@@ -5,7 +5,11 @@ using System.Web;
 
 namespace AppWebERS.Controllers
 {
-    public class ModificarCuentaController
+    public class ModificarCuentaController : Controller
     {
+
+        [HttPost]
+        public ActionResult modificarCuenta
+
     }
 }

@@ -10,7 +10,7 @@ namespace AppWebERS.Controllers
         private String Contrasenna;
         private MySqlConnection Con;//solo para test
 
-        public LoginController(string nombreUsuario, string contrasenna)
+        public LoginController()
         {
             Con = new MySqlConnection("Server=localhost;Port=3306;Database=appers;Uid=conexion;password=1234");
         }
@@ -41,16 +41,19 @@ namespace AppWebERS.Controllers
         */
         private Boolean validacionUsuario(String usuario)
         {
-                                            " FROM usuario" +
             String consultaExistaUsuario = "SELECT usuario.rut as rut" +
+                                            " FROM usuario" +
+            
                                             " WHERE usuario.rut =  '"+ usuario +"';";
             MySqlDataReader readerUsuario = this.RealizarConsulta(consultaExistaUsuario);
             if (readerUsuario ==null)
             {
                 Con.Close();
-            }
                 return false;
+            }
+            Con.Close();
             return true;
+            
         }
 
         /**
@@ -69,28 +72,28 @@ namespace AppWebERS.Controllers
          * 
          *
          */
-        public Boolean ValidacionContrasenna(String usuario, String contrasenia)
+        public Boolean validacionContrasenna(String usuario, String contrasenia)
         {
-            string consulta = "SELECT contrasenna FROM testlogin.usuario WHERE rut = '"+usuario+"';";
+            string consulta = "SELECT usuario.contrasenia FROM usuario WHERE rut = '"+usuario+"';";
             MySqlDataReader reader = this.RealizarConsulta(consulta);
-            {
+            
             if (reader != null)
+            { 
                 reader.Read();
-                string contrasennaBD = reader["contrasenna"].ToString();
+                string contrasennaBD = reader["contrasenia"].ToString();
                 //Desencriptar contraseña de la BD
                 if (contrasennaBD==contrasenia)
                 {
-                    //this.conector.CerrarConexion();
-                }
+                    Con.Close();
                     return true;
-                {
-                else
-                    //this.conector.CerrarConexion();
+                }
+                else {
+                    Con.Close();
                     return false;
                 }
                 
             }
-            //this.conector.CerrarConexion();
+            Con.Close();
             return false;
         }
 

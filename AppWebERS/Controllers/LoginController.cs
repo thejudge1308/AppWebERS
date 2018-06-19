@@ -15,30 +15,46 @@ namespace AppWebERS.Controllers
             Con = new MySqlConnection("Server=localhost;Port=3306;Database=appers;Uid=conexion;password=1234");
         }
 
-        public int PermitirAccesoUsuario(String usuario, String Contrasenia)
+        public int PermitirAccesoUsuario(String usuario, String contrasenia)
         {
-            //Se realiza una consulta para verificar si el usuario existe en la base de datos 
+            //Se realizan las validaciones de los campos
+            if (this.VerificarCampoVacio(usuario) || this.VerificarCampoVacio(contrasenia))
+            {
+                return 0;
+            }
+            if (this.VerificarEspaciosEnCampo(usuario) || this.VerificarEspaciosEnCampo(contrasenia))
+            {
+                return 0;
+            }
+            if (!this.VerificarLargoCampo(usuario,12) || !this.VerificarLargoCampo(contrasenia,16))
+            {
+                return 0;
+            } 
             if (!validacionUsuario(usuario))
             {
                 return 0;
             }
-            //Se finaliza consulta 1
+            if (!this.validacionContrasenia(usuario,contrasenia))
+            {
+                return 0;
+            }
+            //Se verficia exitosamente
             return 2;
         }
 
-       /**
-        * <author>
-        * </author>
-        * Ariel Cornejo
-        * <summary>
-        * Este metodo se encarga de realizar una consulta a la base de datos para comprobar si el usuario 
-        * esta registrado
-        * <param name="usuario"> El string con el id del usuario</param>
-        * </summary>
-        * <returns>
-        * </returns>
-        * valor booleano, true si existe o false en caso contrario
-        */
+        /**
+         * <author>
+         * Ariel Cornejo
+         * </author>
+         * <summary>
+         * Este metodo se encarga de realizar una consulta a la base de datos para comprobar si el usuario 
+         * esta registrado
+         * </summary>
+         * <param name="usuario"> El string con el id del usuario</param>
+         * <returns>
+         * valor booleano, true si existe o false en caso contrario
+         * </returns>
+         */
         private Boolean validacionUsuario(String usuario)
         {
             String consultaExistaUsuario = "SELECT usuario.rut as rut" +
@@ -72,7 +88,7 @@ namespace AppWebERS.Controllers
          * 
          *
          */
-        public Boolean validacionContrasenna(String usuario, String contrasenia)
+        private Boolean validacionContrasenia(String usuario, String contrasenia)
         {
             string consulta = "SELECT usuario.contrasenia FROM usuario WHERE rut = '"+usuario+"';";
             MySqlDataReader reader = this.RealizarConsulta(consulta);
@@ -122,7 +138,7 @@ namespace AppWebERS.Controllers
          * <param name="texto">Contiene un string con el texto a verificar</param>
          * <returns> true si es vacio, false en caso contrario </returns>
          */
-        private bool VerificarCampoVacio(string texto) {
+        private Boolean VerificarCampoVacio(string texto) {
             return String.IsNullOrEmpty(texto);
         }
         /**
@@ -133,7 +149,7 @@ namespace AppWebERS.Controllers
          *<param name="texto">Contiene un string con el texto a verificar</param>
          * <returns> true si contiene espacios, false en caso contrario</returns>
          */
-        private bool VerificarEspaciosEnCampo(string texto) {
+        private Boolean VerificarEspaciosEnCampo(string texto) {
             return texto.Contains(" ");
         }
 
@@ -147,7 +163,7 @@ namespace AppWebERS.Controllers
          * <param name="largoMaximo">Entero que representa el largo maximo que puede tener el string texto</param>
          * <returns>true si texto es igual o menor que el largoMaximo, false en caso contrario</returns>
          */
-        private bool VerificarLargoCampo(string texto, int largoMaximo) {
+        private Boolean VerificarLargoCampo(string texto, int largoMaximo) {
             return texto.Length <= largoMaximo;
         }
 
@@ -161,7 +177,7 @@ namespace AppWebERS.Controllers
          * <param name="id">Contiene un string con el id o rut a obtener desde la bd</param>
          * <returns>Debe retornar el objeto Usuario</returns>
          */
-        private bool/*Usuario*/ ObtenerUsuario(string id)
+        private Boolean/*Usuario*/ ObtenerUsuario(string id)
         {
             //MySqlDataReader data = RealizarConsulta("SELECT * FROM Usuario WHERE rut='" + id + "';");
             return true;

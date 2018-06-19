@@ -175,12 +175,40 @@ namespace AppWebERS.Controllers
          * Obtiene un usuario desde la base de datos.
          * </summary>
          * <param name="id">Contiene un string con el id o rut a obtener desde la bd</param>
-         * <returns>Debe retornar el objeto Usuario</returns>
+         * <param name="contrasenia">Contiene un string con la contrasenia relacionada con el id o rut que se encuentra en la bd</param>
+         * <returns>Debe retornar el objeto Usuario, si no se logro obtener se retorna null</returns>
          */
-        private Boolean/*Usuario*/ ObtenerUsuario(string id)
+        public Usuario ObtenerUsuario(string id, string contrasenia)
         {
-            //MySqlDataReader data = RealizarConsulta("SELECT * FROM Usuario WHERE rut='" + id + "';");
-            return true;
+            if (PermitirAccesoUsuario(id, contrasenia) == 2)
+            {
+                string consulta = "SELECT * FROM Usuario WHERE rut='" + id + "';";
+                MySqlDataReader data = this.RealizarConsulta(consulta);
+                if (data != null)
+                {
+                    data.Read();
+                    string rutBD = data["rut"].ToString();
+                    string nombreBD = data["nombre"].ToString();
+                    string correoBD = data["correo_electronico"].ToString();
+                    string contraseniaBD = data["contrasenia"].ToString();
+                    string tipoBD = data["tipo"].ToString();
+                    //bool estadoBD = data["estado"].ToBoolean();
+                    Usuario usuario = new Usuario(rutBD, nombreBD, correoBD, contraseniaBD, tipoBD/*,estadoBD*/);
+                    Con.Close();
+                    return usuario;
+
+                }
+                else
+                {
+                    Con.Close();
+                    return null;
+                }
+            }
+            else
+            {
+                Con.Close();
+                return null;
+            }
         }
     }
 }

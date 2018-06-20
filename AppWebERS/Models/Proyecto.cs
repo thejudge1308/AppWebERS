@@ -69,10 +69,7 @@ namespace AppWebERS.Models
          * 
          **/
 
-        public int IdProyecto {
-            get => idProyecto;
-            set => idProyecto = value;
-        }
+        public int IdProyecto {get; set;}
 
         /**
          * Setter y Getter del proposito del proyecto
@@ -82,10 +79,7 @@ namespace AppWebERS.Models
          * 
          **/
 
-        public string Proposito {
-            get => proposito;
-            set => proposito = value;
-        }
+        public string Proposito {get; set;}
 
         /**
          * Setter y Getter del alcance del proyecto
@@ -95,10 +89,7 @@ namespace AppWebERS.Models
          * 
          **/
 
-        public string Alcance {
-            get => alcance;
-            set => alcance = value;
-        }
+        public string Alcance {get; set;}
 
         /**
          * Setter y Getter del contexto del proyecto
@@ -108,10 +99,7 @@ namespace AppWebERS.Models
          * 
          **/
 
-        public string Contexto {
-            get => contexto;
-            set => contexto = value;
-        }
+        public string Contexto {get; set;}
 
         /**
          * Setter y Getter del atributo que contiene las definiciones del proyecto
@@ -121,10 +109,7 @@ namespace AppWebERS.Models
          * 
          **/
 
-        public string Definiciones {
-            get => definiciones;
-            set => definiciones = value;
-        }
+        public string Definiciones {get; set;}
 
         /**
          * Setter y Getter del atributo que contiene los acronimos del proyecto
@@ -134,10 +119,7 @@ namespace AppWebERS.Models
          * 
          **/
 
-        public string Acronimos {
-            get => acronimos;
-            set => acronimos = value;
-        }
+        public string Acronimos {get; set;}
 
         /**
         * Setter y Getter del atributo que contiene las abreviaturas del proyecto
@@ -147,10 +129,7 @@ namespace AppWebERS.Models
         * 
         **/
 
-        public string Abreviaturas {
-            get => abreviaturas;
-            set => abreviaturas = value;
-        }
+        public string Abreviaturas {get; set;}
 
         /**
         * Setter y Getter del atributo que contiene las referencias del proyecto
@@ -160,10 +139,7 @@ namespace AppWebERS.Models
         * 
         **/
 
-        public string Referencias {
-            get => referencias;
-            set => referencias = value;
-        }
+        public string Referencias {get; set;}
 
         /**
         * Setter y Getter del ambiente operacional del proyecto
@@ -173,10 +149,7 @@ namespace AppWebERS.Models
         * 
         **/
 
-        public string AmbienteOperacional {
-            get => ambienteOperacional;
-            set => ambienteOperacional = value;
-        }
+        public string AmbienteOperacional {get; set;}
 
         /**
         * Setter y Getter del atributo que contiene la relacion con otros proyectos
@@ -186,10 +159,7 @@ namespace AppWebERS.Models
         * 
         **/
 
-        public string RelacionProyectos {
-            get => relacionProyectos;
-            set => relacionProyectos = value;
-        }
+        public string RelacionProyectos {get; set;}
 
         /**
          * Setter y Getter de los usuarios relacionados con el proyecto.
@@ -199,10 +169,7 @@ namespace AppWebERS.Models
          * 
          **/
 
-        public List<Usuario> Usuarios {
-            get => usuarios;
-            set => usuarios = value;
-        }
+        public List<Usuario> Usuarios {get; set;}
 
         /**
          * Setter y Getter de los requisitos relacionados con el proyecto.
@@ -212,10 +179,7 @@ namespace AppWebERS.Models
          * 
          **/
 
-        public List<Requisito> Requisitos {
-            get => requisitos;
-            set => requisitos = value;
-        }
+        public List<Requisito> Requisitos {get; set;}
 
         /**
          * Setter y Getter de los casos de uso relacionados con el proyecto.
@@ -225,10 +189,7 @@ namespace AppWebERS.Models
          * 
          **/
 
-        public List<CasosDeUso> CasosDeUso {
-            get => casosDeUso;
-            set => casosDeUso = value;
-        }
+        public List<CasosDeUso> CasosDeUso {get; set;}
 
         /**
          * Setter y Getter de los actores relacionados con el proyecto.
@@ -238,9 +199,55 @@ namespace AppWebERS.Models
          * 
          **/
 
-        public List<Actor> Actores {
-            get => actores;
-            set => actores = value;
+        public List<Actor> Actores {get; set;}
+
+        /**
+         * Método para listar todos los proyectos existentes
+         **/
+
+        public void listarTodos() {
+        }
+
+        /**
+         * Método para listar un proyecto específico
+         * <returns>Retorna un proyecto específico.</returns>
+         **/
+
+        public void listarEspecifico(Usuario usuario) {
+            int aux = 0;
+            usuariosEspecificos = new List<Usuario>();
+            numUsuarios = proyecto.usuarios.Count;
+            while (aux < numUsuarios) {
+                if (proyecto.usuarios.id.equals(usuario.id)) {
+                    usuariosEspecificos.add(proyecto.usuarios(aux));
+                }
+            }
+            return usuariosEspecificos;
+        }
+
+        /**
+         * Método para seleccionar un proyecto 
+         **/
+
+        public void seleccionar(int id) {
+
+        }
+
+        /**
+         * Método para Crear un Proyecto
+         * <returns>Retorna un boolean que indica la correcta creación del proyecto.</returns>
+         **/
+
+        public bool crear() {
+            return true;
+        }
+
+        /**
+         * Método para cargar datos
+         **/
+
+        public void cargarDatos(dr DataRow) {
+
         }
     }
 }

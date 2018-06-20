@@ -44,10 +44,7 @@ namespace AppWebERS.Models {
          * 
          **/
 
-        public int IdActor {
-            get => idActor;
-            set => idActor = value;
-        }
+        public int IdActor {get; set;}
 
         /**
          * Setter y Getter de la descripcion del actor
@@ -57,10 +54,7 @@ namespace AppWebERS.Models {
          * 
          **/
 
-        public string Descripcion {
-            get => descripcion;
-            set => descripcion = value;
-        }
+        public string Descripcion {get; set;}
 
         /**
          * Setter y Getter del número actual del actor
@@ -70,36 +64,27 @@ namespace AppWebERS.Models {
          * 
          **/
 
-        public int NumActual {
-            get => numActual;
-            set => numActual = value;
-        }
+        public int NumActual {get; set;}
 
         /**
          * Setter y Getter del número futuro del actor
          * 
-         * <param name = "proposito" > El numero futuro del actor.</param>
+         * <param name = "numFuturo" > El numero futuro del actor.</param>
          * <returns>Retorna el valor int del numero futuro.</returns>
          * 
          **/
 
-        public int NumFuturo {
-            get => numFuturo;
-            set => numFuturo = value;
-        }
+        public int NumFuturo {get; set;}
 
         /**
          * Setter y Getter del número de contactables del actor
          * 
-         * <param name = "proposito" > El numero de contactables del actor.</param>
+         * <param name = "numContactables" > El numero de contactables del actor.</param>
          * <returns>Retorna el valor int del numero de contactables.</returns>
          * 
          **/
 
-        public int NumContactables {
-            get => numContactables;
-            set => numContactables = value;
-        }
+        public int NumContactables {get; set;}
 
         /**
          * Setter y Getter del tipo de usuario
@@ -109,9 +94,48 @@ namespace AppWebERS.Models {
          * 
          **/
 
-        public string TipoUsuario {
-            get => tipoUsuario;
-            set => tipoUsuario = value;
+        public string TipoUsuario {get; set;}
+
+        /**
+         * Método para Crear un Actor
+         * <returns>Retorna un boolean que indica la correcta creación del actor.</returns>
+         **/
+
+        public bool crear() {
+            return true;
+        }
+
+        /**
+         * Método para listar un actor específico
+         * <returns>Retorna un actor específico.</returns>
+         **/
+
+        public void listarEspecifico(Proyecto proyecto) {
+            int aux = 0;
+            actoresEspecificos = new List<Actor>();
+            numActores = proyecto.actores.Count;
+            while (aux < numActores) {
+                if (proyecto.actores.tipoUsuario.equals(this.tipoUsuario)) {
+                    actoresEspecificos.add(proyecto.actores(aux));
+                }
+            }
+            return actoresEspecificos;
+        }
+
+        /**
+         * Método para seleccionar un actor 
+         **/
+
+        public void seleccionar(int id) {
+
+        }
+
+        /**
+         * Método para cargar datos
+         **/
+
+        public void cargarDatos(dr DataRow) {
+
         }
     }
 }

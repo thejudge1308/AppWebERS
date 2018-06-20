@@ -45,10 +45,7 @@ namespace AppWebERS.Models{
          * <returns>Retorna el valor integer del id de la motificación.</returns>
          * 
          */
-        public int IdModificacion{
-            get => idModificacion;
-            set => idModificacion = value;
-        }
+        public int IdModificacion {get; set;}
 
         /*
          * Setter y getter de la versión de la modificación.
@@ -58,10 +55,7 @@ namespace AppWebERS.Models{
          * <returns>Retorna el valor double de la versión de la modificación.</returns>
          * 
          */
-        public double Version{
-            get => version;
-            set => version = value;
-        }
+        public double Version {get; set;}
 
         /*
          * Setter y getter de la fecha de modificación.
@@ -71,10 +65,7 @@ namespace AppWebERS.Models{
          * <returns>Retorna el valor DateTime de la fecha de modificación.</returns>
          * 
          */
-        public DateTime Fecha{
-            get => fecha;
-            set => fecha = value;
-        }
+        public DateTime Fecha {get; set;}
 
         /*
          * Setter y getter de la referencia de usuario.
@@ -84,9 +75,48 @@ namespace AppWebERS.Models{
          * <returns>Retorna el valor string de la referencia de usuario.</returns>
          * 
          */
-        public string RefUsuario{
-            get => refUsuario;
-            set => refUsuario = value;
+        public string RefUsuario {get; set;}
+
+        /**
+         * Método para Crear una Modificacion
+         * <returns>Retorna un boolean que indica el correcto registro de la modificacion.</returns>
+         **/
+
+        public bool crear() {
+            return true;
+        }
+
+        /**
+         * Método para listar una modificación específica
+         * <returns>Retorna una modificación específica.</returns>
+         **/
+
+        public void listarEspecifico(Proyecto proyecto) {
+            int aux = 0;
+            modificacionesEspecificas = new List<ModificacionDERS>();
+            numModificaciones = proyecto.modificaciones.Count;
+            while (aux < numModificaciones) {
+                if (proyecto.modificaciones.id.equals(this.id)) {
+                    modificacionesEspecificas.add(proyecto.modificaciones(aux));
+                }
+            }
+            return modificacionesEspecificas;
+        }
+
+        /**
+         * Método para seleccionar una modificación 
+         **/
+
+        public void seleccionar(int id) {
+
+        }
+
+        /**
+         * Método para cargar datos
+         **/
+
+        public void cargarDatos(dr DataRow) {
+
         }
     }
 }

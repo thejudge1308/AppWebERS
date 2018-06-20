@@ -6,7 +6,7 @@ namespace AppWebERS.Models
     public class ExternalLoginConfirmationViewModel
     {
         [Required]
-        [Display(Name = "Email")]
+        [Display(Name = "RUt")]
         public string Email { get; set; }
     }
 
@@ -33,7 +33,7 @@ namespace AppWebERS.Models
         public string Code { get; set; }
         public string ReturnUrl { get; set; }
 
-        [Display(Name = "Remember this browser?")]
+        [Display(Name = "Desea recordar en este navegador?")]
         public bool RememberBrowser { get; set; }
 
         public bool RememberMe { get; set; }
@@ -42,23 +42,43 @@ namespace AppWebERS.Models
     public class ForgotViewModel
     {
         [Required]
-        [Display(Name = "Email")]
+        [Display(Name = "RUt")]
         public string Email { get; set; }
     }
 
+    /**
+     *   
+     * <summary>
+     *  Autor: Patricio Quezada Laras. 
+     *  Modelo de la vista de LOGIN.
+     * </summary>
+     * 
+     */
     public class LoginViewModel
     {
         [Required]
-        [Display(Name = "Email")]
-        [EmailAddress]
-        public string Email { get; set; }
+        [Display(Name = "Rut")]
+        [RegularExpression("([1-9][0-9]*)",ErrorMessage ="El Campo Rut debe tener solo numeros.")]
+        [StringLength(9,ErrorMessage ="El campo Rut debe tener 8 caractener como minimo y 9 maximo.s",MinimumLength =8)]
+        /**
+         * <param name="Rut">Rut</param>  
+         */
+        public string RUt { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [Display(Name = "Contraseña")]
+        
+        /**
+         * <param name="Password">Contraseña</param>  
+         */
         public string Password { get; set; }
 
-        [Display(Name = "Remember me?")]
+        [Display(Name = "Recordar contraseña?")]
+
+        /**
+        * <summary> For more information = https://www.youtube.com/watch?v=rWK_VlekdwM </summary>>
+        */
         public bool RememberMe { get; set; }
     }
 
@@ -66,7 +86,7 @@ namespace AppWebERS.Models
     {
         [Required]
         [EmailAddress]
-        [Display(Name = "Email")]
+        [Display(Name = "RUt")]
         public string Email { get; set; }
 
         [Required]
@@ -85,7 +105,7 @@ namespace AppWebERS.Models
     {
         [Required]
         [EmailAddress]
-        [Display(Name = "Email")]
+        [Display(Name = "RUt")]
         public string Email { get; set; }
 
         [Required]
@@ -102,6 +122,14 @@ namespace AppWebERS.Models
         public string Code { get; set; }
     }
 
+    /**
+     *   
+     * <summary>
+     *  Autor: Patricio Quezada Laras. 
+     *  Modelo de la vista de ForgotPassword.
+     * </summary>
+     * 
+     */
     public class ForgotPasswordViewModel
     {
         [Required]

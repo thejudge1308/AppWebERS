@@ -19,7 +19,7 @@
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item mr-3">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link " })</li>
                 <li class="nav-item mr-3 ">@Html.ActionLink("About", "About", "Home", new { area = "" }, new { @class = "nav-link " })</li>
-                <li class="nav-item mr-3 ">@Html.ActionLink("Contact", "Contact", "Home", new { area = "" }, new { @class = "nav-link " })</li>
+                <li class="nav-item mr-3 ">@Html.ActionLink("Usuarios", "ListarUsuarios", "Usuario", new { area = "" }, new { @class = "nav-link " })</li>
             </ul>
             @Html.Partial("_LoginPartial")
         </div>

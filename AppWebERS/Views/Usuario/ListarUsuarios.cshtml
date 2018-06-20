@@ -1,0 +1,48 @@
+﻿
+@{
+    ViewBag.Title = "ModificarCuentaUsuario";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+@Html.Partial("_AlertaDeshabilitacionPartial");
+<div class="card my-1 mx-5">
+    <div class="card-header">
+        <h4>Usuarios disponibles</h4>
+    </div>
+    <div class="card-body table-responsive">
+        <table class="table">
+            <thead class="thead-dark">
+                <tr class="text-center">
+                    <th scope="col">Nombre de Usuario</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="text-center">
+                    <td>Gabriel Sanhueza</td>
+                    <td>
+                        <div class="dropdown d-lg-none">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="triggerId" data-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">
+                                Opciones
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="triggerId">
+                                <a class="dropdown-item" href="#">Detalles</a>
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#exampleModal">Modificar</a>
+                                <a class="dropdown-item" href="#">Deshabilitar</a>
+                            </div>
+                        </div>
+                        <div class="d-none d-lg-block">
+
+                            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">Modificar</button>
+                            <button type="button" class="btn btn-secondary">Deshabilitar</button>
+                        </div>
+                    </td>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@Html.Partial("_ModalPartial");

@@ -14,6 +14,7 @@ namespace AppWebERS.Controllers
             Con = new MySqlConnection("Server=localhost;Port=3306;Database=appers;Uid=conexion;Password=1234");
         }
 
+
         /**
          *<autor>Ariel Cornejo - Diego Iturriaga</autor>
          * <summary>Metodo que ejecuta todas las validaciones correspondientes para
@@ -123,6 +124,9 @@ namespace AppWebERS.Controllers
             return false;
         }
 
+        /**
+         * 
+         */
         private MySqlDataReader realizarConsulta(string consulta)
         { 
             MySqlCommand command = Con.CreateCommand();
@@ -234,10 +238,10 @@ namespace AppWebERS.Controllers
         */
         public Boolean comprobarEstadoUsuario(Usuario usuario)
         {
-           /* if (usuario.Estado)
+            if (usuario.Estado)
             {
                 return true;
-            }*/
+            }
             return false;
         }
     }

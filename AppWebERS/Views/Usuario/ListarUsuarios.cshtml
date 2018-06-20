@@ -6,7 +6,7 @@
 
 
 
-@Html.Partial("_AlertaDeshabilitacionPartial");
+@Html.Partial("_AlertaDeshabilitacionPartial")
 <div class="card my-1 mx-5">
     <div class="card-header">
         <h4>Usuarios disponibles</h4>
@@ -31,13 +31,13 @@
                             <div class="dropdown-menu" aria-labelledby="triggerId">
                                 <a class="dropdown-item" href="#">Detalles</a>
                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#exampleModal">Modificar</a>
-                                <a class="dropdown-item" href="#">Deshabilitar</a>
+                                <a class="dropdown-item deshabilitar" href="#" >Deshabilitar</a>
                             </div>
                         </div>
                         <div class="d-none d-lg-block">
 
                             <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">Modificar</button>
-                            <button type="button" class="btn btn-secondary">Deshabilitar</button>
+                            <button type="button" class="btn btn-secondary deshabilitar">Deshabilitar</button>
                         </div>
                     </td>
             </tbody>
@@ -45,4 +45,8 @@
     </div>
 </div>
 
-@Html.Partial("_ModalPartial");
+@Html.Partial("_ModalPartial")
+
+@section scripts{
+    <script type="text/javascript" src="~/Scripts/listaUsuario.js"></script>    
+}

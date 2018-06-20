@@ -33,13 +33,13 @@
                             <div class="dropdown-menu" aria-labelledby="triggerId">
                                 <a class="dropdown-item" href="#">Detalles</a>
                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#exampleModal">Modificar</a>
-                                <input type="submit" class="dropdown-item" href="#" value="Deshabilitar">
+                                <input type="submit" class="dropdown-item deshabilitar" href="#" value="Deshabilitar">
                             </div>
                         </div>
                         <div class="d-none d-lg-block">
 
                             <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">Modificar</button>
-                            <input type="submit" value="Deshabilitar" class="btn btn-secondary" />
+                            <input type="submit" value="Deshabilitar" class="btn btn-secondary deshabilitar" />
                         </div>
                     </td>
                 </tr>
@@ -50,4 +50,8 @@
     </div>
 </div>
 
-@Html.Partial("_ModalPartial");
+@Html.Partial("_ModalPartial")
+
+@section scripts{
+    <script type="text/javascript" src="~/Scripts/listaUsuario.js"></script>    
+}

@@ -56,10 +56,7 @@ namespace AppWebERS.Models {
          * 
          **/
 
-        public int IdRequisito {
-            get => idRequisito;
-            set => idRequisito = value;
-        }
+        public int IdRequisito {get; set;}
 
         /**
          * Setter y Getter del nombre del requisito.
@@ -69,10 +66,7 @@ namespace AppWebERS.Models {
          * 
          **/
 
-        public string Nombre {
-            get => nombre;
-            set => nombre = value;
-        }
+        public string Nombre {get; set;}
 
         /**
          * Setter y Getter de la descripcion del requisito.
@@ -82,10 +76,7 @@ namespace AppWebERS.Models {
          * 
          **/
 
-        public string Descripcion{
-            get => descripcion;
-            set => descripcion = value;
-        }
+        public string Descripcion {get; set;}
 
         /**
          * Setter y Getter de la prioridad del requisito.
@@ -95,10 +86,7 @@ namespace AppWebERS.Models {
          * 
          **/
 
-        public string Prioridad {
-            get => prioridad;
-            set => prioridad = value;
-        }
+        public string Prioridad {get; set;}
 
         /**
          * Setter y Getter de la categoria del requisito.
@@ -108,10 +96,7 @@ namespace AppWebERS.Models {
          * 
          **/
 
-        public string Categoria {
-            get => categoria;
-            set => categoria = value;
-        }
+        public string Categoria {get; set;}
 
         /**
          * Setter y Getter de la fuente del requisito.
@@ -121,10 +106,7 @@ namespace AppWebERS.Models {
          * 
          **/
 
-        public string Fuente {
-            get => fuente;
-            set => fuente = value;
-        }
+        public string Fuente {get; set;}
 
         /**
          * Setter y Getter de la estabilidad del requisito.
@@ -134,10 +116,7 @@ namespace AppWebERS.Models {
          * 
          **/
 
-        public string Estabilidad {
-            get => estabilidad;
-            set => estabilidad = value;
-        }
+        public string Estabilidad {get; set;}
 
         /**
          * Setter y Getter del estado del requisito.
@@ -147,10 +126,7 @@ namespace AppWebERS.Models {
          * 
          **/
 
-        public string Estado {
-            get => estado;
-            set => estado = value;
-        }
+        public string Estado {get; set;}
 
         /**
          * Setter y Getter del tipo del requisito.
@@ -160,10 +136,7 @@ namespace AppWebERS.Models {
          * 
          **/
 
-        public string Tipo {
-            get => tipo;
-            set => tipo = value;
-        }
+        public string Tipo {get; set;}
 
         /**
          * Setter y Getter de los actores del requisito.
@@ -173,9 +146,48 @@ namespace AppWebERS.Models {
          * 
          **/
 
-        public List<Actor> Actores {
-            get => actores;
-            set => actores = value;
+        public List<Actor> Actores {get; set;}
+
+        /**
+         * Método para Crear un Requisito
+         * <returns>Retorna un boolean que indica el correcto registro del requisito.</returns>
+         **/
+
+        public bool crear() {
+            return true;
+        }
+
+        /**
+         * Método para listar un registro específico
+         * <returns>Retorna un registro específico.</returns>
+         **/
+
+        public void listarEspecifico(Proyecto proyecto) {
+            int aux = 0;
+            requisitosEspecificos = new List<Requisito>();
+            numRequisitos = proyecto.requisitos.Count;
+            while (aux < numRequisitos) {
+                if (proyecto.requisitos.id.equals(this.id)) {
+                    requisitosEspecificos.add(proyecto.requisitos(aux));
+                }
+            }
+            return requisitosEspecificos;
+        }
+
+        /**
+         * Método para seleccionar un requisito 
+         **/
+
+        public void seleccionar(int id) {
+
+        }
+
+        /**
+         * Método para cargar datos
+         **/
+
+        public void cargarDatos(dr DataRow) {
+
         }
     }
 }

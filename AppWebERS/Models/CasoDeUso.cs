@@ -39,10 +39,7 @@ namespace AppWebERS.Models{
          * <returns>Retorna el valor integer del id del caso de uso.</returns>
          * 
          */
-        public int IdCasoDeUso{
-            get => idCasoDeUso;
-            set => idCasoDeUso = value;
-        }
+        public int IdCasoDeUso {get; set;}
 
         /*
          * Setter y getter de la ruta de la imagen del caso de uso.
@@ -52,9 +49,48 @@ namespace AppWebERS.Models{
          * <returns>Retorna el valor string de la ruta de la imagen.</returns>
          * 
          */
-        public string RutaImagen{
-            get => rutaImagen;
-            set => rutaImagen = value;
+        public string RutaImagen {get; set;}
+
+        /**
+         * Método para Crear un Caso de Uso
+         * <returns>Retorna un boolean que indica el correcto registro del caso de uso.</returns>
+         **/
+
+        public bool crear() {
+            return true;
+        }
+
+        /**
+         * Método para listar un caso de uso específico
+         * <returns>Retorna un caso de uso específico.</returns>
+         **/
+
+        public void listarEspecifico(Proyecto proyecto) {
+            int aux = 0;
+            casosDeUsoEspecificos = new List<CasoDeUso>();
+            numCDU = proyecto.casosDeUso.Count;
+            while (aux < numCDU) {
+                if (proyecto.casosDeUso.idCasoDeUso.equals(this.idCasoDeUso)) {
+                    casosDeUsoEspecificos.add(proyecto.casosDeUso(aux));
+                }
+            }
+            return casosDeUsoEspecificos;
+        }
+
+        /**
+         * Método para seleccionar un caso de uso 
+         **/
+
+        public void seleccionar(int id) {
+
+        }
+
+        /**
+         * Método para cargar datos
+         **/
+
+        public void cargarDatos(dr DataRow) {
+
         }
     }
 }

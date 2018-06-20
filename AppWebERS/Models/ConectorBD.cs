@@ -36,9 +36,32 @@ namespace AppWebERS.Models{
          * <returns>Retorna el valor string del conector de la base de datos.</returns>
          * 
          */
-        public string ConnString{
-            get => connString;
-            set => connString = value;
+        public string ConnString {get; set;}
+
+        /**
+         * Método para ejecutar una query 
+         **/
+
+        public void ejecutarQuery(command MySqlCommand) {
+
+        }
+
+        /**
+         * Método para ejecutar una query 
+         * <returns>Retorna un DataSet</returns>
+         **/
+
+        public void ejecutarNoQuery(command MySqlCommand) {
+
+        }
+
+        /**
+         * Método para no ejecutar una query 
+         * <returns>Retorna un MySqlCommand</returns>
+         **/
+
+        public void ejecutarNoQuery(command MySqlCommand) {
+
         }
     }
 }

@@ -29,7 +29,6 @@ namespace AppWebERS.Controllers
          * llama a la funcion de modificar la cuenta de un usuario en el modelo de este
          * usuario
          * return RedirectToAction
-         * 
          */
 
         [HttPost]
@@ -39,7 +38,7 @@ namespace AppWebERS.Controllers
             return RedirectToAction("Index");
         }
 
-        
+
 
     }
 }

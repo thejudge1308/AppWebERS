@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 
@@ -22,7 +23,7 @@ namespace AppWebERS.Models
         private string relacionProyectos;
         private List<Usuario> usuarios;
         private List<Requisito> requisitos;
-        private List<CasosDeUso> casosDeUso;
+        private List<CasoDeUso> casosDeUso;
         private List<Actor> actores;
 
         /**
@@ -44,7 +45,7 @@ namespace AppWebERS.Models
          * <param name = "actores" > La lista de actores asociados al proyecto.</param>
          **/
 
-        public Proyecto(int idProyecto, string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string referencias, string ambienteOperacional, string relacionProyectos, List<Usuario> usuarios, List<Requisito> requisitos, List<CasosDeUso> casosDeUso, List<Actor> actores) {
+        public Proyecto(int idProyecto, string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string referencias, string ambienteOperacional, string relacionProyectos, List<Usuario> usuarios, List<Requisito> requisitos, List<CasoDeUso> casosDeUso, List<Actor> actores) {
             this.idProyecto = idProyecto;
             this.proposito = proposito;
             this.alcance = alcance;
@@ -57,7 +58,7 @@ namespace AppWebERS.Models
             this.relacionProyectos = relacionProyectos;
             this.usuarios = new List<Usuario>();
             this.requisitos = new List<Requisito>();
-            this.casosDeUso = new List<CasosDeUso>();
+            this.casosDeUso = new List<CasoDeUso>();
             this.actores = new List<Actor>();
         }
 
@@ -189,7 +190,7 @@ namespace AppWebERS.Models
          * 
          **/
 
-        public List<CasosDeUso> CasosDeUso {get; set;}
+        public List<CasoDeUso> CasosDeUso {get; set;}
 
         /**
          * Setter y Getter de los actores relacionados con el proyecto.
@@ -214,15 +215,7 @@ namespace AppWebERS.Models
          **/
 
         public void listarEspecifico(Usuario usuario) {
-            int aux = 0;
-            usuariosEspecificos = new List<Usuario>();
-            numUsuarios = proyecto.usuarios.Count;
-            while (aux < numUsuarios) {
-                if (proyecto.usuarios.id.equals(usuario.id)) {
-                    usuariosEspecificos.add(proyecto.usuarios(aux));
-                }
-            }
-            return usuariosEspecificos;
+           
         }
 
         /**
@@ -246,7 +239,7 @@ namespace AppWebERS.Models
          * Método para cargar datos
          **/
 
-        public void cargarDatos(dr DataRow) {
+        public void cargarDatos(DataRow dr) {
 
         }
     }

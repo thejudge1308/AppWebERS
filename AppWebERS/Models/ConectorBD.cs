@@ -42,26 +42,26 @@ namespace AppWebERS.Models{
          * Método para ejecutar una query 
          **/
 
-        public void ejecutarQuery(command MySqlCommand) {
+        //public void ejecutarQuery(command MySqlCommand) {
 
-        }
+        //}
 
         /**
          * Método para ejecutar una query 
          * <returns>Retorna un DataSet</returns>
          **/
 
-        public void ejecutarNoQuery(command MySqlCommand) {
+        //public void ejecutarNoQuery(command MySqlCommand) {
 
-        }
+        //}
 
         /**
          * Método para no ejecutar una query 
          * <returns>Retorna un MySqlCommand</returns>
          **/
 
-        public void ejecutarNoQuery(command MySqlCommand) {
+        //public void ejecutarNoQuery(command MySqlCommand) {
 
-        }
+        //}
     }
 }

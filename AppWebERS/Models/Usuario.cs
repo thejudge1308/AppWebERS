@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 
@@ -13,6 +14,7 @@ namespace AppWebERS.Models{
         private string correoElectronico;
         private string contrasenia;
         private string tipo;
+        
 
         /*
          * Constructor vacío de la clase usuario (se agrega para cualquier otro uso que se le de en un futuro).
@@ -102,18 +104,10 @@ namespace AppWebERS.Models{
          * <returns>Retorna un usuario específico.</returns>
          **/
 
-        public void listarEspecifico(Usuario usuario) {
-            int aux = 0;
-            usuariosEspecificos = new List<Usuario>();
-            numUsuarios = proyecto.usuarios.Count;
-            while (aux < numUsuarios) {
-                if (proyecto.usuarios.id.equals(usuario.id)) {
-                    usuariosEspecificos.add(proyecto.usuarios(aux));
-                }
-            }
-            return usuariosEspecificos;
+       public void listarEspecifico(Usuario usuario) {
+            
         }
-
+        
         /**
          * Método para seleccionar un usuario 
          **/
@@ -135,7 +129,7 @@ namespace AppWebERS.Models{
          * Método para cargar datos
          **/
 
-        public void cargarDatos(dr DataRow) {
+        public void cargarDatos(DataRow dr) {
 
         }
     }

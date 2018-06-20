@@ -4,10 +4,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
-
-@Html.Partial("_AlertaDeshabilitacionPartial");
-<div class="card my-1 mx-5">
+@Html.Partial("_AlertaDeshabilitacionPartial")
+<div class="card my-1 mx-5 h-100">
     <div class="card-header">
         <h4>Usuarios disponibles</h4>
     </div>
@@ -25,7 +23,7 @@
                     <td>
                         <div class="dropdown d-lg-none">
                             <button class="btn btn-secondary dropdown-toggle" type="button" id="triggerId" data-toggle="dropdown" aria-haspopup="true"
-                                    aria-expanded="false">
+                                    aria-expanded="false" data-flip="false">
                                 Opciones
                             </button>
                             <div class="dropdown-menu" aria-labelledby="triggerId">
@@ -40,6 +38,8 @@
                             <button type="button" class="btn btn-secondary">Deshabilitar</button>
                         </div>
                     </td>
+                </tr>
+               
             </tbody>
         </table>
     </div>

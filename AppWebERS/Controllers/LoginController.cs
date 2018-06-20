@@ -4,42 +4,55 @@ using System.Web.Mvc;
 
 namespace AppWebERS.Controllers
 {
-    public class LoginController 
+    public class LoginController : Controller
     {
-        private String NombreUsuario;
-        private String Contrasenna;
+
         private MySqlConnection Con;//solo para test
 
         public LoginController()
         {
-            Con = new MySqlConnection("Server=localhost;Port=3306;Database=appers;Uid=conexion;password=1234");
+            Con = new MySqlConnection("Server=localhost;Port=3306;Database=appers;Uid=conexion;Password=1234");
         }
 
-        public int PermitirAccesoUsuario(String usuario, String contrasenia)
+        /**
+         *<autor>Ariel Cornejo - Diego Iturriaga</autor>
+         * <summary>Metodo que ejecuta todas las validaciones correspondientes para
+         * verificar que los datos del usuario y su respectiva contraseña son validas
+         * segun el formato y corresponden a los datos registrados en la base de datos</summary>
+         * 
+         * <param name="usuario"> Es el string que contiene el id del usuario ingresado en la ventana de login</param>
+         * <param name="contrasenia"> Es el string que contiene la contraseña ingresada en la ventana de login</param>
+         *
+         * <returns> 
+         * Retorna true si permite el acceso y false si se niega el acceso.
+         * </returns>
+         * 
+         */
+        private Boolean permitirAccesoUsuario(String usuario, String contrasenia)
         {
             //Se realizan las validaciones de los campos
-            if (this.VerificarCampoVacio(usuario) || this.VerificarCampoVacio(contrasenia))
+            if (this.verificarCampoVacio(usuario) || this.verificarCampoVacio(contrasenia))
             {
-                return 0;
+                return false;
             }
-            if (this.VerificarEspaciosEnCampo(usuario) || this.VerificarEspaciosEnCampo(contrasenia))
+            if (this.verificarEspaciosEnCampo(usuario))
             {
-                return 0;
+                return false;
             }
-            if (!this.VerificarLargoCampo(usuario,12) || !this.VerificarLargoCampo(contrasenia,16))
+            if (!this.verificarLargoCampo(usuario,12) || !this.verificarLargoCampo(contrasenia,16))
             {
-                return 0;
+                return false;
             } 
-            if (!validacionUsuario(usuario))
+            if (!validarUsuario(usuario))
             {
-                return 0;
+                return false;
             }
-            if (!this.validacionContrasenia(usuario,contrasenia))
+            if (!this.validarContrasenia(usuario,contrasenia))
             {
-                return 0;
+                return false;
             }
             //Se verficia exitosamente
-            return 2;
+            return true;
         }
 
         /**
@@ -55,13 +68,12 @@ namespace AppWebERS.Controllers
          * valor booleano, true si existe o false en caso contrario
          * </returns>
          */
-        private Boolean validacionUsuario(String usuario)
+        private Boolean validarUsuario(String usuario)
         {
             String consultaExistaUsuario = "SELECT usuario.rut as rut" +
                                             " FROM usuario" +
-            
                                             " WHERE usuario.rut =  '"+ usuario +"';";
-            MySqlDataReader readerUsuario = this.RealizarConsulta(consultaExistaUsuario);
+            MySqlDataReader readerUsuario = this.realizarConsulta(consultaExistaUsuario);
             if (readerUsuario ==null)
             {
                 Con.Close();
@@ -81,17 +93,15 @@ namespace AppWebERS.Controllers
          * 
          * <param name="usuario"> Es el string que contiene el id del usuario ingresado en la ventana de login</param>
          * <param name="contrasenia"> Es el string que contiene la contraseña ingresada en la ventana de login</param>
-         * <returns> Retorna true si la contraseña que se verifica es correcta - Retorna false si la contraseña
-         * 
+         * <returns> 
+         * Retorna true si la contraseña que se verifica es correcta - Retorna false si la contraseña
          * que se verifica es incorrecta al no coincidir con la contraseña asociada al usuario en la base da datos
          * </returns>
-         * 
-         *
          */
-        private Boolean validacionContrasenia(String usuario, String contrasenia)
+        private Boolean validarContrasenia(String usuario, String contrasenia)
         {
             string consulta = "SELECT usuario.contrasenia FROM usuario WHERE rut = '"+usuario+"';";
-            MySqlDataReader reader = this.RealizarConsulta(consulta);
+            MySqlDataReader reader = this.realizarConsulta(consulta);
             
             if (reader != null)
             { 
@@ -113,7 +123,7 @@ namespace AppWebERS.Controllers
             return false;
         }
 
-        private MySqlDataReader RealizarConsulta(string consulta)
+        private MySqlDataReader realizarConsulta(string consulta)
         { 
             MySqlCommand command = Con.CreateCommand();
             command.CommandText = consulta;
@@ -130,6 +140,7 @@ namespace AppWebERS.Controllers
             }
             return null;
         }
+
         /**
          * <author>Roberto Ureta</author>
          * <summary>
@@ -138,9 +149,10 @@ namespace AppWebERS.Controllers
          * <param name="texto">Contiene un string con el texto a verificar</param>
          * <returns> true si es vacio, false en caso contrario </returns>
          */
-        private Boolean VerificarCampoVacio(string texto) {
+        private Boolean verificarCampoVacio(string texto) {
             return String.IsNullOrEmpty(texto);
         }
+
         /**
          * <author>Roberto Ureta</author>
          * <summary>
@@ -149,7 +161,7 @@ namespace AppWebERS.Controllers
          *<param name="texto">Contiene un string con el texto a verificar</param>
          * <returns> true si contiene espacios, false en caso contrario</returns>
          */
-        private Boolean VerificarEspaciosEnCampo(string texto) {
+        private Boolean verificarEspaciosEnCampo(string texto) {
             return texto.Contains(" ");
         }
 
@@ -163,7 +175,7 @@ namespace AppWebERS.Controllers
          * <param name="largoMaximo">Entero que representa el largo maximo que puede tener el string texto</param>
          * <returns>true si texto es igual o menor que el largoMaximo, false en caso contrario</returns>
          */
-        private Boolean VerificarLargoCampo(string texto, int largoMaximo) {
+        private Boolean verificarLargoCampo(string texto, int largoMaximo) {
             return texto.Length <= largoMaximo;
         }
 
@@ -178,12 +190,12 @@ namespace AppWebERS.Controllers
          * <param name="contrasenia">Contiene un string con la contrasenia relacionada con el id o rut que se encuentra en la bd</param>
          * <returns>Debe retornar el objeto Usuario, si no se logro obtener se retorna null</returns>
          */
-        public Usuario ObtenerUsuario(string id, string contrasenia)
+        public Usuario ingresar(string id, string contrasenia)
         {
-            if (PermitirAccesoUsuario(id, contrasenia) == 2)
+            if (permitirAccesoUsuario(id, contrasenia))
             {
                 string consulta = "SELECT * FROM Usuario WHERE rut='" + id + "';";
-                MySqlDataReader data = this.RealizarConsulta(consulta);
+                MySqlDataReader data = this.realizarConsulta(consulta);
                 if (data != null)
                 {
                     data.Read();

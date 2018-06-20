@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 
@@ -111,15 +112,7 @@ namespace AppWebERS.Models {
          **/
 
         public void listarEspecifico(Proyecto proyecto) {
-            int aux = 0;
-            actoresEspecificos = new List<Actor>();
-            numActores = proyecto.actores.Count;
-            while (aux < numActores) {
-                if (proyecto.actores.tipoUsuario.equals(this.tipoUsuario)) {
-                    actoresEspecificos.add(proyecto.actores(aux));
-                }
-            }
-            return actoresEspecificos;
+          
         }
 
         /**
@@ -134,7 +127,7 @@ namespace AppWebERS.Models {
          * Método para cargar datos
          **/
 
-        public void cargarDatos(dr DataRow) {
+        public void cargarDatos(DataRow dr) {
 
         }
     }

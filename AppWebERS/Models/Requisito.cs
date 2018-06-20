@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 
@@ -163,15 +164,7 @@ namespace AppWebERS.Models {
          **/
 
         public void listarEspecifico(Proyecto proyecto) {
-            int aux = 0;
-            requisitosEspecificos = new List<Requisito>();
-            numRequisitos = proyecto.requisitos.Count;
-            while (aux < numRequisitos) {
-                if (proyecto.requisitos.id.equals(this.id)) {
-                    requisitosEspecificos.add(proyecto.requisitos(aux));
-                }
-            }
-            return requisitosEspecificos;
+            
         }
 
         /**
@@ -186,7 +179,7 @@ namespace AppWebERS.Models {
          * Método para cargar datos
          **/
 
-        public void cargarDatos(dr DataRow) {
+        public void cargarDatos(DataRow dr ) {
 
         }
     }

@@ -8,12 +8,6 @@ namespace AppWebERS.Controllers
 {
     public class UsuarioController : Controller
     {
-        // GET: ModificacionUsuario
-        public ActionResult Index()
-        {
-            return View();
-        }
-
         public ActionResult ListarUsuarios()
         {
             return View();

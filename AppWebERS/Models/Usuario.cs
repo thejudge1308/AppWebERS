@@ -14,7 +14,7 @@ namespace AppWebERS.Models
         public string tipo { get; set; }
 
 
-
+          
         public bool modificar()
         {
             using (var conn = new
@@ -49,6 +49,42 @@ namespace AppWebERS.Models
             return true;
         }
 
-    
+        /*
+         * Juan Abello
+         * Cambia es estado de deshabilitado a habilitado
+         * rut
+         */ 
+        public void deshabilitarUsuario(string rut)
+        {
+            this.seleccionar(rut);
+            if(this.estado.Equals("1"))
+            {
+                using (var conn = new
+            MySqlConnection(ConfigurationManager.ConnectionStrings["appers"].ConnectionString))
+                {
+                    conn.Open();
+                    var sqlTran = conn.BeginTransaction();
+                    try
+                    {
+                        var command = new MySqlCommand()
+                        {
+                            CommandText = "deshabilitarUsuario",
+                            CommandType = CommandType.StoredProcedure
+                        };
+                        
+                        command.Parameters.AddWithValue("estado","0");
+                        command.Connection = conn;
+                        command.Transaction = sqlTran;
+                        command.ExecuteNonQuery();
+                        sqlTran.Commit();
+                        conn.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        sqlTran.Rollback();
+                    }
+                }
+            }
+        }
     }
 }

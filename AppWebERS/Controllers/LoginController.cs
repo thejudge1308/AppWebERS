@@ -224,5 +224,21 @@ namespace AppWebERS.Controllers
                 return null;
             }
         }
+        /**
+        * <author>Ariel Cornejo</author>
+        * <summary>
+        * Comprueba el estado de un usuario
+        * </summary>
+        * <param name="usuario">Objeto usuario que sera comprobado</param>
+        * <returns>Valor booleano, true si esta habilitado y false en caso contrario</returns>
+        */
+        public Boolean comprobarEstadoUsuario(Usuario usuario)
+        {
+           /* if (usuario.Estado)
+            {
+                return true;
+            }*/
+            return false;
+        }
     }
 }

@@ -11,6 +11,8 @@
     </div>
     <div class="card-body table-responsive">
         <table class="table">
+            @using (Html.BeginForm())
+            {
             <thead class="thead-dark">
                 <tr class="text-center">
                     <th scope="col">Nombre de Usuario</th>
@@ -18,8 +20,10 @@
                 </tr>
             </thead>
             <tbody>
+            @for (int i = 0; i < 5; i++)//Reemplazar por foreach()//
+            {
                 <tr class="text-center">
-                    <td>Gabriel Sanhueza</td>
+                    <td>Gabriel Sanhueza</td><!-- Reemplazar por como quiera que le pongan en el foreach a la variable. Ej: (arroba)Item.Nombre -->
                     <td>
                         <div class="dropdown d-lg-none">
                             <button class="btn btn-secondary dropdown-toggle" type="button" id="triggerId" data-toggle="dropdown" aria-haspopup="true"
@@ -29,18 +33,19 @@
                             <div class="dropdown-menu" aria-labelledby="triggerId">
                                 <a class="dropdown-item" href="#">Detalles</a>
                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#exampleModal">Modificar</a>
-                                <a class="dropdown-item" href="#">Deshabilitar</a>
+                                <input type="submit" class="dropdown-item" href="#" value="Deshabilitar">
                             </div>
                         </div>
                         <div class="d-none d-lg-block">
 
                             <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">Modificar</button>
-                            <button type="button" class="btn btn-secondary">Deshabilitar</button>
+                            <input type="submit" value="Deshabilitar" class="btn btn-secondary" />
                         </div>
                     </td>
                 </tr>
-               
+            }
             </tbody>
+            }
         </table>
     </div>
 </div>

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 
 /*
- * autor: Nicolás Hervias
+ * Autor: Nicolás Hervias
  */ 
 
 namespace AppWebERS.Models
@@ -20,12 +20,13 @@ namespace AppWebERS.Models
 
         /*
          * Autor: Nicolás Hervias
-         * carga los datos de un usuario especigficado con su rut. Este método llama al método CargarDatos, donde
-         * los datos cargados desde la base de datos son asignados a las variables de la clase.
+         * Carga los datos de un usuario especigficado con su rut. Este método llama al método CargarDatos, donde
+         * los datos cargados desde la base de datos son asignados a las variables de la clase. Si no encuentra al usuario
+         * llena los datos con "Not Found".
          * Parámetros: rut (es el rut del usuario que se desea modificar)
          * Retorna: vacío
          */
-        public void Seleccionar(string rut)
+        public void seleccionar(string rut)
         {
             try
             {
@@ -63,12 +64,12 @@ namespace AppWebERS.Models
         }
 
         /*
-         * autor: Nicolás Hervias
-         * convierte los datos cargados desde la base de datos al tipo de la variable de la clase para ser asignados
-         * parámetros: dr (una fila de la tabla de la base de datos)
-         * retorna: vacío
+         * Autor: Nicolás Hervias
+         * Convierte los datos cargados desde la base de datos al tipo de la variable de la clase para ser asignados
+         * Parámetros: dr (una fila de la tabla de la base de datos)
+         * Retorna: vacío
          */
-        public void CargarDatos(DataRow dr)
+        public void cargarDatos(DataRow dr)
         {
             this.rut = dr["rut"].ToString();
             this.nombre = dr["nombre"].ToString();
@@ -76,6 +77,40 @@ namespace AppWebERS.Models
             this.contrasenia = dr["contrasenia"].ToString();
             this.estado = dr["estado"].ToString();
             this.tipo = dr["tipo"].ToString();
+        }
+
+        /*
+         * Autor: Nicolás Hervias
+         * Cambia el estado de habilitado a deshabilitado (suponiendo que 0 es deshabilitado y 1 es habilitado)
+         * Parámetros: rut (el rut del usuario)
+         * Retorna: vacío
+         */
+        public void habilitarUsuario(string rut)
+        {
+            this.seleccionar(rut);
+            if (this.estado.Equals("0"))
+            {
+                using (var conn = new MySqlConnection(ConfigurationManager.ConnectionStrings["appers"].ConnectionString))
+                {
+                    conn.Open();
+                    var sqlTran = conn.BeginTransaction();
+                    try
+                    {
+                        var command = new MySqlCommand() { CommandText = "habilitarUsuario", CommandType = CommandType.StoredProcedure };
+                        command.Parameters.AddWithValue("estado", "1");
+                        command.Connection = conn;
+                        command.Transaction = sqlTran;
+                        command.ExecuteNonQuery();
+                        sqlTran.Commit();
+                        conn.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        sqlTran.Rollback();
+                    }
+                }
+            }
+            //else { }
         }
     }
 }

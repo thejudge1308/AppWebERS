@@ -10,12 +10,6 @@ using System.Web;
 
 namespace AppWebERS.Models {
     public class Actor {
-        private int idActor;
-        private string descripcion;
-        private int numActual;
-        private int numFuturo;
-        private int numContactables;
-        private string tipoUsuario;
 
         /**
          * Constructor de la clase Actor
@@ -29,12 +23,12 @@ namespace AppWebERS.Models {
          **/
 
         public Actor(int idActor, string descripcion, int numActual, int numFuturo, int numContactables, string tipoUsuario) {
-            this.idActor = idActor;
-            this.descripcion = descripcion;
-            this.numActual = numActual;
-            this.numFuturo = numFuturo;
-            this.numContactables = numContactables;
-            this.tipoUsuario = tipoUsuario;
+            this.IdActor = idActor;
+            this.Descripcion = descripcion;
+            this.NumActual = numActual;
+            this.NumFuturo = numFuturo;
+            this.NumContactables = numContactables;
+            this.TipoUsuario = tipoUsuario;
         }
 
         /**
@@ -102,7 +96,7 @@ namespace AppWebERS.Models {
          * <returns>Retorna un boolean que indica la correcta creación del actor.</returns>
          **/
 
-        public bool crear() {
+        public bool Crear() {
             return true;
         }
 
@@ -111,7 +105,7 @@ namespace AppWebERS.Models {
          * <returns>Retorna un actor específico.</returns>
          **/
 
-        public void listarEspecifico(Proyecto proyecto) {
+        public void ListarEspecifico(Proyecto proyecto) {
           
         }
 
@@ -119,7 +113,7 @@ namespace AppWebERS.Models {
          * Método para seleccionar un actor 
          **/
 
-        public void seleccionar(int id) {
+        public void Seleccionar(int id) {
 
         }
 
@@ -127,7 +121,7 @@ namespace AppWebERS.Models {
          * Método para cargar datos
          **/
 
-        public void cargarDatos(DataRow dr) {
+        public void CargarDatos(DataRow dr) {
 
         }
     }

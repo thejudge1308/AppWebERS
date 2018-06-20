@@ -9,13 +9,6 @@ namespace AppWebERS.Models{
      * Matías Parra
      */
     public class Usuario{
-        private string rut;
-        private string nombre;
-        private string correoElectronico;
-        private string contrasenia;
-        private string tipo;
-        
-
         /*
          * Constructor vacío de la clase usuario (se agrega para cualquier otro uso que se le de en un futuro).
          * 
@@ -35,11 +28,11 @@ namespace AppWebERS.Models{
          * 
          */
         public Usuario(string rut, string nombre, string correoElectronico, string contrasenia, string tipo){
-            this.rut = rut;
-            this.nombre = nombre;
-            this.correoElectronico = correoElectronico;
-            this.contrasenia = contrasenia;
-            this.tipo = tipo;
+            this.Rut = rut;
+            this.Nombre = nombre;
+            this.CorreoElectronico = correoElectronico;
+            this.Contrasenia = contrasenia;
+            this.Tipo = tipo;
         }
 
         /*
@@ -96,7 +89,7 @@ namespace AppWebERS.Models{
          * Método para listar todos los usuarios existentes
          **/
 
-        public void listarTodos() {
+        public void ListarTodos() {
         }
 
         /**
@@ -104,7 +97,7 @@ namespace AppWebERS.Models{
          * <returns>Retorna un usuario específico.</returns>
          **/
 
-       public void listarEspecifico(Usuario usuario) {
+       public void ListarEspecifico(Usuario usuario) {
             
         }
         
@@ -112,7 +105,7 @@ namespace AppWebERS.Models{
          * Método para seleccionar un usuario 
          **/
 
-        public void seleccionar(int id) {
+        public void Seleccionar(int id) {
 
         }
 
@@ -121,7 +114,7 @@ namespace AppWebERS.Models{
          * <returns>Retorna un boolean que indica la correcta creación del usuario.</returns>
          **/
 
-        public bool crear() {
+        public bool Crear() {
             return true;
         }
 
@@ -129,7 +122,7 @@ namespace AppWebERS.Models{
          * Método para cargar datos
          **/
 
-        public void cargarDatos(DataRow dr) {
+        public void CargarDatos(DataRow dr) {
 
         }
     }

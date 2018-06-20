@@ -1,5 +1,7 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 
@@ -8,60 +10,67 @@ namespace AppWebERS.Models{
      * Matías Parra
      */
     public class ConectorBD{
-        private string connString;
-
-        /*
-         * Constructor vacío de la clase ConectorBD (se agrega para cualquier otro uso que se le de en un futuro).
-         * 
-         */
-        public ConectorBD(){
-
-        }
-
-        /*
-         * Constructor de la clase ConectorBD.
-         * 
-         * <param name="connString">El conector de la base de datos.</param>
-         * 
-         */
-        public ConectorBD(string connString){
-            this.connString = connString;
-        }
-
-        /*
-         * Setter y getter del conector de la base de datos.
-         * 
-         * <param name="connString">El conector de la base de datos.</param>
-         * 
-         * <returns>Retorna el valor string del conector de la base de datos.</returns>
-         * 
-         */
-        public string ConnString {get; set;}
-
+        private static string connStr = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["conexion"].ConnectionString;
+        
         /**
          * Método para ejecutar una query 
          **/
 
-        //public void ejecutarQuery(command MySqlCommand) {
-
-        //}
+        public DataSet ejecutarQuery(MySqlCommand command) {
+            var ds = new DataSet();
+            using (var conn = new MySqlConnection(connStr)) {
+                conn.Open();
+                var sqlTran = conn.BeginTransaction();
+                try {
+                    command.Connection = conn;
+                    command.Transaction = sqlTran;
+                    command.CommandType = CommandType.StoredProcedure;
+                    var sqlda = new MySqlDataAdapter(command);
+                    sqlda.SelectCommand.Transaction = sqlTran;
+                    sqlda.Fill(ds);
+                    sqlTran.Commit();
+                }
+                catch (Exception ex) {
+                    sqlTran.Rollback();
+                    Console.WriteLine(ex.ToString());
+                    command = null;
+                    throw ex;
+                }
+                finally {
+                    conn.Close();
+                }
+            }
+            return ds;
+        }
 
         /**
          * Método para ejecutar una query 
          * <returns>Retorna un DataSet</returns>
          **/
 
-        //public void ejecutarNoQuery(command MySqlCommand) {
-
-        //}
-
-        /**
-         * Método para no ejecutar una query 
-         * <returns>Retorna un MySqlCommand</returns>
-         **/
-
-        //public void ejecutarNoQuery(command MySqlCommand) {
-
-        //}
+        public MySqlCommand ejecutarNoQuery(MySqlCommand command) {
+            using (var conn = new MySqlConnection(connStr)) {
+                conn.Open();
+                var sqlTran = conn.BeginTransaction();
+                try {
+                    command.Connection = conn;
+                    command.Transaction = sqlTran;
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.ExecuteNonQuery();
+                    sqlTran.Commit();
+                }
+                catch (Exception ex) {
+                    sqlTran.Rollback();
+                    Console.WriteLine(ex.ToString());
+                    command = null;
+                    throw ex;
+                }
+                finally {
+                    conn.Close();
+                }
+            }
+            return command;
+        }
+        
     }
 }

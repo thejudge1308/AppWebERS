@@ -8,13 +8,7 @@ namespace AppWebERS.Models{
     /*
      * Matías Parra
      */
-    public class ModificacionDERS{
-        private int idModificacion;
-        private double version;
-        private DateTime fecha;
-        private string refUsuario;
-
-        /*
+    public class ModificacionDERS{ /*
          * Constructor vacío de la clase modificacionesDERS (se agrega para cualquier otro uso que se le de en un futuro).
          * 
          */
@@ -32,10 +26,10 @@ namespace AppWebERS.Models{
          * 
          */
         public ModificacionDERS(int idModificacion, double version, DateTime fecha, string refUsuario){
-            this.idModificacion = idModificacion;
-            this.version = version;
-            this.fecha = fecha;
-            this.refUsuario = refUsuario;
+            this.IdModificacion = idModificacion;
+            this.Version = version;
+            this.Fecha = fecha;
+            this.RefUsuario = refUsuario;
         }
 
         /*
@@ -83,7 +77,7 @@ namespace AppWebERS.Models{
          * <returns>Retorna un boolean que indica el correcto registro de la modificacion.</returns>
          **/
 
-        public bool crear() {
+        public bool Crear() {
             return true;
         }
 
@@ -92,7 +86,7 @@ namespace AppWebERS.Models{
          * <returns>Retorna una modificación específica.</returns>
          **/
 
-        public void listarEspecifico(Proyecto proyecto) {
+        public void ListarEspecifico(Proyecto proyecto) {
           
         }
 
@@ -100,7 +94,7 @@ namespace AppWebERS.Models{
          * Método para seleccionar una modificación 
          **/
 
-        public void seleccionar(int id) {
+        public void Seleccionar(int id) {
 
         }
 
@@ -108,7 +102,7 @@ namespace AppWebERS.Models{
          * Método para cargar datos
          **/
 
-        public void cargarDatos(DataRow dr) {
+        public void CargarDatos(DataRow dr) {
 
         }
     }

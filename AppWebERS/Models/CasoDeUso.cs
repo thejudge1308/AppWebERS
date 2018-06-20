@@ -9,8 +9,6 @@ namespace AppWebERS.Models{
      * Matías Parra
      */
     public class CasoDeUso{
-        private int idCasoDeUso;
-        private string rutaImagen;
 
         /*
          * Constructor vacío de la clase CasoDeUso (se agrega para cualquier otro uso que se le de en un futuro).
@@ -28,8 +26,8 @@ namespace AppWebERS.Models{
          * 
          */
         public CasoDeUso(int idCasoDeUso, string rutaImagen){
-            this.idCasoDeUso = idCasoDeUso;
-            this.rutaImagen = rutaImagen;
+            this.IdCasoDeUso = idCasoDeUso;
+            this.RutaImagen = rutaImagen;
         }
 
         /*
@@ -57,7 +55,7 @@ namespace AppWebERS.Models{
          * <returns>Retorna un boolean que indica el correcto registro del caso de uso.</returns>
          **/
 
-        public bool crear() {
+        public bool Crear() {
             return true;
         }
 
@@ -66,7 +64,7 @@ namespace AppWebERS.Models{
          * <returns>Retorna un caso de uso específico.</returns>
          **/
 
-        public void listarEspecifico(Proyecto proyecto) {
+        public void ListarEspecifico(Proyecto proyecto) {
            
         }
 
@@ -74,7 +72,7 @@ namespace AppWebERS.Models{
          * Método para seleccionar un caso de uso 
          **/
 
-        public void seleccionar(int id) {
+        public void Seleccionar(int id) {
 
         }
 
@@ -82,7 +80,7 @@ namespace AppWebERS.Models{
          * Método para cargar datos
          **/
 
-        public void cargarDatos(DataRow dr) {
+        public void CargarDatos(DataRow dr) {
 
         }
     }

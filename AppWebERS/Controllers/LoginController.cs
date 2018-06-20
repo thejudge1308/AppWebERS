@@ -204,7 +204,9 @@ namespace AppWebERS.Controllers
                     string correoBD = data["correo_electronico"].ToString();
                     string contraseniaBD = data["contrasenia"].ToString();
                     string tipoBD = data["tipo"].ToString();
-                    //bool estadoBD = data["estado"].ToBoolean();
+                    string stringEstadoBD = data["estado"].ToString();
+                    //bool estadoBD = false;
+                    //if (Int32.Parse(stringEstadoBD)==1) estadoBD = true;
                     Usuario usuario = new Usuario(rutBD, nombreBD, correoBD, contraseniaBD, tipoBD/*,estadoBD*/);
                     Con.Close();
                     return usuario;

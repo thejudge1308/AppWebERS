@@ -6,7 +6,7 @@ namespace AppWebERS.Models
     public class ExternalLoginConfirmationViewModel
     {
         [Required]
-        [Display(Name = "RUt")]
+        [Display(Name = "Email")]
         public string Email { get; set; }
     }
 
@@ -42,7 +42,7 @@ namespace AppWebERS.Models
     public class ForgotViewModel
     {
         [Required]
-        [Display(Name = "RUt")]
+        [Display(Name = "Email")]
         public string Email { get; set; }
     }
 
@@ -59,7 +59,7 @@ namespace AppWebERS.Models
         [Required]
         [Display(Name = "Rut")]
         [RegularExpression("([1-9][0-9]*)",ErrorMessage ="El Campo Rut debe tener solo numeros.")]
-        [StringLength(9,ErrorMessage ="El campo Rut debe tener 8 caractener como minimo y 9 maximo.s",MinimumLength =8)]
+        [StringLength(9,ErrorMessage ="El campo Rut debe tener 8 caractener como minimo y 9 maximos",MinimumLength =8)]
         /**
          * <param name="Rut">Rut</param>  
          */
@@ -98,7 +98,7 @@ namespace AppWebERS.Models
 
         [Required(ErrorMessage = "El campo Email es obligatorio.")]
         [EmailAddress]
-        [Display(Name = "RUt")]
+        [Display(Name = "Email")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "El campo Contraseña es obligatorio.")]
@@ -109,7 +109,7 @@ namespace AppWebERS.Models
 
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirme Contraseña")]
+        [Display(Name = "Confirme contraseña")]
         [Compare("Password", ErrorMessage = "Las contraseñas ingresadas no coinciden.")]
         public string ConfirmPassword { get; set; }
     }
@@ -118,7 +118,7 @@ namespace AppWebERS.Models
     {
         [Required]
         [EmailAddress]
-        [Display(Name = "RUt")]
+        [Display(Name = "Email")]
         public string Email { get; set; }
 
         [Required]

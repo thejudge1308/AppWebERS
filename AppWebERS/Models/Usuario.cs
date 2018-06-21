@@ -33,6 +33,7 @@ namespace AppWebERS.Models{
             this.CorreoElectronico = correoElectronico;
             this.Contrasenia = contrasenia;
             this.Tipo = tipo;
+            this.Estado = true;
         }
 
         /*
@@ -84,6 +85,16 @@ namespace AppWebERS.Models{
          * 
          */
         public string Tipo {get; set;}
+
+        /*
+         * Setter y getter de estado del usuario.
+         * 
+         * <param name="estado">El estado del usuari(true es habilitado, false deshabilitado).</param>
+         * 
+         * <returns>Retorna el valor bool del estado.</returns>
+         * 
+         */
+        public bool Estado { get; set; }
 
         /**
          * Método para listar todos los usuarios existentes

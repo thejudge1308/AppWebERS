@@ -25,15 +25,16 @@ namespace AppWebERS.Models{
          * <param name="correoElectronico">El correo electrónico del usuario.</param>
          * <param name="contrasenia">La contraseña del usuario.</param>
          * <param name="tipo">El tipo del usuario (administrador, jefe de proyecto y usuario normal).</param>
+         * <param name="tipo">El estado del usuario (true para habilitado, false para deshabilitado).</param>
          * 
          */
-        public Usuario(string rut, string nombre, string correoElectronico, string contrasenia, string tipo){
+        public Usuario(string rut, string nombre, string correoElectronico, string contrasenia, string tipo, bool estado){
             this.Rut = rut;
             this.Nombre = nombre;
             this.CorreoElectronico = correoElectronico;
             this.Contrasenia = contrasenia;
             this.Tipo = tipo;
-            this.Estado = true;
+            this.Estado = estado;
         }
 
         /*

@@ -27,8 +27,8 @@ namespace AppWebERS.Controllers
 
         }
 
-        public void CrearUsuario() {
-
+        public ActionResult CrearUsuario() {
+            return View();
         }
 
         public void VerDetalleDelProyecto(Proyecto proyecto) {

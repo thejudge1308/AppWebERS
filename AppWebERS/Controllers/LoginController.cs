@@ -1,11 +1,15 @@
-﻿using MySql.Data.MySqlClient;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 
-namespace AppWebERS.Controllers
-{
-    public class LoginController : Controller
-    {
+namespace AppWebERS.Controllers{
+    public class LoginController : Controller{
+        // GET: Login
+        public ActionResult Index(){
+            return View();
+        }
 
         private MySqlConnection Con;//solo para test
 

@@ -27,6 +27,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TypeScriptToolsVersion>2.9</TypeScriptToolsVersion>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -274,7 +275,7 @@
     <Content Include="Views\Account\ForgotPassword.cshtml" />
     <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
-    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\SysAdmin\CrearUsuario.cshtml" />
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
     <Content Include="Views\Account\SendCode.cshtml" />
@@ -302,7 +303,6 @@
     <Content Include="Views\Usuario\CasoDeUso.cshtml" />
     <Content Include="Views\SysAdmin\VistaSysAdmin.cshtml" />
     <Content Include="Views\SysAdmin\CrearProyecto.cshtml" />
-    <Content Include="Views\SysAdmin\CrearUsuario.cshtml" />
     <Content Include="Views\JefeProyecto\VistaJP.cshtml" />
     <Content Include="Views\JefeProyecto\VistaAdministrarParticipantes.cshtml" />
   </ItemGroup>

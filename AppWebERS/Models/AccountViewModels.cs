@@ -98,7 +98,7 @@ namespace AppWebERS.Models
 
         [Required(ErrorMessage = "El campo Email es obligatorio.")]
         [EmailAddress]
-        [Display(Name = "RUt")]
+        [Display(Name = "Email")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "El campo Contraseña es obligatorio.")]

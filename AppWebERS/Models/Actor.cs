@@ -19,16 +19,16 @@ namespace AppWebERS.Models {
          * <param name = "numActual" > El número actual del actor.</param>
          * <param name = "numFuturo" > El número futuro del actor.</param>
          * <param name = "numContactables" > El número de contactables del actor.</param>
-         * <param name = "tipoUsuario" > El tipo de usuario del actor.</param>
+         * <param name = "nombre" > El nombre del actor.</param>
          **/
 
-        public Actor(int idActor, string descripcion, int numActual, int numFuturo, int numContactables, string tipoUsuario) {
+        public Actor(int idActor, string descripcion, int numActual, int numFuturo, int numContactables, string nombre) {
             this.IdActor = idActor;
             this.Descripcion = descripcion;
             this.NumActual = numActual;
             this.NumFuturo = numFuturo;
             this.NumContactables = numContactables;
-            this.TipoUsuario = tipoUsuario;
+            this.Nombre = nombre;
         }
 
         /**
@@ -82,19 +82,20 @@ namespace AppWebERS.Models {
         public int NumContactables {get; set;}
 
         /**
-         * Setter y Getter del tipo de usuario
+         * Setter y Getter del nombre
          * 
-         * <param name = "tipoUsuario" > El tipo de usuario que corresponde al actor.</param>
-         * <returns>Retorna el valor string del tipo de usuario.</returns>
+         * <param name = "nombre" > El nombre que corresponde al actor.</param>
+         * <returns>Retorna el valor string del nombre.</returns>
          * 
          **/
 
-        public string TipoUsuario {get; set;}
+        public string Nombre {get; set;}
 
         /**
          * Método para Crear un Actor
          * <returns>Retorna un boolean que indica la correcta creación del actor.</returns>
          **/
+
 
         public bool Crear() {
             return true;

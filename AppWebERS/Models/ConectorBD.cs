@@ -6,71 +6,79 @@ using System.Linq;
 using System.Web;
 
 namespace AppWebERS.Models{
-    /*
-     * Matías Parra
-     */
     public class ConectorBD{
-        private static string connStr = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["conexion"].ConnectionString;
-        
-        /**
-         * Método para ejecutar una query 
-         **/
+        private static readonly Lazy<ConectorBD> instance = new Lazy<ConectorBD>(() => new ConectorBD());
 
-        public DataSet ejecutarQuery(MySqlCommand command) {
-            var ds = new DataSet();
-            using (var conn = new MySqlConnection(connStr)) {
-                conn.Open();
-                var sqlTran = conn.BeginTransaction();
-                try {
-                    command.Connection = conn;
-                    command.Transaction = sqlTran;
-                    command.CommandType = CommandType.StoredProcedure;
-                    var sqlda = new MySqlDataAdapter(command);
-                    sqlda.SelectCommand.Transaction = sqlTran;
-                    sqlda.Fill(ds);
-                    sqlTran.Commit();
-                }
-                catch (Exception ex) {
-                    sqlTran.Rollback();
-                    Console.WriteLine(ex.ToString());
-                    command = null;
-                    throw ex;
-                }
-                finally {
-                    conn.Close();
-                }
+        private static MySqlConnection Con;
+
+        private ConectorBD()
+        {
+            string conS = "Server=localhost;Port=3306;Database=appers;Uid=conexion;password=1234";
+            Con = new MySqlConnection(conS);
+        }
+
+        public static ConectorBD Instance
+        {
+            get
+            {
+                return instance.Value;
             }
-            return ds;
+        }
+
+        public MySqlDataReader realizarConsulta(string consulta)
+        {
+            MySqlCommand command = Con.CreateCommand();
+            command.CommandText = consulta;
+            try
+            {
+                Con.Open();
+                MySqlDataReader reader = command.ExecuteReader();
+                if (reader.HasRows) return reader;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                Con.Close();
+            }
+            return null;
+        }
+
+        public void realizarConsultaNoQuery(string consulta)
+        {
+            MySqlCommand command = Con.CreateCommand();
+            command.CommandText = consulta;
+            try
+            {
+                Con.Open();
+                command.ExecuteNonQuery();
+                Con.Close();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                Con.Close();
+            }
+        }
+
+        //Cierra la conexión con la base de datos.
+        public void cerrarConexion()
+        {
+            Con.Close();
         }
 
         /**
-         * Método para ejecutar una query 
-         * <returns>Retorna un DataSet</returns>
-         **/
+         * 
+         * 
+         */
+        public DataSet getDataSet(MySqlDataReader reader)
+        {
+            DataSet dataSet = new DataSet();
 
-        public MySqlCommand ejecutarNoQuery(MySqlCommand command) {
-            using (var conn = new MySqlConnection(connStr)) {
-                conn.Open();
-                var sqlTran = conn.BeginTransaction();
-                try {
-                    command.Connection = conn;
-                    command.Transaction = sqlTran;
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.ExecuteNonQuery();
-                    sqlTran.Commit();
-                }
-                catch (Exception ex) {
-                    sqlTran.Rollback();
-                    Console.WriteLine(ex.ToString());
-                    command = null;
-                    throw ex;
-                }
-                finally {
-                    conn.Close();
-                }
-            }
-            return command;
+            DataTable dataTable = new DataTable();
+            dataTable.Load(reader);
+            dataSet.Tables.Add(dataTable);
+
+            return dataSet;
         }
-        
     }
 }

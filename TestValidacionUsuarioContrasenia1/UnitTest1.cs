@@ -13,7 +13,7 @@ namespace TestValidacionUsuarioContrasenia1
             String usuario = "";
             String contrasenia = "23131";
 
-            Assert.AreEqual(0,new LoginController().PermitirAccesoUsuario(usuario,contrasenia));
+            Assert.AreEqual(false,new LoginController().permitirAccesoUsuario(usuario,contrasenia));
         }
         [TestMethod]
         public void TestMethod2()
@@ -21,7 +21,7 @@ namespace TestValidacionUsuarioContrasenia1
             String usuario = "432423";
             String contrasenia = "";
 
-            Assert.AreEqual(0, new LoginController().PermitirAccesoUsuario(usuario, contrasenia));
+            Assert.AreEqual(false, new LoginController().permitirAccesoUsuario(usuario, contrasenia));
         }
         [TestMethod]
         public void TestMethod3()
@@ -29,7 +29,7 @@ namespace TestValidacionUsuarioContrasenia1
             String usuario = " ";
             String contrasenia = "23131";
 
-            Assert.AreEqual(0, new LoginController().PermitirAccesoUsuario(usuario, contrasenia));
+            Assert.AreEqual(false, new LoginController().permitirAccesoUsuario(usuario, contrasenia));
         }
         [TestMethod]
         public void TestMethod4()
@@ -37,7 +37,7 @@ namespace TestValidacionUsuarioContrasenia1
             String usuario = "123123";
             String contrasenia = "2 3131 ";
 
-            Assert.AreEqual(0, new LoginController().PermitirAccesoUsuario(usuario, contrasenia));
+            Assert.AreEqual(false, new LoginController().permitirAccesoUsuario(usuario, contrasenia));
         }
         [TestMethod]
         public void TestMethod5()
@@ -45,7 +45,7 @@ namespace TestValidacionUsuarioContrasenia1
             String usuario = "63464664564564564565456";
             String contrasenia = "23131";
 
-            Assert.AreEqual(0, new LoginController().PermitirAccesoUsuario(usuario, contrasenia));
+            Assert.AreEqual(false, new LoginController().permitirAccesoUsuario(usuario, contrasenia));
         }
         [TestMethod]
         public void TestMethod6()
@@ -53,7 +53,15 @@ namespace TestValidacionUsuarioContrasenia1
             String usuario = "23";
             String contrasenia = "2313lfhakdladhasjkdhaskdhasfbbf1";
 
-            Assert.AreEqual(0, new LoginController().PermitirAccesoUsuario(usuario, contrasenia));
+            Assert.AreEqual(false, new LoginController().permitirAccesoUsuario(usuario, contrasenia));
+        }
+        [TestMethod]
+        public void TestMethod7()
+        {
+            String usuario = "18884898";
+            String contrasenia = "NFS0128";
+
+            Assert.AreEqual(true, new LoginController().permitirAccesoUsuario(usuario, contrasenia));
         }
     }
 }

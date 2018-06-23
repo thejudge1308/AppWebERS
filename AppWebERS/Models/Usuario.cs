@@ -1,19 +1,126 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 
-namespace AppWebERS.Models
-{
-    public class Usuario
-    {
-        public string rut { get; set; }
-        public string nombre { get; set; }
-        public string correo_electronico { get; set; }
-        public string contrasenia { get; set; }
-        public string tipo { get; set; }
-        public string estado { get; set; }
+namespace AppWebERS.Models{
+    /*
+     * Matías Parra
+     */
+    public class Usuario{
+        /*
+         * Constructor vacío de la clase usuario (se agrega para cualquier otro uso que se le de en un futuro).
+         * 
+         */
+        public Usuario(){
 
+        }
+        /*
+         * Constructor de la clase usuario.
+         * 
+         * <param name="rut">El rut del usuario.</param>
+         * <param name="nombre">El nombre del usuario.</param>
+         * <param name="correoElectronico">El correo electrónico del usuario.</param>
+         * <param name="contrasenia">La contraseña del usuario.</param>
+         * <param name="tipo">El tipo del usuario (administrador, jefe de proyecto y usuario normal).</param>
+         * <param name="tipo">El estado del usuario (true para habilitado, false para deshabilitado).</param>
+         * 
+         */
+        public Usuario(string rut, string nombre, string correoElectronico, string contrasenia, string tipo, bool estado){
+            this.Rut = rut;
+            this.Nombre = nombre;
+            this.CorreoElectronico = correoElectronico;
+            this.Contrasenia = contrasenia;
+            this.Tipo = tipo;
+            this.Estado = estado;
+        }
+
+        /*
+         * Setter y getter de rut del usuario.
+         * 
+         * <param name="rut">El rut del usuario.</param>
+         * 
+         * <returns>Retorna el valor string del rut.</returns>
+         * 
+         */
+        public string Rut {get; set;}
+
+        /*
+         * Setter y getter de nombre del usuario.
+         * 
+         * <param name="nombre">El nombre del usuario.</param>
+         * 
+         * <returns>Retorna el valor string del rut.</returns>
+         * 
+         */
+        public string Nombre {get; set;}
+
+        /*
+         * Setter y getter de correo electrónico del usuario.
+         * 
+         * <param name="correoElectronico">El correo electrónico del usuario.</param>
+         * 
+         * <returns>Retorna el valor string del correo electrónico.</returns>
+         * 
+         */
+        public string CorreoElectronico {get; set;}
+
+        /*
+         * Setter y getter de contraseña del usuario.
+         * 
+         * <param name="contrasenia">La contraseña del usuario.</param>
+         * 
+         * <returns>Retorna el valor string de la contraseña.</returns>
+         * 
+         */
+        public string Contrasenia {get; set;}
+
+        /*
+         * Setter y getter de tipo del usuario.
+         * 
+         * <param name="tipo">El tipo del usuario (administrador, jefe de proyecto y usuario normal).</param>
+         * 
+         * <returns>Retorna el valor string del tipo.</returns>
+         * 
+         */
+        public string Tipo {get; set;}
+
+        /*
+         * Setter y getter de estado del usuario.
+         * 
+         * <param name="estado">El estado del usuari(true es habilitado, false deshabilitado).</param>
+         * 
+         * <returns>Retorna el valor bool del estado.</returns>
+         * 
+         */
+        public bool Estado { get; set; }
+
+        /**
+         * Método para listar todos los usuarios existentes
+         **/
+
+        public void ListarTodos() {
+        }
+
+        /**
+         * Método para listar un usuario específico
+         * <returns>Retorna un usuario específico.</returns>
+         **/
+
+       public void ListarEspecifico(Usuario usuario) {
+            
+        }
+        
+
+        /**
+         * Método para Crear un Usuario
+         * <returns>Retorna un boolean que indica la correcta creación del usuario.</returns>
+         **/
+
+        public bool Crear() {
+            return true;
+        }
 
         /*
          * Juan Abello

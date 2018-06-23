@@ -1,14 +1,12 @@
-﻿using System;
+﻿using AppWebERS.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace AppWebERS.Controllers
-{
-    public class UsuarioController : Controller
-    {
-
-
+using System.Web.Mvc;
+namespace AppWebERS.Controllers {
+    public class UsuarioController : Controller {
         /*
          * Juan Abello
          * Obtiene los datos de la vista del formulario para modificar la cuenta
@@ -41,4 +39,29 @@ namespace AppWebERS.Controllers
 
 
     }
+        public ActionResult Index() {
+            return View();
+        }
+
+        public void Crear() {
+
+        }
+
+        public void EditarProyecto() {
+
+        }
+
+        public void CrearRequisito() {
+
+        }
+
+
+        public void CrearCasoDeUso() {
+        }
+
+        public void CreaeActor(Proyecto  proyecto) {
+
+        }
+
+       
 }

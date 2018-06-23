@@ -5,8 +5,10 @@ using System.Linq;
 using System.Web;
 
 using System.Web.Mvc;
-namespace AppWebERS.Controllers {
-    public class UsuarioController : Controller {
+namespace AppWebERS.Controllers
+{
+    public class UsuarioController : Controller
+    {
         /*
          * Juan Abello
          * Obtiene los datos de la vista del formulario para modificar la cuenta
@@ -15,10 +17,10 @@ namespace AppWebERS.Controllers {
          */
 
         [HttpGet]
-        public ActionResult modificarCuenta(string rutUsuario)
+        public ActionResult ModificarCuenta(string rutUsuario,string nombre,string correoElectronico,string estado,string contrasenia,string tipo)
         {
-            Usuario u = new Usuario();
-            u.rutUsuario = rutUsuario;
+            Usuario u = new Usuario(rutUsuario,nombre,correoElectronico,contrasenia,tipo,estado);
+            u.Rut = rutUsuario;
             return View(u);
         }
 
@@ -29,39 +31,47 @@ namespace AppWebERS.Controllers {
          * return RedirectToAction
          */
 
-        [HttPost]
-        public ActionResult modificarCuenta(Usuario usuario)
+        [HttpPost]
+        public ActionResult ModificarCuenta(Usuario usuario)
         {
-            usuario.modificarUsuario();
+            usuario.Modificar();
             return RedirectToAction("Index");
         }
 
 
 
-    }
-        public ActionResult Index() {
+
+        public ActionResult Index()
+        {
             return View();
         }
 
-        public void Crear() {
+        public void Crear()
+        {
 
         }
 
-        public void EditarProyecto() {
+        public void EditarProyecto()
+        {
 
         }
 
-        public void CrearRequisito() {
+        public void CrearRequisito()
+        {
 
         }
 
 
-        public void CrearCasoDeUso() {
+        public void CrearCasoDeUso()
+        {
         }
 
-        public void CreaeActor(Proyecto  proyecto) {
+        public void CreaeActor(Proyecto proyecto)
+        {
 
         }
 
-       
+
+    }
 }
+

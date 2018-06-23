@@ -1,21 +1,29 @@
-﻿using System;
+﻿using AppWebERS.Models;
+using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
 namespace AppWebERS.Controllers{
-    public class LoginController : Controller{
+    public class LoginController : Controller
+    {
         // GET: Login
         public ActionResult Index(){
             return View();
         }
 
-        private MySqlConnection Con;//solo para test
+        //private MySqlConnection Con;//solo para test
+        private ConectorBD conexion;
+
 
         public LoginController()
         {
-            Con = new MySqlConnection("Server=localhost;Port=3306;Database=appers;Uid=conexion;Password=1234");
+            //this.Con = new MySqlConnection("Server=localhost;Port=3306;Database=appers;Uid=conexion;Password=1234");
+            this.conexion = ConectorBD.Instance;
+            
         }
 
 
@@ -33,7 +41,7 @@ namespace AppWebERS.Controllers{
          * </returns>
          * 
          */
-        private Boolean permitirAccesoUsuario(String usuario, String contrasenia)
+        public Boolean permitirAccesoUsuario(String usuario, String contrasenia)
         {
             //Se realizan las validaciones de los campos
             if (this.verificarCampoVacio(usuario) || this.verificarCampoVacio(contrasenia))
@@ -52,7 +60,7 @@ namespace AppWebERS.Controllers{
             {
                 return false;
             }
-            if (!this.validarContrasenia(usuario,contrasenia))
+            if (!this.validarContrasenia2(usuario,contrasenia))
             {
                 return false;
             }
@@ -78,16 +86,32 @@ namespace AppWebERS.Controllers{
             String consultaExistaUsuario = "SELECT usuario.rut as rut" +
                                             " FROM usuario" +
                                             " WHERE usuario.rut =  '"+ usuario +"';";
-            MySqlDataReader readerUsuario = this.realizarConsulta(consultaExistaUsuario);
+            MySqlDataReader readerUsuario = this.conexion.realizarConsulta(consultaExistaUsuario);
             if (readerUsuario ==null)
             {
-                Con.Close();
+                conexion.cerrarConexion();
                 return false;
             }
-            Con.Close();
+            conexion.cerrarConexion();
             return true;
             
         }
+
+        /*private Boolean validarUsuario2(String usuario)
+        {
+            String consultaExistaUsuario = "SELECT usuario.rut as rut" +
+                                            " FROM usuario" +
+                                            " WHERE usuario.rut =  '" + usuario + "';";
+            MySqlCommand cmd = new MySqlCommand(consultaExistaUsuario);
+            DataSet user = this.conexion.ejecutarQuery(cmd);
+            DataTable tablaData = user.Tables[0];
+            DataRow dataRow = tablaData.Rows[0];
+            if (dataRow != null)
+            {
+                return true;
+            }
+            return false;
+        }*/
 
         /**
          * <autor>Diego Iturriaga</autor>
@@ -106,7 +130,7 @@ namespace AppWebERS.Controllers{
         private Boolean validarContrasenia(String usuario, String contrasenia)
         {
             string consulta = "SELECT usuario.contrasenia FROM usuario WHERE rut = '"+usuario+"';";
-            MySqlDataReader reader = this.realizarConsulta(consulta);
+            MySqlDataReader reader = this.conexion.realizarConsulta(consulta);
             
             if (reader != null)
             { 
@@ -115,39 +139,43 @@ namespace AppWebERS.Controllers{
                 //Desencriptar contraseña de la BD
                 if (contrasennaBD==contrasenia)
                 {
-                    Con.Close();
+                    conexion.cerrarConexion();
                     return true;
                 }
                 else {
-                    Con.Close();
+                    conexion.cerrarConexion();
                     return false;
                 }
                 
             }
-            Con.Close();
+            conexion.cerrarConexion();
             return false;
         }
 
-        /**
-         * 
-         */
-        private MySqlDataReader realizarConsulta(string consulta)
-        { 
-            MySqlCommand command = Con.CreateCommand();
-            command.CommandText = consulta;
-            try
+        private Boolean validarContrasenia2(String usuario, String contrasenia)
+        {
+            string consulta = "SELECT usuario.contrasenia FROM usuario WHERE rut = '" + usuario + "';";
+            
+            MySqlDataReader reader = this.conexion.realizarConsulta(consulta);
+            DataSet user = this.conexion.getDataSet(reader);
+            DataTable tablaData = user.Tables[0];
+            DataRow dataRow = tablaData.Rows[0];
+            if (dataRow!=null)
             {
-                Con.Open();
-                MySqlDataReader reader = command.ExecuteReader();
-                if (reader.HasRows) return reader;
+                string contrasennaBD = dataRow["contrasenia"].ToString();
+                if (contrasenia == contrasennaBD)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
-            catch (Exception e)
-            {
-                Con.Close();
-                Console.WriteLine(e.Message);
-            }
-            return null;
+
+            return false;
         }
+
 
         /**
          * <author>Roberto Ureta</author>
@@ -203,7 +231,7 @@ namespace AppWebERS.Controllers{
             if (permitirAccesoUsuario(id, contrasenia))
             {
                 string consulta = "SELECT * FROM Usuario WHERE rut='" + id + "';";
-                MySqlDataReader data = this.realizarConsulta(consulta);
+                MySqlDataReader data = this.conexion.realizarConsulta(consulta);
                 if (data != null)
                 {
                     data.Read();
@@ -213,22 +241,22 @@ namespace AppWebERS.Controllers{
                     string contraseniaBD = data["contrasenia"].ToString();
                     string tipoBD = data["tipo"].ToString();
                     string stringEstadoBD = data["estado"].ToString();
-                    //bool estadoBD = false;
-                    //if (Int32.Parse(stringEstadoBD)==1) estadoBD = true;
-                    Usuario usuario = new Usuario(rutBD, nombreBD, correoBD, contraseniaBD, tipoBD/*,estadoBD*/);
-                    Con.Close();
+                    bool estadoBD = false;
+                    if (Int32.Parse(stringEstadoBD)==1) estadoBD = true;
+                    Usuario usuario = new Usuario(rutBD, nombreBD, correoBD, contraseniaBD, tipoBD,estadoBD);
+                    this.conexion.cerrarConexion();
                     return usuario;
 
                 }
                 else
                 {
-                    Con.Close();
+                    this.conexion.cerrarConexion();
                     return null;
                 }
             }
             else
             {
-                Con.Close();
+                this.conexion.cerrarConexion();
                 return null;
             }
         }

@@ -67,8 +67,14 @@ namespace AppWebERS.Models{
         }
 
         /**
-         * 
-         * 
+         * <autor>Diego Iturriaga</autor>
+         * <summary>
+         * Transforma un objeto tipo MySqlDataReader en un objeto de tipo DataSet.
+         * </summary> 
+         * <param name="reader"> objeto MySqlDataReader a transformar</param>
+         * <returns> 
+         * Retorna un objeto DataSet que contiene una tabla proveniente del objeto MySqlDataReader.
+         * </returns>
          */
         public DataSet getDataSet(MySqlDataReader reader)
         {

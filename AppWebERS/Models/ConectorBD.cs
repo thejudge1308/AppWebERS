@@ -24,8 +24,18 @@ namespace AppWebERS.Models{
                 return instance.Value;
             }
         }
-
-        public MySqlDataReader realizarConsulta(string consulta)
+        /**
+         * <autor>Diego Iturriaga-Ariel Cornejo</autor>
+         * <summary>
+         * Metodo encargado de realizar las conusltas en la base de datos
+         * </summary> 
+         * <param name="consulta"> String con la consulta a realizae</param>
+         * <returns> 
+         * Retorna un objeto MySqlDataReader que contendra los datos necesarios de la tabla si es que la consulta fue exitosa y
+         * en caso contrario retornara un objeto null.
+         * </returns>
+         */
+        public MySqlDataReader RealizarConsulta(string consulta)
         {
             MySqlCommand command = Con.CreateCommand();
             command.CommandText = consulta;
@@ -43,7 +53,7 @@ namespace AppWebERS.Models{
             return null;
         }
 
-        public void realizarConsultaNoQuery(string consulta)
+        public void RealizarConsultaNoQuery(string consulta)
         {
             MySqlCommand command = Con.CreateCommand();
             command.CommandText = consulta;
@@ -61,7 +71,7 @@ namespace AppWebERS.Models{
         }
 
         //Cierra la conexión con la base de datos.
-        public void cerrarConexion()
+        public void CerrarConexion()
         {
             Con.Close();
         }
@@ -76,7 +86,7 @@ namespace AppWebERS.Models{
          * Retorna un objeto DataSet que contiene una tabla proveniente del objeto MySqlDataReader.
          * </returns>
          */
-        public DataSet getDataSet(MySqlDataReader reader)
+        public DataSet GetDataSet(MySqlDataReader reader)
         {
             DataSet dataSet = new DataSet();
 

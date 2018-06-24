@@ -41,26 +41,26 @@ namespace AppWebERS.Controllers{
          * </returns>
          * 
          */
-        public Boolean permitirAccesoUsuario(String usuario, String contrasenia)
+        private Boolean PermitirAccesoUsuario(String usuario, String contrasenia)
         {
             //Se realizan las validaciones de los campos
             if (this.verificarCampoVacio(usuario) || this.verificarCampoVacio(contrasenia))
             {
                 return false;
             }
-            if (this.verificarEspaciosEnCampo(usuario))
+            if (this.VerificarEspaciosEnCampo(usuario))
             {
                 return false;
             }
-            if (!this.verificarLargoCampo(usuario,12) || !this.verificarLargoCampo(contrasenia,16))
+            if (!this.VerificarLargoCampo(usuario,12) || !this.VerificarLargoCampo(contrasenia,16))
             {
                 return false;
             } 
-            if (!validarUsuario(usuario))
+            if (!ValidarUsuario(usuario))
             {
                 return false;
             }
-            if (!this.validarContrasenia2(usuario,contrasenia))
+            if (!this.ValidarContrasenia(usuario,contrasenia))
             {
                 return false;
             }
@@ -81,38 +81,21 @@ namespace AppWebERS.Controllers{
          * valor booleano, true si existe o false en caso contrario
          * </returns>
          */
-        private Boolean validarUsuario(String usuario)
+        private Boolean ValidarUsuario(String usuario)
         {
             String consultaExistaUsuario = "SELECT usuario.rut as rut" +
                                             " FROM usuario" +
                                             " WHERE usuario.rut =  '"+ usuario +"';";
-            MySqlDataReader readerUsuario = this.conexion.realizarConsulta(consultaExistaUsuario);
+            MySqlDataReader readerUsuario = this.conexion.RealizarConsulta(consultaExistaUsuario);
             if (readerUsuario ==null)
             {
-                conexion.cerrarConexion();
+                conexion.CerrarConexion();
                 return false;
             }
-            conexion.cerrarConexion();
+            conexion.CerrarConexion();
             return true;
             
         }
-
-        /*private Boolean validarUsuario2(String usuario)
-        {
-            String consultaExistaUsuario = "SELECT usuario.rut as rut" +
-                                            " FROM usuario" +
-                                            " WHERE usuario.rut =  '" + usuario + "';";
-            MySqlCommand cmd = new MySqlCommand(consultaExistaUsuario);
-            DataSet user = this.conexion.ejecutarQuery(cmd);
-            DataTable tablaData = user.Tables[0];
-            DataRow dataRow = tablaData.Rows[0];
-            if (dataRow != null)
-            {
-                return true;
-            }
-            return false;
-        }*/
-
         /**
          * <autor>Diego Iturriaga</autor>
          * <summary>
@@ -127,10 +110,10 @@ namespace AppWebERS.Controllers{
          * que se verifica es incorrecta al no coincidir con la contraseña asociada al usuario en la base da datos
          * </returns>
          */
-        private Boolean validarContrasenia(String usuario, String contrasenia)
+        private Boolean ValidarContrasenia(String usuario, String contrasenia)
         {
             string consulta = "SELECT usuario.contrasenia FROM usuario WHERE rut = '"+usuario+"';";
-            MySqlDataReader reader = this.conexion.realizarConsulta(consulta);
+            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
             
             if (reader != null)
             { 
@@ -139,44 +122,18 @@ namespace AppWebERS.Controllers{
                 //Desencriptar contraseña de la BD
                 if (contrasennaBD==contrasenia)
                 {
-                    conexion.cerrarConexion();
+                    conexion.CerrarConexion();
                     return true;
                 }
                 else {
-                    conexion.cerrarConexion();
+                    conexion.CerrarConexion();
                     return false;
                 }
                 
             }
-            conexion.cerrarConexion();
+            conexion.CerrarConexion();
             return false;
         }
-
-        private Boolean validarContrasenia2(String usuario, String contrasenia)
-        {
-            string consulta = "SELECT usuario.contrasenia FROM usuario WHERE rut = '" + usuario + "';";
-            
-            MySqlDataReader reader = this.conexion.realizarConsulta(consulta);
-            DataSet user = this.conexion.getDataSet(reader);
-            DataTable tablaData = user.Tables[0];
-            DataRow dataRow = tablaData.Rows[0];
-            if (dataRow!=null)
-            {
-                string contrasennaBD = dataRow["contrasenia"].ToString();
-                if (contrasenia == contrasennaBD)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-
-            return false;
-        }
-
-
         /**
          * <author>Roberto Ureta</author>
          * <summary>
@@ -197,7 +154,7 @@ namespace AppWebERS.Controllers{
          *<param name="texto">Contiene un string con el texto a verificar</param>
          * <returns> true si contiene espacios, false en caso contrario</returns>
          */
-        private Boolean verificarEspaciosEnCampo(string texto) {
+        private Boolean VerificarEspaciosEnCampo(string texto) {
             return texto.Contains(" ");
         }
 
@@ -211,7 +168,7 @@ namespace AppWebERS.Controllers{
          * <param name="largoMaximo">Entero que representa el largo maximo que puede tener el string texto</param>
          * <returns>true si texto es igual o menor que el largoMaximo, false en caso contrario</returns>
          */
-        private Boolean verificarLargoCampo(string texto, int largoMaximo) {
+        private Boolean VerificarLargoCampo(string texto, int largoMaximo) {
             return texto.Length <= largoMaximo;
         }
 
@@ -226,12 +183,12 @@ namespace AppWebERS.Controllers{
          * <param name="contrasenia">Contiene un string con la contrasenia relacionada con el id o rut que se encuentra en la bd</param>
          * <returns>Debe retornar el objeto Usuario, si no se logro obtener se retorna null</returns>
          */
-        public Usuario ingresar(string id, string contrasenia)
+        public Usuario Ingresar(string id, string contrasenia)
         {
-            if (permitirAccesoUsuario(id, contrasenia))
+            if (PermitirAccesoUsuario(id, contrasenia))
             {
                 string consulta = "SELECT * FROM Usuario WHERE rut='" + id + "';";
-                MySqlDataReader data = this.conexion.realizarConsulta(consulta);
+                MySqlDataReader data = this.conexion.RealizarConsulta(consulta);
                 if (data != null)
                 {
                     data.Read();
@@ -244,19 +201,19 @@ namespace AppWebERS.Controllers{
                     bool estadoBD = false;
                     if (Int32.Parse(stringEstadoBD)==1) estadoBD = true;
                     Usuario usuario = new Usuario(rutBD, nombreBD, correoBD, contraseniaBD, tipoBD,estadoBD);
-                    this.conexion.cerrarConexion();
+                    this.conexion.CerrarConexion();
                     return usuario;
 
                 }
                 else
                 {
-                    this.conexion.cerrarConexion();
+                    this.conexion.CerrarConexion();
                     return null;
                 }
             }
             else
             {
-                this.conexion.cerrarConexion();
+                this.conexion.CerrarConexion();
                 return null;
             }
         }
@@ -268,7 +225,7 @@ namespace AppWebERS.Controllers{
         * <param name="usuario">Objeto usuario que sera comprobado</param>
         * <returns>Valor booleano, true si esta habilitado y false en caso contrario</returns>
         */
-        public Boolean comprobarEstadoUsuario(Usuario usuario)
+        public Boolean ComprobarEstadoUsuario(Usuario usuario)
         {
             if (usuario.Estado)
             {

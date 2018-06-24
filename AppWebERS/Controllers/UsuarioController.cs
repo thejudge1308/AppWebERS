@@ -72,14 +72,13 @@ namespace AppWebERS.Controllers
         }
 
 
-      public class UsuarioController : Controller
-      {
-          public ActionResult ListarUsuarios()
-          {
-              return View();
-          }
+      
+        public ActionResult ListarUsuarios()
+        {
+            return View();
+        }
   
   
-      }
+      
     }
 }

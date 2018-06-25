@@ -17,7 +17,7 @@ namespace AppWebERS.Controllers
          */
 
         [HttpGet]
-        public ActionResult ModificarCuenta(string rutUsuario,string nombre,string correoElectronico,string estado,string contrasenia,string tipo)
+        public ActionResult ModificarCuenta(string rutUsuario,string nombre,string correoElectronico,bool estado,string contrasenia,string tipo)
         {
             Usuario u = new Usuario(rutUsuario,nombre,correoElectronico,contrasenia,tipo,estado);
             u.Rut = rutUsuario;

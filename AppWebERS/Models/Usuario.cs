@@ -29,7 +29,7 @@ namespace AppWebERS.Models{
          * <param name="tipo">El estado del usuario (true para habilitado, false para deshabilitado).</param>
          * 
          */
-        public Usuario(string rut, string nombre, string correoElectronico, string contrasenia, string tipo, string estado){
+        public Usuario(string rut, string nombre, string correoElectronico, string contrasenia, string tipo, bool estado){
             this.Rut = rut;
             this.Nombre = nombre;
             this.CorreoElectronico = correoElectronico;
@@ -96,7 +96,7 @@ namespace AppWebERS.Models{
          * <returns>Retorna el valor bool del estado.</returns>
          * 
          */
-        public string Estado { get; set; }
+        public bool Estado { get; set; }
 
         /**
          * Método para listar todos los usuarios existentes
@@ -223,7 +223,7 @@ namespace AppWebERS.Models{
                     this.Nombre = "Not Found";
                     this.CorreoElectronico = "Not Found";
                     this.Contrasenia = "Not Found";
-                    this.Estado = "Not Found";
+                    this.Estado = false;
                     this.Tipo = "Not Found";
                     //this.rut = -1;
                 }
@@ -247,7 +247,14 @@ namespace AppWebERS.Models{
             this.CorreoElectronico = Dr["correo_electronico"].ToString();
             this.Nombre = Dr["nombre"].ToString();
             this.Contrasenia = Dr["contrasenia"].ToString();
-            this.Estado = Dr["estado"].ToString();
+            if(Dr["estado"].ToString() == "1")
+            {
+                this.Estado = true;
+            }
+            else
+            {
+                this.Estado = false;
+            }
             this.Tipo = Dr["tipo"].ToString();
         }
 

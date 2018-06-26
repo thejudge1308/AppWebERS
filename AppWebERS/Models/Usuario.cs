@@ -132,8 +132,8 @@ namespace AppWebERS.Models{
                     string contrasenia = reader.GetString(3);
                     string tipo = reader.GetString(4);
                     bool estado = reader.GetBoolean(5);
-                    string estadoConvert = (estado) ? "Habilitado" : "Deshabilitado";
-                    listaUsuarios.Add(new Usuario (rut,nombre,correo,contrasenia,tipo,estadoConvert) );
+                    
+                    listaUsuarios.Add(new Usuario (rut,nombre,correo,contrasenia,tipo,estado) );
                 }
 
                 this.conector.CerrarConexion();

@@ -16,6 +16,19 @@ namespace AppWebERS.Controllers{
             return View();
         }
 
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult Index(LoginViewModel model, string returnUrl)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            return this.Ingresar(model.Id, model.Contrasenia);
+        }
+
         //private MySqlConnection Con;//solo para test
         private ConectorBD conexion;
 
@@ -185,7 +198,6 @@ namespace AppWebERS.Controllers{
          * <returns>Debe retornar el objeto Usuario, si no se logro obtener se retorna null</returns>
          */
 
-        [HttpPost]
         public ActionResult Ingresar(string Rut, string contrasenia)
         {
             if (PermitirAccesoUsuario(Rut, contrasenia))
@@ -201,9 +213,9 @@ namespace AppWebERS.Controllers{
                     string contraseniaBD = data["contrasenia"].ToString();
                     string tipoBD = data["tipo"].ToString();
                     string stringEstadoBD = data["estado"].ToString();
-                    string estadoBD = "Deshabilitado";
-                    if (Int32.Parse(stringEstadoBD)==1) estadoBD = "Habilitado";
-                    Usuario usuario = new Usuario(rutBD, nombreBD, correoBD, contraseniaBD, tipoBD,estadoBD);
+                    bool estadoBD = false;
+                    if (Int32.Parse(stringEstadoBD) == 1) estadoBD = true;
+                    Usuario usuario = new Usuario(rutBD, nombreBD, correoBD, contraseniaBD, tipoBD, estadoBD);
                     this.conexion.CerrarConexion();
                     return RedirectToAction("ListarUsuarios", "Usuario");
 
@@ -211,13 +223,15 @@ namespace AppWebERS.Controllers{
                 else
                 {
                     this.conexion.CerrarConexion();
-                    return null;
+                    ViewBag.Message = "Acceso denegado";
+                    return View();
                 }
             }
             else
             {
                 this.conexion.CerrarConexion();
-                return null;
+                ViewBag.Message = "Datos no válidos. Acceso denegado";
+                return View();
             }
         }
         /**
@@ -228,9 +242,9 @@ namespace AppWebERS.Controllers{
         * <param name="usuario">Objeto usuario que sera comprobado</param>
         * <returns>Valor booleano, true si esta habilitado y false en caso contrario</returns>
         */
-        public Boolean ComprobarEstadoUsuario(Usuario usuario)
+        public bool ComprobarEstadoUsuario(Usuario usuario)
         {
-            if (usuario.Estado == "Habilitado")
+            if (usuario.Estado.Equals( "Habilitado"))
             {
                 return true;
             }

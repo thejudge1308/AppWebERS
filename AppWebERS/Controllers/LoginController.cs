@@ -231,7 +231,7 @@ namespace AppWebERS.Controllers{
             {
                 this.conexion.CerrarConexion();
                 ViewBag.Message = "Datos no válidos. Acceso denegado";
-                return null;
+                return View();
             }
         }
         /**

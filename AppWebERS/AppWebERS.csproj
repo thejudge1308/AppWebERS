@@ -246,6 +246,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\listaUsuario.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\popper-utils.js" />
     <Content Include="Scripts\popper-utils.min.js" />
@@ -309,6 +310,9 @@
     <Content Include="Views\SysAdmin\CrearProyecto.cshtml" />
     <Content Include="Views\JefeProyecto\VistaJP.cshtml" />
     <Content Include="Views\JefeProyecto\VistaAdministrarParticipantes.cshtml" />
+    <Content Include="Views\Usuario\ListarUsuarios.cshtml" />
+    <Content Include="Views\Usuario\_ModalPartial.cshtml" />
+    <Content Include="Views\Usuario\_AlertaDeshabilitacionPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -353,6 +357,7 @@
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
+      <UserProperties Content_4bootstrap_1min_1css_1map__JSONSchema="" />
     </VisualStudio>
   </ProjectExtensions>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

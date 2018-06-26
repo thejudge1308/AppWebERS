@@ -1,5 +1,5 @@
 ﻿/**
- * @Autor: Gabriel Sanhueza
+ * Autor: Gabriel Sanhueza
  */
 $(document).ready(() => {
     let alerta = $('#alert');
@@ -55,5 +55,10 @@ $(document).ready(() => {
      */
     $('#button-alert').on('click', () => {
         ocultarAlerta();
+    })
+
+    //Seleccionan los eventos que abren el modal de modificaciones
+    $("[data-target='#exampleModal']").on('click', (event) => {
+        $("#nombreModal").text(event.target.dataset.nombre);
     })
 });

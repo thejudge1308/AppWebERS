@@ -18,6 +18,10 @@ namespace AppWebERS.Models{
         public Usuario(){
 
         }
+
+        //privatw conector solo para testing.
+        private ConectorBD conector = ConectorBD.Instance;
+
         /*
          * Constructor de la clase usuario.
          * 
@@ -36,7 +40,12 @@ namespace AppWebERS.Models{
             this.Contrasenia = contrasenia;
             this.Tipo = tipo;
             this.Estado = estado;
+             
+                    
+            
         }
+
+       
 
         /*
          * Setter y getter de rut del usuario.
@@ -102,7 +111,35 @@ namespace AppWebERS.Models{
          * Método para listar todos los usuarios existentes
          **/
 
-        public void ListarTodos() {
+        public List<Usuario> ListarTodos() {
+
+            List<Usuario> listaUsuarios = new List<Usuario>();
+
+            string consulta = "SELECT * FROM usuario";
+            MySqlDataReader reader = this.conector.RealizarConsulta(consulta);
+            if(reader == null)
+            {
+                this.conector.CerrarConexion();
+                return null;
+            }
+            else
+            {
+               while (reader.Read())
+                {
+                    string rut = reader.GetString(0);
+                    string nombre = reader.GetString(1);
+                    string correo = reader.GetString(2);
+                    string contrasenia = reader.GetString(3);
+                    string tipo = reader.GetString(4);
+                    bool estado = reader.GetBoolean(5);
+                    string estadoConvert = (estado) ? "Habilitado" : "Deshabilitado";
+                    listaUsuarios.Add(new Usuario (rut,nombre,correo,contrasenia,tipo,estadoConvert) );
+                }
+
+                this.conector.CerrarConexion();
+                return listaUsuarios;
+            }
+  
         }
 
         /**
@@ -124,6 +161,27 @@ namespace AppWebERS.Models{
             return true;
         }
 
+
+        public bool ModificarUsuario(string rutAModificar, string nombre, string correo,
+            string contrasenia,string tipo,bool estado)
+        {
+            string consulta = "UPDATE usuario SET nombre =" + nombre + "," + "correo_electronico =" +
+            correo + "," + "contrasenia =" + contrasenia + "," + "tipo =" + tipo + "," + "estado =" + estado +
+            "WHERE rut =" + rutAModificar;
+             MySqlDataReader reader = this.conector.RealizarConsulta(consulta);
+            if (reader ==null)
+            {
+                this.conector.CerrarConexion();
+                return false;
+            }
+            else
+            {
+                this.conector.CerrarConexion();
+                return true;
+            }
+                
+        }
+
         /*
          * Juan Abello
          * Envia los datos modificados a la consulta para ser cambiados en la base de datos
@@ -135,6 +193,8 @@ namespace AppWebERS.Models{
             {
                 Conn.Open();
                 var SqlTran = Conn.BeginTransaction();
+                
+
                 try
                 {
                     var Command = new MySqlCommand() { CommandText = "modificarUsuario", CommandType = CommandType.StoredProcedure };

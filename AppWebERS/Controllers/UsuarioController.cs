@@ -72,6 +72,17 @@ namespace AppWebERS.Controllers
         }
 
 
+      
+        public ActionResult ListarUsuarios()
+        {
+            List<Usuario> usuarios = new Usuario().ListarTodos();
+            return View(usuarios);
+        }
+
+        
+        
+  
+  
+      
     }
 }
-

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
+
 namespace AppWebERS.Controllers{
     public class LoginController : Controller
     {
@@ -183,11 +184,13 @@ namespace AppWebERS.Controllers{
          * <param name="contrasenia">Contiene un string con la contrasenia relacionada con el id o rut que se encuentra en la bd</param>
          * <returns>Debe retornar el objeto Usuario, si no se logro obtener se retorna null</returns>
          */
-        public Usuario Ingresar(string id, string contrasenia)
+
+        [HttpPost]
+        public ActionResult Ingresar(string Rut, string contrasenia)
         {
-            if (PermitirAccesoUsuario(id, contrasenia))
+            if (PermitirAccesoUsuario(Rut, contrasenia))
             {
-                string consulta = "SELECT * FROM Usuario WHERE rut='" + id + "';";
+                string consulta = "SELECT * FROM Usuario WHERE rut='" + Rut + "';";
                 MySqlDataReader data = this.conexion.RealizarConsulta(consulta);
                 if (data != null)
                 {
@@ -198,11 +201,11 @@ namespace AppWebERS.Controllers{
                     string contraseniaBD = data["contrasenia"].ToString();
                     string tipoBD = data["tipo"].ToString();
                     string stringEstadoBD = data["estado"].ToString();
-                    bool estadoBD = false;
-                    if (Int32.Parse(stringEstadoBD)==1) estadoBD = true;
+                    string estadoBD = "Deshabilitado";
+                    if (Int32.Parse(stringEstadoBD)==1) estadoBD = "Habilitado";
                     Usuario usuario = new Usuario(rutBD, nombreBD, correoBD, contraseniaBD, tipoBD,estadoBD);
                     this.conexion.CerrarConexion();
-                    return usuario;
+                    return RedirectToAction("ListarUsuarios", "Usuario");
 
                 }
                 else
@@ -227,7 +230,7 @@ namespace AppWebERS.Controllers{
         */
         public Boolean ComprobarEstadoUsuario(Usuario usuario)
         {
-            if (usuario.Estado)
+            if (usuario.Estado == "Habilitado")
             {
                 return true;
             }

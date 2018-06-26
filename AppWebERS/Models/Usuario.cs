@@ -5,6 +5,8 @@ using System.Configuration;
 using System.Data;
 using System.Linq;
 using System.Web;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace AppWebERS.Models{
     /*
@@ -18,6 +20,10 @@ namespace AppWebERS.Models{
         public Usuario(){
 
         }
+
+        //privatw conector solo para testing.
+        private ConectorBD conector = ConectorBD.Instance;
+
         /*
          * Constructor de la clase usuario.
          * 
@@ -36,7 +42,12 @@ namespace AppWebERS.Models{
             this.Contrasenia = contrasenia;
             this.Tipo = tipo;
             this.Estado = estado;
+             
+                    
+            
         }
+
+       
 
         /*
          * Setter y getter de rut del usuario.
@@ -98,11 +109,44 @@ namespace AppWebERS.Models{
          */
         public bool Estado { get; set; }
 
-        /**
-         * Método para listar todos los usuarios existentes
-         **/
+        /*<autor>Diego Matus</autor>
+         * <summary>Metodo encargado de obtener la lista usuarios registrados en el sistema y de 
+         * almacenarlos en una lista</summary>
+         * <param void> 
+         * <returns> 
+         * Retorna un List<Usuario> si la consulta ha sido exitosa , en caso contrario retorna un null.
+         * </returns>
+         */
 
-        public void ListarTodos() {
+        public List<Usuario> ListarTodos() {
+
+            List<Usuario> listaUsuarios = new List<Usuario>();
+
+            string consulta = "SELECT * FROM usuario";
+            MySqlDataReader reader = this.conector.RealizarConsulta(consulta);
+            if(reader == null)
+            {
+                this.conector.CerrarConexion();
+                return null;
+            }
+            else
+            {
+               while (reader.Read())
+                {
+                    string rut = reader.GetString(0);
+                    string nombre = reader.GetString(1);
+                    string correo = reader.GetString(2);
+                    string contrasenia = reader.GetString(3);
+                    string tipo = reader.GetString(4);
+                    bool estado = reader.GetBoolean(5);
+                    
+                    listaUsuarios.Add(new Usuario (rut,nombre,correo,contrasenia,tipo,estado) );
+                }
+
+                this.conector.CerrarConexion();
+                return listaUsuarios;
+            }
+  
         }
 
         /**
@@ -124,6 +168,27 @@ namespace AppWebERS.Models{
             return true;
         }
 
+
+        public bool ModificarUsuario(string rutAModificar, string nombre, string correo,
+            string contrasenia,string tipo,bool estado)
+        {
+            string consulta = "UPDATE usuario SET nombre =" + nombre + "," + "correo_electronico =" +
+            correo + "," + "contrasenia =" + contrasenia + "," + "tipo =" + tipo + "," + "estado =" + estado +
+            "WHERE rut =" + rutAModificar;
+             MySqlDataReader reader = this.conector.RealizarConsulta(consulta);
+            if (reader ==null)
+            {
+                this.conector.CerrarConexion();
+                return false;
+            }
+            else
+            {
+                this.conector.CerrarConexion();
+                return true;
+            }
+                
+        }
+
         /*
          * Juan Abello
          * Envia los datos modificados a la consulta para ser cambiados en la base de datos
@@ -135,6 +200,8 @@ namespace AppWebERS.Models{
             {
                 Conn.Open();
                 var SqlTran = Conn.BeginTransaction();
+                
+
                 try
                 {
                     var Command = new MySqlCommand() { CommandText = "modificarUsuario", CommandType = CommandType.StoredProcedure };
@@ -292,4 +359,38 @@ namespace AppWebERS.Models{
             //else { }
         }
     }
+
+    public class RegisterViewModel
+    {
+        [Required(ErrorMessage = "El campo Rut es obligatorio.")]
+        [RegularExpression("[0-9]*", ErrorMessage = "Rut no válido.")]
+        [StringLength(8, ErrorMessage = "El rut debe tener entre 7 a 8 caracteres (sin guión ni digito verif.)", MinimumLength = 7)]
+        [Display(Name = "Rut")]
+        public string Rut { get; set; }
+
+        [Required(ErrorMessage = "El campo Nombre es obligatorio.")]
+        [RegularExpression("([ ]?[a-zA-Z])*", ErrorMessage = "Nombre no válido.")]
+        [StringLength(50, ErrorMessage = "El largo del nombre deber ser entre 1 a 50 caracteres.", MinimumLength = 1)]
+        [Display(Name = "Nombre")]
+        public string Nombre { get; set; }
+
+        [Required(ErrorMessage = "El campo Email es obligatorio.")]
+        [EmailAddress]
+        [Display(Name = "Email")]
+        public string Email { get; set; }
+
+        [Required(ErrorMessage = "El campo Contraseña es obligatorio.")]
+        [StringLength(16, ErrorMessage = "La contraseña debe tener de 3 a 16 caracteres.", MinimumLength = 3)]
+        [DataType(DataType.Password)]
+        [Display(Name = "Contraseña")]
+        public string Password { get; set; }
+
+
+        [DataType(DataType.Password)]
+        [Display(Name = "Confirme contraseña")]
+        [Compare("Password", ErrorMessage = "Las contraseñas ingresadas no coinciden.")]
+        public string ConfirmPassword { get; set; }
+    }
+
+
 }

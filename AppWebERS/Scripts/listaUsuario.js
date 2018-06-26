@@ -60,5 +60,6 @@ $(document).ready(() => {
     //Seleccionan los eventos que abren el modal de modificaciones
     $("[data-target='#exampleModal']").on('click', (event) => {
         $("#nombreModal").text(event.target.dataset.nombre);
+        $("#correoModal").text(event.target.dataset.correo);
     })
 });

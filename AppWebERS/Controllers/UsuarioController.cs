@@ -72,7 +72,15 @@ namespace AppWebERS.Controllers
         }
 
 
-      
+         /* <autor>Diego Matus</autor>
+         * <summary>Metodo encargado de enviar la lista de usarios a la vista ListarUsuarios y mostrarla dicha
+         * lista</summary>
+         * <param void>
+         * <returns> 
+         * Retorna la vista correspodiente (ListarUsuarios).
+         * </returns>
+         * 
+         */
         public ActionResult ListarUsuarios()
         {
             List<Usuario> usuarios = new Usuario().ListarTodos();

@@ -1,4 +1,6 @@
-﻿
+﻿@using AppWebERS.Models
+@model List<Usuario> 
+
 @{
     ViewBag.Title = "ModificarCuentaUsuario";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -9,49 +11,68 @@
     <div class="card-header">
         <h4>Usuarios disponibles</h4>
     </div>
-    <div class="card-body table-responsive">
-        <table class="table">
-            @using (Html.BeginForm())
-            {
-            <thead class="thead-dark">
-                <tr class="text-center">
-                    <th scope="col">Nombre de Usuario</th>
-                    <th scope="col">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-            @for (int i = 0; i < 5; i++)//Reemplazar por foreach()//
-            {
-                <tr class="text-center">
-                    <td>Gabriel Sanhueza</td><!-- Reemplazar por como quiera que le pongan en el foreach a la variable. Ej: (arroba)Item.Nombre -->
-                    <td>
-                        <div class="dropdown d-lg-none">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" id="triggerId" data-toggle="dropdown" aria-haspopup="true"
-                                    aria-expanded="false" data-flip="false">
-                                Opciones
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="triggerId">
-                                <a class="dropdown-item" href="#">Detalles</a>
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#exampleModal">Modificar</a>
-                                <input type="submit" class="dropdown-item deshabilitar" href="#" value="Deshabilitar">
+    @try {
+        if(Model.Count != 0) { 
+    using(Html.BeginForm("EditarUsuario", "Usuario", FormMethod.Post))
+    {
+        <div class="card-body table-responsive">
+            <table class="table">
+                <thead class="thead-dark">
+                    <tr class="text-center">
+                        <th scope="col">Nombre de Usuario</th>
+                        <th scope="col">Rut</th>
+                        <th scope="col">Correo Electronico</th>
+                        <th scope="col">Tipo</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var usuario in Model)
+                    {
+                    <tr class="text-center">
+                        <td data-info="info">@usuario.Nombre</td><!-- Reemplazar por como quiera que le pongan en el foreach a la variable. Ej: (arroba)Item.Nombre -->
+                        <td data-info="info">@usuario.Rut</td>
+                        <td data-info="info">@usuario.CorreoElectronico</td>
+                        <td data-info="info">@usuario.Tipo</td>
+                        <td>
+                            <!-- Menu de opciones-->
+                            <div class="dropdown d-lg-none">
+                                <button class="btn btn-secondary dropdown-toggle" type="submit" id="triggerId" data-toggle="dropdown" aria-haspopup="true"
+                                        aria-expanded="false" data-flip="false">
+                                    Opciones
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="triggerId">
+                                    <a class="dropdown-item" href="#">Detalles</a>
+                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#exampleModal" data-nombre="@usuario.Nombre" data-rut="@usuario.Rut" data-correo="@usuario.CorreoElectronico" data-tipo="@usuario.Tipo">Modificar</a>
+                                    <input type="submit" class="dropdown-item deshabilitar" href="#" value="Deshabilitar">
+                                </div>
                             </div>
-                        </div>
-                        <div class="d-none d-lg-block">
-
-                            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">Modificar</button>
-                            <input type="submit" value="Deshabilitar" class="btn btn-secondary deshabilitar" />
-                        </div>
-                    </td>
-                </tr>
-            }
-            </tbody>
-            }
-        </table>
-    </div>
+                            <!-- Si esta en pantalla grande-->
+                            <div class="d-none d-lg-block">
+                                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal" data-nombre="@usuario.Nombre" data-rut="@usuario.Rut" data-correo="@usuario.CorreoElectronico" data-tipo="@usuario.Tipo">Modificar</button>
+                                <input type="submit" value="Deshabilitar" class="btn btn-secondary deshabilitar" />
+                            </div>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+        }
+    }
+    catch(Exception e)
+    {
+       <!-- <h5>No existen usuarios registrados</h5>-->
+        <div class="alert alert-warning fade show w-50 mx-auto mt-3" role="alert">
+            <strong>No hay usuarios registrados!</strong> <br /> Debe registrar usuarios para poder modificar su cuenta.
+        </div>
+    }
 </div>
 
 @Html.Partial("_ModalPartial")
 
+
 @section scripts{
-    <script type="text/javascript" src="~/Scripts/listaUsuario.js"></script>    
+    <script type="text/javascript" src="~/Scripts/listaUsuario.js"></script>
 }

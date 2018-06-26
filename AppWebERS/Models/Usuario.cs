@@ -5,6 +5,8 @@ using System.Configuration;
 using System.Data;
 using System.Linq;
 using System.Web;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace AppWebERS.Models{
     /*
@@ -357,4 +359,38 @@ namespace AppWebERS.Models{
             //else { }
         }
     }
+
+    public class RegisterViewModel
+    {
+        [Required(ErrorMessage = "El campo Rut es obligatorio.")]
+        [RegularExpression("[0-9]*", ErrorMessage = "Rut no válido.")]
+        [StringLength(8, ErrorMessage = "El rut debe tener entre 7 a 8 caracteres (sin guión ni digito verif.)", MinimumLength = 7)]
+        [Display(Name = "Rut")]
+        public string Rut { get; set; }
+
+        [Required(ErrorMessage = "El campo Nombre es obligatorio.")]
+        [RegularExpression("([ ]?[a-zA-Z])*", ErrorMessage = "Nombre no válido.")]
+        [StringLength(50, ErrorMessage = "El largo del nombre deber ser entre 1 a 50 caracteres.", MinimumLength = 1)]
+        [Display(Name = "Nombre")]
+        public string Nombre { get; set; }
+
+        [Required(ErrorMessage = "El campo Email es obligatorio.")]
+        [EmailAddress]
+        [Display(Name = "Email")]
+        public string Email { get; set; }
+
+        [Required(ErrorMessage = "El campo Contraseña es obligatorio.")]
+        [StringLength(16, ErrorMessage = "La contraseña debe tener de 3 a 16 caracteres.", MinimumLength = 3)]
+        [DataType(DataType.Password)]
+        [Display(Name = "Contraseña")]
+        public string Password { get; set; }
+
+
+        [DataType(DataType.Password)]
+        [Display(Name = "Confirme contraseña")]
+        [Compare("Password", ErrorMessage = "Las contraseñas ingresadas no coinciden.")]
+        public string ConfirmPassword { get; set; }
+    }
+
+
 }

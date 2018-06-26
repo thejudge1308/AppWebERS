@@ -107,9 +107,14 @@ namespace AppWebERS.Models{
          */
         public bool Estado { get; set; }
 
-        /**
-         * Método para listar todos los usuarios existentes
-         **/
+        /*<autor>Diego Matus</autor>
+         * <summary>Metodo encargado de obtener la lista usuarios registrados en el sistema y de 
+         * almacenarlos en una lista</summary>
+         * <param void> 
+         * <returns> 
+         * Retorna un List<Usuario> si la consulta ha sido exitosa , en caso contrario retorna un null.
+         * </returns>
+         */
 
         public List<Usuario> ListarTodos() {
 

@@ -71,5 +71,6 @@ $(document).ready(() => {
      * event: objeto con informacion del evento
      */    $("[data-target='#exampleModal']").on('click', (event) => {
         $("#nombreModal").text(event.target.dataset.nombre);
+        $("#correoModal").text(event.target.dataset.correo);
     })
 });

@@ -9,6 +9,19 @@ namespace AppWebERS.Controllers
 {
     public class UsuarioController : Controller
     {
+
+
+        [HttpPost]
+        public ActionResult Modificar2(string rutUsuario, string nombre, string correoElectronico, bool estado, string contrasenia, string tipo)
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Deshabilitar2(string rutUsuario, string nombre, string correoElectronico, bool estado, string contrasenia, string tipo)
+        {
+            return View();
+        }
         /*
          * Juan Abello
          * Obtiene los datos de la vista del formulario para modificar la cuenta
@@ -87,10 +100,16 @@ namespace AppWebERS.Controllers
             return View(usuarios);
         }
 
-        
-        
-  
-  
-      
+
+        public ActionResult VistaUsuario()
+        {
+            return View();
+        }
+
+
+
+
+
+
     }
 }

@@ -17,6 +17,9 @@ namespace AppWebERS.Models{
          * Constructor vacío de la clase usuario (se agrega para cualquier otro uso que se le de en un futuro).
          * 
          */
+
+        private ConectorBD Conexion;
+
         public Usuario(){
 
         }
@@ -42,10 +45,8 @@ namespace AppWebERS.Models{
             this.Contrasenia = contrasenia;
             this.Tipo = tipo;
             this.Estado = estado;
-             
-                    
-            
-        }
+            this.Conexion = ConectorBD.Instance;
+         }
 
        
 
@@ -227,33 +228,23 @@ namespace AppWebERS.Models{
 
         /*
          * Juan Abello
-         * Cambia es estado de deshabilitado a habilitado
+         * Cambia es estado de habilitado a deshabilitado
          * rut
          */
-        public void DeshabilitarUsuario(string rut)
+        public bool DeshabilitarUsuario(string rut,bool estado)
         {
-            this.Seleccionar(rut);
-            if (this.Estado.Equals("1"))
+            string consulta = "UPDATE usuario SET estado =" + estado +
+            "WHERE rut =" + rut;
+            MySqlDataReader reader = this.conector.RealizarConsulta(consulta);
+            if (reader == null)
             {
-                using (var Conn = new MySqlConnection(ConfigurationManager.ConnectionStrings["appers"].ConnectionString))
-                {
-                    Conn.Open();
-                    var SqlTran = Conn.BeginTransaction();
-                    try
-                    {
-                        var Command = new MySqlCommand() { CommandText = "deshabilitarUsuario", CommandType = CommandType.StoredProcedure };
-                        Command.Parameters.AddWithValue("estado", "0");
-                        Command.Connection = Conn;
-                        Command.Transaction = SqlTran;
-                        Command.ExecuteNonQuery();
-                        SqlTran.Commit();
-                        Conn.Close();
-                    }
-                    catch (Exception ex)
-                    {
-                        SqlTran.Rollback();
-                    }
-                }
+                this.conector.CerrarConexion();
+                return false;
+            }
+            else
+            {
+                this.conector.CerrarConexion();
+                return true;
             }
         }
 
@@ -323,41 +314,28 @@ namespace AppWebERS.Models{
         }
 
         /*
-         * Autor: Nicolás Hervias
-         * Cambia el estado de habilitado a deshabilitado (suponiendo que 0 es deshabilitado y 1 es habilitado)
-         * Retorna: vacío
-         * Parámetros: rut (el rut del usuario)
+         * Juan Abello
+         * Cambia es estado de deshabilitado a habilitado
+         * rut, estado
          */
-        public void HabilitarUsuario(string rut)
+        public bool habilitarUsuario(string rut, bool estado)
         {
-            this.Seleccionar(rut);
-            if (this.Estado.Equals("0"))
+            string consulta = "UPDATE usuario SET estado =" + estado +
+            "WHERE rut =" + rut;
+            MySqlDataReader reader = this.conector.RealizarConsulta(consulta);
+            if (reader == null)
             {
-                using (var Conn = new MySqlConnection(ConfigurationManager.ConnectionStrings["appers"].ConnectionString))
-                {
-                    Conn.Open();
-                    var SqlTran = Conn.BeginTransaction();
-                    try
-                    {
-                        var Command = new MySqlCommand() { CommandText = "habilitarUsuario", CommandType = CommandType.StoredProcedure };
-                        Command.Parameters.AddWithValue("estado", "1");
-                        Command.Connection = Conn;
-                        Command.Transaction = SqlTran;
-                        Command.ExecuteNonQuery();
-                        SqlTran.Commit();
-                        Conn.Close();
-                    }
-                    catch (Exception ex)
-                    {
-                        SqlTran.Rollback();
-                    }
-                }
+                this.conector.CerrarConexion();
+                return false;
             }
-            //else { }
+            else
+            {
+                this.conector.CerrarConexion();
+                return true;
+            }
         }
-    }
 
-    public class RegisterViewModel
+        public class RegisterViewModel
     {
         [Required(ErrorMessage = "El campo Rut es obligatorio.")]
         [RegularExpression("[0-9]*", ErrorMessage = "Rut no válido.")]

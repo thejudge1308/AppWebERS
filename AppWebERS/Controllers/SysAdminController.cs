@@ -61,12 +61,19 @@ namespace AppWebERS.Controllers
             string correo = modeloUsuario.Email;
             string contrasena = modeloUsuario.ConfirmPassword;
             contrasena = this.encriptarClave(contrasena);
-            Usuario nuevoUsuario = new Usuario(rut, nombre, correo, contrasena, "Default");
-            
-            nuevoUsuario.Crear();
+            Usuario nuevoUsuario = new Usuario(rut, nombre, correo, contrasena, "USUARIO", true);
 
-            ViewBag.SuccessMessage = "Registro exitoso";
-            return View("CrearUsuario", new RegisterViewModel());
+            if (nuevoUsuario.Crear()) {
+                ViewBag.SuccessMessage = "Registro exitoso";
+                return View("CrearUsuario", new RegisterViewModel());
+            }
+            else{
+                ViewBag.SuccessMessage = "Registro fallido";
+                return View("CrearUsuario", new RegisterViewModel());
+            }
+
+
+            
         }
 
 

@@ -54,7 +54,7 @@ namespace AppWebERS.Models{
             return null;
         }
 
-        public void RealizarConsultaNoQuery(string consulta)
+        public Boolean RealizarConsultaNoQuery(string consulta)
         {
             MySqlCommand command = Con.CreateCommand();
             command.CommandText = consulta;
@@ -63,11 +63,13 @@ namespace AppWebERS.Models{
                 Con.Open();
                 command.ExecuteNonQuery();
                 Con.Close();
+                return true;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 Con.Close();
+                return false;
             }
         }
 

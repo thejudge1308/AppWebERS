@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 
@@ -133,8 +135,9 @@ namespace AppWebERS.Controllers{
             { 
                 reader.Read();
                 string contrasennaBD = reader["contrasenia"].ToString();
-                //Desencriptar contraseña de la BD
-                if (contrasennaBD==contrasenia)
+                //Desencriptar contraseña de la BD 
+                contrasenia = this.encriptarClave(contrasenia);
+                if (contrasennaBD.Equals(contrasenia))
                 {
                     conexion.CerrarConexion();
                     return true;
@@ -244,11 +247,22 @@ namespace AppWebERS.Controllers{
         */
         public bool ComprobarEstadoUsuario(Usuario usuario)
         {
-            if (usuario.Estado.Equals( "Habilitado"))
+            if (usuario.Estado)
             {
                 return true;
             }
             return false;
         }
+        private string encriptarClave(string original)
+        {
+
+            using (MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider())
+            {
+                UTF8Encoding utf8 = new UTF8Encoding();
+                byte[] data = md5.ComputeHash(utf8.GetBytes(original));
+                return Convert.ToBase64String(data);
+            }
+        }
     }
+
 }

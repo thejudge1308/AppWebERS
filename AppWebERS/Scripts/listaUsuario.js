@@ -1,8 +1,11 @@
 ﻿// Ejecuta cuando se haya cargado la pagina completa
 $(document).ready(() => {
-    let alerta = $('#alert');
+    let alerta = $('#alertDiv');
+    const TiposAlerta = {
+        EXITO: 'alert-success',
+        ERROR: 'alert-danger'
+    };
     cerrarAlertaAutomaticamente(); //Si hay una alerta la ocultara 
-
     /**
      * Autor: Gabriel Sanhueza
      * Agrega un evento cuando se hace click en los botones con clase deshabilitar para que 
@@ -11,19 +14,28 @@ $(document).ready(() => {
      * event: objeto con informacion del evento
      */
     $('.deshabilitar').on('click', (event) => {
+        let mensaje = "El usuario se ha deshabilitado correctamente";
+        mostrarAlerta(mensaje, TiposAlerta.EXITO);
+        event.preventDefault(); //Se arreglo por mientras, despues hay que quitarlo y configurar desde el servidor la muestra de alerta
+    });
+
+    function mostrarAlerta(mensaje, tipo = TiposAlerta.EXITO) {
         alerta.toggleClass(function () {
             console.log($(this));
             if ($(this).hasClass('d-none')) {
-
                 $(this).addClass('d-flex').removeClass('d-none');
 
+                //Borra las clases y añade el nuevo tipo
+                $('.alert').removeClass(TiposAlerta.EXITO);
+                $('.alert').removeClass(TiposAlerta.ERROR);
+                $('.alert').addClass(tipo);
+                $('#mensajeAlerta').text(mensaje);
                 //Activa el timer para cerrar automaticamente la alerta al cabo de 2 segundos
                 cerrarAlertaAutomaticamente();
             }
             return $(this);
         })
-        event.preventDefault(); //Se arreglo por mientras, despues hay que quitarlo y configurar desde el servidor la muestra de alerta
-    });
+    }
 
     /**
      * Autor: Gabriel Sanhueza
@@ -65,12 +77,27 @@ $(document).ready(() => {
     })
 
     /**
-     * Autor: Gabriel Sanhueza
-     * Agrega eventos sobre los botones modificar que abren la ventana modal y rellena esta ventana con los datos
-     * Parametros:
-     * event: objeto con informacion del evento
-     */    $("[data-target='#exampleModal']").on('click', (event) => {
-        $("#nombreModal").text(event.target.dataset.nombre);
-        $("#correoModal").text(event.target.dataset.correo);
+     * Autor Gabriel Sanhueza
+     * Evento que cambia el enlace del iframe para que liste el usuario correcto para la modificacion
+     */
+    $("[data-target='#exampleModal']").on('click', (event) => {
+        var iframe = $("#iframe")[0];
+        iframe.src = `/Usuario/ModificarCuenta?rut=${event.target.dataset.rut}`;
     })
+
+   /**
+    * Autor Gabriel Sanhueza
+    * Evento en el boton que enviara el formulario
+    */
+    $("button[type='submit']").on('click', (event) => {
+        let form = $("#iframe").contents().find("#form");
+        let prevenido = $("#iframe").contents().find("#form")[0].dispatchEvent(new Event('submit', {bubbles: true, cancelable:true}));
+        if (!prevenido) {
+            event.preventDefault();
+            return;
+        }
+        form.submit();
+        mostrarAlerta("Se ha modificado correctamente el usuario", TiposAlerta.EXITO);
+        $("#exampleModal").modal('toggle');
+    });
 });

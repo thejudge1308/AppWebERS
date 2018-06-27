@@ -22,19 +22,29 @@ namespace AppWebERS.Controllers
         {
             return View();
         }
+
         /*
          * Juan Abello
          * Obtiene los datos de la vista del formulario para modificar la cuenta
          * rutUsuario
          * retorna el usuario con los datos modificados al modelo de usuario
          */
-
         [HttpGet]
-        public ActionResult ModificarCuenta(string rutUsuario,string nombre,string correoElectronico,bool estado,string contrasenia,string tipo)
+        public ActionResult ModificarCuentaN(string rutUsuario,string nombre,string correoElectronico,bool estado,string contrasenia,string tipo)
         {
             Usuario u = new Usuario(rutUsuario,nombre,correoElectronico,contrasenia,tipo,estado);
+            ViewBag.Title = "ModificarUsuario";
             u.Rut = rutUsuario;
             return View(u);
+        }
+
+        [HttpGet]
+        public ActionResult ModificarCuenta(string rut)
+        {
+            Usuario u = new Usuario();
+            u.ListarEspecifico(rut);
+            ModificarViewModel model = new ModificarViewModel(u);
+            return View(model);
         }
 
         /*
@@ -43,12 +53,19 @@ namespace AppWebERS.Controllers
          * usuario
          * return RedirectToAction
          */
-
         [HttpPost]
-        public ActionResult ModificarCuenta(Usuario usuario)
+        public ActionResult ModificarCuenta(ModificarViewModel usuario)
         {
-            usuario.Modificar();
-            return RedirectToAction("Index");
+            if (ModelState.IsValid)
+            {
+                Usuario usuarioModificado = new Usuario(usuario.Rut, usuario.Nombre, usuario.Email, usuario.Password,usuario.Tipo, usuario.Estado);
+                usuarioModificado.Modificar();
+                return View();
+            }
+            else
+            {
+                return View(usuario);
+            }
         }
 
 
@@ -79,7 +96,7 @@ namespace AppWebERS.Controllers
         {
         }
 
-        public void CreaeActor(Proyecto proyecto)
+        public void CrearActor(Proyecto proyecto)
         {
 
         }
@@ -105,11 +122,5 @@ namespace AppWebERS.Controllers
         {
             return View();
         }
-
-
-
-
-
-
     }
 }

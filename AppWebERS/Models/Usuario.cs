@@ -150,14 +150,36 @@ namespace AppWebERS.Models{
         }
 
         /**
+         * Gabriel Sanhueza
          * Método para listar un usuario específico
          * <returns>Retorna un usuario específico.</returns>
          **/
 
-       public void ListarEspecifico(Usuario usuario) {
-            
+       public Usuario ListarEspecifico(String rut) {
+            string consulta = $"SELECT * FROM usuario WHERE usuario.rut = '{rut}'";
+            MySqlDataReader reader = this.conector.RealizarConsulta(consulta);
+            if (reader == null)
+            {
+                this.conector.CerrarConexion();
+                return null;
+            }
+            else
+            {
+                while (reader.Read())
+                {
+                    Rut = reader.GetString(0);
+                    Nombre = reader.GetString(1);
+                    CorreoElectronico = reader.GetString(2);
+                    Contrasenia = reader.GetString(3);
+                    Tipo = reader.GetString(4);
+                    Estado = reader.GetBoolean(5);
+                }
+
+                this.conector.CerrarConexion();
+                return this;
+            }
         }
-        
+
 
         /**
          * Método para Crear un Usuario
@@ -169,24 +191,11 @@ namespace AppWebERS.Models{
         }
 
 
-        public bool ModificarUsuario(string rutAModificar, string nombre, string correo,
-            string contrasenia,string tipo,bool estado)
+        public void ModificarUsuario()
         {
-            string consulta = "UPDATE usuario SET nombre =" + nombre + "," + "correo_electronico =" +
-            correo + "," + "contrasenia =" + contrasenia + "," + "tipo =" + tipo + "," + "estado =" + estado +
-            "WHERE rut =" + rutAModificar;
-             MySqlDataReader reader = this.conector.RealizarConsulta(consulta);
-            if (reader ==null)
-            {
-                this.conector.CerrarConexion();
-                return false;
-            }
-            else
-            {
-                this.conector.CerrarConexion();
-                return true;
-            }
-                
+            string consulta = $"UPDATE usuario SET nombre = '{Nombre}', correo_electronico = '{CorreoElectronico}',"+
+                $"contrasenia ='{Contrasenia}',tipo = '{Tipo}', estado = '{Estado}' WHERE rut = '{Rut}'";
+            this.conector.RealizarConsultaNoQuery(consulta);
         }
 
         /*
@@ -392,5 +401,47 @@ namespace AppWebERS.Models{
         public string ConfirmPassword { get; set; }
     }
 
+    public class ModificarViewModel
+    {
+        [RegularExpression("[0-9]*", ErrorMessage = "Rut no válido.")]
+        [StringLength(8, ErrorMessage = "El rut debe tener entre 7 a 8 caracteres (sin guión ni digito verif.)", MinimumLength = 7)]
+        [Display(Name = "Rut")]
+        public string Rut { get; set; }
+
+        [RegularExpression("([ ]?[a-zA-Z])*", ErrorMessage = "Nombre no válido.")]
+        [StringLength(50, ErrorMessage = "El largo del nombre deber ser entre 1 a 50 caracteres.", MinimumLength = 1)]
+        [Display(Name = "Nombre")]
+        public string Nombre { get; set; }
+
+        [EmailAddress]
+        [Display(Name = "Email")]
+        public string Email { get; set; }
+
+        [StringLength(16, ErrorMessage = "La contraseña debe tener de 3 a 16 caracteres.", MinimumLength = 3)]
+        [DataType(DataType.Password)]
+        [Display(Name = "Contraseña")]
+        public string Password { get; set; }
+
+        public string Tipo { get; set; }
+        public bool Estado { get; set; }
+
+        public string AntiguoRut { get; set; }
+        public string AntiguoNombre { get; set; }
+        public string AntiguoEmail { get; set; }
+        public string AntiguaPassword { get; set; }
+        public string AntiguoTipo { get; set; }
+        public bool AntiguoEstado { get; set; }
+
+        public ModificarViewModel() { }
+        public ModificarViewModel(Usuario usuario)
+        {
+            this.AntiguoRut = usuario.Rut;
+            this.AntiguoNombre = usuario.Nombre;
+            this.AntiguoEmail = usuario.CorreoElectronico;
+            this.AntiguaPassword = usuario.Contrasenia;
+            this.AntiguoTipo = usuario.Tipo;
+            this.AntiguoEstado = usuario.Estado;
+        }
+    }
 
 }

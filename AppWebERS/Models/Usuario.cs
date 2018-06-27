@@ -17,9 +17,6 @@ namespace AppWebERS.Models{
          * Constructor vacío de la clase usuario (se agrega para cualquier otro uso que se le de en un futuro).
          * 
          */
-
-        private ConectorBD Conexion;
-
         public Usuario(){
 
         }
@@ -45,8 +42,10 @@ namespace AppWebERS.Models{
             this.Contrasenia = contrasenia;
             this.Tipo = tipo;
             this.Estado = estado;
-            this.Conexion = ConectorBD.Instance;
-         }
+             
+                    
+            
+        }
 
        
 
@@ -228,23 +227,33 @@ namespace AppWebERS.Models{
 
         /*
          * Juan Abello
-         * Cambia es estado de habilitado a deshabilitado
+         * Cambia es estado de deshabilitado a habilitado
          * rut
          */
-        public bool DeshabilitarUsuario(string rut,bool estado)
+        public void DeshabilitarUsuario(string rut)
         {
-            string consulta = "UPDATE usuario SET estado =" + estado +
-            "WHERE rut =" + rut;
-            MySqlDataReader reader = this.conector.RealizarConsulta(consulta);
-            if (reader == null)
+            this.Seleccionar(rut);
+            if (this.Estado.Equals("1"))
             {
-                this.conector.CerrarConexion();
-                return false;
-            }
-            else
-            {
-                this.conector.CerrarConexion();
-                return true;
+                using (var Conn = new MySqlConnection(ConfigurationManager.ConnectionStrings["appers"].ConnectionString))
+                {
+                    Conn.Open();
+                    var SqlTran = Conn.BeginTransaction();
+                    try
+                    {
+                        var Command = new MySqlCommand() { CommandText = "deshabilitarUsuario", CommandType = CommandType.StoredProcedure };
+                        Command.Parameters.AddWithValue("estado", "0");
+                        Command.Connection = Conn;
+                        Command.Transaction = SqlTran;
+                        Command.ExecuteNonQuery();
+                        SqlTran.Commit();
+                        Conn.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        SqlTran.Rollback();
+                    }
+                }
             }
         }
 
@@ -260,15 +269,21 @@ namespace AppWebERS.Models{
         {
             try
             {
-                String ConsultaSeleccionarUsuario = "SELECT * " +
-                                  "FROM usuario " +
-                                  "WHERE usuario.rut = '" + Rut + "';";
-                MySqlDataReader ReaderUsuario = Conexion.RealizarConsulta(ConsultaSeleccionarUsuario);
-                if (ReaderUsuario != null)
+                var DataSet = new DataSet();
+                using (var Conexion = new MySqlConnection(ConfigurationManager.ConnectionStrings["appers"].ConnectionString))
                 {
-                    this.CargarDatos(ReaderUsuario);
-                    Conexion.CerrarConexion();
-                    //return;
+                    var Command = new MySqlCommand() { CommandText = "getRutUsuario", CommandType = CommandType.StoredProcedure };
+                    Command.Parameters.AddWithValue("rut", Rut);
+                    Conexion.Open();
+                    Command.Connection = Conexion;
+                    var Sqlda = new MySqlDataAdapter(Command);
+                    Sqlda.Fill(DataSet);
+                    Conexion.Close();
+                }
+                if (DataSet.Tables[0].Rows.Count > 0)
+                {
+                    this.CargarDatos(DataSet.Tables[0].Rows[0]);
+                    return;
                 }
                 else
                 {
@@ -278,7 +293,6 @@ namespace AppWebERS.Models{
                     this.Estado = false;
                     this.Tipo = "Not Found";
                     //this.rut = -1;
-                    Conexion.CerrarConexion();
                 }
             }
             catch (Exception ex)
@@ -294,15 +308,13 @@ namespace AppWebERS.Models{
          * Parámetros: dr (una fila de la tabla de la base de datos)
          * Retorna: vacío
          */
-        public void CargarDatos(MySqlDataReader Dr)
+        public void CargarDatos(DataRow Dr)
         {
-            Dr.Read();
             this.Rut = Dr["rut"].ToString();
             this.CorreoElectronico = Dr["correo_electronico"].ToString();
             this.Nombre = Dr["nombre"].ToString();
             this.Contrasenia = Dr["contrasenia"].ToString();
-            // Asumiendo que en la base de datos se usa un bit donde 1 es habilitado y 0 deshabilitado
-            if (Dr["estado"].ToString() == "1")
+            if(Dr["estado"].ToString() == "1")
             {
                 this.Estado = true;
             }
@@ -314,28 +326,41 @@ namespace AppWebERS.Models{
         }
 
         /*
-         * Juan Abello
-         * Cambia es estado de deshabilitado a habilitado
-         * rut, estado
+         * Autor: Nicolás Hervias
+         * Cambia el estado de habilitado a deshabilitado (suponiendo que 0 es deshabilitado y 1 es habilitado)
+         * Retorna: vacío
+         * Parámetros: rut (el rut del usuario)
          */
-        public bool habilitarUsuario(string rut, bool estado)
+        public void HabilitarUsuario(string rut)
         {
-            string consulta = "UPDATE usuario SET estado =" + estado +
-            "WHERE rut =" + rut;
-            MySqlDataReader reader = this.conector.RealizarConsulta(consulta);
-            if (reader == null)
+            this.Seleccionar(rut);
+            if (this.Estado.Equals("0"))
             {
-                this.conector.CerrarConexion();
-                return false;
+                using (var Conn = new MySqlConnection(ConfigurationManager.ConnectionStrings["appers"].ConnectionString))
+                {
+                    Conn.Open();
+                    var SqlTran = Conn.BeginTransaction();
+                    try
+                    {
+                        var Command = new MySqlCommand() { CommandText = "habilitarUsuario", CommandType = CommandType.StoredProcedure };
+                        Command.Parameters.AddWithValue("estado", "1");
+                        Command.Connection = Conn;
+                        Command.Transaction = SqlTran;
+                        Command.ExecuteNonQuery();
+                        SqlTran.Commit();
+                        Conn.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        SqlTran.Rollback();
+                    }
+                }
             }
-            else
-            {
-                this.conector.CerrarConexion();
-                return true;
-            }
+            //else { }
         }
+    }
 
-        public class RegisterViewModel
+    public class RegisterViewModel
     {
         [Required(ErrorMessage = "El campo Rut es obligatorio.")]
         [RegularExpression("[0-9]*", ErrorMessage = "Rut no válido.")]

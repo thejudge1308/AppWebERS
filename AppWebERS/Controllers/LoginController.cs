@@ -218,7 +218,7 @@ namespace AppWebERS.Controllers{
                     Usuario usuario = new Usuario(rutBD, nombreBD, correoBD, contraseniaBD, tipoBD, estadoBD);
                     this.conexion.CerrarConexion();
 
-                    if (!usuario.Estado)
+                    if (!this.ComprobarEstadoUsuario(usuario))
                     {
                         ViewBag.Message = "Acceso denegado";
                         return View();

@@ -217,13 +217,28 @@ namespace AppWebERS.Controllers{
                     if (Int32.Parse(stringEstadoBD) == 1) estadoBD = true;
                     Usuario usuario = new Usuario(rutBD, nombreBD, correoBD, contraseniaBD, tipoBD, estadoBD);
                     this.conexion.CerrarConexion();
-                    return RedirectToAction("ListarUsuarios", "Usuario");
+
+                    if (!this.ComprobarEstadoUsuario(usuario))
+                    {
+                        ViewBag.Message = "Acceso denegado";
+                        return View();
+                    }
+
+                    if(usuario.Tipo == "SYSADMIN")
+                    {
+                        return RedirectToAction("ListarUsuarios", "Usuario");
+                    }
+                    else if(usuario.Tipo == "USUARIO")
+                    {
+                        return RedirectToAction("VistaUsuario", "Usuario");
+                    }
+                    return View();
 
                 }
                 else
                 {
                     this.conexion.CerrarConexion();
-                    ViewBag.Message = "Acceso denegado";
+                    ViewBag.Message = "Error de conexión con el servidor";
                     return View();
                 }
             }

@@ -16,6 +16,7 @@ namespace AppWebERS.Models
          * Constructor de la clase Proyecto
          * 
          * <param name = "idProyecto" > El identificador del proyecto.</param>
+         * <param name = "nombre" > El identificador del proyecto.</param>
          * <param name = "proposito" > El proposito del proyecto.</param>
          * <param name = "alcance" > El alcance del proyecto.</param>
          * <param name = "contexto" > El contexto del proyecto.</param>
@@ -31,8 +32,9 @@ namespace AppWebERS.Models
          * <param name = "actores" > La lista de actores asociados al proyecto.</param>
          **/
 
-        public Proyecto(int idProyecto, string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string referencias, string ambienteOperacional, string relacionProyectos, List<Usuario> usuarios, List<Requisito> requisitos, List<CasoDeUso> casosDeUso, List<Actor> actores) {
+        public Proyecto(int idProyecto, string nombre,string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string referencias, string ambienteOperacional, string relacionProyectos, List<Usuario> usuarios, List<Requisito> requisitos, List<CasoDeUso> casosDeUso, List<Actor> actores) {
             this.IdProyecto = idProyecto;
+            this.Nombre = nombre;
             this.Proposito = proposito;
             this.Alcance = alcance;
             this.Contexto = contexto;
@@ -57,6 +59,15 @@ namespace AppWebERS.Models
          **/
 
         public int IdProyecto {get; set;}
+
+        /**
+         * Setter y Getter de Nombre del proyecto
+         * 
+         * <param name = "nombre" > El identificador del proyecto.</param>
+         * <returns>Retorna el valor string del nombre.</returns>
+         * 
+         **/
+        public string Nombre { get; set;}
 
         /**
          * Setter y Getter del proposito del proyecto

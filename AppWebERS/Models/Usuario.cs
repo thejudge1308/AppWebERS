@@ -11,6 +11,9 @@ namespace AppWebERS.Models{
      * Matías Parra
      */
     public class Usuario{
+
+        private ConectorBD conexion;
+
         /*
          * Constructor vacío de la clase usuario (se agrega para cualquier otro uso que se le de en un futuro).
          * 
@@ -36,6 +39,7 @@ namespace AppWebERS.Models{
             this.Contrasenia = contrasenia;
             this.Tipo = tipo;
             this.Estado = estado;
+            this.conexion = ConectorBD.Instance;
         }
 
         /*
@@ -129,33 +133,29 @@ namespace AppWebERS.Models{
          * Envia los datos modificados a la consulta para ser cambiados en la base de datos
          * return true
          */ 
-        public bool Modificar()
+        public void Modificar()
         {
-            using (var Conn = new MySqlConnection(ConfigurationManager.ConnectionStrings["appers"].ConnectionString))
+            string consulta = "UPDATE Usuario SET Usuario.nombre ="+ Nombre+",Usuario.correo_electronico ="+ CorreoElectronico+",Usuario.contrasenia = "+Contrasenia+",Usuario.tipo = "+Tipo+"WHERE Usuario.rut = "+Rut+"; ";
+            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
+
+            if (reader != null)
             {
-                Conn.Open();
-                var SqlTran = Conn.BeginTransaction();
-                try
-                {
-                    var Command = new MySqlCommand() { CommandText = "modificarUsuario", CommandType = CommandType.StoredProcedure };
-                    //Setea el valor de los atributos del SP (procedimiento almacenado)
-                    Command.Parameters.AddWithValue("rut", this.Rut);
-                    Command.Parameters.AddWithValue("nombre", this.Nombre);
-                    Command.Parameters.AddWithValue("contrasenia", this.Contrasenia);
-                    Command.Parameters.AddWithValue("correoElectronico", this.CorreoElectronico);
-                    Command.Parameters.AddWithValue("tipo", this.Tipo);
-                    Command.Connection = Conn;
-                    Command.Transaction = SqlTran;
-                    Command.ExecuteNonQuery();
-                    SqlTran.Commit();
-                    Conn.Close();
-                }
-                catch (Exception ex)
-                {
-                    SqlTran.Rollback();
-                }
+
+                string rutBD = reader["rut"].ToString();
+                string nombreBD = reader["nombre"].ToString();
+                string correoBD = reader["correo_electronico"].ToString();
+                string contraseniaBD = reader["contrasenia"].ToString();
+                string tipoBD = reader["tipo"].ToString();
+                this.conexion.CerrarConexion();
+
             }
-            return true;
+            else
+            {
+                this.conexion.CerrarConexion();
+            }
+            
+           
+            
         }
 
         /*

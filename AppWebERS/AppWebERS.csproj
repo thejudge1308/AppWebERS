@@ -301,6 +301,8 @@
     <Content Include="Views\Usuario\ListarUsuarios.cshtml" />
     <Content Include="Views\Usuario\_ModalPartial.cshtml" />
     <Content Include="Views\Usuario\_AlertaDeshabilitacionPartial.cshtml" />
+    <Content Include="Views\Usuario\Modificar2.cshtml" />
+    <Content Include="Views\Usuario\Deshabilitar2.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

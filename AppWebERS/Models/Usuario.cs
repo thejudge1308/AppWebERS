@@ -269,21 +269,15 @@ namespace AppWebERS.Models{
         {
             try
             {
-                var DataSet = new DataSet();
-                using (var Conexion = new MySqlConnection(ConfigurationManager.ConnectionStrings["appers"].ConnectionString))
+                String ConsultaSeleccionarUsuario = "SELECT * " +
+                                  "FROM usuario " +
+                                  "WHERE usuario.rut = '" + Rut + "';";
+                MySqlDataReader ReaderUsuario = Conexion.RealizarConsulta(ConsultaSeleccionarUsuario);
+                if (ReaderUsuario != null)
                 {
-                    var Command = new MySqlCommand() { CommandText = "getRutUsuario", CommandType = CommandType.StoredProcedure };
-                    Command.Parameters.AddWithValue("rut", Rut);
-                    Conexion.Open();
-                    Command.Connection = Conexion;
-                    var Sqlda = new MySqlDataAdapter(Command);
-                    Sqlda.Fill(DataSet);
-                    Conexion.Close();
-                }
-                if (DataSet.Tables[0].Rows.Count > 0)
-                {
-                    this.CargarDatos(DataSet.Tables[0].Rows[0]);
-                    return;
+                    this.CargarDatos(ReaderUsuario);
+                    Conexion.CerrarConexion();
+                    //return;
                 }
                 else
                 {
@@ -293,6 +287,7 @@ namespace AppWebERS.Models{
                     this.Estado = false;
                     this.Tipo = "Not Found";
                     //this.rut = -1;
+                    Conexion.CerrarConexion();
                 }
             }
             catch (Exception ex)
@@ -308,13 +303,15 @@ namespace AppWebERS.Models{
          * Parámetros: dr (una fila de la tabla de la base de datos)
          * Retorna: vacío
          */
-        public void CargarDatos(DataRow Dr)
+        public void CargarDatos(MySqlDataReader Dr)
         {
+            Dr.Read();
             this.Rut = Dr["rut"].ToString();
             this.CorreoElectronico = Dr["correo_electronico"].ToString();
             this.Nombre = Dr["nombre"].ToString();
             this.Contrasenia = Dr["contrasenia"].ToString();
-            if(Dr["estado"].ToString() == "1")
+            // Asumiendo que en la base de datos se usa un bit donde 1 es habilitado y 0 deshabilitado
+            if (Dr["estado"].ToString() == "1")
             {
                 this.Estado = true;
             }

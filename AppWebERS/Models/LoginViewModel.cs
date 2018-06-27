@@ -10,8 +10,8 @@ namespace AppWebERS.Models
     {
         [Required]
         [Display(Name = "Rut")]
-        [RegularExpression("([1-9][0-9]*)", ErrorMessage = "El Campo Rut debe tener solo numeros.")]
-        [StringLength(9, ErrorMessage = "El campo Rut debe tener 8 caractener como minimo y 9 maximos", MinimumLength = 8)]
+        [RegularExpression("([1-9][0-9]*)", ErrorMessage = "El campo Rut debe tener solo números.")]
+        [StringLength(8, ErrorMessage = "El campo Rut debe tener 7 caractener como minimo y 8 como máximo", MinimumLength = 7)]
         /**
          * <param name="Rut">Rut</param>  
          */

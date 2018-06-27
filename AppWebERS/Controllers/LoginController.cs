@@ -7,12 +7,26 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
+
 namespace AppWebERS.Controllers{
     public class LoginController : Controller
     {
         // GET: Login
         public ActionResult Index(){
             return View();
+        }
+
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult Index(LoginViewModel model, string returnUrl)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            return this.Ingresar(model.Id, model.Contrasenia);
         }
 
         //private MySqlConnection Con;//solo para test
@@ -183,11 +197,12 @@ namespace AppWebERS.Controllers{
          * <param name="contrasenia">Contiene un string con la contrasenia relacionada con el id o rut que se encuentra en la bd</param>
          * <returns>Debe retornar el objeto Usuario, si no se logro obtener se retorna null</returns>
          */
-        public Usuario Ingresar(string id, string contrasenia)
+
+        public ActionResult Ingresar(string Rut, string contrasenia)
         {
-            if (PermitirAccesoUsuario(id, contrasenia))
+            if (PermitirAccesoUsuario(Rut, contrasenia))
             {
-                string consulta = "SELECT * FROM Usuario WHERE rut='" + id + "';";
+                string consulta = "SELECT * FROM Usuario WHERE rut='" + Rut + "';";
                 MySqlDataReader data = this.conexion.RealizarConsulta(consulta);
                 if (data != null)
                 {
@@ -199,22 +214,24 @@ namespace AppWebERS.Controllers{
                     string tipoBD = data["tipo"].ToString();
                     string stringEstadoBD = data["estado"].ToString();
                     bool estadoBD = false;
-                    if (Int32.Parse(stringEstadoBD)==1) estadoBD = true;
-                    Usuario usuario = new Usuario(rutBD, nombreBD, correoBD, contraseniaBD, tipoBD,estadoBD);
+                    if (Int32.Parse(stringEstadoBD) == 1) estadoBD = true;
+                    Usuario usuario = new Usuario(rutBD, nombreBD, correoBD, contraseniaBD, tipoBD, estadoBD);
                     this.conexion.CerrarConexion();
-                    return usuario;
+                    return RedirectToAction("ListarUsuarios", "Usuario");
 
                 }
                 else
                 {
                     this.conexion.CerrarConexion();
-                    return null;
+                    ViewBag.Message = "Acceso denegado";
+                    return View();
                 }
             }
             else
             {
                 this.conexion.CerrarConexion();
-                return null;
+                ViewBag.Message = "Datos no válidos. Acceso denegado";
+                return View();
             }
         }
         /**
@@ -225,9 +242,9 @@ namespace AppWebERS.Controllers{
         * <param name="usuario">Objeto usuario que sera comprobado</param>
         * <returns>Valor booleano, true si esta habilitado y false en caso contrario</returns>
         */
-        public Boolean ComprobarEstadoUsuario(Usuario usuario)
+        public bool ComprobarEstadoUsuario(Usuario usuario)
         {
-            if (usuario.Estado)
+            if (usuario.Estado.Equals( "Habilitado"))
             {
                 return true;
             }

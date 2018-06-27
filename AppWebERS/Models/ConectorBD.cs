@@ -11,9 +11,9 @@ namespace AppWebERS.Models{
 
         private static MySqlConnection Con;
 
-        private ConectorBD()
+        public ConectorBD()
         {
-            string conS = "Server=localhost;Port=3306;Database=appers;Uid=conexion;password=1234";
+            string conS = "Server=localhost;Port=3306;Database=appers;Uid=conexion;password=1234;SslMode=None";
             Con = new MySqlConnection(conS);
         }
 
@@ -48,6 +48,7 @@ namespace AppWebERS.Models{
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+
                 Con.Close();
             }
             return null;

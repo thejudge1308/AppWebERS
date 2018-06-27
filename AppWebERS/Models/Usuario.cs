@@ -115,6 +115,9 @@ namespace AppWebERS.Models{
          **/
 
         public bool Crear() {
+
+            string values = this.Rut + "," + this.Nombre + "," + this.CorreoElectronico + "," + this.Contrasenia + "," + this.Tipo + ",Activo" ;
+            string consulta = "INSERT INTO Usuario (rut,nombre,correo_electronico,constrasenia,tipo,estado) VALUES ( " + values +")";
             return true;
         }
 

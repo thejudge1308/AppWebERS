@@ -10,16 +10,6 @@ using System.Web;
 
 namespace AppWebERS.Models {
     public class Requisito {
-        private int idRequisito;
-        private string nombre;
-        private string descripcion;
-        private string prioridad;
-        private string categoria;
-        private string fuente;
-        private string estabilidad;
-        private string estado;
-        private string tipo;
-        private List<Actor> actores;
 
         /**
          * Constructor de la clase Requisito
@@ -37,16 +27,16 @@ namespace AppWebERS.Models {
          **/
 
         public Requisito(int idRequisito, string nombre, string descripcion, string prioridad, string categoria, string fuente, string estabilidad, string estado, string tipo, List<Actor> actores) {
-            this.idRequisito = idRequisito;
-            this.nombre = nombre;
-            this.descripcion = descripcion;
-            this.prioridad = prioridad;
-            this.categoria = categoria;
-            this.fuente = fuente;
-            this.estabilidad = estabilidad;
-            this.estado = estado;
-            this.tipo = tipo;
-            this.actores = new List<Actor>();
+            this.IdRequisito = idRequisito;
+            this.Nombre = nombre;
+            this.Descripcion = descripcion;
+            this.Prioridad = prioridad;
+            this.Categoria = categoria;
+            this.Fuente = fuente;
+            this.Estabilidad = estabilidad;
+            this.Estado = estado;
+            this.Tipo = tipo;
+            this.Actores = new List<Actor>();
         }
 
         /**
@@ -154,7 +144,7 @@ namespace AppWebERS.Models {
          * <returns>Retorna un boolean que indica el correcto registro del requisito.</returns>
          **/
 
-        public bool crear() {
+        public bool Crear() {
             return true;
         }
 
@@ -163,7 +153,7 @@ namespace AppWebERS.Models {
          * <returns>Retorna un registro específico.</returns>
          **/
 
-        public void listarEspecifico(Proyecto proyecto) {
+        public void ListarEspecifico(Proyecto proyecto) {
             
         }
 
@@ -171,7 +161,7 @@ namespace AppWebERS.Models {
          * Método para seleccionar un requisito 
          **/
 
-        public void seleccionar(int id) {
+        public void Seleccionar(int id) {
 
         }
 
@@ -179,7 +169,7 @@ namespace AppWebERS.Models {
          * Método para cargar datos
          **/
 
-        public void cargarDatos(DataRow dr ) {
+        public void CargarDatos(DataRow dr ) {
 
         }
     }

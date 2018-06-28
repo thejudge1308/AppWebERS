@@ -10,12 +10,6 @@ using System.Web;
 
 namespace AppWebERS.Models {
     public class Actor {
-        private int idActor;
-        private string descripcion;
-        private int numActual;
-        private int numFuturo;
-        private int numContactables;
-        private string tipoUsuario;
 
         /**
          * Constructor de la clase Actor
@@ -25,16 +19,16 @@ namespace AppWebERS.Models {
          * <param name = "numActual" > El número actual del actor.</param>
          * <param name = "numFuturo" > El número futuro del actor.</param>
          * <param name = "numContactables" > El número de contactables del actor.</param>
-         * <param name = "tipoUsuario" > El tipo de usuario del actor.</param>
+         * <param name = "nombre" > El nombre del actor.</param>
          **/
 
-        public Actor(int idActor, string descripcion, int numActual, int numFuturo, int numContactables, string tipoUsuario) {
-            this.idActor = idActor;
-            this.descripcion = descripcion;
-            this.numActual = numActual;
-            this.numFuturo = numFuturo;
-            this.numContactables = numContactables;
-            this.tipoUsuario = tipoUsuario;
+        public Actor(int idActor, string descripcion, int numActual, int numFuturo, int numContactables, string nombre) {
+            this.IdActor = idActor;
+            this.Descripcion = descripcion;
+            this.NumActual = numActual;
+            this.NumFuturo = numFuturo;
+            this.NumContactables = numContactables;
+            this.Nombre = nombre;
         }
 
         /**
@@ -88,21 +82,22 @@ namespace AppWebERS.Models {
         public int NumContactables {get; set;}
 
         /**
-         * Setter y Getter del tipo de usuario
+         * Setter y Getter del nombre
          * 
-         * <param name = "tipoUsuario" > El tipo de usuario que corresponde al actor.</param>
-         * <returns>Retorna el valor string del tipo de usuario.</returns>
+         * <param name = "nombre" > El nombre que corresponde al actor.</param>
+         * <returns>Retorna el valor string del nombre.</returns>
          * 
          **/
 
-        public string TipoUsuario {get; set;}
+        public string Nombre {get; set;}
 
         /**
          * Método para Crear un Actor
          * <returns>Retorna un boolean que indica la correcta creación del actor.</returns>
          **/
 
-        public bool crear() {
+
+        public bool Crear() {
             return true;
         }
 
@@ -111,7 +106,7 @@ namespace AppWebERS.Models {
          * <returns>Retorna un actor específico.</returns>
          **/
 
-        public void listarEspecifico(Proyecto proyecto) {
+        public void ListarEspecifico(Proyecto proyecto) {
           
         }
 
@@ -119,7 +114,7 @@ namespace AppWebERS.Models {
          * Método para seleccionar un actor 
          **/
 
-        public void seleccionar(int id) {
+        public void Seleccionar(int id) {
 
         }
 
@@ -127,7 +122,7 @@ namespace AppWebERS.Models {
          * Método para cargar datos
          **/
 
-        public void cargarDatos(DataRow dr) {
+        public void CargarDatos(DataRow dr) {
 
         }
     }

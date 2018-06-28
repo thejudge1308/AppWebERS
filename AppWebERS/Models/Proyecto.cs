@@ -11,25 +11,12 @@ using System.Web;
 namespace AppWebERS.Models
 {
     public class Proyecto {
-        private int idProyecto;
-        private string proposito;
-        private string alcance;
-        private string contexto;
-        private string definiciones;
-        private string acronimos;
-        private string abreviaturas;
-        private string referencias;
-        private string ambienteOperacional;
-        private string relacionProyectos;
-        private List<Usuario> usuarios;
-        private List<Requisito> requisitos;
-        private List<CasoDeUso> casosDeUso;
-        private List<Actor> actores;
 
         /**
          * Constructor de la clase Proyecto
          * 
          * <param name = "idProyecto" > El identificador del proyecto.</param>
+         * <param name = "nombre" > El identificador del proyecto.</param>
          * <param name = "proposito" > El proposito del proyecto.</param>
          * <param name = "alcance" > El alcance del proyecto.</param>
          * <param name = "contexto" > El contexto del proyecto.</param>
@@ -45,21 +32,22 @@ namespace AppWebERS.Models
          * <param name = "actores" > La lista de actores asociados al proyecto.</param>
          **/
 
-        public Proyecto(int idProyecto, string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string referencias, string ambienteOperacional, string relacionProyectos, List<Usuario> usuarios, List<Requisito> requisitos, List<CasoDeUso> casosDeUso, List<Actor> actores) {
-            this.idProyecto = idProyecto;
-            this.proposito = proposito;
-            this.alcance = alcance;
-            this.contexto = contexto;
-            this.definiciones = definiciones;
-            this.acronimos = acronimos;
-            this.abreviaturas = abreviaturas;
-            this.referencias = referencias;
-            this.ambienteOperacional = ambienteOperacional;
-            this.relacionProyectos = relacionProyectos;
-            this.usuarios = new List<Usuario>();
-            this.requisitos = new List<Requisito>();
-            this.casosDeUso = new List<CasoDeUso>();
-            this.actores = new List<Actor>();
+        public Proyecto(int idProyecto, string nombre,string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string referencias, string ambienteOperacional, string relacionProyectos, List<Usuario> usuarios, List<Requisito> requisitos, List<CasoDeUso> casosDeUso, List<Actor> actores) {
+            this.IdProyecto = idProyecto;
+            this.Nombre = nombre;
+            this.Proposito = proposito;
+            this.Alcance = alcance;
+            this.Contexto = contexto;
+            this.Definiciones = definiciones;
+            this.Acronimos = acronimos;
+            this.Abreviaturas = abreviaturas;
+            this.Referencias = referencias;
+            this.AmbienteOperacional = ambienteOperacional;
+            this.RelacionProyectos = relacionProyectos;
+            this.Usuarios = new List<Usuario>();
+            this.Requisitos = new List<Requisito>();
+            this.CasosDeUso = new List<CasoDeUso>();
+            this.Actores = new List<Actor>();
         }
 
         /**
@@ -71,6 +59,15 @@ namespace AppWebERS.Models
          **/
 
         public int IdProyecto {get; set;}
+
+        /**
+         * Setter y Getter de Nombre del proyecto
+         * 
+         * <param name = "nombre" > El identificador del proyecto.</param>
+         * <returns>Retorna el valor string del nombre.</returns>
+         * 
+         **/
+        public string Nombre { get; set;}
 
         /**
          * Setter y Getter del proposito del proyecto
@@ -206,7 +203,7 @@ namespace AppWebERS.Models
          * Método para listar todos los proyectos existentes
          **/
 
-        public void listarTodos() {
+        public void ListarTodos() {
         }
 
         /**
@@ -214,7 +211,7 @@ namespace AppWebERS.Models
          * <returns>Retorna un proyecto específico.</returns>
          **/
 
-        public void listarEspecifico(Usuario usuario) {
+        public void ListarEspecifico(Usuario usuario) {
            
         }
 
@@ -222,7 +219,7 @@ namespace AppWebERS.Models
          * Método para seleccionar un proyecto 
          **/
 
-        public void seleccionar(int id) {
+        public void Seleccionar(int id) {
 
         }
 
@@ -231,7 +228,7 @@ namespace AppWebERS.Models
          * <returns>Retorna un boolean que indica la correcta creación del proyecto.</returns>
          **/
 
-        public bool crear() {
+        public bool Crear() {
             return true;
         }
 
@@ -239,7 +236,7 @@ namespace AppWebERS.Models
          * Método para cargar datos
          **/
 
-        public void cargarDatos(DataRow dr) {
+        public void CargarDatos(DataRow dr) {
 
         }
     }

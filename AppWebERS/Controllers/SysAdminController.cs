@@ -64,12 +64,12 @@ namespace AppWebERS.Controllers
             Usuario nuevoUsuario = new Usuario(rut, nombre, correo, contrasena, "USUARIO", true);
 
             if (nuevoUsuario.Crear()) {
-                ViewBag.SuccessMessage = "Registro exitoso";
+                ViewBag.SuccessMessage = "Registro exitoso.";
                 return View("CrearUsuario", new RegisterViewModel());
             }
             else{
-                ViewBag.SuccessMessage = "Registro fallido";
-                return View("CrearUsuario", new RegisterViewModel());
+                ViewBag.SuccessMessage = "No se pudo completar la solicitud.";
+                return View("CrearUsuario", modeloUsuario);
             }
 
 

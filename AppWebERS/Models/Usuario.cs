@@ -5,7 +5,7 @@ using System.Configuration;
 using System.Data;
 using System.Linq;
 using System.Web;
-using System.Collections.Generic;
+
 using System.ComponentModel.DataAnnotations;
 
 namespace AppWebERS.Models{
@@ -165,6 +165,26 @@ namespace AppWebERS.Models{
          **/
 
         public bool Crear() {
+            int bit;
+            if (this.Estado == true){
+                bit = 1;
+            }
+            else{
+                bit = 0;
+            }
+            string values = "'"+ this.Rut + "','" + this.Nombre + "','" + this.CorreoElectronico + "','" + this.Contrasenia + "','" + this.Tipo +"'," + bit ;
+            string consulta = "INSERT INTO Usuario (rut,nombre,correo_electronico,contrasenia,tipo,estado) VALUES ( " + values +")";
+            
+
+            if(this.conector.RealizarConsultaNoQuery(consulta)){
+                this.conector.CerrarConexion();
+                return true;
+            }
+            else{
+                this.conector.CerrarConexion();
+                return false;
+            }
+   
             return true;
         }
 
@@ -176,7 +196,7 @@ namespace AppWebERS.Models{
             correo + "," + "contrasenia =" + contrasenia + "," + "tipo =" + tipo + "," + "estado =" + estado +
             "WHERE rut =" + rutAModificar;
              MySqlDataReader reader = this.conector.RealizarConsulta(consulta);
-            if (reader ==null)
+            if (reader.Read() )
             {
                 this.conector.CerrarConexion();
                 return false;

@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `appers`.`Usuario` (
   `rut` VARCHAR(12) NOT NULL,
   `nombre` VARCHAR(50) NOT NULL,
   `correo_electronico` VARCHAR(35) NOT NULL,
-  `contrasenia` VARCHAR(16) NOT NULL,
+  `contrasenia` VARCHAR(50) NOT NULL,
   `tipo` VARCHAR(20) NOT NULL,
   `estado` BIT NOT NULL,
   PRIMARY KEY (`rut`)

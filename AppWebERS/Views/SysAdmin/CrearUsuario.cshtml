@@ -5,7 +5,7 @@
 
 <h2>@ViewBag.Title.</h2>
 
-@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+@using (Html.BeginForm("CrearUsuario", "SysAdmin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
     <h4>Crear una cuenta nueva</h4>
@@ -15,8 +15,8 @@
         @Html.LabelFor(m => m.Rut, new { @class = "col-md-2 control-label" })
 
         <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Rut, new { placeholder = "Ej. 1234678",maxlenght ="12", @class = "form-control"})
-            @Html.ValidationMessageFor(m => m.Rut,"",new { @style ="color:rgb(209,52,56); font-size:14px"})
+            @Html.TextBoxFor(m => m.Rut, new { placeholder = "Ej. 1234678", maxlenght = "12", @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Rut, "", new { @style = "color:rgb(209,52,56); font-size:14px" })
         </div>
     </div>
 
@@ -48,13 +48,19 @@
         @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
             @Html.PasswordFor(m => m.ConfirmPassword, new { @maxlenght = "16", @class = "form-control" })
-            @Html.ValidationMessageFor(m => m.ConfirmPassword,"",new { @style = "color:rgb(209,52,56); font-size:14px" })
+            @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @style = "color:rgb(209,52,56); font-size:14px" })
         </div>
     </div>
 
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             <input type="submit" class="btn btn-default" value="Registrar" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-10">
+            <label class="label-success">@ViewBag.SuccessMessage</label>
         </div>
     </div>
 }

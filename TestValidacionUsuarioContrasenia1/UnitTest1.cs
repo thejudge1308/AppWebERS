@@ -1,12 +1,13 @@
 ﻿using System;
 using AppWebERS.Controllers;
+using AppWebERS.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace TestValidacionUsuarioContrasenia1
 {
     [TestClass]
     public class UnitTest1
-    {
+    {/*
         [TestMethod]
         public void TestMethod1()
         {
@@ -62,6 +63,13 @@ namespace TestValidacionUsuarioContrasenia1
             String contrasenia = "NFS0128";
 
             Assert.AreEqual(true, new LoginController().permitirAccesoUsuario(usuario, contrasenia));
+        }*/
+        [TestMethod]
+        public void TestMethod8()
+        {
+            Proyecto p1 = new Proyecto(1,"proyecto1",null,null,null,null,null,null,null,null,null,null,null,null,null);
+           
+            Assert.AreEqual(true, p1.RegistrarProyectoEnBd(p1));
         }
     }
 }

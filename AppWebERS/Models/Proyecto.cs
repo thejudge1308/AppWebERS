@@ -239,5 +239,34 @@ namespace AppWebERS.Models
         public void CargarDatos(DataRow dr) {
 
         }
+        /**
+         *<autor>Ariel Cornejo</autor>
+         * <summary>
+         * Metodo encargado de insertar un proyecto creado en la Base De datos
+         * </summary> 
+         * 
+         * <param name="proyecto"> Objeto proyecto que sera ingresado en la BD</param>
+         * 
+         * */
+        public bool RegistrarProyectoEnBd(Proyecto proyecto)
+        {
+            ConectorBD conector = ConectorBD.Instance;
+            int id = proyecto.IdProyecto;
+            String nombre = proyecto.Nombre;
+            String proposito = proyecto.Proposito;
+            String alcance = proyecto.Alcance;
+            String contexto = proyecto.Contexto;
+            String definiciones = proyecto.Definiciones;
+            String acronimos = proyecto.Acronimos;
+            String abreviaturas = proyecto.Abreviaturas;
+            String referencias = proyecto.Referencias;
+            String ambiente = proyecto.AmbienteOperacional;
+            String relacion = proyecto.RelacionProyectos;
+            String consulta = "INSERT INTO proyecto (id_proyecto,nombre,proposito,alcance,contexto,definiciones,acronimos,abreviaturas,referencias,ambiente_operacional,relacion_con_otros_proyectos)" +
+                " VALUES ('"+id+"','"+nombre+"', '"+proposito+"','"+alcance+"','"+contexto+"','"+definiciones+"','"+acronimos+"','"+abreviaturas+"','"+referencias+"','"+ambiente+"','"+relacion+"')";
+            return conector.RealizarConsultaNoQuery(consulta);
+
+           
+        }
     }
 }

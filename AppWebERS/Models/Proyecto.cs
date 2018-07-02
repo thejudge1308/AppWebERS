@@ -305,6 +305,18 @@ namespace AppWebERS.Models
         public void CargarDatos(DataRow dr) {
 
         }
+
+        /**
+         * <author>Roberto Ureta</author>
+         * <summary>
+         * Indica si el largo de una cadena de texto es mayor a 0.
+         * </summary>
+         * <param name="texto">Contiene un string con el texto a verificar</param>
+         * <returns>true si texto es mayor que 0, false en caso contrario</returns>
+         */
+        private bool VerificarNombre(string texto) {
+            return texto.Length > 0;
+        }
         /**
          *<autor>Ariel Cornejo</autor>
          * <summary>
@@ -331,8 +343,6 @@ namespace AppWebERS.Models
             String consulta = "INSERT INTO proyecto (id_proyecto,nombre,proposito,alcance,contexto,definiciones,acronimos,abreviaturas,referencias,ambiente_operacional,relacion_con_otros_proyectos)" +
                 " VALUES ('"+id+"','"+nombre+"', '"+proposito+"','"+alcance+"','"+contexto+"','"+definiciones+"','"+acronimos+"','"+abreviaturas+"','"+referencias+"','"+ambiente+"','"+relacion+"')";
             return conector.RealizarConsultaNoQuery(consulta);
-
-           
         }
     }
 }

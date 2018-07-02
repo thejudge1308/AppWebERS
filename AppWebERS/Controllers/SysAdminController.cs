@@ -50,7 +50,7 @@ namespace AppWebERS.Controllers
 
             return View(modeloUsuario);
         }
-
+/*
         [HttpPost]
         public ActionResult CrearUsuario(RegisterViewModel modeloUsuario)
         {
@@ -76,7 +76,7 @@ namespace AppWebERS.Controllers
             
         }
 
-
+*/
 
         public void VerDetalleDelProyecto(Proyecto proyecto)
         {

@@ -6,7 +6,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
+using AspNet.Identity.MySQL;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
@@ -42,7 +42,7 @@ namespace AppWebERS
 
         public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context) 
         {
-            var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<ApplicationDbContext>()));
+            var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<ApplicationDbContext>() as MySQLDatabase));
             // Configure validation logic for usernames
             manager.UserValidator = new UserValidator<ApplicationUser>(manager)
             {
@@ -85,6 +85,82 @@ namespace AppWebERS
                     new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
             }
             return manager;
+        }
+
+        /*
+        * Creador: Gabriel Sanhueza
+        * Accion: Busca un usuario por rut
+        * Retorno: Una operacion asincrona (Parecida a las promesas de js)
+        */
+        public Task<ApplicationUser> FindByRutAsync(string rut)
+        {
+            using (var db = ApplicationDbContext.Create())
+            {
+                return new UserStore<ApplicationUser>(db).FindByRutAsync(rut);
+            }
+        }
+
+        /*
+         * Creador: Gabriel Sanhueza
+         * Accion: Obtiene todos los usuarios
+         * Retorno: Una operacion asincrona (Parecida a las promesas de js)
+         */
+        public Task<List<ApplicationUser>> GetAllUsersAsync()
+        {
+            using (var db = ApplicationDbContext.Create())
+            {
+                return new UserStore<ApplicationUser>(db).GetAllUsersAsync();
+            }
+        }
+
+        /*
+        * Creador: Gabriel Sanhueza
+        * Accion: Busca un usuario por rut
+        * Retorno: Una operacion asincrona (Parecida a las promesas de js)
+        */
+        public async Task<bool> IsEstadoEnabledAsync(string userId)
+        {
+            using (var db = ApplicationDbContext.Create())
+            {
+                var store = new UserStore<ApplicationUser>(db);
+                var usuarioTask = store.FindByIdAsync(userId);
+                ApplicationUser usuario = await usuarioTask;
+                bool result = await store.GetEstadoAsync(usuario);
+                return result;
+            }
+        }
+
+        /*
+        * Creador: Gabriel Sanhueza
+        * Accion: Busca un usuario por rut
+        * Retorno: Una operacion asincrona (Parecida a las promesas de js) usar await para esperar que el resultado de la operacion este listo
+        */
+        public async Task setEstadoAsync(string userId, bool isEnabled)
+        {
+            using (var db = ApplicationDbContext.Create())
+            {
+                var store = new UserStore<ApplicationUser>(db);
+                var usuarioTask = store.FindByIdAsync(userId);
+                ApplicationUser usuario = await usuarioTask;
+                await store.SetEstadoAsync(usuario, isEnabled);
+                store.UpdateAsync(usuario);
+            }
+        }
+
+        /*
+         * Creador: Gabriel Sanhueza
+         * Accion: Busca un usuario por rut
+         * Retorno: Una operacion asincrona (Parecida a las promesas de js) usar await para esperar que el resultado de la operacion este listo
+         */
+        public async Task<string> getTipoAsync(string userId)
+        {
+            using (var db = ApplicationDbContext.Create())
+            {
+                var store = new UserStore<ApplicationUser>(db);
+                var usuarioTask = store.FindByIdAsync(userId);
+                ApplicationUser usuario = await usuarioTask;
+                return await store.GetTipoAsync(usuario);
+            }
         }
     }
 

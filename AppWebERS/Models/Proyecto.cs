@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -32,7 +33,7 @@ namespace AppWebERS.Models
          * <param name = "actores" > La lista de actores asociados al proyecto.</param>
          **/
 
-        public Proyecto(int idProyecto, string nombre,string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string referencias, string ambienteOperacional, string relacionProyectos, List<Usuario> usuarios, List<Requisito> requisitos, List<CasoDeUso> casosDeUso, List<Actor> actores) {
+        public Proyecto(int idProyecto, string nombre,string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string referencias, string ambienteOperacional, string relacionProyectos) {
             this.IdProyecto = idProyecto;
             this.Nombre = nombre;
             this.Proposito = proposito;
@@ -49,6 +50,8 @@ namespace AppWebERS.Models
             this.CasosDeUso = new List<CasoDeUso>();
             this.Actores = new List<Actor>();
         }
+
+        private ConectorBD conexion = ConectorBD.Instance;
 
         /**
          * Setter y Getter de ID del proyecto
@@ -224,11 +227,74 @@ namespace AppWebERS.Models
         }
 
         /**
-         * Método para Crear un Proyecto
-         * <returns>Retorna un boolean que indica la correcta creación del proyecto.</returns>
+         * <autor>Diego Iturriaga</autor>
+         * <summary>Este metodo se encarga de crear un proyecto con los atributos correspondientes a este
+         * siempre y cuando estos cumplan el esquema de validaciones</summary>
+         * <param name = "idProyecto" > El identificador del proyecto.</param>
+         * <param name = "nombre" > El nombre del proyecto.</param>
+         * <param name = "proposito" > El proposito del proyecto.</param>
+         * <param name = "alcance" > El alcance del proyecto.</param>
+         * <param name = "contexto" > El contexto del proyecto.</param>
+         * <param name = "definiciones" > Las definiciones del proyecto.</param>
+         * <param name = "acronimos" > Los acronimos del proyecto.</param>
+         * <param name = "abreviaturas" > Las abreviaturas del proyecto.</param>
+         * <param name = "referencias" > Las referencias del proyecto.</param>
+         * <param name = "ambienteOperacional" > El ambiente operacional del proyecto.</param>
+         * <param name = "relacionProyectos" > La relacion con otros proyectos del proyecto.</param>
+         * <param name = "usuarios" > La lista de usuarios involucrados en el proyecto.</param>
+         * <param name = "requisitos" > La lista de requisitos asociados al proyecto.</param>
+         * <param name = "casosDeUso" > La lista de casos de uso asociados al proyecto.</param>
+         * <param name = "actores" > La lista de actores asociados al proyecto.</param> 
+         * <returns>Retorna un objeto Proyecto que contienen los datos que se ingresan como
+         * parametros o retorna el objeto Proyecto como un null en caso de que alguno de los datos
+         * no pasen las validaciones correspondientes.</returns>
          **/
 
-        public bool Crear() {
+        public Proyecto CrearProyecto(int idProyecto, string nombre, string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string referencias, string ambienteOperacional, string relacionProyectos) {
+            Proyecto proyectoNuevo = null;
+            if (this.VerificarTexto(nombre))
+            {
+                if (this.ValidarNombre(nombre))
+                {
+                    proyectoNuevo = new Proyecto(idProyecto, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambienteOperacional, relacionProyectos);
+                    return proyectoNuevo;
+                }
+            }
+            return proyectoNuevo;
+        }
+
+        private bool VerificarTexto(string nombre)
+        {
+            throw new NotImplementedException();
+        }
+
+        /**
+         * 
+         * <autor>Diego Iturriaga</autor>
+         * <summary>Este metodo se encarga de validar que el atributo nombre de un proyecto que se desea crear, 
+         * el cual no se debe repetir </summary>
+         * <param name="nombreProyecto">Contiene un string con el nombre del proyecto que se desea crear.</param>
+         * <returns>true si el nombre del proyecto que se desea crear es valido, por lo tanto no se repite,
+         * en caso contrario, retorna false</returns>
+         * 
+         **/
+        private bool ValidarNombre(string nombreProyecto)
+        {
+            string consulta = "SELECT proyecto.nombre FROM proyecto;";
+            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
+            if (reader!=null)
+            {
+                while (reader.Read())
+                {
+                    string nombre = reader["nombre"].ToString();
+                    if (nombre==nombreProyecto)
+                    {
+                        this.conexion.CerrarConexion();
+                        return false;
+                    }
+                }
+            }
+            this.conexion.CerrarConexion();
             return true;
         }
 
@@ -238,6 +304,45 @@ namespace AppWebERS.Models
 
         public void CargarDatos(DataRow dr) {
 
+        }
+
+        /**
+         * <author>Roberto Ureta</author>
+         * <summary>
+         * Indica si el largo de una cadena de texto es mayor a 0.
+         * </summary>
+         * <param name="texto">Contiene un string con el texto a verificar</param>
+         * <returns>true si texto es mayor que 0, false en caso contrario</returns>
+         */
+        private bool VerificarNombre(string texto) {
+            return texto.Length > 0;
+        }
+        /**
+         *<autor>Ariel Cornejo</autor>
+         * <summary>
+         * Metodo encargado de insertar un proyecto creado en la Base De datos
+         * </summary> 
+         * 
+         * <param name="proyecto"> Objeto proyecto que sera ingresado en la BD</param>
+         * 
+         * */
+        public bool RegistrarProyectoEnBd(Proyecto proyecto)
+        {
+            ConectorBD conector = ConectorBD.Instance;
+            int id = proyecto.IdProyecto;
+            String nombre = proyecto.Nombre;
+            String proposito = proyecto.Proposito;
+            String alcance = proyecto.Alcance;
+            String contexto = proyecto.Contexto;
+            String definiciones = proyecto.Definiciones;
+            String acronimos = proyecto.Acronimos;
+            String abreviaturas = proyecto.Abreviaturas;
+            String referencias = proyecto.Referencias;
+            String ambiente = proyecto.AmbienteOperacional;
+            String relacion = proyecto.RelacionProyectos;
+            String consulta = "INSERT INTO proyecto (id_proyecto,nombre,proposito,alcance,contexto,definiciones,acronimos,abreviaturas,referencias,ambiente_operacional,relacion_con_otros_proyectos)" +
+                " VALUES ('"+id+"','"+nombre+"', '"+proposito+"','"+alcance+"','"+contexto+"','"+definiciones+"','"+acronimos+"','"+abreviaturas+"','"+referencias+"','"+ambiente+"','"+relacion+"')";
+            return conector.RealizarConsultaNoQuery(consulta);
         }
     }
 }

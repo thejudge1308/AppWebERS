@@ -11,7 +11,7 @@ namespace AppWebERS.Models
     public class ProyectoController : Controller
     {
         private ConectorBD conector = ConectorBD.Instance;
-
+        List<String> listaProyectosNombres = new List<String>();
         // GET: Proyecto
         public ActionResult Index()
         {
@@ -27,7 +27,7 @@ namespace AppWebERS.Models
          */
         public List<String> ListarProyectos()
         {
-            List<String> listaProyectosNombres = new List<String>();
+            
 
             string consulta = "SELECT nombre FROM proyecto";
             MySqlDataReader reader = this.conector.RealizarConsulta(consulta);

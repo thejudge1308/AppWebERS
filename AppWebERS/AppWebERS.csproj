@@ -197,6 +197,7 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\ModificacionDERS.cs" />
     <Compile Include="Models\Proyecto.cs" />
+    <Compile Include="Models\ProyectoController.cs" />
     <Compile Include="Models\Requisito.cs" />
     <Compile Include="Models\Usuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -306,6 +307,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Proyecto\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

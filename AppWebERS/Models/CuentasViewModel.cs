@@ -36,17 +36,20 @@ namespace AppWebERS.Models
 
     public class RegisterViewModel
     {
+
+        
+
         [Required(ErrorMessage = "El campo Rut es obligatorio.")]
         [RegularExpression("[0-9]*", ErrorMessage = "Rut no válido.")]
         [StringLength(8, ErrorMessage = "El rut debe tener entre 7 a 8 caracteres (sin guión ni digito verif.)", MinimumLength = 7)]
         [Display(Name = "Rut")]
         public string Rut { get; set; }
 
-        [Required(ErrorMessage = "El campo Nombre es obligatorio.")]
+       /** [Required(ErrorMessage = "El campo Nombre es obligatorio.")]
         [RegularExpression("([ ]?[a-zA-Z])*", ErrorMessage = "Nombre no válido.")]
         [StringLength(50, ErrorMessage = "El largo del nombre deber ser entre 1 a 50 caracteres.", MinimumLength = 1)]
-        [Display(Name = "Nombre")]
-        public string NombreUsuario { get; set; }
+        [Display(Name = "Nombre de usuario")]
+        public string NombreUsuario { get; set; }*/
 
         [Required]
         [EmailAddress]
@@ -64,6 +67,11 @@ namespace AppWebERS.Models
         [Display(Name = "Confirmar contraseña")]
         [Compare("Password", ErrorMessage = "La contraseña y la contraseña de confirmación no coinciden.")]
         public string ConfirmPassword { get; set; }
+
+        [Required(ErrorMessage = "El campo Nombre es obligatorio.")]
+        [StringLength(50, ErrorMessage = "El largo del nombre deber ser entre 5 a 50 caracteres.", MinimumLength = 5)]
+        [Display(Name = "Nombre de usuario")]
+        public string UserName { get; set; }
     }
 
     public class ResetPasswordViewModel

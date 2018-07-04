@@ -221,6 +221,12 @@ namespace WebApplication2.Controllers
             base.Dispose(disposing);
         }
 
+
+        public async Task<ActionResult> ModificarUsuario()
+        {
+            return View();
+        }
+
 #region Aplicaciones auxiliares
         // Se usan para protección XSRF al agregar inicios de sesión externos
         private const string XsrfKey = "XsrfId";

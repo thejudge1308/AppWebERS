@@ -113,7 +113,7 @@ namespace AppWebERS.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email};
+                var user = new ApplicationUser { UserName = model.UserName, Rut = model.Rut, Email = model.Email , Tipo = "SYSADMIN"};
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {

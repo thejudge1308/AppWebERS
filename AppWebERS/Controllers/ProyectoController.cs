@@ -12,18 +12,21 @@ namespace AppWebERS.Controllers
     {
         [HttpGet]
         public ActionResult CrearProyecto() {
-            ViewBag.Message = "Crear Proyecto";
             return View();
 
         }
         [HttpPost]
         public ActionResult CrearProyecto(string nombre) {
             if (ModelState.IsValid) {
-                Proyecto proyectoTest = new Proyecto();
-                proyectoTest.Nombre = nombre;
-                if(proyectoTest.RegistrarProyectoEnBd(proyectoTest))
+                Proyecto proyecto = new Proyecto();
+                proyecto.Nombre = nombre;
+                if(proyecto.RegistrarProyectoEnBd(proyecto))
                     ViewBag.Message = "Exito";
-                ViewBag.Message = "Error";
+                else
+                {
+                    ViewBag.Message = "Error";
+                }
+                
             }
 
             return View();

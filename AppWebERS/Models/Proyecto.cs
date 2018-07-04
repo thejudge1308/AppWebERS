@@ -76,7 +76,7 @@ namespace AppWebERS.Models
          * 
          **/
          [Required]
-         [StringLength(100,ErrorMessage = "El número de caracteres de Nombre debe ser ",MinimumLength = 6)]
+         [StringLength(100,ErrorMessage = "El número de caracteres de Nombre debe ser 6",MinimumLength = 6)]
         public string Nombre { get; set;}
 
         /**
@@ -259,7 +259,7 @@ namespace AppWebERS.Models
 
         public Proyecto CrearProyecto(int idProyecto, string nombre, string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string referencias, string ambienteOperacional, string relacionProyectos) {
             Proyecto proyectoNuevo = null;
-            if (this.VerificarTexto(nombre))
+            if (this.VerificarNombre(nombre))
             {
                 if (this.ValidarNombre(nombre))
                 {
@@ -268,11 +268,6 @@ namespace AppWebERS.Models
                 }
             }
             return proyectoNuevo;
-        }
-
-        private bool VerificarTexto(string nombre)
-        {
-            throw new NotImplementedException();
         }
 
         /**
@@ -348,7 +343,7 @@ namespace AppWebERS.Models
             String ambiente = proyecto.AmbienteOperacional;
             String relacion = proyecto.RelacionProyectos;
             String consulta = "INSERT INTO proyecto (id_proyecto,nombre,proposito,alcance,contexto,definiciones,acronimos,abreviaturas,referencias,ambiente_operacional,relacion_con_otros_proyectos)" +
-                " VALUES ('"+1+"','"+nombre+"', '"+proposito+"','"+alcance+"','"+contexto+"','"+definiciones+"','"+acronimos+"','"+abreviaturas+"','"+referencias+"','"+ambiente+"','"+relacion+"')";
+                " VALUES ("+7+",'"+nombre+"', '"+proposito+"','"+alcance+"','"+contexto+"','"+definiciones+"','"+acronimos+"','"+abreviaturas+"','"+referencias+"','"+ambiente+"','"+relacion+"')";
             return conector.RealizarConsultaNoQuery(consulta);
         }
     }

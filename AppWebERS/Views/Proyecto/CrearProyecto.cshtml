@@ -7,7 +7,8 @@
 <h2>Crear Proyecto</h2>
 
 
-@using (Html.BeginForm()) 
+
+@using (Html.BeginForm("CrearProyecto","Proyecto")) 
 {
     @Html.AntiForgeryToken()
     
@@ -22,7 +23,7 @@
                     @Html.ValidationMessageFor(model => model.IdProyecto, "", new { @class = "text-danger" })
                 </div>
             </div>
-
+		*@
         <div class="form-group">
             @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -30,6 +31,7 @@
                 @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
             </div>
         </div>
+		@*
         <div class="form-group">
                 @Html.LabelFor(model => model.Proposito, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
@@ -101,21 +103,13 @@
                     @Html.ValidationMessageFor(model => model.RelacionProyectos, "", new { @class = "text-danger" })
                 </div>
             </div>*@
-    <form action=" /Proyecto/CrearProyecto" method="post">
-        <input type="text" id="nombre" name="nombre" />
-        
-
-    </form>
-    <form>
-        <input type="submit" value="Crear Proyecto" />  
-    </form>
-    @*
+		<h4>@ViewBag.Message</h4>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Crear Proyecto" class="btn btn-default" />
             </div>
         </div>
-    *@
+  
 </div>
 }
 

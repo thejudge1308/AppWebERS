@@ -197,6 +197,7 @@
     <Compile Include="Models\LoginViewModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\ModificacionDERS.cs" />
+    <Compile Include="Models\NombreProyecto.cs" />
     <Compile Include="Models\Proyecto.cs" />
     <Compile Include="Models\Requisito.cs" />
     <Compile Include="Models\Usuario.cs" />

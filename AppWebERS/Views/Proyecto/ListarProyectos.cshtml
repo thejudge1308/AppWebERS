@@ -1,5 +1,31 @@
-﻿@{
+﻿@model List<AppWebERS.Models.NombreProyecto>
+
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@{ 
+    ViewBag.Title = "Lista de proyectos";
+}
 
+<h2>@ViewBag.Title.</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var proyecto in Model)
+        {
+            <tr>
+                <td>@proyecto.Nombre</td>
+            </tr>
+
+        }
+
+    </tbody>
+
+
+</table>

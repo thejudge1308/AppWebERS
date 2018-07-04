@@ -78,11 +78,12 @@ namespace AppWebERS.Controllers
          */
         public List<String> ListaDeProyectos()
         {
+            List<string> ListaProyectosNombres = new List<string>();
             string consulta = "SELECT nombre FROM proyecto";
-            MySqlDataReader reader = this.conector.RealizarConsulta(consulta);
+            MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
             if (reader == null)
             {
-                this.conector.CerrarConexion();
+                this.Conector.CerrarConexion();
                 return null;
             }
             else
@@ -90,10 +91,10 @@ namespace AppWebERS.Controllers
                 while (reader.Read())
                 {
                     string Nombre = reader.GetString(1);
-                    listaProyectosNombres.Add(Nombre);
+                    ListaProyectosNombres.Add(Nombre);
                 }
-                this.conector.CerrarConexion();
-                return listaProyectosNombres;
+                this.Conector.CerrarConexion();
+                return ListaProyectosNombres;
             }
         }
      }

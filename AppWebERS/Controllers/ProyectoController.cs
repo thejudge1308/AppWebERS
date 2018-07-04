@@ -10,13 +10,28 @@ namespace AppWebERS.Controllers
 {
     public class ProyectoController : Controller
     {
-        public ActionResult Index() {
+        [HttpGet]
+        public ActionResult CrearProyecto() {
+            ViewBag.Message = "Crear Proyecto";
+            return View();
+
+        }
+        [HttpPost]
+        public ActionResult CrearProyecto(string nombre) {
+            if (ModelState.IsValid) {
+                Proyecto proyectoTest = new Proyecto();
+                proyectoTest.Nombre = nombre;
+                if(proyectoTest.RegistrarProyectoEnBd(proyectoTest))
+                    ViewBag.Message = "Exito";
+                ViewBag.Message = "Error";
+            }
+
             return View();
         }
 
-        public Proyecto crearProyecto() {
+        /**public Proyecto crearProyecto() {
             
-        }
+        }**/
 
     }
 }

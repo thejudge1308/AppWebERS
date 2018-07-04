@@ -13,7 +13,7 @@ namespace AppWebERS.Models
         private ConectorBD conector = ConectorBD.Instance;
         List<String> listaProyectosNombres = new List<String>();
         // GET: Proyecto
-        public ActionResult Index()
+        public ActionResult ListarProyectos()
         {
             return View();
             
@@ -25,7 +25,7 @@ namespace AppWebERS.Models
          * <param void>
          * <returns> listaProyectosNombres 
          */
-        public List<String> ListarProyectos()
+        public List<String> ListaDeProyectos()
         {
             
 

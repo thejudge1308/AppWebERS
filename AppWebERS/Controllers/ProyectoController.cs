@@ -69,5 +69,32 @@ namespace AppWebERS.Controllers
                 return ListaProyectos;
             }
         }
-    }
+
+        /*
+         * Autor Juan Abello
+         * Metodo encargado de obtener los nombres de los proyectos que existen ,guardarlos en una lista y retornar esta.
+         * <param void>
+         * <returns> listaProyectosNombres 
+         */
+        public List<String> ListaDeProyectos()
+        {
+            string consulta = "SELECT nombre FROM proyecto";
+            MySqlDataReader reader = this.conector.RealizarConsulta(consulta);
+            if (reader == null)
+            {
+                this.conector.CerrarConexion();
+                return null;
+            }
+            else
+            {
+                while (reader.Read())
+                {
+                    string Nombre = reader.GetString(1);
+                    listaProyectosNombres.Add(Nombre);
+                }
+                this.conector.CerrarConexion();
+                return listaProyectosNombres;
+            }
+        }
+     }
 }

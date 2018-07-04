@@ -186,6 +186,7 @@
     <Compile Include="Controllers\RequisitoController.cs" />
     <Compile Include="Controllers\SysAdminController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
+    <Compile Include="Controllers\ProyectoController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -303,6 +304,7 @@
     <Content Include="Views\Usuario\_AlertaDeshabilitacionPartial.cshtml" />
     <Content Include="Views\Usuario\Modificar2.cshtml" />
     <Content Include="Views\Usuario\Deshabilitar2.cshtml" />
+    <Content Include="Views\Proyecto\ListarProyectos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

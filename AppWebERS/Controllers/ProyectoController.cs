@@ -21,15 +21,15 @@ namespace AppWebERS.Controllers
 
         /*
          * Autor: Nicolás Hervias
-         * Envía una solicitud para unirse al proyecto seleccionado
+         * Envía una solicitud para unirse al proyecto seleccionado (esta se guarda en la BD)
          * Parámetros: PosProyecto. Es la posición que tiene el proyecto en la lista de proyectos
          */ 
          [HttpPost]
         public void AgregarUsuarioAProyecto(int PosProyecto)
         {
             List<int> ListaProyectos = ListaProyectosIds();
-            int IdProyectoAUnirse = ListaProyectos[PosProyecto];
-            string UsuarioSolicitante = System.Web.HttpContext.Current.User.Identity.Name;
+            int IdProyectoAUnirse = ListaProyectos[PosProyecto]; 
+            string UsuarioSolicitante = System.Web.HttpContext.Current.User.Identity.Name; // obtiene el user logueado actualmente (rut)
 
             string Values = "'" + IdProyectoAUnirse + "','" + UsuarioSolicitante + "'";
             string Consulta = "INSERT INTO Solicitud_vinculacion (ref_proyecto,ref_solicitante) VALUES (" + Values + ");";
@@ -62,7 +62,7 @@ namespace AppWebERS.Controllers
             {
                 while (reader.Read())
                 {
-                    int Id_proyecto = reader.GetInt16(1);
+                    int Id_proyecto = reader.GetInt16(0);
                     ListaProyectos.Add(Id_proyecto);
                 }
                 this.Conector.CerrarConexion();

@@ -22,6 +22,14 @@ namespace AppWebERS.Models
             
         }
 
+        public ActionResult InterfazUsuario()
+        {
+            var model = ObtenerProyectos();
+            return View(model);
+
+        }
+
+
         public List<NombreProyecto> ObtenerProyectos()
         {
             return ListaDeProyectos();

@@ -331,7 +331,6 @@ namespace AppWebERS.Models
         public bool RegistrarProyectoEnBd(Proyecto proyecto)
         {
             ConectorBD conector = ConectorBD.Instance;
-            int id = proyecto.IdProyecto;
             String nombre = proyecto.Nombre;
             String proposito = proyecto.Proposito;
             String alcance = proyecto.Alcance;
@@ -342,8 +341,8 @@ namespace AppWebERS.Models
             String referencias = proyecto.Referencias;
             String ambiente = proyecto.AmbienteOperacional;
             String relacion = proyecto.RelacionProyectos;
-            String consulta = "INSERT INTO proyecto (id_proyecto,nombre,proposito,alcance,contexto,definiciones,acronimos,abreviaturas,referencias,ambiente_operacional,relacion_con_otros_proyectos)" +
-                " VALUES ("+7+",'"+nombre+"', '"+proposito+"','"+alcance+"','"+contexto+"','"+definiciones+"','"+acronimos+"','"+abreviaturas+"','"+referencias+"','"+ambiente+"','"+relacion+"')";
+            String consulta = "INSERT INTO proyecto (inombre,proposito,alcance,contexto,definiciones,acronimos,abreviaturas,referencias,ambiente_operacional,relacion_con_otros_proyectos)" +
+                " VALUES ('"+nombre+"', '"+proposito+"','"+alcance+"','"+contexto+"','"+definiciones+"','"+acronimos+"','"+abreviaturas+"','"+referencias+"','"+ambiente+"','"+relacion+"')";
             return conector.RealizarConsultaNoQuery(consulta);
         }
     }

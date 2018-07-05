@@ -307,6 +307,7 @@
     <Content Include="Views\Usuario\Modificar2.cshtml" />
     <Content Include="Views\Usuario\Deshabilitar2.cshtml" />
     <Content Include="Views\Proyecto\CrearProyecto.cshtml" />
+    <Content Include="Views\Proyecto\AsignarJefeProyecto.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

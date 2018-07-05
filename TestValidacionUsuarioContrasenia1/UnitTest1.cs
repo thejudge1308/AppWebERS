@@ -21,6 +21,6 @@ namespace TestValidacionUsuarioContrasenia1
             Proyecto p1 = new Proyecto(1,"proyecto1",null,null,null,null,null,null,null,null,null,null,null,null,null);
            
             Assert.AreEqual(true, p1.RegistrarProyectoEnBd(p1));
-        }
+        }*/
     }
 }

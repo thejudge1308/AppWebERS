@@ -1,6 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Linq;
 using System.Web;
@@ -32,7 +33,7 @@ namespace AppWebERS.Models
          * <param name = "casosDeUso" > La lista de casos de uso asociados al proyecto.</param>
          * <param name = "actores" > La lista de actores asociados al proyecto.</param>
          **/
-
+        
         public Proyecto(int idProyecto, string nombre,string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string referencias, string ambienteOperacional, string relacionProyectos) {
             this.IdProyecto = idProyecto;
             this.Nombre = nombre;
@@ -49,6 +50,10 @@ namespace AppWebERS.Models
             this.Requisitos = new List<Requisito>();
             this.CasosDeUso = new List<CasoDeUso>();
             this.Actores = new List<Actor>();
+        }
+
+        public Proyecto() {
+
         }
 
         private ConectorBD conexion = ConectorBD.Instance;
@@ -70,6 +75,8 @@ namespace AppWebERS.Models
          * <returns>Retorna el valor string del nombre.</returns>
          * 
          **/
+         [Required]
+         [StringLength(100,ErrorMessage = "El número de caracteres de Nombre debe ser 6",MinimumLength = 6)]
         public string Nombre { get; set;}
 
         /**
@@ -252,7 +259,7 @@ namespace AppWebERS.Models
 
         public Proyecto CrearProyecto(int idProyecto, string nombre, string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string referencias, string ambienteOperacional, string relacionProyectos) {
             Proyecto proyectoNuevo = null;
-            if (this.VerificarTexto(nombre))
+            if (this.VerificarNombre(nombre))
             {
                 if (this.ValidarNombre(nombre))
                 {
@@ -261,11 +268,6 @@ namespace AppWebERS.Models
                 }
             }
             return proyectoNuevo;
-        }
-
-        private bool VerificarTexto(string nombre)
-        {
-            throw new NotImplementedException();
         }
 
         /**
@@ -329,7 +331,6 @@ namespace AppWebERS.Models
         public bool RegistrarProyectoEnBd(Proyecto proyecto)
         {
             ConectorBD conector = ConectorBD.Instance;
-            int id = proyecto.IdProyecto;
             String nombre = proyecto.Nombre;
             String proposito = proyecto.Proposito;
             String alcance = proyecto.Alcance;
@@ -340,8 +341,8 @@ namespace AppWebERS.Models
             String referencias = proyecto.Referencias;
             String ambiente = proyecto.AmbienteOperacional;
             String relacion = proyecto.RelacionProyectos;
-            String consulta = "INSERT INTO proyecto (id_proyecto,nombre,proposito,alcance,contexto,definiciones,acronimos,abreviaturas,referencias,ambiente_operacional,relacion_con_otros_proyectos)" +
-                " VALUES ('"+id+"','"+nombre+"', '"+proposito+"','"+alcance+"','"+contexto+"','"+definiciones+"','"+acronimos+"','"+abreviaturas+"','"+referencias+"','"+ambiente+"','"+relacion+"')";
+            String consulta = "INSERT INTO proyecto (nombre,proposito,alcance,contexto,definiciones,acronimos,abreviaturas,referencias,ambiente_operacional,relacion_con_otros_proyectos)" +
+                " VALUES ('"+nombre+"', '"+proposito+"','"+alcance+"','"+contexto+"','"+definiciones+"','"+acronimos+"','"+abreviaturas+"','"+referencias+"','"+ambiente+"','"+relacion+"')";
             return conector.RealizarConsultaNoQuery(consulta);
         }
     }

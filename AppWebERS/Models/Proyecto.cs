@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 /**
  * Autor: Gerardo Estrada (Meister1412)
@@ -326,6 +327,8 @@ namespace AppWebERS.Models
          * </summary> 
          * 
          * <param name="proyecto"> Objeto proyecto que sera ingresado en la BD</param>
+         * <returns>Retorna true si el registro del proyecto en la base de datos se realiza
+         * exitosamente, retorna false en caso contrario</returns>
          * 
          * */
         public bool RegistrarProyectoEnBd(Proyecto proyecto)
@@ -344,6 +347,91 @@ namespace AppWebERS.Models
             String consulta = "INSERT INTO proyecto (nombre,proposito,alcance,contexto,definiciones,acronimos,abreviaturas,referencias,ambiente_operacional,relacion_con_otros_proyectos)" +
                 " VALUES ('"+nombre+"', '"+proposito+"','"+alcance+"','"+contexto+"','"+definiciones+"','"+acronimos+"','"+abreviaturas+"','"+referencias+"','"+ambiente+"','"+relacion+"')";
             return conector.RealizarConsultaNoQuery(consulta);
+        }
+
+
+        //Metodos para Asignar Jefes de Proyectos
+        /**
+         * 
+         * <autor>Diego Iturriaga</autor>
+         * <summary>Este metodo se encarga de Obtener una lista de usuarios validos desde la base de datos
+         * que puedan ser asignados a un proyecto con el rol JEFEPROYECTO</summary>
+         * <returns>Retorna una List de tipo SelectListItem que contiene todos los usuarios validos
+         * en la base de datos que puedan ser asignados a un proyecto como JEFEPROYECTO</returns>
+         * 
+         **/
+        public List<SelectListItem> ObtenerUsuarios()
+        {
+            List<SelectListItem> listasUsuarios = new List<SelectListItem>();
+            string consulta = "SELECT usuario.nombre, usuario.rut FROM usuario, " +
+                " (SELECT vinculo_usuario_proyecto.ref_usuario AS RUT FROM vinculo_usuario_proyecto WHERE rol = 'JEFEPROYECTO') AS C1 " +
+                " WHERE C1.RUT != usuario.rut AND usuario.tipo != 'SYSADMIN' AND usuario.estado = 1; ";
+            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
+            if (reader != null)
+            {
+                int i = 0;
+                while (reader.Read())
+                {
+                    string rutBD = reader["rut"].ToString();
+                    string nombreBD =reader["nombre"].ToString();
+                    string texto = nombreBD + " / " + rutBD;
+                    i++;
+                    listasUsuarios.Add(new SelectListItem() { Text = texto, Value = i.ToString()});
+                }
+            }
+
+            this.conexion.CerrarConexion();
+            return listasUsuarios;
+        }
+
+        /**
+         * 
+         * <autor>Diego Iturriaga</autor>
+         * <summary>Este metodo se encarga de modificar el jefe de proyecto de un proyecto en especifico
+         * dado un usuario y un proyecto en especifico para que a este ultimo se le modifique un nuevo 
+         * jefe de proyecto.</summary>
+         * <param name="nombreUsuario">nombre del usuario que pasara a ser el nuevo jefe de proyecto (contiene el rut de este concadenado)</param>
+         * <param name="nombreProyecto"> nombre del proyecto al que se le desea modificar el jefe de proyecto</param>
+         * <returns>Retorna true si se modifica el Jefe de Proyecto existosamente en la tabla
+         * vinculo_usuario_proyecto, Retorna false si falla la modificacion</returns>
+         * 
+         **/
+        public bool ModificarJefeProyecto(string nombreUsuario, string nombreProyecto)
+        {
+            String consulta1 = "SELECT id_proyecto FROM proyecto WHERE nombre = '"+nombreProyecto+"';";
+            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta1);
+            int idProyecto = -1;
+            if (reader != null)
+            {
+                reader.Read();
+                idProyecto = Int32.Parse(reader["id_proyecto"].ToString());
+            }
+            this.conexion.CerrarConexion();
+            String rut = this.ObtenerRutDesdeString(nombreUsuario);
+            if (idProyecto != -1)
+            {
+                String consulta2 = "UPDATE vinculo_usuario_proyecto SET ref_usuario = '"+rut+"' WHERE ref_proyecto = '"+idProyecto+"' AND rol = 'JEFEPROYECTO'; " +
+                    "DELETE FROM vinculo_usuario_proyecto WHERE ref_usuario = '" + rut + "' AND ref_proyecto = '" + idProyecto + "' AND rol = 'USUARIO'; ";
+                if (this.conexion.RealizarConsultaNoQuery(consulta2))
+                {
+                    this.conexion.CerrarConexion();
+                    return true;
+                }
+                else
+                {
+                    this.conexion.CerrarConexion();
+                    return false;
+                }
+            }
+            return false;
+
+        }
+
+        public String ObtenerRutDesdeString(String texto)
+        {
+            String[] substring = texto.Split('/');
+            String rut = substring[1].Trim(' ');
+            return rut;
         }
     }
 }

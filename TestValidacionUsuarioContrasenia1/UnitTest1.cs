@@ -21,6 +21,13 @@ namespace TestValidacionUsuarioContrasenia1
             Proyecto p1 = new Proyecto(1,"proyecto1",null,null,null,null,null,null,null,null,null,null,null,null,null);
            
             Assert.AreEqual(true, p1.RegistrarProyectoEnBd(p1));
+        }
+        [TestMethod]
+        public void TestMethod1()
+        {
+            Proyecto p1 = new Proyecto();
+            
+            Assert.AreEqual(true, p1.ModificarJefeProyecto("GLoria / 10576377", "Proyecto 1"));
         }*/
     }
 }

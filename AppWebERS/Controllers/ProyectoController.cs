@@ -52,5 +52,32 @@ namespace AppWebERS.Controllers
             return View();
         }
 
+        [HttpGet]
+        public ActionResult AsignarJefeProyecto()
+        {
+            var list = new List<SelectListItem>()
+            {
+                new SelectListItem()
+                {
+                    Text="holi",
+                    Value = "3"
+                }
+            };
+            ViewBag.MiListadoProyectos = list;
+            ViewBag.MiListadoUsuarios = list;
+            return View();
+        }
+        [HttpPost]
+        public ActionResult AsignarJefeProyecto(FormCollection datos)
+        {
+            
+            return View();
+        }
+        [HttpGet]
+        public ActionResult ModificarJefeProyecto()
+        {
+            return View();
+        }
+
     }
 }

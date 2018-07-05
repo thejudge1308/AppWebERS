@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 /**
  * Autor: Gerardo Estrada (Meister1412)
@@ -344,6 +345,84 @@ namespace AppWebERS.Models
             String consulta = "INSERT INTO proyecto (nombre,proposito,alcance,contexto,definiciones,acronimos,abreviaturas,referencias,ambiente_operacional,relacion_con_otros_proyectos)" +
                 " VALUES ('"+nombre+"', '"+proposito+"','"+alcance+"','"+contexto+"','"+definiciones+"','"+acronimos+"','"+abreviaturas+"','"+referencias+"','"+ambiente+"','"+relacion+"')";
             return conector.RealizarConsultaNoQuery(consulta);
+        }
+
+
+        /**
+         * <author>Roberto Ureta</author>
+         * <summary>
+         * Obtiene los nombres de proyecto desde la base de datos.
+         * </summary>
+         * <returns>Devuelve una lista de SelectListItem con el nombre de los proyectos.</returns>
+         */
+        public List<SelectListItem> ObtenerProyectos() {
+            List<SelectListItem> listaProyectos = new List<SelectListItem>();
+            string consulta = "SELECT proyecto.nombre FROM proyecto;";
+            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
+            if (reader != null)
+            {
+                int i = 0;
+                while (reader.Read())
+                {
+                    string nombre = reader["nombre"].ToString();
+                    i++;
+                    listaProyectos.Add(new SelectListItem() { Text = nombre, Value = i.ToString() });
+                }
+            }
+            this.conexion.CerrarConexion();
+            return listaProyectos;
+        }
+
+        /**
+         * <author>Roberto Ureta</author>
+         * <summary>
+         * Asigna un jefe de proyecto segun el rut del usuario y el nombre del proyecto.
+         * </summary>
+         * <param name="nombreUsuario">Contiene un string que tiene el nombre de usuario y su rut separados por un / .</param>
+         * <param name="nombreProyecto">Contiene un string que tiene el nombre del Proyecto</param>
+         * <returns>true si inserto, false en caso contrario</returns>
+         */
+        public bool AsignarJefeProyecto(string nombreUsuario, string nombreProyecto) {
+            string consultaNombreProyecto = "SELECT id_proyecto FROM proyecto WHERE nombre ='"+nombreProyecto+"';";
+            MySqlDataReader reader = this.conexion.RealizarConsulta(consultaNombreProyecto);
+            int idProyecto = -1;
+            if (reader != null)
+            {
+                reader.Read();
+                idProyecto = Int32.Parse(reader["id_proyecto"].ToString());
+            }
+            this.conexion.CerrarConexion();
+            String rut = ObtenerRutDesdeString(nombreUsuario);
+            if (IdProyecto != -1) {
+                String consultaInsertar = "INSERT INTO vinculo_usuario_proyecto(ref_usuario,ref_proyecto,rol)"+
+                    "VALUES ('"+rut+"','"+idProyecto+"','JEFEPROYECTO');"+
+                    "DELETE FROM vinculo_usuario_proyecto WHERE ref_usuario = '" + rut + "' AND ref_proyecto = '" + idProyecto + "' AND rol = 'USUARIO'; ";
+                if (this.conexion.RealizarConsultaNoQuery(consultaInsertar))
+                {
+                    this.conexion.CerrarConexion();
+                    return true;
+                }
+                else
+                {
+                    this.conexion.CerrarConexion();
+                    return false;
+                }
+            }
+            return false;
+        }
+
+        /**
+         * <author>Roberto Ureta</author>
+         * <summary>
+         * Recupera el rut desde un string con formato nombreUsuario / rutUsuario.
+         * </summary>
+         * <param name="texto">Contiene un string que tiene el nombre de usuario y su rut separados por un / .</param>
+         * <returns> el string con el rut de un usuario</returns>
+         */
+        public String ObtenerRutDesdeString(String texto) {
+            String[] subStrings = texto.Split('/');
+            String rut = subStrings[1].Trim(' ');
+            return rut;
         }
     }
 }

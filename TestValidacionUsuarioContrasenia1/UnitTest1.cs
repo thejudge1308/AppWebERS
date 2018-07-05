@@ -22,5 +22,13 @@ namespace TestValidacionUsuarioContrasenia1
            
             Assert.AreEqual(true, p1.RegistrarProyectoEnBd(p1));
         }*/
+        /*[TestMethod]
+        public void TestMethod1()
+        {
+            Proyecto p1 = new Proyecto();
+            String esperado = " ";
+            String prueba = "Roberto / 19275731";
+            Assert.AreEqual(esperado, p1.ObtenerRutDesdeString(prueba));
+        }*/
     }
 }

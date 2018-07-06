@@ -358,7 +358,7 @@ namespace AppWebERS.Models
          */
         public List<SelectListItem> ObtenerProyectos() {
             List<SelectListItem> listaProyectos = new List<SelectListItem>();
-            string consulta = "SELECT proyecto.nombre FROM proyecto;";
+            string consulta = "SELECT proyecto.nombre FROM proyecto WHERE id_proyecto IN (SELECT vinculo_usuario_proyecto.ref_proyecto FROM vinculo_usuario_proyecto WHERE rol='JEFEPROYECTO');";
             MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
             if (reader != null)
             {
@@ -367,7 +367,33 @@ namespace AppWebERS.Models
                 {
                     string nombre = reader["nombre"].ToString();
                     i++;
-                    listaProyectos.Add(new SelectListItem() { Text = nombre, Value = i.ToString() });
+                    listaProyectos.Add(new SelectListItem() { Text = nombre, Value = nombre });
+                }
+            }
+            this.conexion.CerrarConexion();
+            return listaProyectos;
+        }
+
+        /**
+        * <author>Roberto Ureta-Diego Iturriaga</author>
+        * <summary>
+        * Obtiene los nombres de proyecto que no tienen jefe de proyecto asignado desde la base de datos.
+        * </summary>
+        * <returns>Devuelve una lista de SelectListItem con el nombre de los proyectos.</returns>
+        */
+        public List<SelectListItem> ObtenerProyectosSinJefe()
+        {
+            List<SelectListItem> listaProyectos = new List<SelectListItem>();
+            string consulta = "SELECT proyecto.nombre FROM proyecto WHERE id_proyecto NOT IN (SELECT vinculo_usuario_proyecto.ref_proyecto FROM vinculo_usuario_proyecto WHERE rol='JEFEPROYECTO');";
+            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
+            if (reader != null)
+            {
+                int i = 0;
+                while (reader.Read())
+                {
+                    string nombre = reader["nombre"].ToString();
+                    i++;
+                    listaProyectos.Add(new SelectListItem() { Text = nombre, Value = nombre });
                 }
             }
             this.conexion.CerrarConexion();
@@ -385,9 +411,7 @@ namespace AppWebERS.Models
         public List<SelectListItem> ObtenerUsuarios()
         {
             List<SelectListItem> listasUsuarios = new List<SelectListItem>();
-            string consulta = "SELECT usuario.nombre, usuario.rut FROM usuario, " +
-                " (SELECT vinculo_usuario_proyecto.ref_usuario AS RUT FROM vinculo_usuario_proyecto WHERE rol = 'JEFEPROYECTO') AS C1 " +
-                " WHERE C1.RUT != usuario.rut AND usuario.tipo != 'SYSADMIN' AND usuario.estado = 1; ";
+            string consulta = "SELECT usuario.nombre, usuario.rut FROM usuario WHERE rut NOT IN (SELECT vinculo_usuario_proyecto.ref_usuario FROM vinculo_usuario_proyecto WHERE rol = 'JEFEPROYECTO') AND tipo != 'SYSADMIN' AND estado = 1; ";
             MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
             if (reader != null)
             {
@@ -398,7 +422,7 @@ namespace AppWebERS.Models
                     string nombreBD =reader["nombre"].ToString();
                     string texto = nombreBD + " / " + rutBD;
                     i++;
-                    listasUsuarios.Add(new SelectListItem() { Text = texto, Value = i.ToString()});
+                    listasUsuarios.Add(new SelectListItem() { Text = texto, Value = texto});
                 }
             }
 

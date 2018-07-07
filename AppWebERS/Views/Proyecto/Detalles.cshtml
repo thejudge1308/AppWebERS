@@ -1,5 +1,5 @@
 ﻿@*
-Vista creada por Patricio Quezada    
+    Vista creada por Patricio Quezada
 *@
 
 @using AppWebERS.Models;
@@ -8,114 +8,146 @@ Vista creada por Patricio Quezada
     ViewBag.Title = "Detalles del proyecto";
 }
 
-<h2>Detalles</h2>
 
-<ul class="nav nav-tabs">
-    <li class="nav-item">
-        <a class="nav-link active" href="#">Detalles</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#">Notificaciones</a>
-    </li>
-</ul>
+@{
+    var ProyectoActual = (Proyecto)ViewData["proyecto"];
+}
 
+@if(ProyectoActual != null) {
+    <h2>Detalles</h2>
 
-
-@using(Html.BeginForm("Detalles", "Proyecto", FormMethod.Post, new { @class = "form-horizontal", role = "form" })) {
-
-
-    <div class="row">
-        <div class="col-12">
-
-            @Html.AntiForgeryToken()
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link active" href="#">Detalles</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">Notificaciones</a>
+        </li>
+    </ul>
 
 
-            <div class="form-group">
-                @Html.LabelFor(p => p.IdProyecto, new { @class = "col-md-12 control-label" })
-                <div class="col-12">
-                    @Html.TextBoxFor(p => p.IdProyecto, new { @class = "form-control"})
+
+    using(Html.BeginForm("Detalles", "Proyecto", FormMethod.Post, new { @class = "form-horizontal", role = "form" })) {
+
+
+        <div class="row">
+            <div class="col-12">
+
+               @{@Html.AntiForgeryToken()}
+
+
+                <div class="form-group">
+                    @{@Html.LabelFor(p => p.IdProyecto, new { @class = "col-md-12 control-label" })}
+                    <div class="col-12">
+                        @{@Html.TextBoxFor(p => ProyectoActual.IdProyecto, new { @class = "form-control" })}
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <div class="col-12">
-                    @Html.TextBoxFor(p => p.Nombre, new { @class = "form-control", placeholder = "Nombre del proyecto.", Style = "max-width:100%;" })
-                    @Html.ValidationMessageFor(p => p.Nombre, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    <div class="col-12">
+                        @{
+                            @Html.TextBoxFor(p => ProyectoActual.Nombre, new { @class = "form-control", placeholder = "Nombre del proyecto.", Style = "max-width:100%;" })
+                            @Html.ValidationMessageFor(p => p.Nombre, "", new { @class = "text-danger" })
+                        }
+                    </div>
                 </div>
-             
-            </div>
 
-            <div class="form-group">
-                <div class="col-12">
-                    @Html.TextAreaFor(p => p.Proposito, new { @class = "form-control", placeholder = "Proposito.", Style = "max-width:100%;" })
-                    @Html.ValidationMessageFor(p => p.Proposito, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    <div class="col-12">
+                        @{
+                            @Html.TextAreaFor(p => ProyectoActual.Proposito, new { @class = "form-control", placeholder = "Proposito.", Style = "max-width:100%;" })
+                            @Html.ValidationMessageFor(p => p.Proposito, "", new { @class = "text-danger" })
+                        }
+                    </div>
+
                 </div>
-                
-            </div>
 
-            <div class="form-group">
-                <div class="col-12">
-                    @Html.TextAreaFor(p => p.Alcance, new { @class = "form-control", placeholder = "Alcance.", Style = "max-width:100%;" })
-                    @Html.ValidationMessageFor(p => p.Alcance, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    <div class="col-12">
+                        @{
+                            @Html.TextAreaFor(p => ProyectoActual.Alcance, new { @class = "form-control", placeholder = "Alcance.", Style = "max-width:100%;" })
+                            @Html.ValidationMessageFor(p => p.Alcance, "", new { @class = "text-danger" })
+                        }
+                    </div>
+
                 </div>
-               
-            </div>
 
-            <div class="form-group">
-                <div class="col-12">
-                    @Html.TextAreaFor(p => p.Contexto, new { @class = "form-control", placeholder = "Contexto.", Style = "max-width:100%;" })
-                    @Html.ValidationMessageFor(p => p.Contexto, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    <div class="col-12">
+                        @{ 
+                            @Html.TextAreaFor(p => ProyectoActual.Contexto, new { @class = "form-control", placeholder = "Contexto.", Style = "max-width:100%;" })
+                            @Html.ValidationMessageFor(p => p.Contexto, "", new { @class = "text-danger" })
+                        }
+                        
+                    </div>
+
                 </div>
-             
-            </div>
 
-            <div class="form-group">
-                <div class="col-12">
-                    @Html.TextAreaFor(p => p.Definiciones, new { @class = "form-control", placeholder = "Definiciones.", Style = "max-width:100%;" })
+                <div class="form-group">
+                    <div class="col-12">
+                        @{ 
+                            @Html.TextAreaFor(p => ProyectoActual.Definiciones, new { @class = "form-control", placeholder = "Definiciones.", Style = "max-width:100%;" })
+                        }
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <div class="col-12">
-                    @Html.TextAreaFor(p => p.Acronimos, new { @class = "form-control", placeholder = "Acronimos.", Style = "max-width:100%;" })
+                <div class="form-group">
+                    <div class="col-12">
+                        @{ 
+                            @Html.TextAreaFor(p => ProyectoActual.Acronimos, new { @class = "form-control", placeholder = "Acronimos.", Style = "max-width:100%;" })
+                        }
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <div class="col-12">
-                    @Html.TextAreaFor(p => p.Abreviaturas, new { @class = "form-control", placeholder = "Abreviaturas.", Style = "max-width:100%;" })
+                <div class="form-group">
+                    <div class="col-12">
+                        @{ 
+                            @Html.TextAreaFor(p => ProyectoActual.Abreviaturas, new { @class = "form-control", placeholder = "Abreviaturas.", Style = "max-width:100%;" })
+                        }
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <div class="col-md-12">
-                    @Html.TextAreaFor(p => p.Referencias, new { @class = "form-control", placeholder = "Referencias.", Style = "max-width:100%;" })
+                <div class="form-group">
+                    <div class="col-md-12">
+                        @{ 
+                            @Html.TextAreaFor(p => ProyectoActual.Referencias, new { @class = "form-control", placeholder = "Referencias.", Style = "max-width:100%;" })
+
+                        }
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <div class="col-12">
-                    @Html.TextAreaFor(p => p.AmbienteOperacional, new { @class = "form-control", placeholder = "Ambiente operacional.", Style = "max-width:100%;" })
-                    @Html.ValidationMessageFor(p => p.AmbienteOperacional, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    <div class="col-12">
+                        @{ 
+                            @Html.TextAreaFor(p => ProyectoActual.AmbienteOperacional, new { @class = "form-control", placeholder = "Ambiente operacional.", Style = "max-width:100%;" })
+                            @Html.ValidationMessageFor(p => p.AmbienteOperacional, "", new { @class = "text-danger" })
+                        }
+                        
+                    </div>
+
                 </div>
-               
-            </div>
 
-            <div class="form-group">
-                <div class="col-12">
-                    @Html.TextAreaFor(p => p.RelacionProyectos, new { @class = "form-control", placeholder = "Relación con otros proyectos.", Style = "max-width:100%;" })
+                <div class="form-group">
+                    <div class="col-12">
+                        @{ 
+                            @Html.TextAreaFor(p => ProyectoActual.RelacionProyectos, new { @class = "form-control", placeholder = "Relación con otros proyectos.", Style = "max-width:100%;" })
+                        }
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <div class="col-12">
-                    <input type="submit" value="Guardar cambios" class="btn btn-primary" />
+                <div class="form-group">
+                    <div class="col-12">
+                        <input type="submit" value="Guardar cambios" class="btn btn-primary" />
+                    </div>
                 </div>
-            </div>
 
+            </div>
         </div>
-    </div>
 
+                                }
+                            }
+else{
+     <h1>Proyecto no encontrado</h1>
 }
 
 

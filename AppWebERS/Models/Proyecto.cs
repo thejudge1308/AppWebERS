@@ -31,7 +31,6 @@ namespace AppWebERS.Models
          * <param name = "casosDeUso" > La lista de casos de uso asociados al proyecto.</param>
          * <param name = "actores" > La lista de actores asociados al proyecto.</param>
          **/
-
         public Proyecto(int idProyecto, string nombre,string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string referencias, string ambienteOperacional, string relacionProyectos, List<Usuario> usuarios, List<Requisito> requisitos, List<CasoDeUso> casosDeUso, List<Actor> actores) {
             this.IdProyecto = idProyecto;
             this.Nombre = nombre;
@@ -50,6 +49,44 @@ namespace AppWebERS.Models
             this.Actores = new List<Actor>();
         }
 
+
+        /**
+         * Autor: Patricio Quezada 
+         * <param name = "idProyecto" > El identificador del proyecto.</param>
+         * <param name = "nombre" > El identificador del proyecto.</param>
+         * <param name = "proposito" > El proposito del proyecto.</param>
+         * <param name = "alcance" > El alcance del proyecto.</param>
+         * <param name = "contexto" > El contexto del proyecto.</param>
+         * <param name = "definiciones" > Las definiciones del proyecto.</param>
+         * <param name = "acronimos" > Los acronimos del proyecto.</param>
+         * <param name = "abreviaturas" > Las abreviaturas del proyecto.</param>
+         * <param name = "referencias" > Las referencias del proyecto.</param>
+         * <param name = "ambienteOperacional" > El ambiente operacional del proyecto.</param>
+         * <param name = "relacionProyectos" > La relacion con otros proyectos del proyecto.</param>
+         * <param name = "usuarios" > La lista de usuarios involucrados en el proyecto.</param>
+         * <param name = "requisitos" > La lista de requisitos asociados al proyecto.</param>
+         * <param name = "casosDeUso" > La lista de casos de uso asociados al proyecto.</param>
+         * <param name = "actores" > La lista de actores asociados al proyecto.</param>
+         **/
+
+        public Proyecto(int idProyecto, string nombre, string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string referencias, string ambienteOperacional, string relacionProyectos) {
+            IdProyecto = idProyecto;
+            Nombre = nombre;
+            Proposito = proposito;
+            Alcance = alcance;
+            Contexto = contexto;
+            Definiciones = definiciones;
+            Acronimos = acronimos;
+            Abreviaturas = abreviaturas;
+            Referencias = referencias;
+            AmbienteOperacional = ambienteOperacional;
+            RelacionProyectos = relacionProyectos;
+        }
+
+
+
+
+
         /**
          * Setter y Getter de ID del proyecto
          * 
@@ -58,6 +95,7 @@ namespace AppWebERS.Models
          * 
          **/
         [Display(Name = "Id del Proyecto")]
+        [StringLength(128, ErrorMessage = "Este campo debe tener maximo 128 caracteres.", MinimumLength = 1)]
         public int IdProyecto {get; set;}
 
         /**

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Web;
-
+using System.ComponentModel.DataAnnotations;
 /**
  * Autor: Gerardo Estrada (Meister1412)
  **/
@@ -57,7 +57,7 @@ namespace AppWebERS.Models
          * <returns>Retorna el valor int del identificador.</returns>
          * 
          **/
-
+        [Display(Name = "Id del Proyecto")]
         public int IdProyecto {get; set;}
 
         /**
@@ -67,6 +67,9 @@ namespace AppWebERS.Models
          * <returns>Retorna el valor string del nombre.</returns>
          * 
          **/
+        [Required]
+        [Display(Name = "Nombre")]
+        [StringLength(255, ErrorMessage = "Es requerido", MinimumLength = 1)]
         public string Nombre { get; set;}
 
         /**
@@ -76,7 +79,9 @@ namespace AppWebERS.Models
          * <returns>Retorna el valor string del proposito.</returns>
          * 
          **/
-
+        [Required]
+        [Display(Name = "Proposito")]
+        [StringLength(255, ErrorMessage = "Es requerido", MinimumLength = 1)]
         public string Proposito {get; set;}
 
         /**
@@ -86,7 +91,9 @@ namespace AppWebERS.Models
          * <returns>Retorna el valor string del alcance.</returns>
          * 
          **/
-
+        [Required]
+        [Display(Name = "Alcance")]
+        [StringLength(255, ErrorMessage = "Es requerido", MinimumLength = 1)]
         public string Alcance {get; set;}
 
         /**
@@ -96,7 +103,9 @@ namespace AppWebERS.Models
          * <returns>Retorna el valor string del contexto.</returns>
          * 
          **/
-
+        [Required]
+        [Display(Name = "Contexto")]
+        [StringLength(255, ErrorMessage = "Es requerido", MinimumLength = 1)]
         public string Contexto {get; set;}
 
         /**
@@ -106,7 +115,7 @@ namespace AppWebERS.Models
          * <returns>Retorna el valor string de las definiciones.</returns>
          * 
          **/
-
+        [Display(Name = "Definiciones")]
         public string Definiciones {get; set;}
 
         /**
@@ -116,7 +125,7 @@ namespace AppWebERS.Models
          * <returns>Retorna el valor string de los acronimos.</returns>
          * 
          **/
-
+        [Display(Name = "Acronimos")]
         public string Acronimos {get; set;}
 
         /**
@@ -126,7 +135,7 @@ namespace AppWebERS.Models
         * <returns>Retorna el valor string de las abreviaturas.</returns>
         * 
         **/
-
+        [Display(Name = "Abreviaturas")]
         public string Abreviaturas {get; set;}
 
         /**
@@ -136,7 +145,7 @@ namespace AppWebERS.Models
         * <returns>Retorna el valor string de las referencias.</returns>
         * 
         **/
-
+        [Display(Name = "Referencias")]
         public string Referencias {get; set;}
 
         /**
@@ -146,7 +155,9 @@ namespace AppWebERS.Models
         * <returns>Retorna el valor string del ambiente operacional.</returns>
         * 
         **/
-
+        [Required]
+        [Display(Name = "Ambiente operacional")]
+        [StringLength(255, ErrorMessage = "Es requerido", MinimumLength = 1)]
         public string AmbienteOperacional {get; set;}
 
         /**
@@ -156,7 +167,7 @@ namespace AppWebERS.Models
         * <returns>Retorna el valor string de la relacion con otros proyectos del proyecto.</returns>
         * 
         **/
-
+        [Display(Name = "Relacion con otros proyectos")]
         public string RelacionProyectos {get; set;}
 
         /**

@@ -1,0 +1,42 @@
+﻿@{
+    /**/
+
+    ViewBag.Title = " Modificar Jefe Proyecto";
+
+}
+@using (Html.BeginForm("ModificarJefeProyecto", "Proyecto"))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <h2>Modificar Jefe Proyecto</h2>
+        <h4>Seleccione el Proyecto</h4>
+        <div>
+            @Html.DropDownList("DropDownListProyectos", (List<SelectListItem>)ViewBag.MiListadoProyectos)
+
+            <h4>Seleccione el Jefe de Proyecto</h4>
+            @Html.DropDownList("DropDownListUsuarios", (List<SelectListItem>)ViewBag.MiListadoUsuarios)
+        </div>
+        <div>
+            <h6 class="text-danger">@ViewBag.MessageErrorProyectos</h6>
+        </div>
+
+        <div><h6>@ViewBag.Message</h6></div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-9">
+                @if (@ViewBag.listaVacia)
+                {
+                    <input type="submit" value="Asignar jefe" class="btn btn-default" disabled="disabled" />
+                }
+                else
+                {
+                    <input type="submit" value="Asignar jefe" class="btn btn-default" />
+                }
+
+            </div>
+        </div>
+
+
+
+    </div>
+}

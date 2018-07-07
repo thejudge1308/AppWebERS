@@ -183,6 +183,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\JefeProyectoController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\ProyectoController.cs" />
     <Compile Include="Controllers\RequisitoController.cs" />
     <Compile Include="Controllers\SysAdminController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
@@ -257,7 +258,9 @@
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -303,6 +306,9 @@
     <Content Include="Views\Usuario\_AlertaDeshabilitacionPartial.cshtml" />
     <Content Include="Views\Usuario\Modificar2.cshtml" />
     <Content Include="Views\Usuario\Deshabilitar2.cshtml" />
+    <Content Include="Views\Proyecto\CrearProyecto.cshtml" />
+    <Content Include="Views\Proyecto\AsignarJefeProyecto.cshtml" />
+    <Content Include="Views\Proyecto\ModificarJefeProyecto.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -73,7 +73,7 @@ namespace AppWebERS.Controllers
        **/
         private int TipoDePermiso(String usuario) {
             //Esto estara completado una vez que este implementado el Entity Framework
-            return Proyecto.AUTH_COMO_USUARIO;
+            return Proyecto.AUTH_COMO_JEFE_DE_PROYECTO;
         }
 
     }

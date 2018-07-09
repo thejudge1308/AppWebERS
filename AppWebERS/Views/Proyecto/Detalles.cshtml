@@ -17,14 +17,17 @@
 @if(ProyectoActual != null) {
     <h2>Detalles</h2>
     if(TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO) {
-        <ul class="nav nav-tabs">
-            <li class="nav-item">
-                <a class="nav-link active" href="@Url.Action("Detalles", "Proyecto", new { id = ProyectoActual.IdProyecto})">Detalles</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Notificaciones</a>
-            </li>
-        </ul>
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link active" href="@Url.Action("Detalles", "Proyecto", new { id = ProyectoActual.IdProyecto})">Detalles</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">Agregar usuario</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">Notificaciones</a>
+        </li>
+    </ul>
     }
 
 

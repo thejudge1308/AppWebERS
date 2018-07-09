@@ -8,9 +8,17 @@ using System.ComponentModel.DataAnnotations;
  * Autor: Gerardo Estrada (Meister1412)
  **/
 
-namespace AppWebERS.Models
-{
+namespace AppWebERS.Models{
     public class Proyecto {
+        #region Definicion de permisos para la vista de los proyectos
+        /*
+         * Autor: Patricio Quezada
+         * Descripcion: Define los permisos para la visualizacion de los proyectos.
+        */
+        public const int AUTH_COMO_JEFE_DE_PROYECTO = 0;
+        public const int AUTH_COMO_SYSADMIN = 1;
+        public const int AUTH_COMO_USUARIO = 2;
+        #endregion
 
         /**
          * Constructor de la clase Proyecto

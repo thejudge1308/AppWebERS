@@ -18,8 +18,9 @@ namespace AppWebERS.Controllers
         {
             Proyecto proyecto = this.GetProyecto(id);
             string UsuarioActual = System.Web.HttpContext.Current.User.Identity.Name; // pregunta el usuario actual
-
+            Debug.WriteLine("Usuario actual: " + UsuarioActual);
             ViewData["proyecto"] = proyecto;
+            ViewData["permiso"] = TipoDePermiso(UsuarioActual);
 
             return View();
         }
@@ -57,11 +58,23 @@ namespace AppWebERS.Controllers
 
                 
                 proyecto = new Proyecto(id, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambiente_operacional, relacion_con_otros_proyectos);
-                Debug.WriteLine(proyecto.Proposito);
+                //Debug.WriteLine(proyecto.Proposito);
                 this.conexion.CerrarConexion();
             }
             return proyecto;
             }
-        
+
+
+        /**
+       * Autor: Patricio Quezada
+       * <param name = "usuario" > usuario del sistema</param>
+       * <returns>El permiso para el tipo de usuario que ve el contenido</returns>
+       * 
+       **/
+        private int TipoDePermiso(String usuario) {
+            //Esto estara completado una vez que este implementado el Entity Framework
+            return Proyecto.AUTH_COMO_USUARIO;
+        }
+
     }
 }

@@ -1,8 +1,11 @@
 ﻿using AppWebERS.Models;
+using AspNet.Identity.MySQL;
 using System;
+using Microsoft.AspNet.Identity;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Threading.Tasks;
 
 using System.Web.Mvc;
 namespace AppWebERS.Controllers
@@ -94,19 +97,60 @@ namespace AppWebERS.Controllers
          * </returns>
          * 
          */
+        [Authorize]
         public ActionResult ListarUsuarios()
         {
             return View();
         }
-
 
         public ActionResult VistaUsuario()
         {
             return View();
         }
 
+        public ActionResult ModificarUsuario()
+        {
+            return View("~/Views/Usuario/_ModalPartial.cshtml");
+        }
 
+        public ActionResult BotonUsuario()
+        {
+            using (var db = ApplicationDbContext.Create())
+            {
+                var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
+                Task<string> task = userManager.getTipoAsync((User.Identity.GetUserId()));
+                if (task.Result.Equals("SYSADMIN"))
+                {
 
+                    return RedirectToAction("ListarUsuarios", "Usuario");
+                }
+                else
+                {
+                    return View();
+                }
+            }
+            
+        }
+
+        public string RetornaValor()
+        {
+            using (var db = ApplicationDbContext.Create())
+            {
+                var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
+                Task<string> task = userManager.getTipoAsync((User.Identity.GetUserId()));
+                return task.Result;
+            }
+        }
+
+        public ActionResult BotonUsuarioD()
+        {
+            return null;
+        }
+
+        public ActionResult CargarVistaParcial()
+        {
+            return PartialView("_ModalPartial");
+        }
 
 
 

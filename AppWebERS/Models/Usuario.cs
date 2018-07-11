@@ -380,6 +380,7 @@ namespace AppWebERS.Models{
         }
     }
 
+    /*
     public class RegisterViewModel
     {
         [Required(ErrorMessage = "El campo Rut es obligatorio.")]
@@ -411,6 +412,6 @@ namespace AppWebERS.Models{
         [Compare("Password", ErrorMessage = "Las contraseñas ingresadas no coinciden.")]
         public string ConfirmPassword { get; set; }
     }
-
+    */
 
 }

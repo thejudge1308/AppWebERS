@@ -1,0 +1,112 @@
+﻿@using AppWebERS.Models
+@model ModificarViewModel
+
+@{
+    Layout = "";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+<body class="p-0">
+    <div class="container-fluid pt-4">
+        @using (Html.BeginForm("ModificarCuenta", "Usuario", FormMethod.Post, new { id = "form" }))
+        {
+            @Html.ValidationSummary(true)
+            <div class="card">
+                <div class="card-header">
+                    Nombre de usuario
+                </div>
+                <div class="card-body">
+                    <div class="card-text">
+                        @Html.DisplayFor(m => m.AntiguoNombre)
+                        <button class="btn btn-primary float-right btn-secondary" type="button" data-toggle="collapse" data-target="#collapseExample"
+                                aria-expanded="false" aria-controls="collapseExample">
+
+                            Editar
+                        </button>
+                        <div class="collapse colapsable" id="collapseExample">
+                            @Html.EditorFor(m => m.Nombre, new { htmlAttributes = new { @class = "form-control", placeholder = "Nuevo nombre de usuario" } })
+                            @Html.ValidationMessageFor(m => m.Nombre, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header">
+                    Correo electrónico
+                </div>
+                <div class="card-body">
+                    <div class="card-text">
+                        @Html.DisplayFor(m => m.AntiguoEmail)
+                        <button class="btn btn-primary float-right btn-secondary" type="button" data-toggle="collapse" data-target="#collapseExample2"
+                                aria-expanded="false" aria-controls="collapseExample2">
+
+                            Editar
+                        </button>
+                        <div class="collapse colapsable" id="collapseExample2">
+                            @Html.EditorFor(m => m.Email, new { htmlAttributes = new { @class = "form-control", placeholder = "Nuevo correo" } })
+                            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header">
+                    Constraseña
+                </div>
+                <div class="card-body">
+                    <div class="card-text">
+                        <span id="passModal">*********************</span>
+                        <button class="btn btn-primary float-right btn-secondary" type="button" data-toggle="collapse" data-target="#collapseExample1"
+                                aria-expanded="false" aria-controls="collapseExample1">
+
+                            Editar
+                        </button>
+                        <div class="collapse colapsable" id="collapseExample1">
+                            @Html.EditorFor(m => m.Password, new { htmlAttributes = new { @class = "form-control", placeholder = "Nueva contraseña" } })
+                            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <button class="btn btn-secondary w-100 mt-3">
+                    Deshabilitar
+                </button>
+            </div>
+
+            @Html.HiddenFor(m => m.AntiguaPassword);
+            @Html.HiddenFor(m => m.AntiguoRut);
+            @Html.HiddenFor(m => m.AntiguoNombre);
+            @Html.HiddenFor(m => m.AntiguoTipo);
+            @Html.HiddenFor(m => m.AntiguoEmail);
+            @Html.HiddenFor(m => m.AntiguoEstado);
+        }
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/popper")
+    @Scripts.Render("~/bundles/bootstrap")
+
+    <script>
+        document.getElementById("form").addEventListener("submit", event => {
+            let isValid = $("#form").valid();
+            if (!isValid) {
+                event.preventDefault();
+            }
+        });
+    </script>
+</body>

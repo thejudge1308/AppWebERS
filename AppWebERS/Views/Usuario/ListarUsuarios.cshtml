@@ -6,7 +6,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@Html.Partial("_AlertaDeshabilitacionPartial")
+@Html.Partial("_AlertaModificacionPartial")
 <div class="card my-1 mx-5 h-100">
     <div class="card-header">
         <h4>Usuarios disponibles</h4>
@@ -43,13 +43,13 @@
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="triggerId">
                                     <a class="dropdown-item" href="#">Detalles</a>
-                                    <a class="dropdown-item" id="btnModificar" data-toggle="modal" data-target="#exampleModal" data-nombre="@usuario.Nombre" data-rut="@usuario.Rut" data-correo="@usuario.CorreoElectronico" data-tipo="@usuario.Tipo">Modificar</a>
+                                    <a class="dropdown-item" id="btnModificar" data-toggle="modal" data-target="#exampleModal" data-rut="@usuario.Rut">Modificar</a>
                                     <input type="submit" id="btnDeshabilitar" class="dropdown-item deshabilitar" href="#" data-rut="@usuario.Rut" value="Deshabilitar">
                                 </div>
                             </div>
                             <!-- Si esta en pantalla grande-->
                             <div class="d-none d-lg-block">
-                                <button type="button" id="btnModificar" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal" data-nombre="@usuario.Nombre" data-rut="@usuario.Rut" data-correo="@usuario.CorreoElectronico" data-tipo="@usuario.Tipo">Modificar</button>
+                                <button type="button" id="btnModificar" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal" data-rut="@usuario.Rut">Modificar</button>
                                 <input type="submit" id="btnDeshabilitar" data-rut="@usuario.Rut" value="Deshabilitar" class="btn btn-secondary deshabilitar" />
                             </div>
                         </td>
@@ -70,7 +70,26 @@
     }
 </div>
 
-@Html.Partial("_ModalPartial")
+<div class="modal" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static"
+     data-keyboard="false">
+    <div class="row modal-dialog modal-lg justify-content-center" role="document">
+        <div class="modal-content w-75">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Configuración de Usuario</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body p-0">
+                <iframe id="iframe" class="embed-responsive-item" src="~/Usuario/ModificarCuenta" width="100%" height="551" seamless frameborder="0"></iframe>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Guardar cambios</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 @section scripts{

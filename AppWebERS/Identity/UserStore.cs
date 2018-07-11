@@ -438,7 +438,7 @@ namespace AspNet.Identity.MySQL
         public Task SetPasswordHashAsync(TUser user, string passwordHash)
         {
             user.PasswordHash = passwordHash;
-
+            userTable.SetPasswordHash(user.Id, user.PasswordHash);
             return Task.FromResult<Object>(null);
         }
 

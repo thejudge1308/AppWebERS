@@ -162,6 +162,15 @@ namespace AppWebERS
                 return await store.GetTipoAsync(usuario);
             }
         }
+
+        public async Task ChangePasswordAsync(string userId, string newPassword)
+        {
+            var store = this.Store as IUserPasswordStore<ApplicationUser>;
+            var usuario = await store.FindByIdAsync(userId);
+            var newPasswordHash = this.PasswordHasher.HashPassword(newPassword);
+            await store.SetPasswordHashAsync(usuario, newPasswordHash);
+            Task.FromResult<Object>(null);
+        }
     }
 
     // Configure the application sign-in manager which is used in this application.

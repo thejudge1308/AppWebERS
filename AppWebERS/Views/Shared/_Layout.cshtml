@@ -21,19 +21,13 @@
                 <li class="nav-item mr-3">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link " })</li>
                 <li class="nav-item mr-3 ">@Html.ActionLink("About", "About", "Home", new { area = "" }, new { @class = "nav-link " })</li>
                 @if (Request.IsAuthenticated)
-    {
-        string usuario = Html.Action("RetornaValor", "Usuario").ToString();
-        if (usuario.Equals("SYSADMIN"))
-        {
-            <li class="nav-item mr-3 ">@Html.ActionLink("Usuarios", "ListarUsuarios", "Usuario", new { area = "" }, new { @class = "nav-link " })</li>
-        }
-        else
-        {
-            string Partial = Html.Action("BotonUsuarioD", "Usuario").ToString();
-            //Html.RenderPartial(Partial);
-        }
-
-    }
+                {
+                    string usuario = Html.Action("RetornarTipoUsuarioAutentificado", "Cuenta").ToString();
+                    if (usuario.Equals("SYSADMIN"))
+                    {
+                        <li class="nav-item mr-3 ">@Html.ActionLink("Usuarios", "ListarUsuarios", "Cuenta", new { area = "" }, new { @class = "nav-link " })</li>
+                    }
+                }
 
             </ul>
             @Html.Partial("_LoginPartial")

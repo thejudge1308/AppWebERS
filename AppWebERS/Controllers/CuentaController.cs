@@ -244,6 +244,71 @@ namespace AppWebERS.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        /* <autor>Diego Matus</autor>
+         * <summary>Metodo encargado de enviar la lista de usarios a la vista ListarUsuarios y mostrarla dicha
+         * lista</summary>
+         * <param void>
+         * <returns> 
+         * Retorna la vista correspodiente (ListarUsuarios).
+         * </returns>
+         * 
+         */
+        [HttpGet]
+        public async Task<ActionResult> ListarUsuarios()
+        {
+            var lista = await UserManager.GetAllUsersAsync();
+            return View(lista);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ModificarCuenta(string rut)
+        {
+            if (!String.IsNullOrEmpty(rut)) {
+                ApplicationUser usuario = await UserManager.FindByRutAsync(rut);
+                ModificarViewModel model = new ModificarViewModel(usuario);
+                return View(model);
+            }
+            return View();
+        }
+
+        /*
+         * Juan Abello
+         * llama a la funcion de modificar la cuenta de un usuario en el modelo de este
+         * usuario
+         * return RedirectToAction
+         */
+        [HttpPost]
+        public async Task<ActionResult> ModificarCuenta(ModificarViewModel usuarioViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                ApplicationUser usuario = await UserManager.FindByRutAsync(usuarioViewModel.Rut);
+                usuario.Email = usuarioViewModel.Email;
+                usuario.UserName = usuarioViewModel.Nombre;
+                usuario.Estado = usuarioViewModel.Estado;
+                await UserManager.UpdateAsync(usuario);
+                if (!String.IsNullOrEmpty(usuarioViewModel.Password)) {
+                    await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), usuarioViewModel.Password);
+                }
+                return View();
+            }
+            else
+            {
+              return View(usuarioViewModel);
+            }
+        }
+
+        /*
+         * Creador: Maximo Hernandez
+         * Accion: Retorna el tipo del usuario autentificado
+         * Retorno: String con el tipo de usuario autentificado
+         */
+        public string RetornarTipoUsuarioAutentificado()
+        {
+                Task<string> tipo = UserManager.getTipoAsync((User.Identity.GetUserId()));
+                return tipo.Result;
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

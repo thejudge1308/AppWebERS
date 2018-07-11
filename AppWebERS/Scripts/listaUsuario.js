@@ -5,6 +5,9 @@ $(document).ready(() => {
         EXITO: 'alert-success',
         ERROR: 'alert-danger'
     };
+
+    let iframeSRC = "";
+
     cerrarAlertaAutomaticamente(); //Si hay una alerta la ocultara 
     /**
      * Autor: Gabriel Sanhueza
@@ -82,7 +85,8 @@ $(document).ready(() => {
      */
     $("[data-target='#exampleModal']").on('click', (event) => {
         var iframe = $("#iframe")[0];
-        iframe.src = `/Usuario/ModificarCuenta?rut=${event.target.dataset.rut}`;
+        iframeSRC = iframeSRC === "" ? iframe.src:iframeSRC;
+        iframe.src = `${iframeSRC}?rut=${event.target.dataset.rut}`;
     })
 
    /**

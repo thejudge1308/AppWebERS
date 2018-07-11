@@ -1,5 +1,5 @@
 ﻿@using AppWebERS.Models
-@model List<Usuario> 
+@model List<ApplicationUser> 
 
 @{
     ViewBag.Title = "ModificarCuentaUsuario";
@@ -30,9 +30,9 @@
                     @foreach (var usuario in Model)
                     {
                     <tr class="text-center">
-                        <td data-info="info">@usuario.Nombre</td><!-- Reemplazar por como quiera que le pongan en el foreach a la variable. Ej: (arroba)Item.Nombre -->
+                        <td data-info="info">@usuario.UserName</td><!-- Reemplazar por como quiera que le pongan en el foreach a la variable. Ej: (arroba)Item.Nombre -->
                         <td data-info="info">@usuario.Rut</td>
-                        <td data-info="info">@usuario.CorreoElectronico</td>
+                        <td data-info="info">@usuario.Email</td>
                         <td data-info="info">@usuario.Tipo</td>
                         <td>
                             <!-- Menu de opciones-->
@@ -81,7 +81,7 @@
                 </button>
             </div>
             <div class="modal-body p-0">
-                <iframe id="iframe" class="embed-responsive-item" src="~/Usuario/ModificarCuenta" width="100%" height="551" seamless frameborder="0"></iframe>
+                <iframe id="iframe" class="embed-responsive-item" src="/Cuenta/ModificarCuenta" width="100%" height="551" seamless frameborder="0"></iframe>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>

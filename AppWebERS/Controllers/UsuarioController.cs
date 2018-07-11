@@ -26,54 +26,6 @@ namespace AppWebERS.Controllers
             return View();
         }
 
-        /*
-         * Juan Abello
-         * Obtiene los datos de la vista del formulario para modificar la cuenta
-         * rutUsuario
-         * retorna el usuario con los datos modificados al modelo de usuario
-         */
-        [HttpGet]
-        public ActionResult ModificarCuentaN(string rutUsuario,string nombre,string correoElectronico,bool estado,string contrasenia,string tipo)
-        {
-            Usuario u = new Usuario(rutUsuario,nombre,correoElectronico,contrasenia,tipo,estado);
-            ViewBag.Title = "ModificarUsuario";
-            u.Rut = rutUsuario;
-            return View(u);
-        }
-
-        [HttpGet]
-        public ActionResult ModificarCuenta(string rut)
-        {
-            Usuario u = new Usuario();
-            u.ListarEspecifico(rut);
-            ModificarViewModel model = new ModificarViewModel(u);
-            return View(model);
-        }
-
-        /*
-         * Juan Abello
-         * llama a la funcion de modificar la cuenta de un usuario en el modelo de este
-         * usuario
-         * return RedirectToAction
-         */
-        [HttpPost]
-        public ActionResult ModificarCuenta(ModificarViewModel usuario)
-        {
-            if (ModelState.IsValid)
-            {
-                Usuario usuarioModificado = new Usuario(usuario.Rut, usuario.Nombre, usuario.Email, usuario.Password,usuario.Tipo, usuario.Estado);
-                usuarioModificado.Modificar();
-                return View();
-            }
-            else
-            {
-                return View(usuario);
-            }
-        }
-
-
-
-
         public ActionResult Index()
         {
             return View();
@@ -97,6 +49,7 @@ namespace AppWebERS.Controllers
 
         public void CrearCasoDeUso()
         {
+
         }
 
         public void CrearActor(Proyecto proyecto)
@@ -104,72 +57,10 @@ namespace AppWebERS.Controllers
 
         }
 
-
-         /* <autor>Diego Matus</autor>
-         * <summary>Metodo encargado de enviar la lista de usarios a la vista ListarUsuarios y mostrarla dicha
-         * lista</summary>
-         * <param void>
-         * <returns> 
-         * Retorna la vista correspodiente (ListarUsuarios).
-         * </returns>
-         * 
-         */
-        [Authorize]
-        public ActionResult ListarUsuarios()
-        {
-            return View();
-        }
-
         public ActionResult VistaUsuario()
         {
             return View();
         }
-
-        public ActionResult ModificarUsuario()
-        {
-            return View("~/Views/Usuario/_ModalPartial.cshtml");
-        }
-
-        public ActionResult BotonUsuario()
-        {
-            using (var db = ApplicationDbContext.Create())
-            {
-                var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
-                Task<string> task = userManager.getTipoAsync((User.Identity.GetUserId()));
-                if (task.Result.Equals("SYSADMIN"))
-                {
-
-                    return RedirectToAction("ListarUsuarios", "Usuario");
-                }
-                else
-                {
-                    return View();
-                }
-            }
-            
-        }
-
-        public string RetornaValor()
-        {
-            using (var db = ApplicationDbContext.Create())
-            {
-                var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
-                Task<string> task = userManager.getTipoAsync((User.Identity.GetUserId()));
-                return task.Result;
-            }
-        }
-
-        public ActionResult BotonUsuarioD()
-        {
-            return null;
-        }
-
-        public ActionResult CargarVistaParcial()
-        {
-            return PartialView("_ModalPartial");
-        }
-
-
 
     }
 }

@@ -285,7 +285,7 @@ namespace AppWebERS.Controllers
                 ApplicationUser usuario = await UserManager.FindByRutAsync(usuarioViewModel.Rut);
                 usuario.Email = usuarioViewModel.Email;
                 usuario.UserName = usuarioViewModel.Nombre;
-                usuario.Estado = usuarioViewModel.Estado;
+                usuario.Estado = usuarioViewModel.Estado? !usuario.Estado: usuario.Estado;
                 await UserManager.UpdateAsync(usuario);
                 if (!String.IsNullOrEmpty(usuarioViewModel.Password)) {
                     await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), usuarioViewModel.Password);

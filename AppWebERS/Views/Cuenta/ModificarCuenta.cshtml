@@ -81,10 +81,10 @@
                     </div>
                 </div>
             </div>
-            <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                <label class="btn btn-secondar">
+            <div class="btn-group btn-group-toggle w-100" data-toggle="buttons">
+                <label class="btn btn-secondary mt-3 w-100">
                     Deshabilitar
-                    @Html.CheckBoxFor(m => m.Estado, new { htmlAttributes = new { @class = "form-control", type = "checkbox", autocomplete = "off",  } })
+                    @Html.CheckBoxFor(m => m.Estado, new { @class = "form-control", @type = "checkbox", @autocomplete = "off" })
                 </label>
             </div>
 

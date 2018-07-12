@@ -213,6 +213,74 @@ namespace AspNet.Identity.MySQL
             return value;
         }
 
+        /**
+        * <autor>Diego Iturriaga-Ariel Cornejo</autor>
+        * <summary>
+        * Metodo encargado de realizar las conusltas en la base de datos
+        * </summary> 
+        * <param name="consulta"> String con la consulta a realizae</param>
+        * <returns> 
+        * Retorna un objeto MySqlDataReader que contendra los datos necesarios de la tabla si es que la consulta fue exitosa y
+        * en caso contrario retornara un objeto null.
+        * </returns>
+        */
+        public MySqlDataReader RealizarConsulta(string consulta)
+        {
+            MySqlCommand command = _connection.CreateCommand();
+            command.CommandText = consulta;
+            try
+            {
+                EnsureConnectionOpen();
+                MySqlDataReader reader = command.ExecuteReader();
+                if (reader.HasRows) return reader;
+            }
+            finally
+            {
+                EnsureConnectionClosed();
+            }
+            return null;
+        }
+
+        public Boolean RealizarConsultaNoQuery(string consulta)
+        {
+            MySqlCommand command = _connection.CreateCommand();
+            command.CommandText = consulta;
+            try
+            {
+                EnsureConnectionOpen();
+                command.ExecuteNonQuery();
+                EnsureConnectionClosed();
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                EnsureConnectionClosed();
+                return false;
+            }
+        }
+
+        /**
+         * <autor>Diego Iturriaga</autor>
+         * <summary>
+         * Transforma un objeto tipo MySqlDataReader en un objeto de tipo DataSet.
+         * </summary> 
+         * <param name="reader"> objeto MySqlDataReader a transformar</param>
+         * <returns> 
+         * Retorna un objeto DataSet que contiene una tabla proveniente del objeto MySqlDataReader.
+         * </returns>
+         */
+        public DataSet GetDataSet(MySqlDataReader reader)
+        {
+            DataSet dataSet = new DataSet();
+
+            DataTable dataTable = new DataTable();
+            dataTable.Load(reader);
+            dataSet.Tables.Add(dataTable);
+
+            return dataSet;
+        }
+
         public void Dispose()
         {
             if (_connection != null)

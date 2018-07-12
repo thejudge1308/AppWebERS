@@ -7,13 +7,10 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-/**
- * Autor: Gerardo Estrada (Meister1412)
- **/
-
 namespace AppWebERS.Models
 {
-    public class Proyecto {
+    public class Proyecto
+    {
 
         /**
          * Constructor de la clase Proyecto
@@ -34,8 +31,9 @@ namespace AppWebERS.Models
          * <param name = "casosDeUso" > La lista de casos de uso asociados al proyecto.</param>
          * <param name = "actores" > La lista de actores asociados al proyecto.</param>
          **/
-        
-        public Proyecto(int idProyecto, string nombre,string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string referencias, string ambienteOperacional, string relacionProyectos) {
+
+        public Proyecto(int idProyecto, string nombre, string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string referencias, string ambienteOperacional, string relacionProyectos)
+        {
             this.IdProyecto = idProyecto;
             this.Nombre = nombre;
             this.Proposito = proposito;
@@ -53,11 +51,12 @@ namespace AppWebERS.Models
             this.Actores = new List<Actor>();
         }
 
-        public Proyecto() {
+        public Proyecto()
+        {
 
         }
 
-        private ConectorBD conexion = ConectorBD.Instance;
+        private ApplicationDbContext conexion = ApplicationDbContext.Create();
 
         /**
          * Setter y Getter de ID del proyecto
@@ -67,7 +66,7 @@ namespace AppWebERS.Models
          * 
          **/
 
-        public int IdProyecto {get; set;}
+        public int IdProyecto { get; set; }
 
         /**
          * Setter y Getter de Nombre del proyecto
@@ -76,9 +75,9 @@ namespace AppWebERS.Models
          * <returns>Retorna el valor string del nombre.</returns>
          * 
          **/
-         [Required]
-         [StringLength(100,ErrorMessage = "El número de caracteres de Nombre debe ser 6",MinimumLength = 6)]
-        public string Nombre { get; set;}
+        [Required]
+        [StringLength(100, ErrorMessage = "El número de caracteres de Nombre debe ser 6", MinimumLength = 6)]
+        public string Nombre { get; set; }
 
         /**
          * Setter y Getter del proposito del proyecto
@@ -88,7 +87,7 @@ namespace AppWebERS.Models
          * 
          **/
 
-        public string Proposito {get; set;}
+        public string Proposito { get; set; }
 
         /**
          * Setter y Getter del alcance del proyecto
@@ -98,7 +97,7 @@ namespace AppWebERS.Models
          * 
          **/
 
-        public string Alcance {get; set;}
+        public string Alcance { get; set; }
 
         /**
          * Setter y Getter del contexto del proyecto
@@ -108,7 +107,7 @@ namespace AppWebERS.Models
          * 
          **/
 
-        public string Contexto {get; set;}
+        public string Contexto { get; set; }
 
         /**
          * Setter y Getter del atributo que contiene las definiciones del proyecto
@@ -118,7 +117,7 @@ namespace AppWebERS.Models
          * 
          **/
 
-        public string Definiciones {get; set;}
+        public string Definiciones { get; set; }
 
         /**
          * Setter y Getter del atributo que contiene los acronimos del proyecto
@@ -128,7 +127,7 @@ namespace AppWebERS.Models
          * 
          **/
 
-        public string Acronimos {get; set;}
+        public string Acronimos { get; set; }
 
         /**
         * Setter y Getter del atributo que contiene las abreviaturas del proyecto
@@ -138,7 +137,7 @@ namespace AppWebERS.Models
         * 
         **/
 
-        public string Abreviaturas {get; set;}
+        public string Abreviaturas { get; set; }
 
         /**
         * Setter y Getter del atributo que contiene las referencias del proyecto
@@ -148,7 +147,7 @@ namespace AppWebERS.Models
         * 
         **/
 
-        public string Referencias {get; set;}
+        public string Referencias { get; set; }
 
         /**
         * Setter y Getter del ambiente operacional del proyecto
@@ -158,7 +157,7 @@ namespace AppWebERS.Models
         * 
         **/
 
-        public string AmbienteOperacional {get; set;}
+        public string AmbienteOperacional { get; set; }
 
         /**
         * Setter y Getter del atributo que contiene la relacion con otros proyectos
@@ -168,7 +167,7 @@ namespace AppWebERS.Models
         * 
         **/
 
-        public string RelacionProyectos {get; set;}
+        public string RelacionProyectos { get; set; }
 
         /**
          * Setter y Getter de los usuarios relacionados con el proyecto.
@@ -178,7 +177,7 @@ namespace AppWebERS.Models
          * 
          **/
 
-        public List<Usuario> Usuarios {get; set;}
+        public List<Usuario> Usuarios { get; set; }
 
         /**
          * Setter y Getter de los requisitos relacionados con el proyecto.
@@ -188,7 +187,7 @@ namespace AppWebERS.Models
          * 
          **/
 
-        public List<Requisito> Requisitos {get; set;}
+        public List<Requisito> Requisitos { get; set; }
 
         /**
          * Setter y Getter de los casos de uso relacionados con el proyecto.
@@ -198,7 +197,7 @@ namespace AppWebERS.Models
          * 
          **/
 
-        public List<CasoDeUso> CasosDeUso {get; set;}
+        public List<CasoDeUso> CasosDeUso { get; set; }
 
         /**
          * Setter y Getter de los actores relacionados con el proyecto.
@@ -208,13 +207,14 @@ namespace AppWebERS.Models
          * 
          **/
 
-        public List<Actor> Actores {get; set;}
+        public List<Actor> Actores { get; set; }
 
         /**
          * Método para listar todos los proyectos existentes
          **/
 
-        public void ListarTodos() {
+        public void ListarTodos()
+        {
         }
 
         /**
@@ -222,15 +222,17 @@ namespace AppWebERS.Models
          * <returns>Retorna un proyecto específico.</returns>
          **/
 
-        public void ListarEspecifico(Usuario usuario) {
-           
+        public void ListarEspecifico(Usuario usuario)
+        {
+
         }
 
         /**
          * Método para seleccionar un proyecto 
          **/
 
-        public void Seleccionar(int id) {
+        public void Seleccionar(int id)
+        {
 
         }
 
@@ -258,7 +260,8 @@ namespace AppWebERS.Models
          * no pasen las validaciones correspondientes.</returns>
          **/
 
-        public Proyecto CrearProyecto(int idProyecto, string nombre, string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string referencias, string ambienteOperacional, string relacionProyectos) {
+        public Proyecto CrearProyecto(int idProyecto, string nombre, string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string referencias, string ambienteOperacional, string relacionProyectos)
+        {
             Proyecto proyectoNuevo = null;
             if (this.VerificarNombre(nombre))
             {
@@ -285,19 +288,19 @@ namespace AppWebERS.Models
         {
             string consulta = "SELECT proyecto.nombre FROM proyecto;";
             MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
-            if (reader!=null)
+            if (reader != null)
             {
                 while (reader.Read())
                 {
                     string nombre = reader["nombre"].ToString();
-                    if (nombre==nombreProyecto)
+                    if (nombre == nombreProyecto)
                     {
-                        this.conexion.CerrarConexion();
+                        this.conexion.EnsureConnectionClosed();
                         return false;
                     }
                 }
             }
-            this.conexion.CerrarConexion();
+            this.conexion.EnsureConnectionClosed();
             return true;
         }
 
@@ -305,7 +308,8 @@ namespace AppWebERS.Models
          * Método para cargar datos
          **/
 
-        public void CargarDatos(DataRow dr) {
+        public void CargarDatos(DataRow dr)
+        {
 
         }
 
@@ -317,7 +321,8 @@ namespace AppWebERS.Models
          * <param name="texto">Contiene un string con el texto a verificar</param>
          * <returns>true si texto es mayor que 0, false en caso contrario</returns>
          */
-        private bool VerificarNombre(string texto) {
+        private bool VerificarNombre(string texto)
+        {
             return texto.Length > 0;
         }
         /**
@@ -333,7 +338,6 @@ namespace AppWebERS.Models
          * */
         public bool RegistrarProyectoEnBd(Proyecto proyecto)
         {
-            ConectorBD conector = ConectorBD.Instance;
             String nombre = proyecto.Nombre;
             String proposito = proyecto.Proposito;
             String alcance = proyecto.Alcance;
@@ -345,8 +349,8 @@ namespace AppWebERS.Models
             String ambiente = proyecto.AmbienteOperacional;
             String relacion = proyecto.RelacionProyectos;
             String consulta = "INSERT INTO proyecto (nombre,proposito,alcance,contexto,definiciones,acronimos,abreviaturas,referencias,ambiente_operacional,relacion_con_otros_proyectos)" +
-                " VALUES ('"+nombre+"', '"+proposito+"','"+alcance+"','"+contexto+"','"+definiciones+"','"+acronimos+"','"+abreviaturas+"','"+referencias+"','"+ambiente+"','"+relacion+"')";
-            return conector.RealizarConsultaNoQuery(consulta);
+                " VALUES ('" + nombre + "', '" + proposito + "','" + alcance + "','" + contexto + "','" + definiciones + "','" + acronimos + "','" + abreviaturas + "','" + referencias + "','" + ambiente + "','" + relacion + "')";
+            return this.conexion.RealizarConsultaNoQuery(consulta);
         }
         //Metodos para Asignar Jefes de Proyectos
         /**
@@ -356,7 +360,8 @@ namespace AppWebERS.Models
          * </summary>
          * <returns>Devuelve una lista de SelectListItem con el nombre de los proyectos.</returns>
          */
-        public List<SelectListItem> ObtenerProyectos() {
+        public List<SelectListItem> ObtenerProyectos()
+        {
             List<SelectListItem> listaProyectos = new List<SelectListItem>();
             string consulta = "SELECT proyecto.nombre FROM proyecto WHERE id_proyecto IN (SELECT vinculo_usuario_proyecto.ref_proyecto FROM vinculo_usuario_proyecto WHERE rol='JEFEPROYECTO');";
             MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
@@ -370,7 +375,7 @@ namespace AppWebERS.Models
                     listaProyectos.Add(new SelectListItem() { Text = nombre, Value = nombre });
                 }
             }
-            this.conexion.CerrarConexion();
+            this.conexion.EnsureConnectionClosed();
             return listaProyectos;
         }
 
@@ -396,7 +401,7 @@ namespace AppWebERS.Models
                     listaProyectos.Add(new SelectListItem() { Text = nombre, Value = nombre });
                 }
             }
-            this.conexion.CerrarConexion();
+            this.conexion.EnsureConnectionClosed();
             return listaProyectos;
         }
         /**
@@ -419,14 +424,14 @@ namespace AppWebERS.Models
                 while (reader.Read())
                 {
                     string rutBD = reader["rut"].ToString();
-                    string nombreBD =reader["nombre"].ToString();
+                    string nombreBD = reader["nombre"].ToString();
                     string texto = nombreBD + " / " + rutBD;
                     i++;
-                    listasUsuarios.Add(new SelectListItem() { Text = texto, Value = texto});
+                    listasUsuarios.Add(new SelectListItem() { Text = texto, Value = texto });
                 }
             }
 
-            this.conexion.CerrarConexion();
+            this.conexion.EnsureConnectionClosed();
             return listasUsuarios;
         }
 
@@ -439,8 +444,9 @@ namespace AppWebERS.Models
          * <param name="nombreProyecto">Contiene un string que tiene el nombre del Proyecto</param>
          * <returns>true si inserto, false en caso contrario</returns>
          */
-        public bool AsignarJefeProyecto(string nombreUsuario, string nombreProyecto) {
-            string consultaNombreProyecto = "SELECT id_proyecto FROM proyecto WHERE nombre ='"+nombreProyecto+"';";
+        public bool AsignarJefeProyecto(string nombreUsuario, string nombreProyecto)
+        {
+            string consultaNombreProyecto = "SELECT id_proyecto FROM proyecto WHERE nombre ='" + nombreProyecto + "';";
             MySqlDataReader reader = this.conexion.RealizarConsulta(consultaNombreProyecto);
             int idProyecto = -1;
             if (reader != null)
@@ -448,20 +454,21 @@ namespace AppWebERS.Models
                 reader.Read();
                 idProyecto = Int32.Parse(reader["id_proyecto"].ToString());
             }
-            this.conexion.CerrarConexion();
+            this.conexion.EnsureConnectionClosed();
             String rut = ObtenerRutDesdeString(nombreUsuario);
-            if (IdProyecto != -1) {
-                String consultaInsertar = "INSERT INTO vinculo_usuario_proyecto(ref_usuario,ref_proyecto,rol)"+
-                    "VALUES ('"+rut+"','"+idProyecto+"','JEFEPROYECTO');"+
+            if (IdProyecto != -1)
+            {
+                String consultaInsertar = "INSERT INTO vinculo_usuario_proyecto(ref_usuario,ref_proyecto,rol)" +
+                    "VALUES ('" + rut + "','" + idProyecto + "','JEFEPROYECTO');" +
                     "DELETE FROM vinculo_usuario_proyecto WHERE ref_usuario = '" + rut + "' AND ref_proyecto = '" + idProyecto + "' AND rol = 'USUARIO'; ";
                 if (this.conexion.RealizarConsultaNoQuery(consultaInsertar))
                 {
-                    this.conexion.CerrarConexion();
+                    this.conexion.EnsureConnectionClosed();
                     return true;
                 }
                 else
                 {
-                    this.conexion.CerrarConexion();
+                    this.conexion.EnsureConnectionClosed();
                     return false;
                 }
             }
@@ -483,7 +490,7 @@ namespace AppWebERS.Models
          **/
         public bool ModificarJefeProyecto(string nombreUsuario, string nombreProyecto)
         {
-            String consulta1 = "SELECT id_proyecto FROM proyecto WHERE nombre = '"+nombreProyecto+"';";
+            String consulta1 = "SELECT id_proyecto FROM proyecto WHERE nombre = '" + nombreProyecto + "';";
             MySqlDataReader reader = this.conexion.RealizarConsulta(consulta1);
             int idProyecto = -1;
             if (reader != null)
@@ -491,20 +498,20 @@ namespace AppWebERS.Models
                 reader.Read();
                 idProyecto = Int32.Parse(reader["id_proyecto"].ToString());
             }
-            this.conexion.CerrarConexion();
+            this.conexion.EnsureConnectionClosed();
             String rut = this.ObtenerRutDesdeString(nombreUsuario);
             if (idProyecto != -1)
             {
-                String consulta2 = "UPDATE vinculo_usuario_proyecto SET ref_usuario = '"+rut+"' WHERE ref_proyecto = '"+idProyecto+"' AND rol = 'JEFEPROYECTO'; " +
+                String consulta2 = "UPDATE vinculo_usuario_proyecto SET ref_usuario = '" + rut + "' WHERE ref_proyecto = '" + idProyecto + "' AND rol = 'JEFEPROYECTO'; " +
                     "DELETE FROM vinculo_usuario_proyecto WHERE ref_usuario = '" + rut + "' AND ref_proyecto = '" + idProyecto + "' AND rol = 'USUARIO'; ";
                 if (this.conexion.RealizarConsultaNoQuery(consulta2))
                 {
-                    this.conexion.CerrarConexion();
+                    this.conexion.EnsureConnectionClosed();
                     return true;
                 }
                 else
                 {
-                    this.conexion.CerrarConexion();
+                    this.conexion.EnsureConnectionClosed();
                     return false;
                 }
             }
@@ -520,7 +527,8 @@ namespace AppWebERS.Models
          * <param name="texto">Contiene un string que tiene el nombre de usuario y su rut separados por un / .</param>
          * <returns> el string con el rut de un usuario</returns>
          */
-        public String ObtenerRutDesdeString(String texto) {
+        public String ObtenerRutDesdeString(String texto)
+        {
             String[] subStrings = texto.Split('/');
             String rut = subStrings[1].Trim(' ');
             return rut;

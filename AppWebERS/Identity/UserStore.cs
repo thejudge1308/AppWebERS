@@ -746,6 +746,12 @@ namespace AspNet.Identity.MySQL
             return Task.FromResult(user.Tipo);
         }
 
+
+        public Task<string> GetRutAsync(TUser user)
+        {
+            return Task.FromResult(user.Rut);
+        }
+
         /*  Creador: Gabriel Sanhueza
          *  Accion: Obtiene todos los usuarios
          *  Retorno: Operacion asincrona con todos los usuarios

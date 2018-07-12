@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using AppWebERS.Models;
 using System.Data.Entity;
+using AppWebERS.Utilidades;
 namespace AppWebERS.Controllers
 {
     [Authorize]
@@ -293,11 +294,15 @@ namespace AppWebERS.Controllers
                 if (!String.IsNullOrEmpty(usuarioViewModel.Password)) {
                     await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), usuarioViewModel.Password);
                 }
-                return RedirectToAction("ModificarCuenta", new {rut = usuarioViewModel.Rut});
+
+                TempData["alert"] = new Alerta("El usuario se modifico exitosamente", TipoAlerta.SUCCESS);
+
+                return RedirectToAction("ListarUsuarios", new {rut = usuarioViewModel.Rut});
             }
             else
             {
-              return View(usuarioViewModel);
+                TempData["alertData"] = new Alerta("El usuario no pudo ser modificado", TipoAlerta.ERROR);
+                return View(usuarioViewModel);
             }
         }
 

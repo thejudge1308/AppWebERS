@@ -7,18 +7,35 @@ $(document).ready(() => {
     };
 
     cerrarAlertaAutomaticamente(); //Si hay una alerta la ocultara 
+
     /**
      * Autor: Gabriel Sanhueza
-     * Agrega un evento cuando se hace click en los botones con clase deshabilitar para que 
-     * muestre la alerta
-     * Parametros: 
-     * event: objeto con informacion del evento
+     * Llama a una funcion asincrona para que cierre la alerta a los 2 segundos
+     * 
      */
-    $('.deshabilitar').on('click', (event) => {
-        let mensaje = "El usuario se ha deshabilitado correctamente";
-        mostrarAlerta(mensaje, TipoAlerta.EXITO);
-        event.preventDefault(); //Se arreglo por mientras, despues hay que quitarlo y configurar desde el servidor la muestra de alerta
-    });
+    function cerrarAlertaAutomaticamente() {
+        //Realiza una tarea asincrona que ocultara la alerta al cabo de 2 segundos
+        setTimeout(function () {
+            ocultarAlerta();
+        }, 2000);
+    }
+
+
+    /**
+    * Autor: Gabriel Sanhueza
+    * Oculta la alerta y usa un efecto de jquery mientras se oculta
+    */
+    function ocultarAlerta() {
+            alerta.slideUp("slow", function () {
+                alerta.toggleClass(function () {
+                    //Oculta la alert agregando la clase d-none 
+                    $(this).addClass('d-none').removeClass('d-flex');
+                    return $(this);
+                });
+                //Remueve el estilo dado por el efecto jquery
+                alerta.removeAttr('style');
+            });
+    }
 
     /**
      * Autor: Gabriel Sanhueza
@@ -47,34 +64,16 @@ $(document).ready(() => {
 
     /**
      * Autor: Gabriel Sanhueza
-     * Llama a una funcion asincrona para que cierre la alerta a los 2 segundos
-     * 
+     * Agrega un evento cuando se hace click en los botones con clase deshabilitar para que 
+     * muestre la alerta
+     * Parametros: 
+     * event: objeto con informacion del evento
      */
-    function cerrarAlertaAutomaticamente() {
-        //Realiza una tarea asincrona que ocultara la alerta al cabo de 2 segundos
-        setTimeout(function () {
-            ocultarAlerta();
-        }, 2000);
-    }
-
-
-     /**
-     * Autor: Gabriel Sanhueza
-     * Oculta la alerta y usa un efecto de jquery mientras se oculta
-     */
-    function ocultarAlerta() {
-        if (!$(this).hasClass('d-none')) {
-            alerta.slideUp("slow", function () {
-                alerta.toggleClass(function () {
-                        //Oculta la alert agregando la clase d-none 
-                        $(this).addClass('d-none').removeClass('d-flex');
-                    return $(this);
-                });
-                //Remueve el estilo dado por el efecto jquery
-                alerta.removeAttr('style');
-            });
-        }
-    }
+    //$('.deshabilitar').on('click', (event) => {
+    //    let mensaje = "El usuario se ha deshabilitado correctamente";
+    //    mostrarAlerta(mensaje, TipoAlerta.EXITO);
+    //    event.preventDefault(); //Se arreglo por mientras, despues hay que quitarlo y configurar desde el servidor la muestra de alerta
+    //});
 
     /**
      * Autor: Gabriel Sanhueza

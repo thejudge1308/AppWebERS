@@ -1,16 +1,22 @@
 ﻿@using AppWebERS.Utilidades
 @{
     Alerta alertTemp = TempData["alert"] as Alerta;
+    string modoAlerta = "d-none";
+    string tipoAlerta = "";
+    string mensaje = "";
     if (alertTemp != null)
     {
-        <div class="justify-content-center fixed-bottom text-center d-flex" id="alertDiv">
-            <div class="alert @alertTemp.TipoAlerta alert-dismissible w-50" role="alert">
-                <h4 class="alert-heading"></h4>
-                <p id="mensajeAlerta" style="word-break: break-all;">@alertTemp.Mensaje</p>
-                <button type="button" class="close" aria-label="Close" id="button-alert">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        </div>
+        tipoAlerta = alertTemp.TipoAlerta;
+        mensaje = alertTemp.Mensaje;
+        modoAlerta = "d-flex";
     }
+    <div class="justify-content-center fixed-bottom text-center @modoAlerta" id="alertDiv">
+        <div class="alert @tipoAlerta alert-dismissible w-50" role="alert">
+            <h4 class="alert-heading"></h4>
+            <p id="mensajeAlerta" style="word-break: break-all;">@mensaje</p>
+            <button type="button" class="close" aria-label="Close" id="button-alert">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
 }

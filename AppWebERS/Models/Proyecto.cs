@@ -416,15 +416,15 @@ namespace AppWebERS.Models
         public List<SelectListItem> ObtenerUsuarios()
         {
             List<SelectListItem> listasUsuarios = new List<SelectListItem>();
-            string consulta = "SELECT usuario.nombre, usuario.rut FROM usuario WHERE rut NOT IN (SELECT vinculo_usuario_proyecto.ref_usuario FROM vinculo_usuario_proyecto WHERE rol = 'JEFEPROYECTO') AND tipo != 'SYSADMIN' AND estado = 1; ";
+            string consulta = "SELECT users.UserName, users.Rut FROM users WHERE Tipo != 'SYSADMIN' AND Estado = 1; ";
             MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
             if (reader != null)
             {
                 int i = 0;
                 while (reader.Read())
                 {
-                    string rutBD = reader["rut"].ToString();
-                    string nombreBD = reader["nombre"].ToString();
+                    string rutBD = reader["Rut"].ToString();
+                    string nombreBD = reader["UserName"].ToString();
                     string texto = nombreBD + " / " + rutBD;
                     i++;
                     listasUsuarios.Add(new SelectListItem() { Text = texto, Value = texto });

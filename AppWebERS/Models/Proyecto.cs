@@ -500,25 +500,56 @@ namespace AppWebERS.Models
             }
             this.conexion.EnsureConnectionClosed();
             String rut = this.ObtenerRutDesdeString(nombreUsuario);
-            if (idProyecto != -1)
-            {
-                String consulta2 = "UPDATE vinculo_usuario_proyecto SET ref_usuario = '" + rut + "' WHERE ref_proyecto = '" + idProyecto + "' AND rol = 'JEFEPROYECTO'; " +
-                    "DELETE FROM vinculo_usuario_proyecto WHERE ref_usuario = '" + rut + "' AND ref_proyecto = '" + idProyecto + "' AND rol = 'USUARIO'; ";
-                if (this.conexion.RealizarConsultaNoQuery(consulta2))
+            if (VerificarRolEnProyecto(rut,idProyecto)) {
+                if (idProyecto != -1)
                 {
-                    this.conexion.EnsureConnectionClosed();
-                    return true;
+                    String consulta2 = "UPDATE vinculo_usuario_proyecto SET ref_usuario = '" + rut + "' WHERE ref_proyecto = '" + idProyecto + "' AND rol = 'JEFEPROYECTO'; " +
+                        "DELETE FROM vinculo_usuario_proyecto WHERE ref_usuario = '" + rut + "' AND ref_proyecto = '" + idProyecto + "' AND rol = 'USUARIO'; ";
+                    if (this.conexion.RealizarConsultaNoQuery(consulta2))
+                    {
+                        this.conexion.EnsureConnectionClosed();
+                        return true;
+                    }
+                    else
+                    {
+                        this.conexion.EnsureConnectionClosed();
+                        return false;
+                    }
                 }
-                else
-                {
-                    this.conexion.EnsureConnectionClosed();
-                    return false;
-                }
-            }
+            }           
             return false;
 
         }
 
+        /**
+         * <author>Roberto Ureta</author>
+         * <summary>
+         * Verifica si un usuario ya es jefe de proyecto de un proyecto.
+         * </summary>
+         * <param name="rut">Contiene un string que tiene el rut de un usuario.</param>
+         * <param name="idProyecto">Contiene un int con el id de un proyecto.</param>
+         * <returns> true si el rol es jefe de proyecto, false en caso contrario.</returns>
+         */
+        private bool VerificarRolEnProyecto(string rut, int idProyecto) {
+            string consulta = "SELECT vinculo_usuario_proyecto.rol FROM vinculo_usuario_proyecto WHERE vinculo_usuario_proyecto.ref_usuario = '" + rut + "' AND vinculo_usuario_proyecto.ref_proyecto=" + idProyecto + ";";
+            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
+            if (reader != null)
+            {
+                reader.Read();
+                string rol = reader["rol"].ToString();
+                this.conexion.EnsureConnectionClosed();
+                if (rol.Equals("JEFEPROYECTO"))
+                {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+            this.conexion.EnsureConnectionClosed();
+            return false;
+
+        }
         /**
          * <author>Roberto Ureta</author>
          * <summary>

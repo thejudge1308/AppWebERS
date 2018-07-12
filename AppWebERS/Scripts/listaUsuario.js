@@ -1,12 +1,10 @@
 ﻿// Ejecuta cuando se haya cargado la pagina completa
 $(document).ready(() => {
     let alerta = $('#alertDiv');
-    const TiposAlerta = {
+    const TipoAlerta = {
         EXITO: 'alert-success',
         ERROR: 'alert-danger'
     };
-
-    let iframeSRC = "";
 
     cerrarAlertaAutomaticamente(); //Si hay una alerta la ocultara 
     /**
@@ -18,11 +16,18 @@ $(document).ready(() => {
      */
     $('.deshabilitar').on('click', (event) => {
         let mensaje = "El usuario se ha deshabilitado correctamente";
-        mostrarAlerta(mensaje, TiposAlerta.EXITO);
+        mostrarAlerta(mensaje, TipoAlerta.EXITO);
         event.preventDefault(); //Se arreglo por mientras, despues hay que quitarlo y configurar desde el servidor la muestra de alerta
     });
 
-    function mostrarAlerta(mensaje, tipo = TiposAlerta.EXITO) {
+    /**
+     * Autor: Gabriel Sanhueza
+     * Modifica la alerta
+     * Parametros: 
+     * mensaje: Texto que se mostrara
+     * tipo: El tipo de alerta (TipoAlerta.EXITO o TipoAlerta.Error)
+     */
+    function mostrarAlerta(mensaje, tipo = TipoAlerta.EXITO) {
         alerta.toggleClass(function () {
             console.log($(this));
             if ($(this).hasClass('d-none')) {
@@ -78,30 +83,4 @@ $(document).ready(() => {
     $('#button-alert').on('click', () => {
         ocultarAlerta();
     })
-
-    /**
-     * Autor Gabriel Sanhueza
-     * Evento que cambia el enlace del iframe para que liste el usuario correcto para la modificacion
-     */
-    $("[data-target='#exampleModal']").on('click', (event) => {
-        var iframe = $("#iframe")[0];
-        iframeSRC = iframeSRC === "" ? iframe.src:iframeSRC;
-        iframe.src = `${iframeSRC}?rut=${event.target.dataset.rut}`;
-    })
-
-   /**
-    * Autor Gabriel Sanhueza
-    * Evento en el boton que enviara el formulario
-    */
-    $("button[type='submit']").on('click', (event) => {
-        let form = $("#iframe").contents().find("#form");
-        let prevenido = $("#iframe").contents().find("#form")[0].dispatchEvent(new Event('submit', {bubbles: true, cancelable:true}));
-        if (!prevenido) {
-            event.preventDefault();
-            return;
-        }
-        form.submit();
-        mostrarAlerta("Se ha modificado correctamente el usuario", TiposAlerta.EXITO);
-        $("#exampleModal").modal('toggle');
-    });
 });

@@ -2,109 +2,96 @@
 @model ModificarViewModel
 
 @{
-    Layout = "";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+<div class="container pt-4 w-75">
+    @using (Html.BeginForm("ModificarCuenta", "Cuenta", FormMethod.Post, new { id = "form" }))
+    {
+        @Html.ValidationSummary(true)
+        <div class="card">
+            <div class="card-header">
+                Nombre de usuario
+            </div>
+            <div class="card-body">
+                <div class="card-text">
+                    @Html.DisplayFor(m => m.AntiguoNombre)
+                    <button class="btn btn-primary float-right btn-secondary" type="button" data-toggle="collapse" data-target="#collapseExample"
+                            aria-expanded="false" aria-controls="collapseExample">
 
-    @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
-
-</head>
-<body class="p-0">
-    <div class="container-fluid pt-4">
-        @using (Html.BeginForm("ModificarCuenta", "Cuenta", FormMethod.Post, new { id = "form" }))
-        {
-            @Html.ValidationSummary(true)
-            <div class="card">
-                <div class="card-header">
-                    Nombre de usuario
-                </div>
-                <div class="card-body">
-                    <div class="card-text">
-                        @Html.DisplayFor(m => m.AntiguoNombre)
-                        <button class="btn btn-primary float-right btn-secondary" type="button" data-toggle="collapse" data-target="#collapseExample"
-                                aria-expanded="false" aria-controls="collapseExample">
-
-                            Editar
-                        </button>
-                        <div class="collapse colapsable" id="collapseExample">
-                            @Html.EditorFor(m => m.Nombre, new { htmlAttributes = new { @class = "form-control", placeholder = "Nuevo nombre de usuario" } })
-                            @Html.ValidationMessageFor(m => m.Nombre, "", new { @class = "text-danger" })
-                        </div>
+                        Editar
+                    </button>
+                    <div class="collapse colapsable" id="collapseExample">
+                        @Html.EditorFor(m => m.Nombre, new { htmlAttributes = new { @class = "form-control", placeholder = "Nuevo nombre de usuario" } })
+                        @Html.ValidationMessageFor(m => m.Nombre, "", new { @class = "text-danger" })
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="card mt-4">
-                <div class="card-header">
-                    Correo electrónico
-                </div>
-                <div class="card-body">
-                    <div class="card-text">
-                        @Html.DisplayFor(m => m.AntiguoEmail)
-                        <button class="btn btn-primary float-right btn-secondary" type="button" data-toggle="collapse" data-target="#collapseExample2"
-                                aria-expanded="false" aria-controls="collapseExample2">
+        <div class="card mt-4">
+            <div class="card-header">
+                Correo electrónico
+            </div>
+            <div class="card-body">
+                <div class="card-text">
+                    @Html.DisplayFor(m => m.AntiguoEmail)
+                    <button class="btn btn-primary float-right btn-secondary" type="button" data-toggle="collapse" data-target="#collapseExample2"
+                            aria-expanded="false" aria-controls="collapseExample2">
 
-                            Editar
-                        </button>
-                        <div class="collapse colapsable" id="collapseExample2">
-                            @Html.EditorFor(m => m.Email, new { htmlAttributes = new { @class = "form-control", placeholder = "Nuevo correo" } })
-                            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
-                        </div>
+                        Editar
+                    </button>
+                    <div class="collapse colapsable" id="collapseExample2">
+                        @Html.EditorFor(m => m.Email, new { htmlAttributes = new { @class = "form-control", placeholder = "Nuevo correo" } })
+                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="card mt-4">
-                <div class="card-header">
-                    Constraseña
-                </div>
-                <div class="card-body">
-                    <div class="card-text">
-                        <span id="passModal">*********************</span>
-                        <button class="btn btn-primary float-right btn-secondary" type="button" data-toggle="collapse" data-target="#collapseExample1"
-                                aria-expanded="false" aria-controls="collapseExample1">
+        <div class="card mt-4">
+            <div class="card-header">
+                Constraseña
+            </div>
+            <div class="card-body">
+                <div class="card-text">
+                    <span id="passModal">*********************</span>
+                    <button class="btn btn-primary float-right btn-secondary" type="button" data-toggle="collapse" data-target="#collapseExample1"
+                            aria-expanded="false" aria-controls="collapseExample1">
 
-                            Editar
-                        </button>
-                        <div class="collapse colapsable" id="collapseExample1">
-                            @Html.EditorFor(m => m.Password, new { htmlAttributes = new { @class = "form-control", placeholder = "Nueva contraseña" } })
-                            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                        Editar
+                    </button>
+                    <div class="collapse colapsable" id="collapseExample1">
+                        @Html.EditorFor(m => m.Password, new { htmlAttributes = new { @class = "form-control", placeholder = "Nueva contraseña" } })
+                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
 
-                        </div>
                     </div>
                 </div>
             </div>
-            <div class="btn-group btn-group-toggle w-100" data-toggle="buttons">
-                <label class="btn btn-secondary mt-3 w-100">
-                    Deshabilitar
-                    @Html.CheckBoxFor(m => m.Estado, new { @class = "form-control", @type = "checkbox", @autocomplete = "off" })
-                </label>
-            </div>
+        </div>
+        <div class="btn-group btn-group-toggle w-100" data-toggle="buttons">
+            <label class="btn btn-secondary mt-3 w-100">
+                @if (Model.AntiguoEstado)
+                {
+                    @Html.Raw("Deshabilitar")
+                }
+                else
+                {
+                    @Html.Raw("Habilitar")
+                }
+                @Html.CheckBoxFor(m => m.Estado, new { @class = "form-control", @type = "checkbox", @autocomplete = "off" })
+            </label>
+        </div>
 
-            @Html.HiddenFor(m => m.Rut);
-            @Html.HiddenFor(m => m.AntiguoNombre);
-            @Html.HiddenFor(m => m.AntiguoEmail);
+        @Html.HiddenFor(m => m.Rut);
+        @Html.HiddenFor(m => m.AntiguoNombre);
+        @Html.HiddenFor(m => m.AntiguoEmail);
+        <div class="row justify-content-end mx-0 my-3">
+            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        </div>
+    }
+</div>
 
-        }
-    </div>
-            @Scripts.Render("~/bundles/jquery")
-            @Scripts.Render("~/bundles/jqueryval")
-            @Scripts.Render("~/bundles/popper")
-            @Scripts.Render("~/bundles/bootstrap")
-
-            <script>
-                document.getElementById("form").addEventListener("submit", event => {
-                    let isValid = $("#form").valid();
-                    if (!isValid) {
-                        event.preventDefault();
-                    }
-                });
-            </script>
-</body>
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+}

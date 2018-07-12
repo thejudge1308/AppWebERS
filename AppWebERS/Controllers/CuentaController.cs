@@ -113,7 +113,7 @@ namespace AppWebERS.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.UserName, Rut = model.Rut, Email = model.Email , Tipo = "SYSADMIN"};
+                var user = new ApplicationUser { UserName = model.UserName, Rut = model.Rut, Email = model.Email , Tipo = "USER"};
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -256,6 +256,7 @@ namespace AppWebERS.Controllers
         [HttpGet]
         public async Task<ActionResult> ListarUsuarios()
         {
+            ViewBag.Title = "ListarUsuarios";
             var lista = await UserManager.GetAllUsersAsync();
             return View(lista);
         }
@@ -263,12 +264,13 @@ namespace AppWebERS.Controllers
         [HttpGet]
         public async Task<ActionResult> ModificarCuenta(string rut)
         {
+            ViewBag.Title = "ModificarCuenta";
             if (!String.IsNullOrEmpty(rut)) {
                 ApplicationUser usuario = await UserManager.FindByRutAsync(rut);
                 ModificarViewModel model = new ModificarViewModel(usuario);
                 return View(model);
             }
-            return View();
+            return RedirectToAction("Index","Home");
         }
 
         /*
@@ -280,17 +282,18 @@ namespace AppWebERS.Controllers
         [HttpPost]
         public async Task<ActionResult> ModificarCuenta(ModificarViewModel usuarioViewModel)
         {
+            ViewBag.Title = "ModificarCuenta";
             if (ModelState.IsValid)
             {
                 ApplicationUser usuario = await UserManager.FindByRutAsync(usuarioViewModel.Rut);
-                usuario.Email = usuarioViewModel.Email;
-                usuario.UserName = usuarioViewModel.Nombre;
+                usuario.Email = String.IsNullOrEmpty(usuarioViewModel.Email)? usuario.Email: usuarioViewModel.Email;
+                usuario.UserName = String.IsNullOrEmpty(usuarioViewModel.Nombre)? usuario.UserName: usuarioViewModel.Nombre;
                 usuario.Estado = usuarioViewModel.Estado? !usuario.Estado: usuario.Estado;
                 await UserManager.UpdateAsync(usuario);
                 if (!String.IsNullOrEmpty(usuarioViewModel.Password)) {
                     await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), usuarioViewModel.Password);
                 }
-                return View();
+                return RedirectToAction("ModificarCuenta", new {rut = usuarioViewModel.Rut});
             }
             else
             {

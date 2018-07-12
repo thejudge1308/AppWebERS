@@ -77,34 +77,15 @@ namespace AppWebERS.Models
 
     public class ModificarViewModel
     {
-        private string _nombre;
-        private string _email;
-        private string _contrasenia;
-        private bool _estado;
 
         [RegularExpression("([ ]?[a-zA-Z])*", ErrorMessage = "Nombre no válido.")]
         [StringLength(50, ErrorMessage = "El largo del nombre deber ser entre 1 a 50 caracteres.", MinimumLength = 1)]
         [Display(Name = "Nombre")]
-        public string Nombre {
-            get
-            {
-                if (_nombre == "") return AntiguoNombre;
-                return _nombre;
-            }
-            set { _nombre = value; }
-        }
+        public string Nombre { get; set; }
 
         [EmailAddress]
         [Display(Name = "Email")]
-        public string Email
-        {
-            get
-            {
-                if (_email == "") return AntiguoEmail;
-                return _email;
-            }
-            set { _email = value; }
-        }
+        public string Email { get; set; }
 
         [StringLength(16, ErrorMessage = "La contraseña debe tener de 3 a 16 caracteres.", MinimumLength = 3)]
         [DataType(DataType.Password)]
@@ -116,11 +97,9 @@ namespace AppWebERS.Models
         public string Rut { get; set;}
         public string AntiguoNombre {get; set;}
         public string AntiguoEmail { get; set; }
+        public bool AntiguoEstado { get; set; }
 
         public ModificarViewModel() {
-            _nombre = "";
-            _email = "";
-            _contrasenia = "";
         }
 
         public ModificarViewModel(ApplicationUser usuario) : this()
@@ -128,7 +107,7 @@ namespace AppWebERS.Models
             this.Rut = usuario.Rut;
             this.AntiguoNombre = usuario.UserName;
             this.AntiguoEmail = usuario.Email;
-            this._estado = usuario.Estado;
+            this.AntiguoEstado = usuario.Estado;
         }
     }
 

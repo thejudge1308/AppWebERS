@@ -2,7 +2,6 @@
 @model List<ApplicationUser> 
 
 @{
-    ViewBag.Title = "ModificarCuentaUsuario";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -35,22 +34,8 @@
                         <td data-info="info">@usuario.Email</td>
                         <td data-info="info">@usuario.Tipo</td>
                         <td>
-                            <!-- Menu de opciones-->
-                            <div class="dropdown d-lg-none">
-                                <button class="btn btn-secondary dropdown-toggle" type="submit" id="triggerId" data-toggle="dropdown" aria-haspopup="true"
-                                        aria-expanded="false" data-flip="false">
-                                    Opciones
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="triggerId">
-                                    <a class="dropdown-item" href="#">Detalles</a>
-                                    <a class="dropdown-item" id="btnModificar" data-toggle="modal" data-target="#exampleModal" data-rut="@usuario.Rut">Modificar</a>
-                                    <input type="submit" id="btnDeshabilitar" class="dropdown-item deshabilitar" href="#" data-rut="@usuario.Rut" value="Deshabilitar">
-                                </div>
-                            </div>
-                            <!-- Si esta en pantalla grande-->
                             <div class="d-none d-lg-block">
-                                <button type="button" id="btnModificar" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal" data-rut="@usuario.Rut">Modificar</button>
-                                <input type="submit" id="btnDeshabilitar" data-rut="@usuario.Rut" value="Deshabilitar" class="btn btn-secondary deshabilitar" />
+                                @Html.ActionLink("Modificar", "ModificarCuenta", new { rut = usuario.Rut}, new {@class = "btn btn-secondary", id = "btnModificar", type = "button"})
                             </div>
                         </td>
                     </tr>
@@ -69,28 +54,6 @@
         </div>
     }
 </div>
-
-<div class="modal" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static"
-     data-keyboard="false">
-    <div class="row modal-dialog modal-lg justify-content-center" role="document">
-        <div class="modal-content w-75">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Configuración de Usuario</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body p-0">
-                <iframe id="iframe" class="embed-responsive-item" src="/Cuenta/ModificarCuenta" width="100%" height="551" seamless frameborder="0"></iframe>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                <button type="submit" class="btn btn-primary">Guardar cambios</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 
 @section scripts{
     <script type="text/javascript" src="~/Scripts/listaUsuario.js"></script>

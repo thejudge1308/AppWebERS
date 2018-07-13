@@ -268,8 +268,12 @@ namespace AppWebERS.Controllers
             ViewBag.Title = "ModificarCuenta";
             if (!String.IsNullOrEmpty(rut)) {
                 ApplicationUser usuario = await UserManager.FindByRutAsync(rut);
-                ModificarViewModel model = new ModificarViewModel(usuario);
-                return View(model);
+                if (usuario != null)
+                {
+                    ModificarViewModel model = new ModificarViewModel(usuario);
+                    return View(model);
+                }
+                TempData["alerta"] = new Alerta("Hubo un error al obtener al usuario", TipoAlerta.ERROR);
             }
             return RedirectToAction("Index","Home");
         }
@@ -295,7 +299,7 @@ namespace AppWebERS.Controllers
                     await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), usuarioViewModel.Password);
                 }
 
-                TempData["alert"] = new Alerta("El usuario se modifico exitosamente", TipoAlerta.SUCCESS);
+                TempData["alerta"] = new Alerta("El usuario se modifico exitosamente", TipoAlerta.SUCCESS);
 
                 return RedirectToAction("ListarUsuarios", new {rut = usuarioViewModel.Rut});
             }

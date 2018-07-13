@@ -157,7 +157,7 @@ namespace AppWebERS.Controllers
         public ActionResult ModificarJefeProyecto()
         {
             Proyecto proyecto = new Proyecto();
-            var list = proyecto.ObtenerProyectos();
+            /*var list = proyecto.ObtenerProyectos();
             var list2 = proyecto.ObtenerUsuarios();
             ViewBag.MiListadoProyectos = list;
             ViewBag.MiListadoUsuarios = list2;
@@ -172,7 +172,10 @@ namespace AppWebERS.Controllers
                 ViewBag.listaVacia = true;
                 ViewBag.MessageErrorProyectos = "No hay usuarios disponibles";
                 return View();
-            }
+            }*/
+            var list = new List<Usuario>();
+            list.Add(new Usuario("19299833","Ariel COrnejo","algoqgmail.com","","",true));
+            ViewBag.MiListadoUsuarios = list;
             ViewBag.listaVacia = false;
             return View();
             
@@ -186,9 +189,11 @@ namespace AppWebERS.Controllers
         *  <param name="DropDownListUsuarios">parametro importado desde el dropdownList de usuarios, contiene el valor string seleccionado en este</param>
         * <returns> la vista con los dropDownList y en caso de que alguna de las listas este vacia se retornara un mensaje de error junto con deshabilitar el boton</returns>
         */
+        
         [HttpPost]
-        public ActionResult ModificarJefeProyecto(String DropDownListProyectos, String DropDownListUsuarios)
+        public ActionResult ModificarJefeProyecto(String rut)
         {
+            /*
             Proyecto proyecto = new Proyecto();
             proyecto.ModificarJefeProyecto(DropDownListUsuarios, DropDownListProyectos);
             var list = proyecto.ObtenerProyectos();
@@ -206,8 +211,11 @@ namespace AppWebERS.Controllers
                 ViewBag.listaVacia = true;
                 ViewBag.MessageErrorProyectos = "No hay usuarios disponibles";
                 return View();
-            }
+            }*/
             ViewBag.listaVacia = false;
+            var list = new List<Usuario>();
+            list.Add(new Usuario("19299833", "Ariel COrnejo", "algoqgmail.com", "", "", true));
+            ViewBag.MiListadoUsuarios = list;
             return View();
         }
     }

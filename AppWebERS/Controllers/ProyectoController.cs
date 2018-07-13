@@ -19,6 +19,15 @@ namespace AppWebERS.Controllers
          */
         [HttpGet]
         public ActionResult CrearProyecto() {
+            Proyecto proyecto = new Proyecto();
+            List<SelectListItem> lista = proyecto.ObtenerUsuarios();
+            ViewBag.MiListadoUsuarios = lista;
+            if (lista.Count == 0)
+            {
+                ViewBag.BoolLista = false;
+            }
+            else
+                ViewBag.BoolLista = true;
             return View();
         }
         /**
@@ -30,9 +39,17 @@ namespace AppWebERS.Controllers
          * <returns> la vista con el correspondiente mensaje de retroalimentacion. </returns>
          */
         [HttpPost]
-        public ActionResult CrearProyecto(string nombre) {
+        public ActionResult CrearProyecto(string nombre,string usuario) {
             if (ModelState.IsValid) {
                 Proyecto proyecto = new Proyecto();
+                List<SelectListItem> lista = proyecto.ObtenerUsuarios();
+                ViewBag.MiListadoUsuarios = lista;
+                if (lista.Count == 0)
+                {
+                    ViewBag.BoolLista = false;
+                }
+                else
+                    ViewBag.BoolLista = true;
                 proyecto.Nombre = nombre;
                 Proyecto proyectoNuevo = proyecto.CrearProyecto(0, nombre, String.Empty, String.Empty,
                                                 String.Empty, String.Empty, String.Empty, String.Empty,
@@ -40,9 +57,22 @@ namespace AppWebERS.Controllers
                 if (proyectoNuevo != null)
                 {
                     if (proyecto.RegistrarProyectoEnBd(proyectoNuevo))
-                        ViewBag.Message1 = "Exito al crear Proyecto";
+                    {
+                        if (proyecto.AsignarJefeProyecto(usuario, nombre))
+                        {
+                            ViewBag.Message1 = "Exito al crear Proyecto";
+                        }
+                        else {
+                            ViewBag.Message1 = "";
+                            ViewBag.Message = "Error al crear proyecto";
+                        }
+
+                    }
                     else
+                    {
+                        ViewBag.Message1 = "";
                         ViewBag.Message = "Error al crear proyecto";
+                    }
                 }
                 else
                     ViewBag.Message = "Este nombre ya esta asociado a un proyecto";             
@@ -127,7 +157,7 @@ namespace AppWebERS.Controllers
         public ActionResult ModificarJefeProyecto()
         {
             Proyecto proyecto = new Proyecto();
-            var list = proyecto.ObtenerProyectos();
+            /*var list = proyecto.ObtenerProyectos();
             var list2 = proyecto.ObtenerUsuarios();
             ViewBag.MiListadoProyectos = list;
             ViewBag.MiListadoUsuarios = list2;
@@ -142,7 +172,10 @@ namespace AppWebERS.Controllers
                 ViewBag.listaVacia = true;
                 ViewBag.MessageErrorProyectos = "No hay usuarios disponibles";
                 return View();
-            }
+            }*/
+            var list = new List<Usuario>();
+            list.Add(new Usuario("19299833","Ariel COrnejo","algoqgmail.com","","",true));
+            ViewBag.MiListadoUsuarios = list;
             ViewBag.listaVacia = false;
             return View();
             
@@ -156,9 +189,11 @@ namespace AppWebERS.Controllers
         *  <param name="DropDownListUsuarios">parametro importado desde el dropdownList de usuarios, contiene el valor string seleccionado en este</param>
         * <returns> la vista con los dropDownList y en caso de que alguna de las listas este vacia se retornara un mensaje de error junto con deshabilitar el boton</returns>
         */
+        
         [HttpPost]
-        public ActionResult ModificarJefeProyecto(String DropDownListProyectos, String DropDownListUsuarios)
+        public ActionResult ModificarJefeProyecto(String rut)
         {
+            /*
             Proyecto proyecto = new Proyecto();
             proyecto.ModificarJefeProyecto(DropDownListUsuarios, DropDownListProyectos);
             var list = proyecto.ObtenerProyectos();
@@ -176,8 +211,11 @@ namespace AppWebERS.Controllers
                 ViewBag.listaVacia = true;
                 ViewBag.MessageErrorProyectos = "No hay usuarios disponibles";
                 return View();
-            }
+            }*/
             ViewBag.listaVacia = false;
+            var list = new List<Usuario>();
+            list.Add(new Usuario("19299833", "Ariel COrnejo", "algoqgmail.com", "", "", true));
+            ViewBag.MiListadoUsuarios = list;
             return View();
         }
     }

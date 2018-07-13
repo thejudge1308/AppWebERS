@@ -178,11 +178,13 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Controllers\CuentaController.cs" />
     <Compile Include="Controllers\ActorController.cs" />
     <Compile Include="Controllers\CasoDeUsoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\JefeProyectoController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ProyectoController.cs" />
     <Compile Include="Controllers\RequisitoController.cs" />
     <Compile Include="Controllers\SysAdminController.cs" />
@@ -190,11 +192,21 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Identity\IdentityRole.cs" />
+    <Compile Include="Identity\IdentityUser.cs" />
+    <Compile Include="Identity\MySQLDatabase.cs" />
+    <Compile Include="Identity\RoleStore.cs" />
+    <Compile Include="Identity\RoleTable.cs" />
+    <Compile Include="Identity\UserClaimsTable.cs" />
+    <Compile Include="Identity\UserLoginsTable.cs" />
+    <Compile Include="Identity\UserRoleTable.cs" />
+    <Compile Include="Identity\UserStore.cs" />
+    <Compile Include="Identity\UserTable.cs" />
     <Compile Include="Models\Actor.cs" />
     <Compile Include="Models\CasoDeUso.cs" />
     <Compile Include="Models\ConectorBD.cs" />
     <Compile Include="Models\IdentityModels.cs" />
-    <Compile Include="Models\LoginViewModel.cs" />
+    <Compile Include="Models\CuentasViewModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\ModificacionDERS.cs" />
     <Compile Include="Models\Proyecto.cs" />
@@ -213,6 +225,8 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Identity\MySQLIdentity.sql" />
+    <Content Include="Identity\Readme.txt" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -272,7 +286,7 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Login\Index.cshtml" />
+    <Content Include="Views\Cuenta\Login.cshtml" />
     <Content Include="Views\SysAdmin\CrearUsuario.cshtml" />
     <Content Include="Views\Manage\AddPhoneNumber.cshtml" />
     <Content Include="Views\Manage\ChangePassword.cshtml" />
@@ -304,6 +318,7 @@
     <Content Include="Views\Usuario\_AlertaDeshabilitacionPartial.cshtml" />
     <Content Include="Views\Usuario\Modificar2.cshtml" />
     <Content Include="Views\Usuario\Deshabilitar2.cshtml" />
+    <Content Include="Views\Cuenta\Register.cshtml" />
     <Content Include="Views\Proyecto\Detalles.cshtml" />
   </ItemGroup>
   <ItemGroup>

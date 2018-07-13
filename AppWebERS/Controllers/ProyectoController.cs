@@ -19,6 +19,15 @@ namespace AppWebERS.Controllers
          */
         [HttpGet]
         public ActionResult CrearProyecto() {
+            Proyecto proyecto = new Proyecto();
+            List<SelectListItem> lista = proyecto.ObtenerUsuarios();
+            ViewBag.MiListadoUsuarios = lista;
+            if (lista.Count == 0)
+            {
+                ViewBag.BoolLista = false;
+            }
+            else
+                ViewBag.BoolLista = true;
             return View();
         }
         /**
@@ -30,9 +39,17 @@ namespace AppWebERS.Controllers
          * <returns> la vista con el correspondiente mensaje de retroalimentacion. </returns>
          */
         [HttpPost]
-        public ActionResult CrearProyecto(string nombre) {
+        public ActionResult CrearProyecto(string nombre,string usuario) {
             if (ModelState.IsValid) {
                 Proyecto proyecto = new Proyecto();
+                List<SelectListItem> lista = proyecto.ObtenerUsuarios();
+                ViewBag.MiListadoUsuarios = lista;
+                if (lista.Count == 0)
+                {
+                    ViewBag.BoolLista = false;
+                }
+                else
+                    ViewBag.BoolLista = true;
                 proyecto.Nombre = nombre;
                 Proyecto proyectoNuevo = proyecto.CrearProyecto(0, nombre, String.Empty, String.Empty,
                                                 String.Empty, String.Empty, String.Empty, String.Empty,
@@ -40,9 +57,22 @@ namespace AppWebERS.Controllers
                 if (proyectoNuevo != null)
                 {
                     if (proyecto.RegistrarProyectoEnBd(proyectoNuevo))
-                        ViewBag.Message1 = "Exito al crear Proyecto";
+                    {
+                        if (proyecto.AsignarJefeProyecto(usuario, nombre))
+                        {
+                            ViewBag.Message1 = "Exito al crear Proyecto";
+                        }
+                        else {
+                            ViewBag.Message1 = "";
+                            ViewBag.Message = "Error al crear proyecto";
+                        }
+
+                    }
                     else
+                    {
+                        ViewBag.Message1 = "";
                         ViewBag.Message = "Error al crear proyecto";
+                    }
                 }
                 else
                     ViewBag.Message = "Este nombre ya esta asociado a un proyecto";             

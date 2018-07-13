@@ -500,11 +500,16 @@ namespace AppWebERS.Models
             }
             this.conexion.EnsureConnectionClosed();
             String rut = this.ObtenerRutDesdeString(nombreUsuario);
-            if (VerificarRolEnProyecto(rut,idProyecto)) {
+            String consultaRutId = "SELECT users.id FROM users WHERE rut='" + rut + "' GROUP BY id;";
+            reader = this.conexion.RealizarConsulta(consultaRutId);
+            reader.Read();
+            String id = reader["id"].ToString();
+            this.conexion.EnsureConnectionClosed();
+            if (VerificarRolEnProyecto(id,idProyecto)) {
                 if (idProyecto != -1)
                 {
-                    String consulta2 = "UPDATE vinculo_usuario_proyecto SET ref_usuario = '" + rut + "' WHERE ref_proyecto = '" + idProyecto + "' AND rol = 'JEFEPROYECTO'; " +
-                        "DELETE FROM vinculo_usuario_proyecto WHERE ref_usuario = '" + rut + "' AND ref_proyecto = '" + idProyecto + "' AND rol = 'USUARIO'; ";
+                    String consulta2 = "UPDATE vinculo_usuario_proyecto SET ref_usuario = '" + id + "' WHERE ref_proyecto = '" + idProyecto + "' AND rol = 'JEFEPROYECTO'; " +
+                        "DELETE FROM vinculo_usuario_proyecto WHERE ref_usuario = '" + id + "' AND ref_proyecto = '" + idProyecto + "' AND rol = 'USUARIO'; ";
                     if (this.conexion.RealizarConsultaNoQuery(consulta2))
                     {
                         this.conexion.EnsureConnectionClosed();

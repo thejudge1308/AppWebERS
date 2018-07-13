@@ -18,6 +18,7 @@ namespace AppWebERS.Models{
         public const int AUTH_COMO_JEFE_DE_PROYECTO = 0;
         public const int AUTH_COMO_SYSADMIN = 1;
         public const int AUTH_COMO_USUARIO = 2;
+        public const int NO_AUTH = 3;
         #endregion
 
         /**

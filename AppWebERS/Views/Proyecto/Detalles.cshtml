@@ -16,24 +16,31 @@
 
 @if(ProyectoActual != null) {
     <h2>Detalles</h2>
-    if(TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO) {
+    
     <ul class="nav nav-tabs">
         <li class="nav-item">
             <a class="nav-link active" href="@Url.Action("Detalles", "Proyecto", new { id = ProyectoActual.IdProyecto})">Detalles</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">Agregar usuario</a>
+            <a class="nav-link" href="#">Usuarios</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">Notificaciones</a>
-        </li>
+        @{
+                if(TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO) {
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Agregar usuario</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Notificaciones</a>
+                </li>
+                }
+         }
     </ul>
-    }
 
 
 
 
-    using(Html.BeginForm("Detalles", "Proyecto", FormMethod.Post, new { @class = "form-horizontal", role = "form" })) {
+
+            using(Html.BeginForm("Detalles", "Proyecto", FormMethod.Post, new { @class = "form-horizontal", role = "form" })) {
 
 
         <div class="row">

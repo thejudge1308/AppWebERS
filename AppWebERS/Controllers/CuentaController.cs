@@ -113,21 +113,24 @@ namespace AppWebERS.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.UserName, Rut = model.Rut, Email = model.Email , Tipo = "USER"};
-                var result = await UserManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
+                if (VerificarResgistroValidoAsync(model.UserName, model.Email , model.Rut))
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
-                    // Para obtener más información sobre cómo habilitar la confirmación de cuentas y el restablecimiento de contraseña, visite https://go.microsoft.com/fwlink/?LinkID=320771
-                    // Enviar correo electrónico con este vínculo
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirmar cuenta", "Para confirmar la cuenta, haga clic <a href=\"" + callbackUrl + "\">aquí</a>");
+                    var user = new ApplicationUser { UserName = model.UserName, Rut = model.Rut, Email = model.Email, Tipo = "USER" };
+                    var result = await UserManager.CreateAsync(user, model.Password);
+                    if (result.Succeeded)
+                    {
+                        await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
-                    return RedirectToAction("Index", "Home");
+                        // Para obtener más información sobre cómo habilitar la confirmación de cuentas y el restablecimiento de contraseña, visite https://go.microsoft.com/fwlink/?LinkID=320771
+                        // Enviar correo electrónico con este vínculo
+                        // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                        // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                        // await UserManager.SendEmailAsync(user.Id, "Confirmar cuenta", "Para confirmar la cuenta, haga clic <a href=\"" + callbackUrl + "\">aquí</a>");
+
+                        return RedirectToAction("Index", "Home");
+                    }
+                    AddErrors(result);
                 }
-                AddErrors(result);
             }
 
             // Si llegamos a este punto, es que se ha producido un error y volvemos a mostrar el formulario
@@ -318,6 +321,19 @@ namespace AppWebERS.Controllers
         public Boolean VerificarUsuarioRepetidoAsync(string UserName, string UserEmail)
         {
             if(UserManager.VerificarEmailUsuario(UserEmail).Result == false && UserManager.VerificarUserNameUsuario(UserName).Result == false)
+                return true;
+            return false;
+        }
+
+        /*
+       * Creador: Maximo Hernandez-Diego Matus
+       * Accion: Verifica si alguno de los valores de usuario registrados ya existen dentro de la base de datos.
+       * Retorno: Boolean - Falso si es que existe concidencia en los valores, Verdadero en caso contrario
+       */
+        public Boolean VerificarResgistroValidoAsync(string RegisterName, string RegisterEmail, string RegisterRut)
+        {
+            if (UserManager.VerificarEmailUsuario(RegisterEmail).Result == false && UserManager.VerificarUserNameUsuario(RegisterName).Result == false &&
+                UserManager.VerificarRutUsuario(RegisterRut).Result == false)
                 return true;
             return false;
         }

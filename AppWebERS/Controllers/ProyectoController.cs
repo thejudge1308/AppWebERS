@@ -92,6 +92,7 @@ namespace AppWebERS.Controllers
                 {
                     string Nombre = reader.GetString(1);
                     ListaProyectosNombres.Add(Nombre);
+                    string Nombre = reader.GetString(0);
                 }
                 this.Conector.CerrarConexion();
                 return ListaProyectosNombres;

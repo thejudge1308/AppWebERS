@@ -285,20 +285,41 @@ namespace AppWebERS.Controllers
             ViewBag.Title = "ModificarCuenta";
             if (ModelState.IsValid)
             {
-                ApplicationUser usuario = await UserManager.FindByRutAsync(usuarioViewModel.Rut);
-                usuario.Email = String.IsNullOrEmpty(usuarioViewModel.Email)? usuario.Email: usuarioViewModel.Email;
-                usuario.UserName = String.IsNullOrEmpty(usuarioViewModel.Nombre)? usuario.UserName: usuarioViewModel.Nombre;
-                usuario.Estado = usuarioViewModel.Estado? !usuario.Estado: usuario.Estado;
-                await UserManager.UpdateAsync(usuario);
-                if (!String.IsNullOrEmpty(usuarioViewModel.Password)) {
-                    await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), usuarioViewModel.Password);
+                System.Diagnostics.Debug.WriteLine(usuarioViewModel.Email);
+                if (VerificarUsuarioRepetidoAsync(usuarioViewModel.Nombre, usuarioViewModel.Email))
+                {
+                    ApplicationUser usuario = await UserManager.FindByRutAsync(usuarioViewModel.Rut);
+                    usuario.Email = String.IsNullOrEmpty(usuarioViewModel.Email) ? usuario.Email : usuarioViewModel.Email;
+                    usuario.UserName = String.IsNullOrEmpty(usuarioViewModel.Nombre) ? usuario.UserName : usuarioViewModel.Nombre;
+                    usuario.Estado = usuarioViewModel.Estado ? !usuario.Estado : usuario.Estado;
+                    await UserManager.UpdateAsync(usuario);
+                    if (!String.IsNullOrEmpty(usuarioViewModel.Password))
+                    {
+                        await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), usuarioViewModel.Password);
+                    }
+                    return RedirectToAction("ModificarCuenta", new { rut = usuarioViewModel.Rut });
                 }
-                return RedirectToAction("ModificarCuenta", new {rut = usuarioViewModel.Rut});
+                else
+                {
+                    return View(usuarioViewModel);
+                }
             }
             else
             {
               return View(usuarioViewModel);
             }
+        }
+
+        /*
+         * Creador: Maximo Hernandez
+         * Accion: Verifica si alguno de los dos valores de usuario, UserName o UserEmail, se encuentran ya en la base de datos
+         * Retorno: Boolean - Falso si es que existe uno de los dos valores, Verdadero en caso contrario
+         */
+        public Boolean VerificarUsuarioRepetidoAsync(string UserName, string UserEmail)
+        {
+            if(UserManager.VerificarEmailUsuario(UserEmail).Result == false && UserManager.VerificarUserNameUsuario(UserName).Result == false)
+                return true;
+            return false;
         }
 
         /*

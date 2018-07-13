@@ -90,9 +90,9 @@ namespace AppWebERS.Controllers
             {
                 while (reader.Read())
                 {
-                    string Nombre = reader.GetString(1);
-                    ListaProyectosNombres.Add(Nombre);
                     string Nombre = reader.GetString(0);
+                    ListaProyectosNombres.Add(Nombre);
+                   
                 }
                 this.Conector.CerrarConexion();
                 return ListaProyectosNombres;

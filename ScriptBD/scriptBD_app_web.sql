@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `appers`.`Usuario` (
 -- Table `appers`.`Proyecto`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `appers`.`Proyecto` (
-  `id_proyecto` INT NOT NULL,
+  `id_proyecto` INT NOT NULL AUTO_INCREMENT,
   `nombre` VARCHAR(128) NULL,
   `proposito` TEXT NULL,
   `alcance` TEXT NULL,

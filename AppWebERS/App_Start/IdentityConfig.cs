@@ -188,9 +188,9 @@ namespace AppWebERS
         /*
          * Creador: Maximo Hernandez
          * Accion: Verifica si UserName se encuentran en la base de datos
-         * Retorno: Boolean - Falso si UserName ya existe en la base de datos. Verdadero en caso contrario.
+         * Retorno: Boolean - Verdadero si UserName ya existe en la base de datos. Verdadero en caso contrario.
          */
-        public async Task<bool> VerificarUserNameUsuario(string UserName)
+        public async Task<bool> VerificarSiExisteNombre(string UserName)
         {
             if (!String.IsNullOrEmpty(UserName))
             {
@@ -205,9 +205,9 @@ namespace AppWebERS
         /*
          * Creador: Maximo Hernandez
          * Accion: Verifica si UserEmail se encuentran en la base de datos
-         * Retorno: Boolean - Falso si UserEmail ya existe en la base de datos. Verdadero en caso contrario.
+         * Retorno: Boolean - Verdadero si UserEmail ya existe en la base de datos. Falso en caso contrario.
          */
-        public async Task<bool> VerificarEmailUsuario(string UserEmail)
+        public async Task<bool> VerificarSiExisteEmail(string UserEmail)
         {
             if (!String.IsNullOrEmpty(UserEmail))
             {
@@ -219,12 +219,14 @@ namespace AppWebERS
             return false;
         }
 
+
+
         /*
          * Creador: Maximo Hernandez
          * Accion: Verifica si UserRut se encuentran en la base de datos
-         * Retorno: Boolean - Falso si UserRut ya existe en la base de datos. Verdadero en caso contrario.
+         * Retorno: Boolean - Verdadero si UserRut ya existe en la base de datos. Falso en caso contrario.
          */
-        public async Task<bool> VerificarRutUsuario(string UserRut)
+        public async Task<bool> VerificarSiExisteRut(string UserRut)
         {
             if (!String.IsNullOrEmpty(UserRut))
             {
@@ -232,6 +234,21 @@ namespace AppWebERS
                 if (usuario == null)
                     return false;
                 return true;
+            }
+            return false;
+        }
+
+        /*
+        * Creador: Gabriel Sanhueza
+        * Accion: Verifica si la contraseña no es la misma que la que ya esta
+        * Retorno: Boolean - Verdadero si es la misma. Falso en caso contrario
+        */
+        public async Task<bool> VerificarSiExisteContrasenia(string UserRut, string password)
+        {
+            if (String.IsNullOrEmpty(UserRut) && String.IsNullOrEmpty(password))
+            {
+                ApplicationUser usuario = await FindByRutAsync(UserRut);
+                return PasswordHasher.VerifyHashedPassword(usuario.PasswordHash, password) == PasswordVerificationResult.Success;
             }
             return false;
         }

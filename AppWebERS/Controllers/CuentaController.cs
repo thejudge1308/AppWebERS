@@ -113,7 +113,7 @@ namespace AppWebERS.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (VerificarResgistroValidoAsync(model.UserName, model.Email , model.Rut))
+                if (VerificarSiResgistroValido(model.UserName, model.Email , model.Rut))
                 {
                     var user = new ApplicationUser { UserName = model.UserName, Rut = model.Rut, Email = model.Email, Tipo = "USER" };
                     var result = await UserManager.CreateAsync(user, model.Password);
@@ -289,7 +289,7 @@ namespace AppWebERS.Controllers
             if (ModelState.IsValid)
             {
                 System.Diagnostics.Debug.WriteLine(usuarioViewModel.Email);
-                if (VerificarUsuarioRepetidoAsync(usuarioViewModel.Nombre, usuarioViewModel.Email))
+                if (!VerificarSiUsuarioRepetido(usuarioViewModel))
                 {
                     ApplicationUser usuario = await UserManager.FindByRutAsync(usuarioViewModel.Rut);
                     usuario.Email = String.IsNullOrEmpty(usuarioViewModel.Email) ? usuario.Email : usuarioViewModel.Email;
@@ -316,11 +316,13 @@ namespace AppWebERS.Controllers
         /*
          * Creador: Maximo Hernandez
          * Accion: Verifica si alguno de los dos valores de usuario, UserName o UserEmail, se encuentran ya en la base de datos
-         * Retorno: Boolean - Falso si es que existe uno de los dos valores, Verdadero en caso contrario
+         * Retorno: Boolean - Verdadero si es que existe uno de los dos valores, Falso en caso contrario
          */
-        public Boolean VerificarUsuarioRepetidoAsync(string UserName, string UserEmail)
+        public Boolean VerificarSiUsuarioRepetido(ModificarViewModel usuarioViewModels)
         {
-            if(UserManager.VerificarEmailUsuario(UserEmail).Result == false && UserManager.VerificarUserNameUsuario(UserName).Result == false)
+            if(UserManager.VerificarSiExisteEmail(usuarioViewModels.Email).Result ||
+                UserManager.VerificarSiExisteNombre(usuarioViewModels.Nombre).Result ||
+                UserManager.VerificarSiExisteContrasenia(usuarioViewModels.Rut, usuarioViewModels.Password).Result)
                 return true;
             return false;
         }
@@ -328,14 +330,14 @@ namespace AppWebERS.Controllers
         /*
        * Creador: Maximo Hernandez-Diego Matus
        * Accion: Verifica si alguno de los valores de usuario registrados ya existen dentro de la base de datos.
-       * Retorno: Boolean - Falso si es que existe concidencia en los valores, Verdadero en caso contrario
+       * Retorno: Boolean - Verdadero si el registro es valido. Falso en caso contrario.
        */
-        public Boolean VerificarResgistroValidoAsync(string RegisterName, string RegisterEmail, string RegisterRut)
+        public Boolean VerificarSiResgistroValido(string RegisterName, string RegisterEmail, string RegisterRut)
         {
-            if (UserManager.VerificarEmailUsuario(RegisterEmail).Result == false && UserManager.VerificarUserNameUsuario(RegisterName).Result == false &&
-                UserManager.VerificarRutUsuario(RegisterRut).Result == false)
-                return true;
-            return false;
+            if (UserManager.VerificarSiExisteEmail(RegisterEmail).Result || UserManager.VerificarSiExisteNombre(RegisterName).Result  ||
+                UserManager.VerificarSiExisteRut(RegisterRut).Result)
+                return false;
+            return true;
         }
 
         /*

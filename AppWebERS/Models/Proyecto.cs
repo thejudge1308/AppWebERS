@@ -7,13 +7,22 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
+using System.ComponentModel.DataAnnotations;
 /**
  * Autor: Gerardo Estrada (Meister1412)
  **/
 
-namespace AppWebERS.Models
-{
+namespace AppWebERS.Models{
     public class Proyecto {
+        #region Definicion de permisos para la vista de los proyectos
+        /*
+         * Autor: Patricio Quezada
+         * Descripcion: Define los permisos para la visualizacion de los proyectos.
+        */
+        public const int AUTH_COMO_JEFE_DE_PROYECTO = 0;
+        public const int AUTH_COMO_SYSADMIN = 1;
+        public const int AUTH_COMO_USUARIO = 2;
+        #endregion
 
         /**
          * Constructor de la clase Proyecto
@@ -34,8 +43,7 @@ namespace AppWebERS.Models
          * <param name = "casosDeUso" > La lista de casos de uso asociados al proyecto.</param>
          * <param name = "actores" > La lista de actores asociados al proyecto.</param>
          **/
-        
-        public Proyecto(int idProyecto, string nombre,string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string referencias, string ambienteOperacional, string relacionProyectos) {
+        public Proyecto(int idProyecto, string nombre,string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string referencias, string ambienteOperacional, string relacionProyectos, List<Usuario> usuarios, List<Requisito> requisitos, List<CasoDeUso> casosDeUso, List<Actor> actores) {
             this.IdProyecto = idProyecto;
             this.Nombre = nombre;
             this.Proposito = proposito;
@@ -53,11 +61,49 @@ namespace AppWebERS.Models
             this.Actores = new List<Actor>();
         }
 
+
         public Proyecto() {
 
         }
 
         private ConectorBD conexion = ConectorBD.Instance;
+
+        /**
+         * Autor: Patricio Quezada 
+         * <param name = "idProyecto" > El identificador del proyecto.</param>
+         * <param name = "nombre" > El identificador del proyecto.</param>
+         * <param name = "proposito" > El proposito del proyecto.</param>
+         * <param name = "alcance" > El alcance del proyecto.</param>
+         * <param name = "contexto" > El contexto del proyecto.</param>
+         * <param name = "definiciones" > Las definiciones del proyecto.</param>
+         * <param name = "acronimos" > Los acronimos del proyecto.</param>
+         * <param name = "abreviaturas" > Las abreviaturas del proyecto.</param>
+         * <param name = "referencias" > Las referencias del proyecto.</param>
+         * <param name = "ambienteOperacional" > El ambiente operacional del proyecto.</param>
+         * <param name = "relacionProyectos" > La relacion con otros proyectos del proyecto.</param>
+         * <param name = "usuarios" > La lista de usuarios involucrados en el proyecto.</param>
+         * <param name = "requisitos" > La lista de requisitos asociados al proyecto.</param>
+         * <param name = "casosDeUso" > La lista de casos de uso asociados al proyecto.</param>
+         * <param name = "actores" > La lista de actores asociados al proyecto.</param>
+         **/
+
+        public Proyecto(int idProyecto, string nombre, string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string referencias, string ambienteOperacional, string relacionProyectos) {
+            IdProyecto = idProyecto;
+            Nombre = nombre;
+            Proposito = proposito;
+            Alcance = alcance;
+            Contexto = contexto;
+            Definiciones = definiciones;
+            Acronimos = acronimos;
+            Abreviaturas = abreviaturas;
+            Referencias = referencias;
+            AmbienteOperacional = ambienteOperacional;
+            RelacionProyectos = relacionProyectos;
+        }
+
+
+
+
 
         /**
          * Setter y Getter de ID del proyecto
@@ -66,7 +112,8 @@ namespace AppWebERS.Models
          * <returns>Retorna el valor int del identificador.</returns>
          * 
          **/
-
+        [Display(Name = "Id del Proyecto")]
+        [StringLength(128, ErrorMessage = "Este campo debe tener maximo 128 caracteres.", MinimumLength = 1)]
         public int IdProyecto {get; set;}
 
         /**
@@ -76,8 +123,9 @@ namespace AppWebERS.Models
          * <returns>Retorna el valor string del nombre.</returns>
          * 
          **/
-         [Required]
-         [StringLength(100,ErrorMessage = "El número de caracteres de Nombre debe ser 6",MinimumLength = 6)]
+        [Required]
+        [Display(Name = "Nombre")]
+        [StringLength(255, ErrorMessage = "Es requerido", MinimumLength = 1)]
         public string Nombre { get; set;}
 
         /**
@@ -87,7 +135,9 @@ namespace AppWebERS.Models
          * <returns>Retorna el valor string del proposito.</returns>
          * 
          **/
-
+        [Required]
+        [Display(Name = "Proposito")]
+        [StringLength(255, ErrorMessage = "Es requerido", MinimumLength = 1)]
         public string Proposito {get; set;}
 
         /**
@@ -97,7 +147,9 @@ namespace AppWebERS.Models
          * <returns>Retorna el valor string del alcance.</returns>
          * 
          **/
-
+        [Required]
+        [Display(Name = "Alcance")]
+        [StringLength(255, ErrorMessage = "Es requerido", MinimumLength = 1)]
         public string Alcance {get; set;}
 
         /**
@@ -107,7 +159,9 @@ namespace AppWebERS.Models
          * <returns>Retorna el valor string del contexto.</returns>
          * 
          **/
-
+        [Required]
+        [Display(Name = "Contexto")]
+        [StringLength(255, ErrorMessage = "Es requerido", MinimumLength = 1)]
         public string Contexto {get; set;}
 
         /**
@@ -117,7 +171,7 @@ namespace AppWebERS.Models
          * <returns>Retorna el valor string de las definiciones.</returns>
          * 
          **/
-
+        [Display(Name = "Definiciones")]
         public string Definiciones {get; set;}
 
         /**
@@ -127,7 +181,7 @@ namespace AppWebERS.Models
          * <returns>Retorna el valor string de los acronimos.</returns>
          * 
          **/
-
+        [Display(Name = "Acronimos")]
         public string Acronimos {get; set;}
 
         /**
@@ -137,7 +191,7 @@ namespace AppWebERS.Models
         * <returns>Retorna el valor string de las abreviaturas.</returns>
         * 
         **/
-
+        [Display(Name = "Abreviaturas")]
         public string Abreviaturas {get; set;}
 
         /**
@@ -147,7 +201,7 @@ namespace AppWebERS.Models
         * <returns>Retorna el valor string de las referencias.</returns>
         * 
         **/
-
+        [Display(Name = "Referencias")]
         public string Referencias {get; set;}
 
         /**
@@ -157,7 +211,9 @@ namespace AppWebERS.Models
         * <returns>Retorna el valor string del ambiente operacional.</returns>
         * 
         **/
-
+        [Required]
+        [Display(Name = "Ambiente operacional")]
+        [StringLength(255, ErrorMessage = "Es requerido", MinimumLength = 1)]
         public string AmbienteOperacional {get; set;}
 
         /**
@@ -167,7 +223,7 @@ namespace AppWebERS.Models
         * <returns>Retorna el valor string de la relacion con otros proyectos del proyecto.</returns>
         * 
         **/
-
+        [Display(Name = "Relacion con otros proyectos")]
         public string RelacionProyectos {get; set;}
 
         /**

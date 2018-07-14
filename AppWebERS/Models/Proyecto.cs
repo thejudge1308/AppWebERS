@@ -8,7 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 
 
-using System.ComponentModel.DataAnnotations;
+
 /**
  * Autor: Gerardo Estrada (Meister1412)
  **/

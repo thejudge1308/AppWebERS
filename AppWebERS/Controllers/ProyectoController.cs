@@ -226,6 +226,13 @@ namespace AppWebERS.Controllers
             this.id_proyecto = id;
             ViewBag.idProyecto = id;
             var list = proyecto.ObtenerUsuarios2(id);
+            if (list.Count == 0)
+            {
+                ViewBag.MessageErrorProyectos = "No Hay Usuarios Disponibles";
+                ViewBag.MiListadoUsuarios = list;
+                ViewBag.listaVacia = true;
+                return View();
+            }
             ViewBag.MiListadoUsuarios = list;
             ViewBag.listaVacia = false;
             return View();
@@ -244,7 +251,6 @@ namespace AppWebERS.Controllers
         {
             Proyecto proyecto = new Proyecto();
             proyecto.ModificarJefeProyecto(rut,id);
-            int idp = this.id_proyecto;
             return RedirectToAction("Detalles/"+id,"Proyecto");
         }
     }

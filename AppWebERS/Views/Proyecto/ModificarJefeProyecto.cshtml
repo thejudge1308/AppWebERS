@@ -10,7 +10,7 @@
 <div class="form-horizontal">
     <h2>Modificar Jefe Proyecto</h2>
     <h4>Seleccione el Usuario</h4>
-    
+    @if (!ViewBag.listaVacia) {
     <div class="card-body table-responsive">
         <table class="table">
             <thead class="thead-dark">
@@ -29,13 +29,14 @@
                         <td data-info="info">@usuario.Nombre</td>
                         <td data-info="info">@usuario.CorreoElectronico</td>
 						<td>
-							@Html.ActionLink("Asignar Jefe", "ModificarJefeProyectoLogico", new { rut = usuario.Rut, id = @ViewBag.idProyecto}, new {@class = "btn btn-secondary", id = "btnModificar", type = "button"})
+							@Html.ActionLink("Asignar Jefe", "ModificarJefeProyectoLogico", new { rut = usuario.Rut, id = @ViewBag.idProyecto }, new { @class = "btn btn-secondary", id = "btnModificar", type = "button" })
 						</td>
                     </tr>
                 }
             </tbody>
         </table>
     </div>
+    }
     <div>
         <h6 class="text-danger">@ViewBag.MessageErrorProyectos</h6>
     </div>
@@ -46,15 +47,8 @@
     </script>
     <div class="form-group">
         <div class="col-md-offset-2 col-md-9">
-            @if (@ViewBag.listaVacia)
-            {
-                <input type="submit" value="Asignar jefe" class="btn btn-default" disabled="disabled" />
-            }
-            else
-            {
-                <input type="submit" value="Asignar jefe" class="btn btn-default" />
-            }
-
+            
+            @Html.ActionLink("Regresar","Detalles",new {  id = @ViewBag.idProyecto }, new { @class = "btn btn-secondary", id = "btnModificar", type = "button" })
         </div>
     </div>
 

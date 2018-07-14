@@ -163,6 +163,17 @@ namespace AppWebERS
             }
         }
 
+        public async Task<string> getRutAsync(string userId)
+        {
+            using (var db = ApplicationDbContext.Create())
+            {
+                var store = new UserStore<ApplicationUser>(db);
+                var usuarioTask = store.FindByIdAsync(userId);
+                ApplicationUser usuario = await usuarioTask;
+                return await store.GetRutAsync(usuario);
+            }
+        }
+
         public async Task ChangePasswordAsync(string userId, string newPassword)
         {
             var store = this.Store as IUserPasswordStore<ApplicationUser>;

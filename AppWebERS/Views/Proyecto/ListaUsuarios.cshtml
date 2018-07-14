@@ -48,15 +48,22 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (Usuario item in usuarios) {
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>@item.Rut</td>
-                        <td>@item.Nombre</td>
-                        <td>@item.CorreoElectronico</td>
-                        <td>@item.Tipo</td>
-                    </tr>
+            @{
+                if(usuarios.Count != 0) {
+                    foreach(Usuario item in (List<Usuario>)usuarios) {
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>@item.Rut</td>
+                            <td>@item.Nombre</td>
+                            <td>@item.CorreoElectronico</td>
+                            <td>@item.Tipo</td>
+                        </tr>
+                    }
+                }
+
+
             }
+
         </tbody>
 
     </table>

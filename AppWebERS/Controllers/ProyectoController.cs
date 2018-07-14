@@ -43,11 +43,13 @@ namespace AppWebERS.Controllers
         // GET: Proyecto/ListaUsuarios/5
         public ActionResult ListaUsuarios(int id) {
             Proyecto proyecto = this.GetProyecto(id);
-            string UsuarioActual = System.Web.HttpContext.Current.User.Identity.Name; // pregunta el usuario actual
-            //Debug.WriteLine("Usuario actual: " + UsuarioActual);
+            
             List<Usuario> usuarios = GetListaUsuarios(id);
-            ViewData["usuarios"] = TipoDePermiso(UsuarioActual);
+
+            //Debug.WriteLine("Permiso: " + TipoDePermiso());
             ViewData["proyecto"] = proyecto;
+            ViewData["usuarios"] = usuarios;
+            ViewData["permiso"] = TipoDePermiso();
             return View();
         }
 
@@ -102,12 +104,12 @@ namespace AppWebERS.Controllers
             var UsuarioActual = User.Identity.GetUserId();
             int ModoVista = Proyecto.NO_AUTH;
             this.conexion = ConectorBD.Instance;
-            string consulta = "SELECT Tipo From users WHERE id='"+UsuarioActual.ToString()+"';";
+            string consulta = "SELECT Tipo From users WHERE id='" + UsuarioActual.ToString() + "';";
             MySqlDataReader data = this.conexion.RealizarConsulta(consulta);
             if(data != null) {
                 data.Read();
                 string rol = data["Tipo"].ToString();
-                if(rol.Equals("SYSADMIN")){
+                if(rol.Equals("SYSADMIN")) {
                     ModoVista = Proyecto.AUTH_COMO_SYSADMIN;
                 } else {
                     //Cambiar si es jefe de proyecto o usuario normal
@@ -119,53 +121,54 @@ namespace AppWebERS.Controllers
             }
 
             return ModoVista;
-        /**
-        * Autor: Gerardo Estrada
-        * <param name = "id" > Id del proyecto.</param>
-        * <returns>La lista de usuarios involucrados en el proyecto</returns>
-        * 
-        **/
-        private List<Usuario> GetListaUsuarios(int id) {
-            this.conexion = ConectorBD.Instance;
+        }
+            /**
+            * Autor: Gerardo Estrada
+            * <param name = "id" > Id del proyecto.</param>
+            * <returns>La lista de usuarios involucrados en el proyecto</returns>
+            * 
+            **/
+            private List<Usuario> GetListaUsuarios(int id) {
+                this.conexion = ConectorBD.Instance;
 
-            List<Usuario> listaUsuarios = new List<Usuario>();
+                List<Usuario> listaUsuarios = new List<Usuario>();
 
-            string consulta = "SELECT users.Rut, users.Nombre, users.Email, users.Tipo FROM users, vinculo_usuario_proyecto, proyecto WHERE id_proyecto = " + id + " AND vinculo_usuario_proyecto.ref_proyecto = id_proyecto AND vinculo_usuario_proyecto.ref_usuario = users.Rut ;";
-            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
-            if (reader == null) {
-                this.conexion.CerrarConexion();
-                return null;
-            }
-            else {
-                while (reader.Read()) {
-                    string rut = reader.GetString(0);
-                    string nombre = reader.GetString(1);
-                    string correo = reader.GetString(2);
-                    string tipo = reader.GetString(3);
-                    
-                    listaUsuarios.Add(new Usuario(rut, nombre, correo, tipo));
+                string consulta = "SELECT users.Rut, users.UserName, users.Email, users.Tipo FROM users, vinculo_usuario_proyecto, proyecto WHERE id_proyecto = " + id + " AND vinculo_usuario_proyecto.ref_proyecto = id_proyecto AND vinculo_usuario_proyecto.ref_usuario = users.Rut ;";
+                MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
+                if(reader == null) {
+                    this.conexion.CerrarConexion();
+                    return null;
+                } else {
+                    while(reader.Read()) {
+                        string rut = reader.GetString(0);
+                        string nombre = reader.GetString(1);
+                        string correo = reader.GetString(2);
+                        string tipo = reader.GetString(3);
+
+                        listaUsuarios.Add(new Usuario(rut, nombre, correo, tipo));
+                    }
+
+                    this.conexion.CerrarConexion();
+                    return listaUsuarios;
                 }
 
-                this.conexion.CerrarConexion();
-                return listaUsuarios;
+
+                //Proyecto proyecto = null;
+                //this.conexion = ConectorBD.Instance;
+                //string consulta = "SELECT users.Nombre, users.Rut, users.Email, users.Tipo FROM users, vinculo_usuario_proyecto, proyecto WHERE id_proyecto = " + id + " AND vinculo_usuario_proyecto.ref_proyecto = id_proyecto AND vinculo_usuario_proyecto.ref_usuario = users.Rut ;";
+                //MySqlDataReader data = this.conexion.RealizarConsulta(consulta);
+                //if (data != null) {
+                //    data.Read();
+                //    string nombre = data["nombre"].ToString();
+                //    string rut = data["rut"].ToString();
+                //    string correo_electronico = data["correo_electronico"].ToString();
+                //    string tipo = data["tipo"].ToString();
+                //    this.conexion.CerrarConexion();
+
+                //}
+                //return Usuario;
             }
-
-
-            //Proyecto proyecto = null;
-            //this.conexion = ConectorBD.Instance;
-            //string consulta = "SELECT users.Nombre, users.Rut, users.Email, users.Tipo FROM users, vinculo_usuario_proyecto, proyecto WHERE id_proyecto = " + id + " AND vinculo_usuario_proyecto.ref_proyecto = id_proyecto AND vinculo_usuario_proyecto.ref_usuario = users.Rut ;";
-            //MySqlDataReader data = this.conexion.RealizarConsulta(consulta);
-            //if (data != null) {
-            //    data.Read();
-            //    string nombre = data["nombre"].ToString();
-            //    string rut = data["rut"].ToString();
-            //    string correo_electronico = data["correo_electronico"].ToString();
-            //    string tipo = data["tipo"].ToString();
-            //    this.conexion.CerrarConexion();
-
-            //}
-            //return Usuario;
         }
 
     }
-}
+

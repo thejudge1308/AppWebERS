@@ -218,6 +218,7 @@
                         <div class="form-group">
                             <div class="col-12">
                                 <input type="submit" value="Guardar cambios" class="btn btn-primary" />
+								@Html.ActionLink("Modificar Jefe de Proyecto", "ModificarJefeProyecto", new { id = ProyectoActual.IdProyecto}, new {@class = "btn btn-secondary", id = "btnModificarJP", type = "button"})
                             </div>
                         </div>
                     }

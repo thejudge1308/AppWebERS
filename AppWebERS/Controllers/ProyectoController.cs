@@ -12,6 +12,7 @@ namespace AppWebERS.Controllers
     public class ProyectoController : Controller
     {
         private ConectorBD conexion;
+        private int id_proyecto;
 
         // GET: Proyecto/Detalles/5
         public ActionResult Detalles(int id)
@@ -219,77 +220,38 @@ namespace AppWebERS.Controllers
           * <returns> la vista con los dropDownList y en caso de que alguna de las listas este vacia se retornara un mensaje de error junto con deshabilitar el boton</returns>
           */
         [HttpGet]
-        public ActionResult ModificarJefeProyecto()
+        public ActionResult ModificarJefeProyecto(int id)
         {
             Proyecto proyecto = new Proyecto();
-            /*var list = proyecto.ObtenerProyectos();
-            var list2 = proyecto.ObtenerUsuarios();
-            ViewBag.MiListadoProyectos = list;
-            ViewBag.MiListadoUsuarios = list2;
+            this.id_proyecto = id;
+            ViewBag.idProyecto = id;
+            var list = proyecto.ObtenerUsuarios2(id);
             if (list.Count == 0)
             {
+                ViewBag.MessageErrorProyectos = "No Hay Usuarios Disponibles";
+                ViewBag.MiListadoUsuarios = list;
                 ViewBag.listaVacia = true;
-                ViewBag.MessageErrorProyectos = "No hay proyectos disponibles";
                 return View();
             }
-            if (list2.Count == 0)
-            {
-                ViewBag.listaVacia = true;
-                ViewBag.MessageErrorProyectos = "No hay usuarios disponibles";
-                return View();
-            }*/
-            var list = proyecto.ObtenerUsuarios2();
             ViewBag.MiListadoUsuarios = list;
             ViewBag.listaVacia = false;
             return View();
             
         }
         /**
-        * <author>Ariel Cornejo</author>
-        * <summary>
-        * Action POST que retorna una vista una vez se presiona el boton de la vista anterior.
-        * </summary>
-        *  <param name="DropDownListProyectos">parametro importado desde el dropdownList de proyectos, contiene el valor string seleccionado en este</param>
-        *  <param name="DropDownListUsuarios">parametro importado desde el dropdownList de usuarios, contiene el valor string seleccionado en este</param>
-        * <returns> la vista con los dropDownList y en caso de que alguna de las listas este vacia se retornara un mensaje de error junto con deshabilitar el boton</returns>
-        */
-        
-        [HttpPost]
-        public ActionResult ModificarJefeProyecto(String rut)
-        {
-            /*
-            Proyecto proyecto = new Proyecto();
-            proyecto.ModificarJefeProyecto(DropDownListUsuarios, DropDownListProyectos);
-            var list = proyecto.ObtenerProyectos();
-            var list2 = proyecto.ObtenerUsuarios();
-            ViewBag.MiListadoProyectos = list;
-            ViewBag.MiListadoUsuarios = list2;
-            if (list.Count == 0)
-            {
-                ViewBag.listaVacia = true;
-                ViewBag.MessageErrorProyectos = "No hay proyectos disponibles";
-                return View();
-            }
-            if (list2.Count == 0)
-            {
-                ViewBag.listaVacia = true;
-                ViewBag.MessageErrorProyectos = "No hay usuarios disponibles";
-                return View();
-            }*/
-            ViewBag.listaVacia = false;
-            var list = new List<Usuario>();
-            list.Add(new Usuario("19299833", "Ariel COrnejo", "algoqgmail.com", "", "", true));
-            ViewBag.MiListadoUsuarios = list;
-            return View();
-        }
-
+          * <author>Diego Iturriaga</author>
+          * <summary>
+          * Action GET que retorna una redireccion a Detalles despues de ejecutar la modificacion de jefe.
+          * </summary>
+          * <param name="id">id del proyecto actual al cual se le modificara el jefe de proyecto</param>
+          * <returns> Redireccion a la ventana Detalles</returns>
+          */
         [HttpGet]
-        public ActionResult ModificarJefeProyectoLogico(String rut)
+        public ActionResult ModificarJefeProyectoLogico(String rut, int id)
         {
-            String rut1 = rut;
             Proyecto proyecto = new Proyecto();
-            proyecto.ModificarJefeProyecto(rut,"");
-            return View();
+            proyecto.ModificarJefeProyecto(rut,id);
+            return RedirectToAction("Detalles/"+id,"Proyecto");
         }
     }
 }

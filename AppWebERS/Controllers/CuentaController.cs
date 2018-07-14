@@ -114,21 +114,24 @@ namespace AppWebERS.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.UserName, Rut = model.Rut, Email = model.Email , Tipo = "USER"};
-                var result = await UserManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
+                if (VerificarSiResgistroValido(model.UserName, model.Email , model.Rut))
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
-                    // Para obtener más información sobre cómo habilitar la confirmación de cuentas y el restablecimiento de contraseña, visite https://go.microsoft.com/fwlink/?LinkID=320771
-                    // Enviar correo electrónico con este vínculo
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirmar cuenta", "Para confirmar la cuenta, haga clic <a href=\"" + callbackUrl + "\">aquí</a>");
+                    var user = new ApplicationUser { UserName = model.UserName, Rut = model.Rut, Email = model.Email, Tipo = "USER" };
+                    var result = await UserManager.CreateAsync(user, model.Password);
+                    if (result.Succeeded)
+                    {
+                        await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
-                    return RedirectToAction("Index", "Home");
+                        // Para obtener más información sobre cómo habilitar la confirmación de cuentas y el restablecimiento de contraseña, visite https://go.microsoft.com/fwlink/?LinkID=320771
+                        // Enviar correo electrónico con este vínculo
+                        // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                        // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                        // await UserManager.SendEmailAsync(user.Id, "Confirmar cuenta", "Para confirmar la cuenta, haga clic <a href=\"" + callbackUrl + "\">aquí</a>");
+
+                        return RedirectToAction("Index", "Home");
+                    }
+                    AddErrors(result);
                 }
-                AddErrors(result);
             }
 
             // Si llegamos a este punto, es que se ha producido un error y volvemos a mostrar el formulario
@@ -290,24 +293,53 @@ namespace AppWebERS.Controllers
             ViewBag.Title = "ModificarCuenta";
             if (ModelState.IsValid)
             {
-                ApplicationUser usuario = await UserManager.FindByRutAsync(usuarioViewModel.Rut);
-                usuario.Email = String.IsNullOrEmpty(usuarioViewModel.Email)? usuario.Email: usuarioViewModel.Email;
-                usuario.UserName = String.IsNullOrEmpty(usuarioViewModel.Nombre)? usuario.UserName: usuarioViewModel.Nombre;
-                usuario.Estado = usuarioViewModel.Estado? !usuario.Estado: usuario.Estado;
-                await UserManager.UpdateAsync(usuario);
-                if (!String.IsNullOrEmpty(usuarioViewModel.Password)) {
-                    await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), usuarioViewModel.Password);
+                System.Diagnostics.Debug.WriteLine(usuarioViewModel.Email);
+                if (!VerificarSiUsuarioRepetido(usuarioViewModel))
+                {
+                    ApplicationUser usuario = await UserManager.FindByRutAsync(usuarioViewModel.Rut);
+                    usuario.Email = String.IsNullOrEmpty(usuarioViewModel.Email) ? usuario.Email : usuarioViewModel.Email;
+                    usuario.UserName = String.IsNullOrEmpty(usuarioViewModel.Nombre) ? usuario.UserName : usuarioViewModel.Nombre;
+                    usuario.Estado = usuarioViewModel.Estado ? !usuario.Estado : usuario.Estado;
+                    await UserManager.UpdateAsync(usuario);
+                    if (!String.IsNullOrEmpty(usuarioViewModel.Password))
+                    {
+                        await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), usuarioViewModel.Password);
+                    }
+                    TempData["alerta"] = new Alerta("El usuario se modifico exitosamente", TipoAlerta.SUCCESS);
+
+                    return RedirectToAction("ListarUsuarios", new {rut = usuarioViewModel.Rut});
                 }
-
-                TempData["alerta"] = new Alerta("El usuario se modifico exitosamente", TipoAlerta.SUCCESS);
-
-                return RedirectToAction("ListarUsuarios", new {rut = usuarioViewModel.Rut});
             }
-            else
-            {
-                TempData["alertData"] = new Alerta("El usuario no pudo ser modificado", TipoAlerta.ERROR);
-                return View(usuarioViewModel);
-            }
+            
+            TempData["alertData"] = new Alerta("El usuario no pudo ser modificado", TipoAlerta.ERROR);
+            return View(usuarioViewModel);
+        }
+
+        /*
+         * Creador: Maximo Hernandez
+         * Accion: Verifica si alguno de los dos valores de usuario, UserName o UserEmail, se encuentran ya en la base de datos
+         * Retorno: Boolean - Verdadero si es que existe uno de los dos valores, Falso en caso contrario
+         */
+        public Boolean VerificarSiUsuarioRepetido(ModificarViewModel usuarioViewModels)
+        {
+            if(UserManager.VerificarSiExisteEmail(usuarioViewModels.Email).Result ||
+                UserManager.VerificarSiExisteNombre(usuarioViewModels.Nombre).Result ||
+                UserManager.VerificarSiExisteContrasenia(usuarioViewModels.Rut, usuarioViewModels.Password).Result)
+                return true;
+            return false;
+        }
+
+        /*
+       * Creador: Maximo Hernandez-Diego Matus
+       * Accion: Verifica si alguno de los valores de usuario registrados ya existen dentro de la base de datos.
+       * Retorno: Boolean - Verdadero si el registro es valido. Falso en caso contrario.
+       */
+        public Boolean VerificarSiResgistroValido(string RegisterName, string RegisterEmail, string RegisterRut)
+        {
+            if (UserManager.VerificarSiExisteEmail(RegisterEmail).Result || UserManager.VerificarSiExisteNombre(RegisterName).Result  ||
+                UserManager.VerificarSiExisteRut(RegisterRut).Result)
+                return false;
+            return true;
         }
 
         /*

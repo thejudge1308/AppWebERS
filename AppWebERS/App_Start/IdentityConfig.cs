@@ -101,6 +101,19 @@ namespace AppWebERS
         }
 
         /*
+        * Creador: Gabriel Sanhueza
+        * Accion: Busca un usuario por rut
+        * Retorno: Una operacion asincrona (Parecida a las promesas de js)
+        */
+        public Task<ApplicationUser> FindByEmailAsync(string email)
+        {
+            using (var db = ApplicationDbContext.Create())
+            {
+                return new UserStore<ApplicationUser>(db).FindByEmailAsync(email);
+            }
+        }
+
+        /*
          * Creador: Gabriel Sanhueza
          * Accion: Obtiene todos los usuarios
          * Retorno: Una operacion asincrona (Parecida a las promesas de js)
@@ -181,6 +194,74 @@ namespace AppWebERS
             var newPasswordHash = this.PasswordHasher.HashPassword(newPassword);
             await store.SetPasswordHashAsync(usuario, newPasswordHash);
             Task.FromResult<Object>(null);
+        }
+
+        /*
+         * Creador: Maximo Hernandez
+         * Accion: Verifica si UserName se encuentran en la base de datos
+         * Retorno: Boolean - Verdadero si UserName ya existe en la base de datos. Verdadero en caso contrario.
+         */
+        public async Task<bool> VerificarSiExisteNombre(string UserName)
+        {
+            if (!String.IsNullOrEmpty(UserName))
+            {
+                ApplicationUser usuario = await FindByNameAsync(UserName);
+                if (usuario == null)
+                    return false;
+                return true;
+            }
+            return false;
+        }
+
+        /*
+         * Creador: Maximo Hernandez
+         * Accion: Verifica si UserEmail se encuentran en la base de datos
+         * Retorno: Boolean - Verdadero si UserEmail ya existe en la base de datos. Falso en caso contrario.
+         */
+        public async Task<bool> VerificarSiExisteEmail(string UserEmail)
+        {
+            if (!String.IsNullOrEmpty(UserEmail))
+            {
+                ApplicationUser usuario = await FindByEmailAsync(UserEmail);
+                if (usuario == null)
+                    return false;
+                return true;
+            }
+            return false;
+        }
+
+
+
+        /*
+         * Creador: Maximo Hernandez
+         * Accion: Verifica si UserRut se encuentran en la base de datos
+         * Retorno: Boolean - Verdadero si UserRut ya existe en la base de datos. Falso en caso contrario.
+         */
+        public async Task<bool> VerificarSiExisteRut(string UserRut)
+        {
+            if (!String.IsNullOrEmpty(UserRut))
+            {
+                ApplicationUser usuario = await FindByRutAsync(UserRut);
+                if (usuario == null)
+                    return false;
+                return true;
+            }
+            return false;
+        }
+
+        /*
+        * Creador: Gabriel Sanhueza
+        * Accion: Verifica si la contraseña no es la misma que la que ya esta
+        * Retorno: Boolean - Verdadero si es la misma. Falso en caso contrario
+        */
+        public async Task<bool> VerificarSiExisteContrasenia(string UserRut, string password)
+        {
+            if (String.IsNullOrEmpty(UserRut) && String.IsNullOrEmpty(password))
+            {
+                ApplicationUser usuario = await FindByRutAsync(UserRut);
+                return PasswordHasher.VerifyHashedPassword(usuario.PasswordHash, password) == PasswordVerificationResult.Success;
+            }
+            return false;
         }
     }
 

@@ -6,6 +6,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
+using System.Security.Claims;
 
 namespace AppWebERS.Controllers
 {
@@ -14,19 +16,24 @@ namespace AppWebERS.Controllers
         private ConectorBD conexion;
 
         // GET: Proyecto/Detalles/5
+        [Authorize]
         public ActionResult Detalles(int id)
         {
             Proyecto proyecto = this.GetProyecto(id);
-            string UsuarioActual = System.Web.HttpContext.Current.User.Identity.Name; // pregunta el usuario actual
+            //string UsuarioActual = System.Web.HttpContext.Current.User.Identity.Name; // pregunta el usuario actual
+            var UsuarioActual = User.Identity.GetUserId();
             Debug.WriteLine("Usuario actual: " + UsuarioActual);
+            Debug.WriteLine("Proyecto actual: " + proyecto);
+            Debug.WriteLine("Permiso: " + TipoDePermiso());
             ViewData["proyecto"] = proyecto;
-            ViewData["permiso"] = TipoDePermiso(UsuarioActual);
+            ViewData["permiso"] = TipoDePermiso();
 
             return View();
         }
 
         // POST: Proyecto/Detalles/5
         [HttpPost]
+        [Authorize]
         public ActionResult Detalles(FormCollection datos) {
 
             return View();
@@ -90,9 +97,28 @@ namespace AppWebERS.Controllers
        * <returns>El permiso para el tipo de usuario que ve el contenido</returns>
        * 
        **/
-        private int TipoDePermiso(String usuario) {
-            //Esto estara completado una vez que este implementado el Entity Framework
-            return Proyecto.AUTH_COMO_JEFE_DE_PROYECTO;
+        private int TipoDePermiso() {
+            //Obtiene id del usuario de la sesion
+            var UsuarioActual = User.Identity.GetUserId();
+            int ModoVista = Proyecto.NO_AUTH;
+            this.conexion = ConectorBD.Instance;
+            string consulta = "SELECT Tipo From users WHERE id='"+UsuarioActual.ToString()+"';";
+            MySqlDataReader data = this.conexion.RealizarConsulta(consulta);
+            if(data != null) {
+                data.Read();
+                string rol = data["Tipo"].ToString();
+                if(rol.Equals("SYSADMIN")){
+                    ModoVista = Proyecto.AUTH_COMO_SYSADMIN;
+                } else {
+                    //Cambiar si es jefe de proyecto o usuario normal
+                    ModoVista = Proyecto.AUTH_COMO_JEFE_DE_PROYECTO;
+                }
+                this.conexion.CerrarConexion();
+            } else {
+
+            }
+
+            return ModoVista;
         /**
         * Autor: Gerardo Estrada
         * <param name = "id" > Id del proyecto.</param>
@@ -135,8 +161,8 @@ namespace AppWebERS.Controllers
             //    string rut = data["rut"].ToString();
             //    string correo_electronico = data["correo_electronico"].ToString();
             //    string tipo = data["tipo"].ToString();
-
             //    this.conexion.CerrarConexion();
+
             //}
             //return Usuario;
         }

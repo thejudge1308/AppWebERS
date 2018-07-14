@@ -256,7 +256,7 @@ namespace AppWebERS
         */
         public async Task<bool> VerificarSiExisteContrasenia(string UserRut, string password)
         {
-            if (String.IsNullOrEmpty(UserRut) && String.IsNullOrEmpty(password))
+            if (!String.IsNullOrEmpty(UserRut) && !String.IsNullOrEmpty(password))
             {
                 ApplicationUser usuario = await FindByRutAsync(UserRut);
                 return PasswordHasher.VerifyHashedPassword(usuario.PasswordHash, password) == PasswordVerificationResult.Success;

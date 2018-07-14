@@ -13,7 +13,7 @@
     <div class="justify-content-center fixed-bottom text-center @modoAlerta" id="alertDiv">
         <div class="alert @tipoAlerta alert-dismissible w-50" role="alert">
             <h4 class="alert-heading"></h4>
-            <p id="mensajeAlerta" style="word-break: break-all;">@mensaje</p>
+            <p id="mensajeAlerta" style="word-break: break-all;">@Html.Raw(mensaje)</p>
             <button type="button" class="close" aria-label="Close" id="button-alert">
                 <span aria-hidden="true">&times;</span>
             </button>

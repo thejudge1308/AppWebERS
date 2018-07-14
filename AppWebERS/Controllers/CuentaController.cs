@@ -294,6 +294,7 @@ namespace AppWebERS.Controllers
             if (ModelState.IsValid)
             {
                 System.Diagnostics.Debug.WriteLine(usuarioViewModel.Email);
+                //VerificarSIUsuarioRepetido dentro arma un mensaje para mostrar en el popup con TempData["alerta"]
                 if (!VerificarSiUsuarioRepetido(usuarioViewModel))
                 {
                     ApplicationUser usuario = await UserManager.FindByRutAsync(usuarioViewModel.Rut);
@@ -309,9 +310,7 @@ namespace AppWebERS.Controllers
 
                     return RedirectToAction("ListarUsuarios", new {rut = usuarioViewModel.Rut});
                 }
-            }
-            
-            TempData["alertData"] = new Alerta("El usuario no pudo ser modificado", TipoAlerta.ERROR);
+            }            
             return View(usuarioViewModel);
         }
 
@@ -322,11 +321,31 @@ namespace AppWebERS.Controllers
          */
         public Boolean VerificarSiUsuarioRepetido(ModificarViewModel usuarioViewModels)
         {
-            if(UserManager.VerificarSiExisteEmail(usuarioViewModels.Email).Result ||
+            bool resultado = false;
+            string mensaje = "";
+            if (UserManager.VerificarSiExisteEmail(usuarioViewModels.Email).Result) {
+                mensaje += "Correo de usuario en uso </br>";
+                resultado |= true;  
+            }
+            if (UserManager.VerificarSiExisteNombre(usuarioViewModels.Nombre).Result) {
+                mensaje += "Nombre de usuario en uso <br/>";
+                resultado |= true;
+            }
+            if (UserManager.VerificarSiExisteContrasenia(usuarioViewModels.Rut, usuarioViewModels.Password).Result) {
+                mensaje += "La contraseña debe ser distinta de la que tiene actualmente <br/>";
+                resultado |= true;
+            }
+            if (resultado) {
+                TempData["alerta"] = new Alerta(mensaje, TipoAlerta.ERROR);
+            }
+            return resultado;
+            /*
+                if (UserManager.VerificarSiExisteEmail(usuarioViewModels.Email).Result ||
                 UserManager.VerificarSiExisteNombre(usuarioViewModels.Nombre).Result ||
                 UserManager.VerificarSiExisteContrasenia(usuarioViewModels.Rut, usuarioViewModels.Password).Result)
                 return true;
             return false;
+            */
         }
 
         /*

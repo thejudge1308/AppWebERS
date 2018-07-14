@@ -65,6 +65,7 @@
     <Reference Include="System.ComponentModel" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Drawing.Design" />
     <Reference Include="System.Management" />
@@ -272,7 +273,9 @@
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -318,6 +321,9 @@
     <Content Include="Views\Usuario\_AlertaDeshabilitacionPartial.cshtml" />
     <Content Include="Views\Usuario\Modificar2.cshtml" />
     <Content Include="Views\Usuario\Deshabilitar2.cshtml" />
+    <Content Include="Views\Proyecto\CrearProyecto.cshtml" />
+    <Content Include="Views\Proyecto\AsignarJefeProyecto.cshtml" />
+    <Content Include="Views\Proyecto\ModificarJefeProyecto.cshtml" />
     <Content Include="Views\Cuenta\Register.cshtml" />
     <Content Include="Views\Proyecto\Detalles.cshtml" />
   </ItemGroup>

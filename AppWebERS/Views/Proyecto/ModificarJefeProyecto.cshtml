@@ -1,0 +1,64 @@
+﻿@{
+    /**/
+
+    ViewBag.Title = " Modificar Jefe Proyecto";
+
+}
+@using (Html.BeginForm("ModificarJefeProyecto", "Proyecto"))
+{
+    @Html.AntiForgeryToken()
+<div class="form-horizontal">
+    <h2>Modificar Jefe Proyecto</h2>
+    <h4>Seleccione el Proyecto</h4>
+    
+    <div class="card-body table-responsive">
+        <table class="table">
+            <thead class="thead-dark">
+                <tr class="text-center">
+                    <th scope="col">Rut</th>
+                    <th scope="col">Nombre De Usuario</th>
+                    <th scope="col">Correo Electronico</th>
+                    <th scope="col">          </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var usuario in @ViewBag.MiListadoUsuarios)
+                {
+                    <tr class="text-center">
+                        <td data-info="info">@usuario.Rut</td><!-- Reemplazar por como quiera que le pongan en el foreach a la variable. Ej: (arroba)Item.Nombre -->
+                        <td data-info="info">@usuario.Nombre</td>
+                        <td data-info="info">@usuario.CorreoElectronico</td>
+
+                        <td><input type="submit" value="Asignar Jefe" class="btn btn-default" /></td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <h6 class="text-danger">@ViewBag.MessageErrorProyectos</h6>
+    </div>
+
+    <div><h6>@ViewBag.Message</h6></div>
+    <script>
+        
+    </script>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-9">
+            @if (@ViewBag.listaVacia)
+            {
+                <input type="submit" value="Asignar jefe" class="btn btn-default" disabled="disabled" />
+            }
+            else
+            {
+                <input type="submit" value="Asignar jefe" class="btn btn-default" />
+            }
+
+        </div>
+    </div>
+
+
+
+</div>
+}

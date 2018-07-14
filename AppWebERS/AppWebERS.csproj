@@ -211,6 +211,7 @@
     <Compile Include="Models\CuentasViewModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\ModificacionDERS.cs" />
+    <Compile Include="Models\NombreProyecto.cs" />
     <Compile Include="Models\Proyecto.cs" />
     <Compile Include="Models\Requisito.cs" />
     <Compile Include="Models\Usuario.cs" />
@@ -327,6 +328,7 @@
     <Content Include="Views\Proyecto\ModificarJefeProyecto.cshtml" />
     <Content Include="Views\Cuenta\Register.cshtml" />
     <Content Include="Views\Proyecto\ListarProyectos.cshtml" />
+    <Content Include="Views\Proyecto\InterfazUsuario.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

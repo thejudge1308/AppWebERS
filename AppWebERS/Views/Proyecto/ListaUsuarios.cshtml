@@ -1,0 +1,63 @@
+﻿@*
+    Vista creada por Gerardo Estrada
+*@
+
+@using AppWebERS.Models;
+@model Usuario
+@{
+    ViewBag.Title = "Lista de Usuarios";
+}
+
+@{
+    var ProyectoActual = (Proyecto)ViewData["proyecto"];
+    var TipoUsuario = (int)ViewData["permiso"];
+    var usuarios = (List<Usuario>)ViewData["usuarios"];
+}
+
+
+
+@if (ProyectoActual != null) {
+    <h2>ListaUsuarios</h2>
+    <h2>Detalles</h2>
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("Detalles", "Proyecto", new { id = ProyectoActual.IdProyecto })">Detalles</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" href="#">Usuarios</a>
+        </li>
+        @{ if (TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO) {
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Agregar usuario</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Notificaciones</a>
+                </li>
+            }
+        }
+    </ul>
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Rut</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Correo Electronico</th>
+                <th scope="col">Tipo</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Usuario item in usuarios) {
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>@item.Rut</td>
+                        <td>@item.Nombre</td>
+                        <td>@item.CorreoElectronico</td>
+                        <td>@item.Tipo</td>
+                    </tr>
+            }
+        </tbody>
+
+    </table>
+            }

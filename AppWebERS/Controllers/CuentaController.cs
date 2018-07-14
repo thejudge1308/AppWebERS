@@ -114,7 +114,7 @@ namespace AppWebERS.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (VerificarSiResgistroValido(model.UserName, model.Email , model.Rut))
+                if (!VerificarSiResgistroValido(model))
                 {
                     var user = new ApplicationUser { UserName = model.UserName, Rut = model.Rut, Email = model.Email, Tipo = "USER" };
                     var result = await UserManager.CreateAsync(user, model.Password);
@@ -353,12 +353,31 @@ namespace AppWebERS.Controllers
        * Accion: Verifica si alguno de los valores de usuario registrados ya existen dentro de la base de datos.
        * Retorno: Boolean - Verdadero si el registro es valido. Falso en caso contrario.
        */
-        public Boolean VerificarSiResgistroValido(string RegisterName, string RegisterEmail, string RegisterRut)
+        public Boolean VerificarSiResgistroValido(RegisterViewModel usuarioViewModels)
         {
-            if (UserManager.VerificarSiExisteEmail(RegisterEmail).Result || UserManager.VerificarSiExisteNombre(RegisterName).Result  ||
-                UserManager.VerificarSiExisteRut(RegisterRut).Result)
-                return false;
-            return true;
+            bool resultado = false;
+            string mensaje = "";
+            if (UserManager.VerificarSiExisteEmail(usuarioViewModels.Email).Result)
+            {
+                mensaje += "Correo de usuario en uso </br>";
+                resultado |= true;
+            }
+            if (UserManager.VerificarSiExisteNombre(usuarioViewModels.UserName).Result)
+            {
+                mensaje += "Nombre de usuario en uso <br/>";
+                resultado |= true;
+            }
+            if(UserManager.VerificarSiExisteRut(usuarioViewModels.Rut).Result)
+            {
+                mensaje += "Rut en uso<br/>";
+                resultado |= true;
+            }
+            if (resultado)
+            {
+                TempData["alerta"] = new Alerta(mensaje, TipoAlerta.ERROR);
+            }
+            return resultado;
+
         }
 
         /*

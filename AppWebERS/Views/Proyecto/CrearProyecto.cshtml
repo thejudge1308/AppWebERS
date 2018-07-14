@@ -35,7 +35,7 @@
     <div class="form-group">
         <div class="col-md-10">
             <h6>Seleccione el Jefe de Proyecto</h6>
-            @Html.DropDownList("usuario", (List<SelectListItem>)ViewBag.MiListadoUsuarios)
+            @Html.DropDownList("usuario", (List<SelectListItem>)ViewBag.MiListadoUsuarios, new { @class = "form-control" })
         </div>
     </div>
     @*

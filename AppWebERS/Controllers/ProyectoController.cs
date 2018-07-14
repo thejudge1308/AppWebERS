@@ -5,13 +5,16 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Web;
 using MySql.Data.MySqlClient;
+using Microsoft.AspNet.Identity;
 
 namespace AppWebERS.Controllers
 {
     public class ProyectoController : Controller
     {
         private ConectorBD Conector = ConectorBD.Instance;
-        
+        protected MySQLDatabase MySQLDatabase { get; set; }
+        protected UserStore<Usuario> UserManager { get; set; }
+
         // GET: Proyecto
         public ActionResult Index()
         {
@@ -193,14 +196,19 @@ namespace AppWebERS.Controllers
          * Envía una solicitud para unirse al proyecto seleccionado (esta se guarda en la BD)
          * Parámetros: PosProyecto. Es la posición que tiene el proyecto en la lista de proyectos
          */ 
-         [HttpPost]
+        [HttpPost]
         public void AgregarUsuarioAProyecto(int PosProyecto)
         {
+            this.MySQLDatabase = new MySQLDatabase();
+            this.UserManager = new UserStore<Usuario>(new UserStore<Usuario>(this.MySQLDatabase));
             List<int> ListaProyectos = ListaProyectosIds();
-            int IdProyectoAUnirse = ListaProyectos[PosProyecto]; 
-            string UsuarioSolicitante = System.Web.HttpContext.Current.User.Identity.Name; // obtiene el user logueado actualmente (rut)
+            int IdProyectoAUnirse = ListaProyectos[PosProyecto];
+            Usuario UsuarioSolicitante = new Usuario();
+            Usuario UsuarioSolicitante = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<UserManager>().FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
+            string UsuarioSolicitanteId = UsuarioSolicitante.Id.ToString();
+            //string UsuarioSolicitante = System.Web.HttpContext.Current.User.Identity.Name; // obtiene el user logueado actualmente (rut)
 
-            string Values = "'" + IdProyectoAUnirse + "','" + UsuarioSolicitante + "'";
+            string Values = "'" + IdProyectoAUnirse + "','" + UsuarioSolicitanteId + "'";
             string Consulta = "INSERT INTO Solicitud_vinculacion (ref_proyecto,ref_solicitante) VALUES (" + Values + ");";
             if (this.Conector.RealizarConsultaNoQuery(Consulta))
             {

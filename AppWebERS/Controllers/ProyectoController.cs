@@ -238,8 +238,7 @@ namespace AppWebERS.Controllers
                 ViewBag.MessageErrorProyectos = "No hay usuarios disponibles";
                 return View();
             }*/
-            var list = new List<Usuario>();
-            list.Add(new Usuario("19299833","Ariel COrnejo","algoqgmail.com","","",true));
+            var list = proyecto.ObtenerUsuarios2();
             ViewBag.MiListadoUsuarios = list;
             ViewBag.listaVacia = false;
             return View();
@@ -281,6 +280,15 @@ namespace AppWebERS.Controllers
             var list = new List<Usuario>();
             list.Add(new Usuario("19299833", "Ariel COrnejo", "algoqgmail.com", "", "", true));
             ViewBag.MiListadoUsuarios = list;
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult ModificarJefeProyectoLogico(String rut)
+        {
+            String rut1 = rut;
+            Proyecto proyecto = new Proyecto();
+            proyecto.ModificarJefeProyecto(rut,"");
             return View();
         }
     }

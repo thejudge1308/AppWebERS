@@ -585,7 +585,7 @@ namespace AppWebERS.Models{
          * vinculo_usuario_proyecto, Retorna false si falla la modificacion</returns>
          * 
          **/
-        public bool ModificarJefeProyecto(string nombreUsuario, string nombreProyecto)
+        public bool ModificarJefeProyecto(string rut, string nombreProyecto)
         {
             String consulta1 = "SELECT id_proyecto FROM proyecto WHERE nombre = '" + nombreProyecto + "';";
             MySqlDataReader reader = this.conexion.RealizarConsulta(consulta1);
@@ -596,7 +596,6 @@ namespace AppWebERS.Models{
                 idProyecto = Int32.Parse(reader["id_proyecto"].ToString());
             }
             this.conexion.EnsureConnectionClosed();
-            String rut = this.ObtenerRutDesdeString(nombreUsuario);
             String consultaRutId = "SELECT users.id FROM users WHERE rut='" + rut + "' GROUP BY id;";
             reader = this.conexion.RealizarConsulta(consultaRutId);
             reader.Read();

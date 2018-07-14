@@ -29,7 +29,7 @@
                         <td data-info="info">@usuario.Nombre</td>
                         <td data-info="info">@usuario.CorreoElectronico</td>
 						<td>
-							@Html.ActionLink("Asignar Jefe", "ModificarJefeProyectoLogico", new { rut = usuario.Rut}, new {@class = "btn btn-secondary", id = "btnModificar", type = "button"})
+							@Html.ActionLink("Asignar Jefe", "ModificarJefeProyectoLogico", new { rut = usuario.Rut, id = @ViewBag.idProyecto}, new {@class = "btn btn-secondary", id = "btnModificar", type = "button"})
 						</td>
                     </tr>
                 }

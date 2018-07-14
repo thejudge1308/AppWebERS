@@ -186,6 +186,8 @@
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\RequisitoController.cs" />
+    <Compile Include="Controllers\UserViewController.cs" />
+    <Compile Include="Controllers\SysAdmin2Controller.cs" />
     <Compile Include="Controllers\SysAdminController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
     <Compile Include="Global.asax.cs">
@@ -318,6 +320,8 @@
     <Content Include="Views\Usuario\Modificar2.cshtml" />
     <Content Include="Views\Usuario\Deshabilitar2.cshtml" />
     <Content Include="Views\Cuenta\Register.cshtml" />
+    <Content Include="Views\SysAdmin2\Principal.cshtml" />
+    <Content Include="Views\UserView\Principal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

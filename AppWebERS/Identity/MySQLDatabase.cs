@@ -230,13 +230,14 @@ namespace AspNet.Identity.MySQL
             command.CommandText = consulta;
             try
             {
-                EnsureConnectionOpen();
+                _connection.Open();
                 MySqlDataReader reader = command.ExecuteReader();
                 if (reader.HasRows) return reader;
             }
-            finally
+            catch (Exception e)
             {
-                EnsureConnectionClosed();
+                Console.WriteLine(e.Message);
+                _connection.Close();
             }
             return null;
         }
@@ -247,7 +248,7 @@ namespace AspNet.Identity.MySQL
             command.CommandText = consulta;
             try
             {
-                EnsureConnectionOpen();
+                _connection.Open();
                 command.ExecuteNonQuery();
                 EnsureConnectionClosed();
                 return true;

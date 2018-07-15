@@ -8,7 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 
 
-using System.ComponentModel.DataAnnotations;
+
 /**
  * Autor: Gerardo Estrada (Meister1412)
  **/
@@ -499,17 +499,15 @@ namespace AppWebERS.Models{
 
         /**
          * 
-         * <autor>Diego Iturriaga</autor>
-         * <summary>Este metodo se encarga de Obtener una lista de usuarios validos desde la base de datos
-         * que puedan ser asignados a un proyecto con el rol JEFEPROYECTO</summary>
-         * <returns>Retorna una List de tipo SelectListItem que contiene todos los usuarios validos
-         * en la base de datos que puedan ser asignados a un proyecto como JEFEPROYECTO</returns>
-         * 
+         * <autor>Roberto Ureta-Diego Iturriaga</autor>
+         * <summary>Obtiene una lista de Usuarios disponibles para ser JEFE DE PROYECTO en un proyecto      *determinado </summary>
+         * <returns>Retorna una List de tipo Usuario que contiene todos los usuarios que pueden  ser asignados a un * proyecto como JEFEPROYECTO</returns>
+         * <param name="idProyecto">Contiene un entero que tiene el id de un proyecto.</param>
          **/
-        public List<Usuario> ObtenerUsuarios2()
+        public List<Usuario> ObtenerUsuarios2(int idProyecto)
         {
             List<Usuario> listasUsuarios = new List<Usuario>();
-            string consulta = "SELECT users.UserName, users.Rut, users.Email FROM users WHERE Tipo != 'SYSADMIN' AND Estado = 1; ";
+            string consulta = "SELECT users.UserName, users.Rut, users.Email FROM users WHERE Id NOT IN(SELECT vinculo_usuario_proyecto.ref_usuario FROM vinculo_usuario_proyecto WHERE ref_proyecto = "+idProyecto+" AND rol = 'JEFEPROYECTO') AND Tipo != 'SYSADMIN' AND Estado = 1; ";
             MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
             if (reader != null)
             {
@@ -585,38 +583,34 @@ namespace AppWebERS.Models{
          * vinculo_usuario_proyecto, Retorna false si falla la modificacion</returns>
          * 
          **/
-        public bool ModificarJefeProyecto(string nombreUsuario, string nombreProyecto)
+        public bool ModificarJefeProyecto(string rut, int idProyecto)
         {
-            String consulta1 = "SELECT id_proyecto FROM proyecto WHERE nombre = '" + nombreProyecto + "';";
-            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta1);
-            int idProyecto = -1;
-            if (reader != null)
-            {
-                reader.Read();
-                idProyecto = Int32.Parse(reader["id_proyecto"].ToString());
-            }
-            this.conexion.EnsureConnectionClosed();
-            String rut = this.ObtenerRutDesdeString(nombreUsuario);
             String consultaRutId = "SELECT users.id FROM users WHERE rut='" + rut + "' GROUP BY id;";
-            reader = this.conexion.RealizarConsulta(consultaRutId);
+            MySqlDataReader reader = this.conexion.RealizarConsulta(consultaRutId);
             reader.Read();
             String id = reader["id"].ToString();
             this.conexion.EnsureConnectionClosed();
-            if (VerificarRolEnProyecto(id,idProyecto)) {
+            if (!VerificarRolEnProyecto(id,idProyecto)) {
                 if (idProyecto != -1)
                 {
-                    String consulta2 = "UPDATE vinculo_usuario_proyecto SET ref_usuario = '" + id + "' WHERE ref_proyecto = '" + idProyecto + "' AND rol = 'JEFEPROYECTO'; " +
-                        "DELETE FROM vinculo_usuario_proyecto WHERE ref_usuario = '" + id + "' AND ref_proyecto = '" + idProyecto + "' AND rol = 'USUARIO'; ";
-                    if (this.conexion.RealizarConsultaNoQuery(consulta2))
-                    {
+                    String consulta1 = "UPDATE vinculo_usuario_proyecto SET rol = 'USUARIO' WHERE ref_proyecto = " + idProyecto + " AND rol = 'JEFEPROYECTO';";
+                    if (this.conexion.RealizarConsultaNoQuery(consulta1)) {
                         this.conexion.EnsureConnectionClosed();
-                        return true;
+                        String consulta2 = "INSERT INTO vinculo_usuario_proyecto(ref_usuario,ref_proyecto,rol) VALUES ('"+id+"',"+idProyecto+",'JEFEPROYECTO');" +
+                            "DELETE FROM vinculo_usuario_proyecto WHERE ref_usuario = '" + id + "' AND ref_proyecto = " + idProyecto + " AND rol = 'USUARIO'; ";
+                        if (this.conexion.RealizarConsultaNoQuery(consulta2))
+                        {
+                            this.conexion.EnsureConnectionClosed();
+                            return true;
+                        }
+                        else
+                        {
+                            this.conexion.EnsureConnectionClosed();
+                            return false;
+                        }
                     }
-                    else
-                    {
-                        this.conexion.EnsureConnectionClosed();
-                        return false;
-                    }
+                    this.conexion.EnsureConnectionClosed();
+                    return false;
                 }
             }           
             return false;

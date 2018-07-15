@@ -83,7 +83,6 @@ namespace AppWebERS.Controllers
             //Obtiene id del usuario de la sesion
             var UsuarioActual = User.Identity.GetUserId();
             int ModoVista = new Proyecto().ObtenerRolDelUsuario(UsuarioActual.ToString(),id);
-            //Debug.WriteLine("Permiso "+ModoVista);
             return ModoVista;
         }
             /**

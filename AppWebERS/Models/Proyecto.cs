@@ -348,8 +348,8 @@ namespace AppWebERS.Models{
            MySqlDataReader data = this.conexion.RealizarConsulta(consulta);
            if(data != null) {
                 data.Read();
-                string rol = data["Tipo"].ToString();
-                if(rol.Equals(JefeDeProyecto_RolBD)) {
+                string rol = data["Tipo"].ToString().Trim();
+                if(rol.Equals(SysAdmin_RolBD)) {
                         permiso = AUTH_COMO_SYSADMIN;
                 } else {
                     //this.conexion.CerrarConexion();

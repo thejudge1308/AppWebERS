@@ -18,20 +18,30 @@
 
 @if (ProyectoActual != null) {
     <h2>ListaUsuarios</h2>
-    <h2>Detalles</h2>
+    @*<h2>Detalles</h2>*@
     <ul class="nav nav-tabs">
         <li class="nav-item">
-            <a class="nav-link" href="@Url.Action("Detalles", "Proyecto", new { id = ProyectoActual.IdProyecto })">Detalles</a>
+            <a class="nav-link" href="@Url.Action("Detalles", "Proyecto", new { id = ProyectoActual.IdProyecto})">Detalles</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" href="#">Usuarios</a>
+            <a class="nav-link active" href="@Url.Action("ListaUsuarios","Proyecto",new { id = ProyectoActual.IdProyecto})">Usuarios</a>
         </li>
-        @{ if (TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO) {
+        @{
+            if (TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO || TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN) {
                 <li class="nav-item">
                     <a class="nav-link" href="#">Agregar usuario</a>
                 </li>
+            }
+
+            if (TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO) {
                 <li class="nav-item">
                     <a class="nav-link" href="#">Notificaciones</a>
+                </li>
+            }
+
+            if (TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN) {
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Cambiar jefe de proyecto</a>
                 </li>
             }
         }
@@ -41,6 +51,7 @@
     <table class="table">
         <thead>
             <tr>
+                <th scope="col">Numero</th>
                 <th scope="col">Rut</th>
                 <th scope="col">Nombre</th>
                 <th scope="col">Correo Electronico</th>
@@ -49,15 +60,17 @@
         </thead>
         <tbody>
             @{
+                var auxiliar = 1;
                 if(usuarios.Count != 0) {
                     foreach(Usuario item in (List<Usuario>)usuarios) {
                         <tr>
-                            <th scope="row">1</th>
+                            <th scope="row">@auxiliar</th>
                             <td>@item.Rut</td>
                             <td>@item.Nombre</td>
                             <td>@item.CorreoElectronico</td>
                             <td>@item.Tipo</td>
                         </tr>
+                        ++auxiliar;
                     }
                 }
 

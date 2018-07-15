@@ -14,7 +14,7 @@
     var TipoUsuario = (int)ViewData["permiso"];
 }
 
-@if(ProyectoActual != null) {
+@if(ProyectoActual != null || TipoUsuario == Proyecto.NO_AUTH) {
     <h2>Detalles</h2>
     
     <ul class="nav nav-tabs">
@@ -242,12 +242,11 @@
         </div>
 
     }
-} else {
+} else if(TipoUsuario == Proyecto.NO_AUTH ) {
+    <h1>No tiene permisos</h1>
+}els{
     <h1>Proyecto no encontrado</h1>
 }
-
-
-
 
 
 @section Scripts {

@@ -391,7 +391,7 @@ namespace AppWebERS.Models{
 
             List<Usuario> listaUsuarios = new List<Usuario>();
 
-            string consulta = "SELECT users.Rut, users.UserName, users.Email, users.Tipo FROM vinculo_usuario_proyecto INNER JOIN users on vinculo_usuario_proyecto.ref_usuario = users.Id WHERE vinculo_usuario_proyecto.ref_proyecto= " + id +";";
+            string consulta = "SELECT users.Rut, users.UserName, users.Email, vinculo_usuario_proyecto.rol FROM vinculo_usuario_proyecto INNER JOIN users on vinculo_usuario_proyecto.ref_usuario = users.Id WHERE vinculo_usuario_proyecto.ref_proyecto= " + id +";";
             MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
             if (reader == null) {
                 this.conexion.CerrarConexion();
@@ -403,6 +403,11 @@ namespace AppWebERS.Models{
                     string nombre = reader.GetString(1);
                     string correo = reader.GetString(2);
                     string tipo = reader.GetString(3);
+                    if(tipo.Equals(JefeDeProyecto_RolBD)) {
+                        tipo = "Jefe de proyecto";
+                    } else {
+                        tipo = "Usuario";
+                    }
 
                     listaUsuarios.Add(new Usuario(rut, nombre, correo, tipo));
                 }

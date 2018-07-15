@@ -16,33 +16,42 @@
 </head>
 <body>
 
-    <nav class="navbar navbar-inverse">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="#">AppWebErs</a>
-            </div>
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Proyectos</a></li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li><a ><i class="fa fa-user"></i></a></li>
-                <li>
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#"> Rodrigo Letelier - Usuario <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Modificar cuenta</a></li>
-                        <li><a href="#">Cerrar Sesion</a></li>
+    <div>
+        <div class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    @Html.ActionLink("AppWebErs", "Principal", "UserView", new { area = "" }, new { @class = "navbar-brand" })
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        
+                            
+                            <li><a href=".."> Gestionar Proyectos </a></li>
+                        
                     </ul>
-                </li>
-            </ul>
-            
-        </div>
-    </nav>
+                    <ul class="nav navbar-nav navbar-right" style="text-align: center;">
+   
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href=".."> 
+                                <i class="glyphicon glyphicon-user" style="text-align: center;"></i> Rodrigo Letelier <span class="caret"></span>
 
-    <div class="container">
-        <h3>Right Aligned Navbar</h3>
-        <p>The .navbar-right class is used yo right-align navigation bar buttons.</p>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href=".."> <i class="glyphicon glyphicon-pencil" style="text-align: center;"></i>  Modificar Perfil </a></li>
+                                <li><a href=".."> <i class="glyphicon glyphicon-off" style="text-align: center;"></i>  Salir </a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 
+   
 </body>
 </html>

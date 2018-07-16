@@ -36,8 +36,20 @@ namespace AppWebERS.Controllers
         [Authorize]
         public ActionResult Detalles(FormCollection datos) {
             //Captura de datos -> debe ser coherente al nombramiento del modelo
-            var id = datos["Id del Proyecto"];
+
+            Proyecto proyecto = new Proyecto();
+            var idProyecto = datos["Id del Proyecto"];
             var nombre = datos["Nombre"];
+            var proposito = datos["Propósito"];
+            var alcance = datos["Alcance"];
+            var contexto = datos["Contexto"];
+            var definiciones = datos["Definición"];
+            var acronimos = datos["Acrónimo"];
+            var abreviaturas = datos["Abreviatura"];
+            var referencias = datos["Referencia"];
+            var ambienteOperacional = datos["Ambiente operacional"];
+            var relacionProyectos = datos["Relación proyectos"];
+            proyecto.ActualizarDatosProyecto(Int32.Parse(idProyecto), nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambienteOperacional, relacionProyectos);
             return View();
         }
 

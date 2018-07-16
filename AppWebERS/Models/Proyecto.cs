@@ -434,6 +434,14 @@ namespace AppWebERS.Models{
         }
 
 
+        public void ActualizarDatosProyecto(int idProyecto, string nombre, string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string referencias, string ambienteOperacional, string relacionProyectos)
+        {
+            string consulta = "UPDATE proyecto SET nombre='"+ nombre + "',proposito='" + proposito + "',alcance='" + alcance + "',contexto='" + contexto + "',definiciones='" + definiciones + "',acronimos='" + acronimos + "',abreviaturas='" + abreviaturas + "',referencias='" + referencias + "',ambiente_operacional='" + ambienteOperacional + "',relacion_con_otros_proyectos='" + relacionProyectos + "' WHERE id_proyecto=" + idProyecto;
+            this.conexion = ConectorBD.Instance;
+            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
+        }
+
+
         /**
          * Método para cargar datos
          **/

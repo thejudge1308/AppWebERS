@@ -6,14 +6,16 @@ using System.Web.Mvc;
 using System.Web;
 using MySql.Data.MySqlClient;
 using Microsoft.AspNet.Identity;
+using AspNet.Identity.MySQL;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace AppWebERS.Controllers
 {
     public class ProyectoController : Controller
     {
         private ConectorBD Conector = ConectorBD.Instance;
-        protected MySQLDatabase MySQLDatabase { get; set; }
-        protected UserStore<Usuario> UserManager { get; set; }
+        //protected MySQLDatabase MySQLDatabase { get; set; }
+        //protected UserStore<Usuario> UserManager { get; set; }    
 
         // GET: Proyecto
         public ActionResult Index()
@@ -199,16 +201,18 @@ namespace AppWebERS.Controllers
         [HttpPost]
         public void AgregarUsuarioAProyecto(int PosProyecto)
         {
-            this.MySQLDatabase = new MySQLDatabase();
-            this.UserManager = new UserStore<Usuario>(new UserStore<Usuario>(this.MySQLDatabase));
+            //this.MySQLDatabase = new AspNet.Identity.MySQL.MySQLDatabase();
+            //this.UserManager = new UserStore<Usuario>(new UserStore<Usuario>(this.MySQLDatabase));
             List<int> ListaProyectos = ListaProyectosIds();
             int IdProyectoAUnirse = ListaProyectos[PosProyecto];
-            Usuario UsuarioSolicitante = new Usuario();
-            Usuario UsuarioSolicitante = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<UserManager>().FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
-            string UsuarioSolicitanteId = UsuarioSolicitante.Id.ToString();
+            string UsuarioSolicitanteRut = ObtenerRutUsuarioActivo();
+            Console.WriteLine(UsuarioSolicitanteRut);
+            //Usuario UsuarioSolicitante = new Usuario();
+            //Usuario UsuarioSolicitante = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<UserStore>().FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
+            //string UsuarioSolicitanteRut = UsuarioSolicitante.Rut.ToString(); 
             //string UsuarioSolicitante = System.Web.HttpContext.Current.User.Identity.Name; // obtiene el user logueado actualmente (rut)
 
-            string Values = "'" + IdProyectoAUnirse + "','" + UsuarioSolicitanteId + "'";
+            string Values = "'" + IdProyectoAUnirse + "','" + UsuarioSolicitanteRut + "'";
             string Consulta = "INSERT INTO Solicitud_vinculacion (ref_proyecto,ref_solicitante) VALUES (" + Values + ");";
             if (this.Conector.RealizarConsultaNoQuery(Consulta))
             {
@@ -273,6 +277,24 @@ namespace AppWebERS.Controllers
                 }
                 this.Conector.CerrarConexion();
                 return ListaProyectosNombres;
+            }
+        }
+
+        /*
+         * Autor: Nicolás Hervias
+         * Obtiene el rut del usuario actual
+         * Parámetros: N/A
+         * Retorna: string (rut)
+         */
+        public string ObtenerRutUsuarioActivo()
+        {
+            using (var Db = ApplicationDbContext.Create())
+            {
+                var UserManager = new ApplicationUserManager(new UserStore<ApplicationUser>(Db));
+                string UsuarioSolicitante = base.User.Identity.GetUserId();
+                ApplicationUser User = UserManager.FindByIdAsync(UsuarioSolicitante).Result;
+                String UsuarioSolicitanteRut = User.Rut;
+                return UsuarioSolicitanteRut;
             }
         }
      }

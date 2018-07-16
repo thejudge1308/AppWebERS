@@ -6,13 +6,19 @@ using System.Web;
 using System.Web.Mvc;
 using System.Data;
 using MySql.Data.MySqlClient;
+using Microsoft.AspNet.Identity;
+using AspNet.Identity.MySQL;
 
 namespace AppWebERS.Models
 {
     public class ProyectoController : Controller
     {
         private ConectorBD Conector = ConectorBD.Instance;
+
+        
+
         List<NombreProyecto> listaProyectosNombres = new List<NombreProyecto>();
+
         // GET: Proyecto
         public ActionResult ListarProyectos()
         {
@@ -275,6 +281,71 @@ namespace AppWebERS.Models
             return View(model);
 
         }
+
+        /*
+        * Autor Juan Abello
+        * Metodo encargado de obtener los nombres de los proyectos en los que se encuentra un usuario,guardarlos en una lista y retornar esta.
+        * <param String rut>
+        * <returns> listaProyectosNombres 
+        */
+        public List<NombreProyecto> ListaDeProyectosUsuario(String rut)
+        {
+            string consulta = "SELECT proyecto.nombre FROM Proyecto, users, vinculo_usuario_proyecto " +
+                               "WHERE users.rut = " + rut + " AND vinculo_usuario_proyecto.ref_proyecto = " +
+                               "proyecto.id_proyecto AND vinculo_usuario_proyecto.ref_usuario = users.rut";
+            MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
+            if (reader == null)
+            {
+                this.Conector.CerrarConexion();
+                return null;
+            }
+            else
+            {
+                while (reader.Read())
+                {
+
+                    string Nombre = reader.GetString(0);
+                    listaProyectosNombres.Add(new NombreProyecto(Nombre));
+                }
+
+                this.Conector.CerrarConexion();
+                return listaProyectosNombres;
+            }
+        }
+
+
+        /*
+        * Autor Juan Abello
+        * Metodo encargado de obtener los nombres de los proyectos en los que se no encuentra un usuario,guardarlos en una lista y retornar esta.
+        * <param String rut>
+        * <returns> listaProyectosNombres 
+        */
+        public List<NombreProyecto> ListaDeProyectoNoAsociados(string rut)
+        {
+            string consulta = "SELECT proyecto.nombre FROM proyecto, users, vinculo_usuario_proyecto" +
+                               "WHERE users.rut = "+rut+" AND vinculo_usuario_proyecto.ref_proyecto =" +
+                                "proyecto.id_proyecto AND vinculo_usuario_proyecto.ref_usuario = users.rut";
+            MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
+            if (reader == null)
+            {
+                this.Conector.CerrarConexion();
+                return null;
+            }
+            else
+            {
+                while (reader.Read())
+                {
+
+                    string Nombre = reader.GetString(0);
+                    listaProyectosNombres.Add(new NombreProyecto(Nombre));
+                }
+
+                this.Conector.CerrarConexion();
+                return listaProyectosNombres;
+            }
+        }
+
+
     }
 }
 

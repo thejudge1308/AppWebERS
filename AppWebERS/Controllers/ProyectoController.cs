@@ -47,36 +47,20 @@ namespace AppWebERS.Models
             }
         }
 
+        /**
+        * <author>Fabian Oyarce</author>
+        * <summary>
+        * obtiene los proyectos asociados y no asociados y los une a una sola lista
+        * </summary>
+        * <returns>lista proyectos nombres </returns>
+        */
         public List<NombreProyecto> ObtenerProyectos()
         {
 
-            NombreProyecto transicion = new NombreProyecto("mitad");
-            List<NombreProyecto> ListaAsociados = ListaDeProyectosUsuario(ObtenerIdUsuarioActivo());
-            List<NombreProyecto> ListaNoAsociados = ListaDeProyectoNoAsociados(ObtenerIdUsuarioActivo());
-            List<NombreProyecto> ListaProyectosCompleta = new List<NombreProyecto>();
-
-            for(int i=0;i<ListaAsociados.Count+1;i++)
-            {
-                
-                if(ListaProyectosCompleta.Count<ListaAsociados.Count)
-                {
-                    ListaProyectosCompleta.Add(ListaAsociados[i]);
-                }
-
-                if(ListaProyectosCompleta.Count==ListaAsociados.Count)
-                {
-                    ListaProyectosCompleta.Add(transicion);
-                }
-
-                
-                Console.Write(ListaProyectosCompleta[i]);
-            }
-
-            for(int i=0;i<ListaNoAsociados.Count;i++)
-            {
-                ListaProyectosCompleta.Add(ListaNoAsociados[i]);
-            }
-            return ListaProyectosCompleta;
+            ListaDeProyectosUsuario(ObtenerIdUsuarioActivo());
+            ListaDeProyectoNoAsociados(ObtenerIdUsuarioActivo());
+            return listaProyectosNombres;
+         
         }
 
         /**
@@ -356,6 +340,7 @@ namespace AppWebERS.Models
                 }
 
                 this.Conector.CerrarConexion();
+                listaProyectosNombres.Add(new NombreProyecto("mitad"));
                 return listaProyectosNombres;
             }
         }

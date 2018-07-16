@@ -15,9 +15,13 @@
 <h2>@ViewBag.Title.</h2>
 
 
-@{int posicion=0; }
+@{int posicion = 0; }
+@foreach(var proyecto in Model)
+{
+    @proyecto.Nombre
+}
 
-@for (int i=0;i< Model.Count;i++)
+@for (int i = 0; i < Model.Count; i++)
 {
 
     if (Model.ElementAt(i).Nombre != "mitad")
@@ -37,7 +41,9 @@
     }
     else
     {
+        <h4> @posicion</h4>
         posicion = i + 1;
+        <h4> @posicion</h4>
         break;
     }
 }
@@ -46,7 +52,7 @@
 
 <h2>@ViewBag.Title2.</h2>
 
-@for(int i= posicion; i < Model.Count; i++)
+@for (int i = 2; i < Model.Count; i++)
 {
 
 
@@ -54,6 +60,7 @@
     <div class="card">
         <div class="card-header">
             @Model.ElementAt(i).Nombre
+            @posicion
         </div>
         <div class="card-body">
             <h5 class="card-title"></h5>

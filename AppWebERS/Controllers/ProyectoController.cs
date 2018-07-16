@@ -20,6 +20,14 @@ namespace AppWebERS.Models
 
         List<NombreProyecto> listaProyectosNombres = new List<NombreProyecto>();
         // GET: Proyecto
+
+        /**
+         * <author>Juan Abello</author>
+         * <summary>
+         * LLama a la lista de proyectos y la envia a la vista.
+         * </summary>
+         * <returns> la vista cshtml asociada a  </returns>
+         */
         public ActionResult ListarProyectos()
         {
             var model = ObtenerProyectos();
@@ -76,7 +84,7 @@ namespace AppWebERS.Models
          * <summary>
          * Action GET que retorna una vista para la creacion de un proyecto.
          * </summary>
-         * <returns> la vista cshtml asociada a CrearProyecto </returns>
+         * <returns> la vista cshtml asociada a NombreProyecto </returns>
          */
         [HttpGet]
         public ActionResult CrearProyecto()
@@ -361,10 +369,10 @@ namespace AppWebERS.Models
         */
         public List<NombreProyecto> ListaDeProyectoNoAsociados(int id)
         {
-            string consulta = "SELECT proyecto.nombre FROM proyecto EXCEPT SELECT proyecto.nombre " +
-                                "FROM proyecto, users, vinculo_usuario_proyecto" +
-                               "WHERE users.id = "+id+" AND vinculo_usuario_proyecto.ref_proyecto =" +
-                                "proyecto.id_proyecto AND vinculo_usuario_proyecto.ref_usuario = users.id";
+            string consulta = "SELECT Proyecto.nombre FROM Proyecto where Proyecto.nombre NOT IN" +
+                              "(SELECT Proyecto.nombre FROM Proyecto, users, vinculo_usuario_proyecto " +
+                              "WHERE users.id = 1  AND Vinculo_usuario_proyecto.ref_proyecto = Proyecto.id_proyecto AND Vinculo_usuario_proyecto.ref_usuario = users.id)";
+
             MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
             if (reader == null)
             {

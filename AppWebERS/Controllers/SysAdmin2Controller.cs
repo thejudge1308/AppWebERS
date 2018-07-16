@@ -11,12 +11,20 @@ namespace AppWebERS.Controllers
         // GET: SysAdmin2
         public ActionResult Index()
         {
+
             return View("Principal");
         }
 
         // GET: SysAdmin2
-        public ActionResult Principal()
+        public ActionResult Principal(String name)
         {
+            if (name==null) {
+                ViewBag.name = " SysAdmin - Test";
+            }
+            else
+            {
+                ViewBag.name = name;
+            }
             return View();
         }
     }

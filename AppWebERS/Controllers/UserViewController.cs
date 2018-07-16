@@ -15,8 +15,16 @@ namespace AppWebERS.Controllers
         }
 
         // GET: UserView
-        public ActionResult Principal()
+        public ActionResult Principal(String name)
         {
+            if (name == null)
+            {
+                ViewBag.name = " UserView - Test";
+            }
+            else
+            {
+                ViewBag.name = name;
+            }
             return View();
         }
     }

@@ -8,6 +8,7 @@ using System.Data;
 using MySql.Data.MySqlClient;
 using Microsoft.AspNet.Identity;
 using AspNet.Identity.MySQL;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace AppWebERS.Models
 {
@@ -18,7 +19,6 @@ namespace AppWebERS.Models
         
 
         List<NombreProyecto> listaProyectosNombres = new List<NombreProyecto>();
-
         // GET: Proyecto
         public ActionResult ListarProyectos()
         {
@@ -27,9 +27,48 @@ namespace AppWebERS.Models
 
         }
 
+        public int ObtenerIdUsuarioActivo()
+        {
+            using (var Db = ApplicationDbContext.Create())
+            {
+                var UserManager = new ApplicationUserManager(new UserStore<ApplicationUser>(Db));
+                string UsuarioSolicitante = base.User.Identity.GetUserId();
+                ApplicationUser User = UserManager.FindByIdAsync(UsuarioSolicitante).Result;
+                int IdUsuario = Int32.Parse(User.Id);
+                return IdUsuario;
+            }
+        }
+
         public List<NombreProyecto> ObtenerProyectos()
         {
-            return ListaDeProyectos();
+
+            NombreProyecto transicion = new NombreProyecto("mitad");
+            List<NombreProyecto> ListaAsociados = ListaDeProyectosUsuario(ObtenerIdUsuarioActivo());
+            List<NombreProyecto> ListaNoAsociados = ListaDeProyectoNoAsociados(ObtenerIdUsuarioActivo());
+            List<NombreProyecto> ListaProyectosCompleta = new List<NombreProyecto>();
+
+            for(int i=0;i<ListaAsociados.Count+1;i++)
+            {
+                
+                if(ListaProyectosCompleta.Count<ListaAsociados.Count)
+                {
+                    ListaProyectosCompleta.Add(ListaAsociados[i]);
+                }
+
+                if(ListaProyectosCompleta.Count==ListaAsociados.Count)
+                {
+                    ListaProyectosCompleta.Add(transicion);
+                }
+
+                
+                Console.Write(ListaProyectosCompleta[i]);
+            }
+
+            for(int i=0;i<ListaNoAsociados.Count;i++)
+            {
+                ListaProyectosCompleta.Add(ListaNoAsociados[i]);
+            }
+            return ListaProyectosCompleta;
         }
 
         /**
@@ -288,11 +327,11 @@ namespace AppWebERS.Models
         * <param String rut>
         * <returns> listaProyectosNombres 
         */
-        public List<NombreProyecto> ListaDeProyectosUsuario(String rut)
+        public List<NombreProyecto> ListaDeProyectosUsuario(int id)
         {
-            string consulta = "SELECT proyecto.nombre FROM Proyecto, users, vinculo_usuario_proyecto " +
-                               "WHERE users.rut = " + rut + " AND vinculo_usuario_proyecto.ref_proyecto = " +
-                               "proyecto.id_proyecto AND vinculo_usuario_proyecto.ref_usuario = users.rut";
+            string consulta = "SELECT proyecto.nombre FROM proyecto, users, vinculo_usuario_proyecto " +
+                               "WHERE users.id = " + id + " AND vinculo_usuario_proyecto.ref_proyecto = " +
+                               "proyecto.id_proyecto AND vinculo_usuario_proyecto.ref_usuario = users.id";
             MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
             if (reader == null)
             {
@@ -320,11 +359,12 @@ namespace AppWebERS.Models
         * <param String rut>
         * <returns> listaProyectosNombres 
         */
-        public List<NombreProyecto> ListaDeProyectoNoAsociados(string rut)
+        public List<NombreProyecto> ListaDeProyectoNoAsociados(int id)
         {
-            string consulta = "SELECT proyecto.nombre FROM proyecto, users, vinculo_usuario_proyecto" +
-                               "WHERE users.rut = "+rut+" AND vinculo_usuario_proyecto.ref_proyecto =" +
-                                "proyecto.id_proyecto AND vinculo_usuario_proyecto.ref_usuario = users.rut";
+            string consulta = "SELECT proyecto.nombre FROM proyecto EXCEPT SELECT proyecto.nombre " +
+                                "FROM proyecto, users, vinculo_usuario_proyecto" +
+                               "WHERE users.id = "+id+" AND vinculo_usuario_proyecto.ref_proyecto =" +
+                                "proyecto.id_proyecto AND vinculo_usuario_proyecto.ref_usuario = users.id";
             MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
             if (reader == null)
             {

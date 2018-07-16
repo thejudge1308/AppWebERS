@@ -1,57 +1,67 @@
 ﻿
-@model List<AppWebERS.Models.Proyecto>
+@model List<AppWebERS.Models.NombreProyecto>
 
-    @{
-        /**/
-        Layout = "~/Views/Shared/_Layout.cshtml";
-    }
+@{
+    /**/
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
-    @{
-        ViewBag.Title = "Lista de proyectos Asociados";
-        ViewBag.Title2 = "Lista de proyectos NO Asociados";
+@{
+    ViewBag.Title = "Lista de proyectos Asociados";
+    ViewBag.Title2 = "Lista de proyectos NO Asociados";
 
-    }
+}
 
-    <h2>@ViewBag.Title.</h2>
+<h2>@ViewBag.Title.</h2>
 
 
-    @foreach (var proyecto in Model)
+@{int posicion=0; }
+
+@for (int i=0;i< Model.Count;i++)
+{
+
+    if (Model.ElementAt(i).Nombre != "mitad")
     {
 
-        
-            <div class="card">
-                <div class="card-header">
-                    @proyecto.Nombre
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title"></h5>
-                    <p class="card-text"></p>
-                    <a href="#" class="btn btn-primary">Ver detalle</a>
-                </div>
+        <div class="card">
+            <div class="card-header">
+                @Model.ElementAt(i).Nombre
             </div>
-            <br><br>
-       
+            <div class="card-body">
+                <h5 class="card-title"></h5>
+                <p class="card-text"></p>
+                <a href="#" class="btn btn-primary">Ver detalle</a>
+            </div>
+        </div>
+        <br><br>
     }
-
-
-
-
-    @foreach (var proyecto in Model)
+    else
     {
-
-        
-
-            <div class="card">
-                <div class="card-header">
-                    @proyecto.Nombre
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title"></h5>
-                    <p class="card-text"></p>
-                    <a href="#" class="btn btn-primary">Unirse</a>
-                </div>
-            </div>
-            <br><br>
-        
-
+        posicion = i + 1;
+        break;
     }
+}
+
+
+
+<h2>@ViewBag.Title2.</h2>
+
+@for(int i= posicion; i < Model.Count; i++)
+{
+
+
+
+    <div class="card">
+        <div class="card-header">
+            @Model.ElementAt(i).Nombre
+        </div>
+        <div class="card-body">
+            <h5 class="card-title"></h5>
+            <p class="card-text"></p>
+            <a href="#" class="btn btn-primary">Unirse</a>
+        </div>
+    </div>
+    <br><br>
+
+
+}

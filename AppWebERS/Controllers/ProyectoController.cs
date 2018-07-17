@@ -6,6 +6,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
+using System.Security.Claims;
 
 namespace AppWebERS.Controllers
 {
@@ -15,20 +17,61 @@ namespace AppWebERS.Controllers
         private int id_proyecto;
 
         // GET: Proyecto/Detalles/5
+        [Authorize]
         public ActionResult Detalles(int id)
         {
             Proyecto proyecto = this.GetProyecto(id);
-            string UsuarioActual = System.Web.HttpContext.Current.User.Identity.Name; // pregunta el usuario actual
-            Debug.WriteLine("Usuario actual: " + UsuarioActual);
+            //string UsuarioActual = System.Web.HttpContext.Current.User.Identity.Name; // pregunta el usuario actual
+            var UsuarioActual = User.Identity.GetUserId();
+           // Debug.WriteLine("Usuario actual: " + UsuarioActual);
+           // Debug.WriteLine("Proyecto actual: " + proyecto);
+           // Debug.WriteLine("Permiso: " + TipoDePermiso());
             ViewData["proyecto"] = proyecto;
-            ViewData["permiso"] = TipoDePermiso(UsuarioActual);
+            ViewData["permiso"] = TipoDePermiso(id);
 
             return View();
         }
 
         // POST: Proyecto/Detalles/5
         [HttpPost]
+        [Authorize]
         public ActionResult Detalles(FormCollection datos) {
+            //Captura de datos -> debe ser coherente al nombramiento del modelo
+
+            Proyecto proyecto = new Proyecto();
+            var idProyecto = datos["Id del Proyecto"];
+            var nombre = datos["Nombre"];
+            var proposito = datos["Propósito"];
+            var alcance = datos["Alcance"];
+            var contexto = datos["Contexto"];
+            var definiciones = datos["Definición"];
+            var acronimos = datos["Acrónimo"];
+            var abreviaturas = datos["Abreviatura"];
+            var referencias = datos["Referencia"];
+            var ambienteOperacional = datos["Ambiente operacional"];
+            var relacionProyectos = datos["Relación proyectos"];
+            proyecto.ActualizarDatosProyecto(Int32.Parse(idProyecto), nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambienteOperacional, relacionProyectos);
+            return View();
+        }
+
+
+        // GET: Proyecto/ListaUsuarios/5
+        public ActionResult ListaUsuarios(int id) {
+            Proyecto proyecto = this.GetProyecto(id);
+
+            List<Usuario> usuarios = new Proyecto().GetListaUsuarios(id);
+
+            //Debug.WriteLine("Permiso: " + TipoDePermiso());
+            ViewData["proyecto"] = proyecto;
+            ViewData["usuarios"] = usuarios;
+            Debug.WriteLine("Lista de usuarios" + usuarios);
+            ViewData["permiso"] = TipoDePermiso(id);
+            return View();
+        }
+
+        // POST: Proyecto/ListaUsuarios/5
+        [HttpPost]
+        public ActionResult ListaUsuarios(FormCollection datos) {
 
             return View();
         }
@@ -40,41 +83,22 @@ namespace AppWebERS.Controllers
         * 
         **/
         private Proyecto GetProyecto(int id) {
-            Proyecto proyecto=null;
-            this.conexion = ConectorBD.Instance;
-            string consulta = "SELECT * FROM proyecto WHERE id_proyecto = " + id + ";";
-            MySqlDataReader data = this.conexion.RealizarConsulta(consulta);
-            if(data != null) {
-                data.Read();
-                string nombre = data["nombre"].ToString();
-                string proposito = data["proposito"].ToString();
-                string alcance = data["alcance"].ToString();
-                string contexto = data["contexto"].ToString();
-                string definiciones = data["definiciones"].ToString();
-                string acronimos = data["acronimos"].ToString();
-                string abreviaturas = data["abreviaturas"].ToString();
-                string referencias = data["referencias"].ToString();
-                string ambiente_operacional = data["ambiente_operacional"].ToString();
-                string relacion_con_otros_proyectos = data["relacion_con_otros_proyectos"].ToString();
-
-                
-                proyecto = new Proyecto(id, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambiente_operacional, relacion_con_otros_proyectos);
-                //Debug.WriteLine(proyecto.Proposito);
-                this.conexion.CerrarConexion();
-            }
-            return proyecto;
-            }
+            return new Proyecto().ObtenerProyectoPorID(id);
+        }
 
 
         /**
        * Autor: Patricio Quezada
-       * <param name = "usuario" > usuario del sistema</param>
+       * <param name = "id" > id del proyecto</param>
        * <returns>El permiso para el tipo de usuario que ve el contenido</returns>
        * 
        **/
-        private int TipoDePermiso(String usuario) {
-            //Esto estara completado una vez que este implementado el Entity Framework
-            return Proyecto.AUTH_COMO_JEFE_DE_PROYECTO;
+        private int TipoDePermiso(int id) {
+            //Obtiene id del usuario de la sesion
+            var UsuarioActual = User.Identity.GetUserId();
+            int ModoVista = new Proyecto().ObtenerRolDelUsuario(UsuarioActual.ToString(),id);
+            Debug.WriteLine(ModoVista + "jaskdjakdaksdjakdjakdj");
+            return ModoVista;
         }
         /**
          * <author>Roberto Ureta</author>

@@ -32,7 +32,7 @@ namespace AppWebERS.Controllers
             conector.RealizarConsultaNoQuery(insert);
             String delete = "DELETE FROM solicitud_vinculacion_proyecto WHERE ref_solicitante='"+idUsuario+"' AND ref_proyecto='"+idProyecto+"'";
             conector.RealizarConsultaNoQuery(delete);
-            return null;
+            return RedirectToAction("SolicitudDeProyecto","JefeProyecto");
         }
 
         /**
@@ -46,7 +46,7 @@ namespace AppWebERS.Controllers
         {
             String consulta = "DELETE FROM solicitud_vinculacion_proyecto WHERE ref_solicitante='" + idUsuario + "' AND ref_proyecto='" + idProyecto + "'";
             conector.RealizarConsultaNoQuery(consulta);
-            return null; //Lo deje asi por mientras
+            return RedirectToAction("SolicitudDeProyecto", "JefeProyecto"); //Lo deje asi por mientras
         }
 
         /*

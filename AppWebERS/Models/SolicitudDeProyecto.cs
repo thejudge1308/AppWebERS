@@ -1,14 +1,12 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Web;
+using AspNet.Identity.MySQL;
+using Microsoft.AspNet.Identity;
 
-using System.ComponentModel.DataAnnotations;
 
-namespace AppWebERS.Models{
+namespace AppWebERS.Models
+{
 
     public class SolicitudDeProyecto
     {
@@ -59,10 +57,15 @@ namespace AppWebERS.Models{
 
             List<SolicitudDeProyecto> listaSolicitudes = new List<SolicitudDeProyecto>();
 
-            string consulta = "SELECT users.userName, users.Id, proyecto.nombre, proyecto.id_proyecto " +
-                "FROM users, proyecto, solicitud_vinculacion_proyecto " +
-                "WHERE users.id = solicitud_vinculacion_proyecto.ref_solicitante AND solicitud_vinculacion_proyecto.ref_proyecto";
-            
+
+
+            string consulta = "SELECT  users.userName, users.Id, proyecto.nombre, proyecto.id_proyecto " +
+                "FROM users, proyecto, solicitud_vinculacion_proyecto,Vinculo_usuario_proyecto " +
+                "WHERE vinculo_usuario_proyecto.rol = 'JEFEPROYECTO' AND vinculo_usuario_proyecto.ref_proyecto = proyecto.id_proyecto " +
+                "AND vinculo_usuario_proyecto.ref_usuario = '" +this.jefeProyecto+ "' AND users.id = solicitud_vinculacion_proyecto.ref_solicitante " +
+                 " AND proyecto.id_proyecto = solicitud_vinculacion_proyecto.ref_proyecto";
+
+
             MySqlDataReader reader = this.conector.RealizarConsulta(consulta);
             if(reader == null){
                 this.conector.CerrarConexion();

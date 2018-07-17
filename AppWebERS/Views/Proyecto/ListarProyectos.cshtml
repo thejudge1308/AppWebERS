@@ -1,5 +1,30 @@
-﻿@{
+﻿@model List<AppWebERS.Models.NombreProyecto>
+
+@{
+    /**/
+
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@{
+    ViewBag.Title = "Lista de proyectos";
+}
 
+<h2>@ViewBag.Title.</h2>
+
+
+@foreach (var proyecto in Model)
+{
+
+    <div class="card">
+        <div class="card-header">
+            @proyecto.Nombre
+        </div>
+        <div class="card-body">
+            <h5 class="card-title"></h5>
+            <p class="card-text"></p>
+            <a href="#" class="btn btn-primary">Ver detalle</a>
+        </div>
+    </div>
+    <br><br>
+}

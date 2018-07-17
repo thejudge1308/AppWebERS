@@ -2,25 +2,65 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
 using System.Web;
+using System.Web.Mvc;
+using System.Data;
 using MySql.Data.MySqlClient;
 using Microsoft.AspNet.Identity;
 using AspNet.Identity.MySQL;
 using Microsoft.AspNet.Identity.Owin;
 
-namespace AppWebERS.Controllers
+namespace AppWebERS.Models
 {
     public class ProyectoController : Controller
     {
         private ConectorBD Conector = ConectorBD.Instance;
-        //protected MySQLDatabase MySQLDatabase { get; set; }
-        //protected UserStore<Usuario> UserManager { get; set; }    
 
+        
+
+        List<NombreProyecto> listaProyectosNombres = new List<NombreProyecto>();
         // GET: Proyecto
-        public ActionResult Index()
+
+        /**
+         * <author>Juan Abello</author>
+         * <summary>
+         * LLama a la lista de proyectos y la envia a la vista.
+         * </summary>
+         * <returns> la vista cshtml asociada a  </returns>
+         */
+        public ActionResult ListarProyectos()
         {
-            return View();
+            var model = ObtenerProyectos();
+            return View(model);
+
+        }
+
+        public int ObtenerIdUsuarioActivo()
+        {
+            using (var Db = ApplicationDbContext.Create())
+            {
+                var UserManager = new ApplicationUserManager(new UserStore<ApplicationUser>(Db));
+                string UsuarioSolicitante = base.User.Identity.GetUserId();
+                ApplicationUser User = UserManager.FindByIdAsync(UsuarioSolicitante).Result;
+                int IdUsuario = Int32.Parse(User.Id);
+                return IdUsuario;
+            }
+        }
+
+        /**
+        * <author>Fabian Oyarce</author>
+        * <summary>
+        * obtiene los proyectos asociados y no asociados y los une a una sola lista
+        * </summary>
+        * <returns>lista proyectos nombres </returns>
+        */
+        public List<NombreProyecto> ObtenerProyectos()
+        {
+
+            ListaDeProyectosUsuario(ObtenerIdUsuarioActivo());
+            ListaDeProyectoNoAsociados(ObtenerIdUsuarioActivo());
+            return listaProyectosNombres;
+         
         }
 
         /**
@@ -28,10 +68,11 @@ namespace AppWebERS.Controllers
          * <summary>
          * Action GET que retorna una vista para la creacion de un proyecto.
          * </summary>
-         * <returns> la vista cshtml asociada a CrearProyecto </returns>
+         * <returns> la vista cshtml asociada a NombreProyecto </returns>
          */
         [HttpGet]
-        public ActionResult CrearProyecto() {
+        public ActionResult CrearProyecto()
+        {
             return View();
         }
         /**
@@ -43,8 +84,10 @@ namespace AppWebERS.Controllers
          * <returns> la vista con el correspondiente mensaje de retroalimentacion. </returns>
          */
         [HttpPost]
-        public ActionResult CrearProyecto(string nombre) {
-            if (ModelState.IsValid) {
+        public ActionResult CrearProyecto(string nombre)
+        {
+            if (ModelState.IsValid)
+            {
                 Proyecto proyecto = new Proyecto();
                 proyecto.Nombre = nombre;
                 Proyecto proyectoNuevo = proyecto.CrearProyecto(0, nombre, String.Empty, String.Empty,
@@ -58,7 +101,7 @@ namespace AppWebERS.Controllers
                         ViewBag.Message = "Error al crear proyecto";
                 }
                 else
-                    ViewBag.Message = "Este nombre ya esta asociado a un proyecto";             
+                    ViewBag.Message = "Este nombre ya esta asociado a un proyecto";
             }
             else
                 ViewBag.Message = "Modelo no valido";
@@ -105,7 +148,7 @@ namespace AppWebERS.Controllers
          * <returns> la vista con los dropDownList y en caso de que alguna de las listas este vacia se retornara un mensaje de error junto con deshabilitar el boton</returns>
          */
         [HttpPost]
-        public ActionResult AsignarJefeProyecto(String DropDownListProyectos,String DropDownListUsuarios)
+        public ActionResult AsignarJefeProyecto(String DropDownListProyectos, String DropDownListUsuarios)
         {
             Proyecto proyecto = new Proyecto();
             proyecto.AsignarJefeProyecto(DropDownListUsuarios, DropDownListProyectos);
@@ -113,13 +156,13 @@ namespace AppWebERS.Controllers
             var list2 = proyecto.ObtenerUsuarios();
             ViewBag.MiListadoProyectos = list;
             ViewBag.MiListadoUsuarios = list2;
-            if (list.Count==0)
+            if (list.Count == 0)
             {
                 ViewBag.listaVacia = true;
                 ViewBag.MessageErrorProyectos = "No hay proyectos disponibles";
                 return View();
             }
-            if (list2.Count==0)
+            if (list2.Count == 0)
             {
                 ViewBag.listaVacia = true;
                 ViewBag.MessageErrorProyectos = "No hay usuarios disponibles";
@@ -158,7 +201,7 @@ namespace AppWebERS.Controllers
             }
             ViewBag.listaVacia = false;
             return View();
-            
+
         }
         /**
         * <author>Ariel Cornejo</author>
@@ -193,24 +236,18 @@ namespace AppWebERS.Controllers
             ViewBag.listaVacia = false;
             return View();
         }
+
         /*
          * Autor: Nicolás Hervias
          * Envía una solicitud para unirse al proyecto seleccionado (esta se guarda en la BD)
          * Parámetros: PosProyecto. Es la posición que tiene el proyecto en la lista de proyectos
-         */ 
+         */
         [HttpPost]
         public void AgregarUsuarioAProyecto(int PosProyecto)
         {
-            //this.MySQLDatabase = new AspNet.Identity.MySQL.MySQLDatabase();
-            //this.UserManager = new UserStore<Usuario>(new UserStore<Usuario>(this.MySQLDatabase));
             List<int> ListaProyectos = ListaProyectosIds();
             int IdProyectoAUnirse = ListaProyectos[PosProyecto];
             string UsuarioSolicitanteRut = ObtenerRutUsuarioActivo();
-            //Console.WriteLine(UsuarioSolicitanteRut);
-            //Usuario UsuarioSolicitante = new Usuario();
-            //Usuario UsuarioSolicitante = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<UserStore>().FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
-            //string UsuarioSolicitanteRut = UsuarioSolicitante.Rut.ToString(); 
-            //string UsuarioSolicitante = System.Web.HttpContext.Current.User.Identity.Name; // obtiene el user logueado actualmente (rut)
 
             string Values = "'" + IdProyectoAUnirse + "','" + UsuarioSolicitanteRut + "'";
             string Consulta = "INSERT INTO Solicitud_vinculacion (ref_proyecto,ref_solicitante) VALUES (" + Values + ");";
@@ -223,6 +260,8 @@ namespace AppWebERS.Controllers
                 this.Conector.CerrarConexion();
             }
         }
+
+       
 
         /*
          * Autor: Nicolás Hervias
@@ -251,16 +290,24 @@ namespace AppWebERS.Controllers
             }
         }
 
-        /*
-         * Autor Juan Abello
-         * Metodo encargado de obtener los nombres de los proyectos que existen ,guardarlos en una lista y retornar esta.
-         * <param void>
-         * <returns> listaProyectosNombres 
-         */
-        public List<String> ListaDeProyectos()
+        public ActionResult InterfazUsuario()
         {
-            List<string> ListaProyectosNombres = new List<string>();
-            string consulta = "SELECT nombre FROM proyecto";
+            var model = ObtenerProyectos();
+            return View(model);
+
+        }
+
+        /*
+        * Autor Juan Abello
+        * Metodo encargado de obtener los nombres de los proyectos en los que se encuentra un usuario,guardarlos en una lista y retornar esta.
+        * <param String rut>
+        * <returns> listaProyectosNombres 
+        */
+        public List<NombreProyecto> ListaDeProyectosUsuario(int id)
+        {
+            string consulta = "SELECT proyecto.nombre, proyecto.id_proyecto FROM proyecto, users, vinculo_usuario_proyecto " +
+                               "WHERE users.id = " + id + " AND vinculo_usuario_proyecto.ref_proyecto = " +
+                               "proyecto.id_proyecto AND vinculo_usuario_proyecto.ref_usuario = users.id";
             MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
             if (reader == null)
             {
@@ -271,12 +318,15 @@ namespace AppWebERS.Controllers
             {
                 while (reader.Read())
                 {
+
                     string Nombre = reader.GetString(0);
-                    ListaProyectosNombres.Add(Nombre);
-                   
+                    string Id = reader.GetString(1);
+                    listaProyectosNombres.Add(new NombreProyecto(Nombre,Id));
                 }
+
                 this.Conector.CerrarConexion();
-                return ListaProyectosNombres;
+                listaProyectosNombres.Add(new NombreProyecto("mitad","id"));
+                return listaProyectosNombres;
             }
         }
 
@@ -298,4 +348,42 @@ namespace AppWebERS.Controllers
             }
         }
      }
+
+
+        /*
+        * Autor Juan Abello
+        * Metodo encargado de obtener los nombres de los proyectos en los que se no encuentra un usuario,guardarlos en una lista y retornar esta.
+        * <param String rut>
+        * <returns> listaProyectosNombres 
+        */
+        public List<NombreProyecto> ListaDeProyectoNoAsociados(int id)
+        {
+            string consulta = "SELECT Proyecto.nombre ,proyecto.id_proyecto FROM Proyecto where Proyecto.nombre NOT IN" +
+                              "(SELECT Proyecto.nombre FROM Proyecto, users, vinculo_usuario_proyecto " +
+                              "WHERE users.id = 1  AND Vinculo_usuario_proyecto.ref_proyecto = Proyecto.id_proyecto AND Vinculo_usuario_proyecto.ref_usuario = users.id)";
+
+            MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
+            if (reader == null)
+            {
+                this.Conector.CerrarConexion();
+                return null;
+            }
+            else
+            {
+                while (reader.Read())
+                {
+
+                    string Nombre = reader.GetString(0);
+                    string Id = reader.GetString(1);
+                    listaProyectosNombres.Add(new NombreProyecto(Nombre,Id));
+                }
+
+                this.Conector.CerrarConexion();
+                return listaProyectosNombres;
+            }
+        }
+
+
+    }
 }
+

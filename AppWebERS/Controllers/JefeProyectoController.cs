@@ -12,6 +12,14 @@ namespace AppWebERS.Controllers{
             return View();
         }
 
+        public ActionResult SolicitudDeProyecto()
+        {
+            var idJefeProyecto = "Juan Perez";//NO SE COMO OBTENER EL NOMBRE DEL JEFE LOGEADO AQUI
+            var sol = new SolicitudDeProyecto(idJefeProyecto);
+            var modelo = sol.ListarTodos();
+            return View(modelo);
+        }
+
         public void ListaProyecto() {
 
         }

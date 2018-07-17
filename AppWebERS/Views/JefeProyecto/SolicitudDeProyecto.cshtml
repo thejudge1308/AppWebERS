@@ -32,8 +32,8 @@
                                 <td>@solicitud.usuario</td>
                                 <td>@solicitud.proyecto</td>
                                 <td>
-                                    <button type="button" id="btnAceptar" class="btn btn-success boton2">Aceptar</button>
-                                    <button type="button" class="btn btn-danger boton">Rechazar</button>
+                                    <button type="button" id="btnAceptar" onclick="location.href='@Url.Action("Aceptar","SolicitudDeProyecto", new {nombre = @solicitud.usuario })'" class="btn btn-success boton2">Aceptar</button>
+                                    <button type="button" onclick="location.href='@Url.Action("Rechazar","SolicitudDeProyecto", new {nombre = @solicitud.usuario })'"class="btn btn-danger boton">Rechazar</button>
                                 </td>
                             </tr>
                         }

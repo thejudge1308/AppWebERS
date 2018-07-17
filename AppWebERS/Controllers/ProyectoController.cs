@@ -9,6 +9,7 @@ using MySql.Data.MySqlClient;
 using Microsoft.AspNet.Identity;
 using AspNet.Identity.MySQL;
 using Microsoft.AspNet.Identity.Owin;
+using System.Diagnostics;
 
 namespace AppWebERS.Models
 {
@@ -35,14 +36,14 @@ namespace AppWebERS.Models
 
         }
 
-        public int ObtenerIdUsuarioActivo()
+        public string ObtenerIdUsuarioActivo()
         {
             using (var Db = ApplicationDbContext.Create())
             {
                 var UserManager = new ApplicationUserManager(new UserStore<ApplicationUser>(Db));
                 string UsuarioSolicitante = base.User.Identity.GetUserId();
                 ApplicationUser User = UserManager.FindByIdAsync(UsuarioSolicitante).Result;
-                int IdUsuario = Int32.Parse(User.Id);
+                string IdUsuario = User.Id;
                 return IdUsuario;
             }
         }
@@ -242,15 +243,19 @@ namespace AppWebERS.Models
          * Envía una solicitud para unirse al proyecto seleccionado (esta se guarda en la BD)
          * Parámetros: PosProyecto. Es la posición que tiene el proyecto en la lista de proyectos
          */
-        [HttpPost]
-        public void AgregarUsuarioAProyecto(int PosProyecto)
+        [HttpGet]
+        public void AgregarUsuarioAProyecto(string proyecto1)
         {
-            List<int> ListaProyectos = ListaProyectosIds();
-            int IdProyectoAUnirse = ListaProyectos[PosProyecto];
-            string UsuarioSolicitanteRut = ObtenerRutUsuarioActivo();
-
-            string Values = "'" + IdProyectoAUnirse + "','" + UsuarioSolicitanteRut + "'";
+            
+            //int PosProyecto = Int32.Parse(proyecto1);
+            //List<string> ListaProyectos = ListaProyectosIds();
+            //string IdProyectoAUnirse = ListaProyectos[PosProyecto];
+            string UsuarioSolicitanteRut = ObtenerIdUsuarioActivo();
+            Debug.WriteLine(proyecto1);
+            //proyecto1 = "1";
+            string Values = "'" +proyecto1 + "','" + UsuarioSolicitanteRut + "'";
             string Consulta = "INSERT INTO solicitud_vinculacion_proyecto (ref_proyecto,ref_solicitante) VALUES (" + Values + ");";
+            Debug.WriteLine(Consulta);
             if (this.Conector.RealizarConsultaNoQuery(Consulta))
             {
                 this.Conector.CerrarConexion();
@@ -269,9 +274,9 @@ namespace AppWebERS.Models
          * Parametros: N/A
          */
          [HttpGet]
-        public List<int> ListaProyectosIds()
+        public List<string> ListaProyectosIds()
         {
-            List<int> ListaProyectos = new List<int>();
+            List<String> ListaProyectos = new List<String>();
             string Consulta = "SELECT id_proyecto FROM proyecto";
             MySqlDataReader reader = this.Conector.RealizarConsulta(Consulta);
             if (reader == null)
@@ -283,7 +288,7 @@ namespace AppWebERS.Models
             {
                 while (reader.Read())
                 {
-                    int Id_proyecto = reader.GetInt16(0);
+                    string Id_proyecto = reader.ToString();
                     ListaProyectos.Add(Id_proyecto);
                 }
                 this.Conector.CerrarConexion();
@@ -304,16 +309,18 @@ namespace AppWebERS.Models
         * <param String rut>
         * <returns> listaProyectosNombres 
         */
-        public List<NombreProyecto> ListaDeProyectosUsuario(int id)
+        public List<NombreProyecto> ListaDeProyectosUsuario(string id)
         {
             string consulta = "SELECT proyecto.nombre, proyecto.id_proyecto FROM proyecto, users, vinculo_usuario_proyecto " +
-                               "WHERE users.id = " + id + " AND vinculo_usuario_proyecto.ref_proyecto = " +
+                               "WHERE users.id = '" + id + "' AND vinculo_usuario_proyecto.ref_proyecto = " +
                                "proyecto.id_proyecto AND vinculo_usuario_proyecto.ref_usuario = users.id";
             MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
             if (reader == null)
             {
                 this.Conector.CerrarConexion();
-                return null;
+                listaProyectosNombres.Add(new NombreProyecto("mitad", "id"));
+                return listaProyectosNombres;
+                //return null;
             }
             else
             {
@@ -356,11 +363,11 @@ namespace AppWebERS.Models
         * <param String rut>
         * <returns> listaProyectosNombres 
         */
-        public List<NombreProyecto> ListaDeProyectoNoAsociados(int id)
+        public List<NombreProyecto> ListaDeProyectoNoAsociados(string id)
         {
             string consulta = "SELECT Proyecto.nombre ,proyecto.id_proyecto FROM Proyecto where Proyecto.nombre NOT IN" +
                               "(SELECT Proyecto.nombre FROM Proyecto, users, vinculo_usuario_proyecto " +
-                              "WHERE users.id = 1  AND Vinculo_usuario_proyecto.ref_proyecto = Proyecto.id_proyecto AND Vinculo_usuario_proyecto.ref_usuario = users.id)";
+                              "WHERE users.id ='"+id+"'  AND Vinculo_usuario_proyecto.ref_proyecto = Proyecto.id_proyecto AND Vinculo_usuario_proyecto.ref_usuario = users.id)";
 
             MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
             if (reader == null)

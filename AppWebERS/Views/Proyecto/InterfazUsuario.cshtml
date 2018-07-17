@@ -49,7 +49,7 @@
 
 <h2>@ViewBag.Title2.</h2>
 
-@for (int i = 2; i < Model.Count; i++)
+@for (int i = posicion; i < Model.Count; i++)
 {
 
 
@@ -64,7 +64,7 @@
                 <h5 class="card-title"></h5>
                 <p class="card-text"></p>
                 <!--<a href="#" class="btn btn-primary">Unirse</a>-->
-                <input type="button" value="Unirse" onclick="location.href='@Url.Action("AgregarUsuarioAProyecto", "ProyectoController", new { PosProyecto = i })'" />
+                <a href="#" class="btn btn-primary" onclick="location.href='@Url.Action("AgregarUsuarioAProyecto", "Proyecto", new {proyecto1=Model.ElementAt(i).Id })'">Unirse</a>
             </div>
         </div>
         <br><br>

@@ -19,6 +19,8 @@ namespace AppWebERS.Controllers
     {
         List<NombreProyecto> listaProyectosNombres = new List<NombreProyecto>();
         private int id_proyecto;
+        private ConectorBD conexion;
+        private ConectorBD Conector = ConectorBD.Instance;
 
         // GET: Proyecto/Detalles/5
         public ActionResult Detalles(int id)
@@ -39,8 +41,7 @@ namespace AppWebERS.Controllers
             return View();
         }
 
-        private ConectorBD conexion;
-        private ConectorBD Conector = ConectorBD.Instance;
+        
         /**
          * <author>Juan Abello</author>
          * <summary>
@@ -317,14 +318,15 @@ namespace AppWebERS.Controllers
             //List<string> ListaProyectos = ListaProyectosIds();
             //string IdProyectoAUnirse = ListaProyectos[PosProyecto];
             string UsuarioSolicitanteRut = ObtenerIdUsuarioActivo();
-            Debug.WriteLine(proyecto1);
+           
             //proyecto1 = "1";
             string Values = "'" +proyecto1 + "','" + UsuarioSolicitanteRut + "'";
             string Consulta = "INSERT INTO solicitud_vinculacion_proyecto (ref_proyecto,ref_solicitante) VALUES (" + Values + ");";
-            Debug.WriteLine(Consulta);
+            
             if (this.Conector.RealizarConsultaNoQuery(Consulta))
             {
                 this.Conector.CerrarConexion();
+                ViewBag.Message = "Solicitud enviada";
             }
             else
             {

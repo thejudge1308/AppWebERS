@@ -326,6 +326,7 @@
     <Content Include="Views\Proyecto\ModificarJefeProyecto.cshtml" />
     <Content Include="Views\Cuenta\Register.cshtml" />
     <Content Include="Views\Proyecto\Detalles.cshtml" />
+    <Content Include="Views\Proyecto\ListaUsuarios.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

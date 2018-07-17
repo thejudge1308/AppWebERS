@@ -14,21 +14,37 @@
     var TipoUsuario = (int)ViewData["permiso"];
 }
 
-@if(ProyectoActual != null) {
+@if(ProyectoActual != null && TipoUsuario != Proyecto.NO_AUTH) {
     <h2>Detalles</h2>
-    if(TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO) {
+
     <ul class="nav nav-tabs">
         <li class="nav-item">
             <a class="nav-link active" href="@Url.Action("Detalles", "Proyecto", new { id = ProyectoActual.IdProyecto})">Detalles</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">Agregar usuario</a>
+            <a class="nav-link" href="@Url.Action("ListaUsuarios","Proyecto",new { id = ProyectoActual.IdProyecto})">Usuarios</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">Notificaciones</a>
-        </li>
+        @{
+            if(TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO || TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN) {
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Agregar usuario</a>
+                </li>
+            }
+
+            if(TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO) {
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Notificaciones</a>
+                </li>
+            }
+
+            if(TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN) {
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Cambiar jefe de proyecto</a>
+                </li>
+            }
+        }
     </ul>
-    }
+
 
 
 
@@ -43,9 +59,9 @@
 
 
                 <div class="form-group">
-                    @{@Html.LabelFor(p => p.IdProyecto, new { @class = "col-md-12 control-label"})}
+                    @{@Html.LabelFor(p => p.IdProyecto, new { @class = "col-md-12 control-label" })}
                     <div class="col-12">
-                        @{@Html.TextBoxFor(p => ProyectoActual.IdProyecto, new { @class = "form-control font-weight-bold", disabled = "disabled"})}
+                        @{@Html.TextBoxFor(p => ProyectoActual.IdProyecto, new { @class = "form-control font-weight-bold", disabled = "disabled" })}
                     </div>
                 </div>
 
@@ -211,9 +227,9 @@
                 </div>
                 @{
                     if(TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN) {
-                <div class="col-12">
-                    <button type="button" class="btn btn-primary">Atras</button>
-                </div>
+                        <div class="col-12">
+                            <button type="button" class="btn btn-primary">Atras</button>
+                        </div>
                     } else {
                         <div class="form-group">
                             <div class="col-12">
@@ -227,12 +243,20 @@
         </div>
 
     }
+} else if(TipoUsuario == Proyecto.NO_AUTH) {
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1>No tiene permisos para ver estre proyecto.</h1>
+        </div>
+    </div>
+
 } else {
-    <h1>Proyecto no encontrado</h1>
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1>Proyecto no encontrado</h1>
+        </div>
+    </div> 
 }
-
-
-
 
 
 @section Scripts {

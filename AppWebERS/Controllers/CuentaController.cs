@@ -76,7 +76,12 @@ namespace AppWebERS.Controllers
             ApplicationUser usuario = await UserManager.FindByRutAsync(model.Rut);
             if (usuario == null)
             {
-                ModelState.AddModelError("", "Rut de usuario incorrecto");
+                TempData["alerta"] = new Alerta("Rut de usuario incorrecto.", TipoAlerta.ERROR);
+                return View(model);
+            }
+            if (!usuario.Estado)
+            {
+                TempData["alerta"] = new Alerta("La cuenta se encuentra deshabilitada.", TipoAlerta.ERROR);
                 return View(model);
             }
             // No cuenta los errores de inicio de sesión para el bloqueo de la cuenta
@@ -92,7 +97,7 @@ namespace AppWebERS.Controllers
                     return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
                 case SignInStatus.Failure:
                 default:
-                    ModelState.AddModelError("", "Intento de inicio de sesión no válido.");
+                    TempData["alerta"] = new Alerta("Intento de inicio de sesion no valido.", TipoAlerta.ERROR);
                     return View(model);
             }
         }

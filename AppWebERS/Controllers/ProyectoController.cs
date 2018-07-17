@@ -206,7 +206,7 @@ namespace AppWebERS.Controllers
             List<int> ListaProyectos = ListaProyectosIds();
             int IdProyectoAUnirse = ListaProyectos[PosProyecto];
             string UsuarioSolicitanteRut = ObtenerRutUsuarioActivo();
-            Console.WriteLine(UsuarioSolicitanteRut);
+            //Console.WriteLine(UsuarioSolicitanteRut);
             //Usuario UsuarioSolicitante = new Usuario();
             //Usuario UsuarioSolicitante = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<UserStore>().FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
             //string UsuarioSolicitanteRut = UsuarioSolicitante.Rut.ToString(); 

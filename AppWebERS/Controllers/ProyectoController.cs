@@ -268,6 +268,7 @@ namespace AppWebERS.Models
          * Crea una lista de ids de todos los proyectos
          * Parametros: N/A
          */
+         [HttpGet]
         public List<int> ListaProyectosIds()
         {
             List<int> ListaProyectos = new List<int>();
@@ -347,7 +348,6 @@ namespace AppWebERS.Models
                 return UsuarioSolicitanteRut;
             }
         }
-     }
 
 
         /*

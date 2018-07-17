@@ -63,7 +63,8 @@
             <div class="card-body">
                 <h5 class="card-title"></h5>
                 <p class="card-text"></p>
-                <a href="#" class="btn btn-primary">Unirse</a>
+                <!--<a href="#" class="btn btn-primary">Unirse</a>-->
+                <input type="button" value="Unirse" onclick="location.href='@Url.Action("AgregarUsuarioAProyecto", "ProyectoController", new { PosProyecto = i })'" />
             </div>
         </div>
         <br><br>

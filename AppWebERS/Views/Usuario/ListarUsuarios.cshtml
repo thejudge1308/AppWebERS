@@ -13,7 +13,7 @@
     </div>
     @try {
         if(Model.Count != 0) { 
-    using(Html.BeginForm("EditarUsuario", "Usuario", FormMethod.Post))
+    using(Html.BeginForm())
     {
         <div class="card-body table-responsive">
             <table class="table">
@@ -43,14 +43,14 @@
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="triggerId">
                                     <a class="dropdown-item" href="#">Detalles</a>
-                                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#exampleModal" data-nombre="@usuario.Nombre" data-rut="@usuario.Rut" data-correo="@usuario.CorreoElectronico" data-tipo="@usuario.Tipo">Modificar</a>
-                                    <input type="submit" class="dropdown-item deshabilitar" href="#" value="Deshabilitar">
+                                    <a class="dropdown-item" id="btnModificar" data-toggle="modal" data-target="#exampleModal" data-nombre="@usuario.Nombre" data-rut="@usuario.Rut" data-correo="@usuario.CorreoElectronico" data-tipo="@usuario.Tipo">Modificar</a>
+                                    <input type="submit" id="btnDeshabilitar" class="dropdown-item deshabilitar" href="#" data-rut="@usuario.Rut" value="Deshabilitar">
                                 </div>
                             </div>
                             <!-- Si esta en pantalla grande-->
                             <div class="d-none d-lg-block">
-                                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal" data-nombre="@usuario.Nombre" data-rut="@usuario.Rut" data-correo="@usuario.CorreoElectronico" data-tipo="@usuario.Tipo">Modificar</button>
-                                <input type="submit" value="Deshabilitar" class="btn btn-secondary deshabilitar" />
+                                <button type="button" id="btnModificar" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal" data-nombre="@usuario.Nombre" data-rut="@usuario.Rut" data-correo="@usuario.CorreoElectronico" data-tipo="@usuario.Tipo">Modificar</button>
+                                <input type="submit" id="btnDeshabilitar" data-rut="@usuario.Rut" value="Deshabilitar" class="btn btn-secondary deshabilitar" />
                             </div>
                         </td>
                     </tr>

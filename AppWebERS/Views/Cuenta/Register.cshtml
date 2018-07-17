@@ -1,30 +1,28 @@
 ﻿@model AppWebERS.Models.RegisterViewModel
 @{
-    ViewBag.Title = "Registro de Cuenta";
+    ViewBag.Title = "Registrar cuenta de usuario";
 }
 
 <h2>@ViewBag.Title.</h2>
 
-@using (Html.BeginForm("CrearUsuario", "SysAdmin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+@using (Html.BeginForm("Register", "Cuenta", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
-    <h4>Crear una cuenta nueva</h4>
+    @Html.ValidationSummary()
+    <h4>Cree una cuenta nueva.</h4>
     <hr />
-
+    <div class="form-group">
+        @Html.LabelFor(m => m.UserName, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.UserName, new { @maxlenght = "50", @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.UserName, "", new { @style = "color:rgb(209,52,56); font-size:14px" })
+        </div>
+    </div>
     <div class="form-group">
         @Html.LabelFor(m => m.Rut, new { @class = "col-md-2 control-label" })
-
         <div class="col-md-10">
             @Html.TextBoxFor(m => m.Rut, new { placeholder = "Ej. 1234678", maxlenght = "12", @class = "form-control" })
             @Html.ValidationMessageFor(m => m.Rut, "", new { @style = "color:rgb(209,52,56); font-size:14px" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(m => m.Nombre, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Nombre, new { @maxlenght = "50", @class = "form-control" })
-            @Html.ValidationMessageFor(m => m.Nombre, "", new { @style = "color:rgb(209,52,56); font-size:14px" })
         </div>
     </div>
 
@@ -35,7 +33,6 @@
             @Html.ValidationMessageFor(m => m.Email, "", new { @style = "color:rgb(209,52,56); font-size:14px" })
         </div>
     </div>
-
     <div class="form-group">
         @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
@@ -43,7 +40,6 @@
             @Html.ValidationMessageFor(m => m.Password, "", new { @style = "color:rgb(209,52,56); font-size:14px" })
         </div>
     </div>
-
     <div class="form-group">
         @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
@@ -51,16 +47,9 @@
             @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @style = "color:rgb(209,52,56); font-size:14px" })
         </div>
     </div>
-
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <input type="submit" class="btn btn-default" value="Registrar" />
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="col-md-10">
-            <label class="label-success">@ViewBag.SuccessMessage</label>
+            <input type="submit" class="btn btn-default" value="Registrar cuenta" />
         </div>
     </div>
 }

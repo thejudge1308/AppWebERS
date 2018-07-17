@@ -9,6 +9,7 @@ namespace AppWebERS.Controllers
 {
     public class UsuarioController : Controller
     {
+
         /*
          * Juan Abello
          * Obtiene los datos de la vista del formulario para modificar la cuenta
@@ -19,26 +20,11 @@ namespace AppWebERS.Controllers
         [HttpGet]
         public ActionResult ModificarCuenta(string rutUsuario,string nombre,string correoElectronico,bool estado,string contrasenia,string tipo)
         {
+            System.Console.WriteLine("Rut Usuario: {0} - NombreUsuario: {1} - Correo Electrónico: {2} - estado {3} -  contraseña: {4} - tipo: {5}", rutUsuario, nombre, correoElectronico, estado, contrasenia, tipo);
             Usuario u = new Usuario(rutUsuario,nombre,correoElectronico,contrasenia,tipo,estado);
             u.Rut = rutUsuario;
             return View(u);
         }
-
-        /*
-         * Juan Abello
-         * llama a la funcion de modificar la cuenta de un usuario en el modelo de este
-         * usuario
-         * return RedirectToAction
-         */
-
-        [HttpPost]
-        public ActionResult ModificarCuenta(Usuario usuario)
-        {
-            usuario.Modificar();
-            return RedirectToAction("Index");
-        }
-
-
 
 
         public ActionResult Index()
@@ -83,14 +69,19 @@ namespace AppWebERS.Controllers
          */
         public ActionResult ListarUsuarios()
         {
-            List<Usuario> usuarios = new Usuario().ListarTodos();
-            return View(usuarios);
+            return View();
         }
 
-        
-        
-  
-  
-      
+
+        public ActionResult VistaUsuario()
+        {
+            return View();
+        }
+
+
+
+
+
+
     }
 }

@@ -3,7 +3,10 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 
@@ -26,7 +29,7 @@ namespace AppWebERS.Controllers{
             {
                 return View(model);
             }
-            return this.Ingresar(model.Id, model.Contrasenia);
+            return this.Ingresar(model.Rut, model.Contrasenia);
         }
 
         //private MySqlConnection Con;//solo para test
@@ -37,7 +40,9 @@ namespace AppWebERS.Controllers{
         {
             //this.Con = new MySqlConnection("Server=localhost;Port=3306;Database=appers;Uid=conexion;Password=1234");
             this.conexion = ConectorBD.Instance;
-            
+            Debug.WriteLine(this.conexion);
+
+
         }
 
 
@@ -133,8 +138,10 @@ namespace AppWebERS.Controllers{
             { 
                 reader.Read();
                 string contrasennaBD = reader["contrasenia"].ToString();
-                //Desencriptar contraseña de la BD
-                if (contrasennaBD==contrasenia)
+                //Desencriptar contraseña de la BD 
+                contrasenia = this.encriptarClave(contrasenia);
+                System.Diagnostics.Debug.WriteLine(contrasenia);
+                if(contrasennaBD.Equals(contrasenia))
                 {
                     conexion.CerrarConexion();
                     return true;
@@ -217,13 +224,28 @@ namespace AppWebERS.Controllers{
                     if (Int32.Parse(stringEstadoBD) == 1) estadoBD = true;
                     Usuario usuario = new Usuario(rutBD, nombreBD, correoBD, contraseniaBD, tipoBD, estadoBD);
                     this.conexion.CerrarConexion();
-                    return RedirectToAction("ListarUsuarios", "Usuario");
+
+                    if (!usuario.Estado)
+                    {
+                        ViewBag.Message = "Acceso denegado";
+                        return View();
+                    }
+
+                    if(usuario.Tipo == "SYSADMIN")
+                    {
+                        return RedirectToAction("ListarUsuarios", "Usuario");
+                    }
+                    else if(usuario.Tipo == "USUARIO")
+                    {
+                        return RedirectToAction("VistaUsuario", "Usuario");
+                    }
+                    return View();
 
                 }
                 else
                 {
                     this.conexion.CerrarConexion();
-                    ViewBag.Message = "Acceso denegado";
+                    ViewBag.Message = "Error de conexión con el servidor";
                     return View();
                 }
             }
@@ -244,11 +266,23 @@ namespace AppWebERS.Controllers{
         */
         public bool ComprobarEstadoUsuario(Usuario usuario)
         {
-            if (usuario.Estado.Equals( "Habilitado"))
+            if (usuario.Estado)
             {
                 return true;
             }
             return false;
         }
+
+        private string encriptarClave(string original)
+        {
+
+            using (MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider())
+            {
+                UTF8Encoding utf8 = new UTF8Encoding();
+                byte[] data = md5.ComputeHash(utf8.GetBytes(original));
+                return Convert.ToBase64String(data);
+            }
+        }
     }
+
 }

@@ -250,34 +250,7 @@ namespace AppWebERS.Models
             string UsuarioSolicitante = System.Web.HttpContext.Current.User.Identity.Name; // obtiene el user logueado actualmente (rut)
         }
 
-        /*
-         * Autor Juan Abello
-         * Metodo encargado de obtener los nombres de los proyectos que existen ,guardarlos en una lista y retornar esta.
-         * <param void>
-         * <returns> listaProyectosNombres 
-         */
-        public List<NombreProyecto> ListaDeProyectos()
-        {
-            string consulta = "SELECT nombre FROM proyecto";
-            MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
-            if (reader == null)
-            {
-                this.Conector.CerrarConexion();
-                return null;
-            }
-            else
-            {
-                while (reader.Read())
-                {
-
-                    string Nombre = reader.GetString(0);
-                    listaProyectosNombres.Add(new NombreProyecto(Nombre));
-                }
-
-                this.Conector.CerrarConexion();
-                return listaProyectosNombres;
-            }
-        }
+       
 
         /*
          * Autor: Nicolás Hervias
@@ -321,7 +294,7 @@ namespace AppWebERS.Models
         */
         public List<NombreProyecto> ListaDeProyectosUsuario(int id)
         {
-            string consulta = "SELECT proyecto.nombre FROM proyecto, users, vinculo_usuario_proyecto " +
+            string consulta = "SELECT proyecto.nombre, proyecto.id_proyecto FROM proyecto, users, vinculo_usuario_proyecto " +
                                "WHERE users.id = " + id + " AND vinculo_usuario_proyecto.ref_proyecto = " +
                                "proyecto.id_proyecto AND vinculo_usuario_proyecto.ref_usuario = users.id";
             MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
@@ -336,11 +309,12 @@ namespace AppWebERS.Models
                 {
 
                     string Nombre = reader.GetString(0);
-                    listaProyectosNombres.Add(new NombreProyecto(Nombre));
+                    string Id = reader.GetString(1);
+                    listaProyectosNombres.Add(new NombreProyecto(Nombre,Id));
                 }
 
                 this.Conector.CerrarConexion();
-                listaProyectosNombres.Add(new NombreProyecto("mitad"));
+                listaProyectosNombres.Add(new NombreProyecto("mitad","id"));
                 return listaProyectosNombres;
             }
         }
@@ -354,7 +328,7 @@ namespace AppWebERS.Models
         */
         public List<NombreProyecto> ListaDeProyectoNoAsociados(int id)
         {
-            string consulta = "SELECT Proyecto.nombre FROM Proyecto where Proyecto.nombre NOT IN" +
+            string consulta = "SELECT Proyecto.nombre ,proyecto.id_proyecto FROM Proyecto where Proyecto.nombre NOT IN" +
                               "(SELECT Proyecto.nombre FROM Proyecto, users, vinculo_usuario_proyecto " +
                               "WHERE users.id = 1  AND Vinculo_usuario_proyecto.ref_proyecto = Proyecto.id_proyecto AND Vinculo_usuario_proyecto.ref_usuario = users.id)";
 
@@ -370,7 +344,8 @@ namespace AppWebERS.Models
                 {
 
                     string Nombre = reader.GetString(0);
-                    listaProyectosNombres.Add(new NombreProyecto(Nombre));
+                    string Id = reader.GetString(1);
+                    listaProyectosNombres.Add(new NombreProyecto(Nombre,Id));
                 }
 
                 this.Conector.CerrarConexion();

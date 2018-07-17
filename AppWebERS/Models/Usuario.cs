@@ -41,13 +41,29 @@ namespace AppWebERS.Models{
             this.CorreoElectronico = correoElectronico;
             this.Contrasenia = contrasenia;
             this.Tipo = tipo;
-            this.Estado = estado;
-             
-                    
-            
+            this.Estado = estado;                                
         }
 
-       
+        /*
+         * Autor: Gerardo Estrada
+         * 
+         * Constructor de la clase usuario (Para utilizar en la lista de usuarios de un proyecto).
+         * 
+         * <param name="rut">El rut del usuario.</param>
+         * <param name="nombre">El nombre del usuario.</param>
+         * <param name="correoElectronico">El correo electrónico del usuario.</param>
+         * <param name="tipo">El tipo del usuario (administrador, jefe de proyecto y usuario normal).</param>
+         * 
+         */
+        public Usuario(string rut, string nombre, string correoElectronico, string tipo) {
+            Rut = rut;
+            Nombre = nombre;
+            CorreoElectronico = correoElectronico;
+            Tipo = tipo;
+        }
+
+
+
 
         /*
          * Setter y getter de rut del usuario.

@@ -1,0 +1,55 @@
+﻿@using AppWebERS.Models
+@model List<ApplicationUser> 
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card my-1 mx-5 h-100">
+    <div class="card-header">
+        <h4>Usuarios disponibles</h4>
+    </div>
+    @try {
+        if(Model.Count != 0) { 
+    using(Html.BeginForm())
+    {
+        <div class="card-body table-responsive">
+            <table class="table">
+                <thead class="thead-dark">
+                    <tr class="text-center">
+                        <th scope="col">Nombre de Usuario</th>
+                        <th scope="col">Rut</th>
+                        <th scope="col">Correo Electronico</th>
+                        <th scope="col">Tipo</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var usuario in Model)
+                    {
+                    <tr class="text-center">
+                        <td data-info="info">@usuario.UserName</td><!-- Reemplazar por como quiera que le pongan en el foreach a la variable. Ej: (arroba)Item.Nombre -->
+                        <td data-info="info">@usuario.Rut</td>
+                        <td data-info="info">@usuario.Email</td>
+                        <td data-info="info">@usuario.Tipo</td>
+                        <td>
+                            <div class="d-none d-lg-block">
+                                @Html.ActionLink("Modificar", "ModificarCuenta", new { rut = usuario.Rut}, new {@class = "btn btn-secondary", id = "btnModificar", type = "button"})
+                            </div>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+        }
+    }
+    catch(Exception e)
+    {
+       <!-- <h5>No existen usuarios registrados</h5>-->
+        <div class="alert alert-warning fade show w-50 mx-auto mt-3" role="alert">
+            <strong>No hay usuarios registrados!</strong> <br /> Debe registrar usuarios para poder modificar su cuenta.
+        </div>
+    }
+</div>

@@ -15,16 +15,19 @@
 
 @foreach (var proyecto in Model)
 {
+    if (proyecto.Nombre != "mitad")
+    {
+        <div class="card">
+            <div class="card-header">
+                @proyecto.Nombre
+            </div>
+            <div class="card-body">
+                <h5 class="card-title"></h5>
+                <p class="card-text"></p>
+                <a href="Proyecto/Detalles/@proyecto.Id" class="btn btn-primary">Ver detalle</a>
+            </div>
+        </div>
+        <br><br>
+    }
 
-    <div class="card">
-        <div class="card-header">
-            @proyecto.Nombre
-        </div>
-        <div class="card-body">
-            <h5 class="card-title"></h5>
-            <p class="card-text"></p>
-            <a href="Proyecto/Detalles/@proyecto.Id" class="btn btn-primary">Ver detalle</a>
-        </div>
-    </div>
-    <br><br>
 }

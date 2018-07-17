@@ -250,7 +250,7 @@ namespace AppWebERS.Models
             string UsuarioSolicitanteRut = ObtenerRutUsuarioActivo();
 
             string Values = "'" + IdProyectoAUnirse + "','" + UsuarioSolicitanteRut + "'";
-            string Consulta = "INSERT INTO Solicitud_vinculacion (ref_proyecto,ref_solicitante) VALUES (" + Values + ");";
+            string Consulta = "INSERT INTO solicitud_vinculacion_proyecto (ref_proyecto,ref_solicitante) VALUES (" + Values + ");";
             if (this.Conector.RealizarConsultaNoQuery(Consulta))
             {
                 this.Conector.CerrarConexion();

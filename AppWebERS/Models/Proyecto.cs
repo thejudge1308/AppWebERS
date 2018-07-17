@@ -36,10 +36,6 @@ namespace AppWebERS.Models{
         public const String SysAdmin_RolBD = "SYSADMIN";
         #endregion
 
-        #region Atributos
-        private ConectorBD conexion;
-        #endregion
-
         public Proyecto() {
         }
 
@@ -80,11 +76,7 @@ namespace AppWebERS.Models{
             this.CasosDeUso = new List<CasoDeUso>();
             this.Actores = new List<Actor>();
         }
-
-
-        public Proyecto() {
-
-        }
+        
 
         private ApplicationDbContext conexion = ApplicationDbContext.Create();
 
@@ -387,7 +379,6 @@ namespace AppWebERS.Models{
          */
         public Proyecto ObtenerProyectoPorID(int ID) {
             Proyecto proyecto = null;
-            this.conexion = ConectorBD.Instance;
             string consulta = "SELECT * FROM proyecto WHERE id_proyecto = " + ID + ";";
             MySqlDataReader data = this.conexion.RealizarConsulta(consulta);
             if(data != null) {
@@ -406,7 +397,7 @@ namespace AppWebERS.Models{
 
                 proyecto = new Proyecto(ID, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambiente_operacional, relacion_con_otros_proyectos);
                 //Debug.WriteLine(proyecto.Proposito);
-                this.conexion.CerrarConexion();
+                this.conexion.EnsureConnectionClosed();
             }
             return proyecto;
         }
@@ -421,7 +412,6 @@ namespace AppWebERS.Models{
          */
         public int ObtenerRolDelUsuario(String IdUsuario,int Proyecto) {
            int permiso = NO_AUTH; 
-           this.conexion = ConectorBD.Instance;
            string consulta = "SELECT Tipo From users WHERE id='" + IdUsuario + "';";
            MySqlDataReader data = this.conexion.RealizarConsulta(consulta);
            if(data != null) {
@@ -432,8 +422,7 @@ namespace AppWebERS.Models{
                 } else {
                     //this.conexion.CerrarConexion();
                     //this.conexion = ConectorBD.Instance;
-                        this.conexion.CerrarConexion();
-                        this.conexion = ConectorBD.Instance;
+                        this.conexion.EnsureConnectionClosed();
                         consulta = "SELECT vinculo_usuario_proyecto.rol FROM vinculo_usuario_proyecto WHERE vinculo_usuario_proyecto.ref_usuario = '" + IdUsuario + "' AND vinculo_usuario_proyecto.ref_proyecto = " + Proyecto + ";";
                         //Debug.WriteLine(consulta);
                         MySqlDataReader data2 = this.conexion.RealizarConsulta(consulta);
@@ -452,7 +441,7 @@ namespace AppWebERS.Models{
                             permiso = NO_AUTH;
                         }     
                 }
-                this.conexion.CerrarConexion();
+                this.conexion.EnsureConnectionClosed();
            } else {
                 permiso = NO_AUTH;
            }
@@ -465,14 +454,12 @@ namespace AppWebERS.Models{
             * <returns>La lista de usuarios involucrados en el proyecto</returns>
             **/
         public List<Usuario> GetListaUsuarios(int id) {
-            this.conexion = ConectorBD.Instance;
-
             List<Usuario> listaUsuarios = new List<Usuario>();
 
             string consulta = "SELECT users.Rut, users.UserName, users.Email, vinculo_usuario_proyecto.rol FROM vinculo_usuario_proyecto INNER JOIN users on vinculo_usuario_proyecto.ref_usuario = users.Id WHERE vinculo_usuario_proyecto.ref_proyecto= " + id +";";
             MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
             if (reader == null) {
-                this.conexion.CerrarConexion();
+                this.conexion.EnsureConnectionClosed();
                 return null;
             }
             else {
@@ -490,7 +477,7 @@ namespace AppWebERS.Models{
                     listaUsuarios.Add(new Usuario(rut, nombre, correo, tipo));
                 }
 
-                this.conexion.CerrarConexion();
+                this.conexion.EnsureConnectionClosed();
                 return listaUsuarios;
             }
 
@@ -515,8 +502,8 @@ namespace AppWebERS.Models{
         public void ActualizarDatosProyecto(int idProyecto, string nombre, string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string referencias, string ambienteOperacional, string relacionProyectos)
         {
             string consulta = "UPDATE proyecto SET nombre='"+ nombre + "',proposito='" + proposito + "',alcance='" + alcance + "',contexto='" + contexto + "',definiciones='" + definiciones + "',acronimos='" + acronimos + "',abreviaturas='" + abreviaturas + "',referencias='" + referencias + "',ambiente_operacional='" + ambienteOperacional + "',relacion_con_otros_proyectos='" + relacionProyectos + "' WHERE id_proyecto=" + idProyecto;
-            this.conexion = ConectorBD.Instance;
             MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
+            this.conexion.EnsureConnectionClosed();
         }
 
 

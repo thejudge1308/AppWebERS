@@ -14,7 +14,7 @@ namespace AppWebERS.Controllers{
             return View();
         }
 
-        public ActionResult SolicitudDeProyecto()
+        public ActionResult SolicitudDeProyecto(string id)
         {
             string s;
             using (var db = ApplicationDbContext.Create())
@@ -25,8 +25,8 @@ namespace AppWebERS.Controllers{
                 String rut = user.Rut;
 
             }
-           
-            var sol = new SolicitudDeProyecto(s);
+            string idProyecto = id;
+            var sol = new SolicitudDeProyecto(s,id);
             var modelo = sol.ListarTodos();
             return View(modelo);
         }

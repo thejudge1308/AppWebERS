@@ -6,8 +6,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Data;
 using Microsoft.AspNet.Identity;
-using System.Security.Claims;
+using AspNet.Identity.MySQL;
 using Microsoft.AspNet.Identity.Owin;
 
 namespace AppWebERS.Controllers
@@ -154,16 +155,32 @@ namespace AppWebERS.Controllers
          */
         [HttpGet]
         public ActionResult CrearProyecto() {
-            Proyecto proyecto = new Proyecto();
-            List<SelectListItem> lista = proyecto.ObtenerUsuarios();
-            ViewBag.MiListadoUsuarios = lista;
-            if (lista.Count == 0)
+            String tipo;
+            using (var db = ApplicationDbContext.Create())
             {
-                ViewBag.BoolLista = false;
+                var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
+                string s = User.Identity.GetUserId();
+                ApplicationUser user = userManager.FindByIdAsync(s).Result;
+                tipo = user.Tipo;
+
+            }
+            if (tipo == "SYSADMIN")
+            {
+                Proyecto proyecto = new Proyecto();
+                List<SelectListItem> lista = proyecto.ObtenerUsuarios();
+                ViewBag.MiListadoUsuarios = lista;
+                if (lista.Count == 0)
+                {
+                    ViewBag.BoolLista = false;
+                }
+                else
+                    ViewBag.BoolLista = true;
+                return View();
             }
             else
-                ViewBag.BoolLista = true;
-            return View();
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
         /**
          * <author>Roberto Ureta</author>
@@ -329,7 +346,7 @@ namespace AppWebERS.Controllers
          * Parámetros: PosProyecto. Es la posición que tiene el proyecto en la lista de proyectos
          */
         [HttpGet]
-        public void AgregarUsuarioAProyecto(string proyecto1)
+        public ActionResult AgregarUsuarioAProyecto(string proyecto1)
         {
             
             //int PosProyecto = Int32.Parse(proyecto1);
@@ -350,6 +367,8 @@ namespace AppWebERS.Controllers
             {
                 this.Conector.CerrarConexion();
             }
+
+            return View();
         }
 
        

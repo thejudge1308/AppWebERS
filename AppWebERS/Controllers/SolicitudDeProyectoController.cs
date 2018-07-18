@@ -28,11 +28,18 @@ namespace AppWebERS.Controllers
         * <returns> </returns>
         */
         public ActionResult Aceptar( String idUsuario, String idProyecto) {
-            String insert = "INSERT INTO vinculo_usuario_proyecto(ref_usuario, ref_proyecto, rol) VALUES('"+@idUsuario+"', '"+@idProyecto+"', 'USUARIO')";
-            conector.RealizarConsultaNoQuery(insert);
-            String delete = "DELETE FROM solicitud_vinculacion_proyecto WHERE ref_solicitante='"+idUsuario+"' AND ref_proyecto='"+idProyecto+"'";
-            conector.RealizarConsultaNoQuery(delete);
-            return RedirectToAction("SolicitudDeProyecto","JefeProyecto");
+            if (verificarExistencia(idUsuario,idProyecto))
+            {
+                String insert = "INSERT INTO vinculo_usuario_proyecto(ref_usuario, ref_proyecto, rol) VALUES('" + @idUsuario + "', '" + @idProyecto + "', 'USUARIO')";
+                conector.RealizarConsultaNoQuery(insert);
+                String delete = "DELETE FROM solicitud_vinculacion_proyecto WHERE ref_solicitante='" + idUsuario + "' AND ref_proyecto='" + idProyecto + "'";
+                conector.RealizarConsultaNoQuery(delete);
+                return RedirectToAction("SolicitudDeProyecto", "JefeProyecto");
+            }
+            else
+            {
+                return RedirectToAction("SolicitudDeProyecto", "JefeProyecto");
+            }
         }
 
         /**
@@ -44,7 +51,9 @@ namespace AppWebERS.Controllers
         */
         public ActionResult Rechazar(String idUsuario, String idProyecto)
         {
-            String consulta = "DELETE FROM solicitud_vinculacion_proyecto WHERE ref_solicitante='" + idUsuario + "' AND ref_proyecto='" + idProyecto + "'";
+            String consulta = "START TRANSACTION; " +
+                "DELETE FROM solicitud_vinculacion_proyecto WHERE ref_solicitante='" + idUsuario + "' AND ref_proyecto='" + idProyecto + "';"
+                +"COMMIT;";
             conector.RealizarConsultaNoQuery(consulta);
             return RedirectToAction("SolicitudDeProyecto", "JefeProyecto"); //Lo deje asi por mientras
         }
@@ -53,5 +62,21 @@ namespace AppWebERS.Controllers
          *NOTA: despues de cada una de las acciones hay que eliminar la solicitud 
          * 
          */
+
+        private Boolean verificarExistencia(String idUsuario, String idProyecto)
+        {
+            String consulta = "SELECT FROM vinculo_usuario_proyecto WHERE ref_solicitante = '" +idUsuario+"'AND ref_proyecto= '"+idProyecto +"';";
+
+            MySqlDataReader reader = this.conector.RealizarConsulta(consulta);
+
+            if(reader!= null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

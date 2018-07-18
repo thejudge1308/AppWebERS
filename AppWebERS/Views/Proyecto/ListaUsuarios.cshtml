@@ -53,7 +53,7 @@
                 @Html.ActionLink("Agregar usuario", "AgregarUsuario", new { id = ProyectoActual.IdProyecto }, new { @class = "btn btn-primary", id = "btnAgregarUsuario", type = "button" })
                 }
                 if (TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO) {
-                @Html.ActionLink("Ver solicitudes de ingreso", "SolicitudDeProyecto", new { id = ProyectoActual.IdProyecto }, new { @class = "btn btn-primary", id = "btnVerSolicitudes", type = "button" })
+                @Html.ActionLink("Ver solicitudes de ingreso", "SolicitudDeProyecto","JefeProyecto" ,new { id = ProyectoActual.IdProyecto }, new { @class = "btn btn-primary", id = "btnVerSolicitudes", type = "button" })
                 @Html.ActionLink("Invitar usuario", "InvitarUsuario", new { id = ProyectoActual.IdProyecto }, new { @class = "btn btn-primary", id = "btnInvitarUsuario", type = "button" })
                 }
                 }

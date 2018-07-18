@@ -24,6 +24,7 @@ namespace AppWebERS.Models{
                 return instance.Value;
             }
         }
+
         /**
          * <autor>Diego Iturriaga-Ariel Cornejo</autor>
          * <summary>

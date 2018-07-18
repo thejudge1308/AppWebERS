@@ -41,13 +41,29 @@ namespace AppWebERS.Models{
             this.CorreoElectronico = correoElectronico;
             this.Contrasenia = contrasenia;
             this.Tipo = tipo;
-            this.Estado = estado;
-             
-                    
-            
+            this.Estado = estado;                                
         }
 
-       
+        /*
+         * Autor: Gerardo Estrada
+         * 
+         * Constructor de la clase usuario (Para utilizar en la lista de usuarios de un proyecto).
+         * 
+         * <param name="rut">El rut del usuario.</param>
+         * <param name="nombre">El nombre del usuario.</param>
+         * <param name="correoElectronico">El correo electrónico del usuario.</param>
+         * <param name="tipo">El tipo del usuario (administrador, jefe de proyecto y usuario normal).</param>
+         * 
+         */
+        public Usuario(string rut, string nombre, string correoElectronico, string tipo) {
+            Rut = rut;
+            Nombre = nombre;
+            CorreoElectronico = correoElectronico;
+            Tipo = tipo;
+        }
+
+
+
 
         /*
          * Setter y getter de rut del usuario.
@@ -150,14 +166,36 @@ namespace AppWebERS.Models{
         }
 
         /**
+         * Gabriel Sanhueza
          * Método para listar un usuario específico
          * <returns>Retorna un usuario específico.</returns>
          **/
 
-       public void ListarEspecifico(Usuario usuario) {
-            
+       public Usuario ListarEspecifico(String rut) {
+            string consulta = $"SELECT * FROM usuario WHERE usuario.rut = '{rut}'";
+            MySqlDataReader reader = this.conector.RealizarConsulta(consulta);
+            if (reader == null)
+            {
+                this.conector.CerrarConexion();
+                return null;
+            }
+            else
+            {
+                while (reader.Read())
+                {
+                    Rut = reader.GetString(0);
+                    Nombre = reader.GetString(1);
+                    CorreoElectronico = reader.GetString(2);
+                    Contrasenia = reader.GetString(3);
+                    Tipo = reader.GetString(4);
+                    Estado = reader.GetBoolean(5);
+                }
+
+                this.conector.CerrarConexion();
+                return this;
+            }
         }
-        
+
 
         /**
          * Método para Crear un Usuario
@@ -189,24 +227,11 @@ namespace AppWebERS.Models{
         }
 
 
-        public bool ModificarUsuario(string rutAModificar, string nombre, string correo,
-            string contrasenia,string tipo,bool estado)
+        public void ModificarUsuario()
         {
-            string consulta = "UPDATE usuario SET nombre =" + nombre + "," + "correo_electronico =" +
-            correo + "," + "contrasenia =" + contrasenia + "," + "tipo =" + tipo + "," + "estado =" + estado +
-            "WHERE rut =" + rutAModificar;
-             MySqlDataReader reader = this.conector.RealizarConsulta(consulta);
-            if (reader.Read() )
-            {
-                this.conector.CerrarConexion();
-                return false;
-            }
-            else
-            {
-                this.conector.CerrarConexion();
-                return true;
-            }
-                
+            string consulta = $"UPDATE usuario SET nombre = '{Nombre}', correo_electronico = '{CorreoElectronico}',"+
+                $"contrasenia ='{Contrasenia}',tipo = '{Tipo}', estado = '{Estado}' WHERE rut = '{Rut}'";
+            this.conector.RealizarConsultaNoQuery(consulta);
         }
 
         /*
@@ -381,5 +406,6 @@ namespace AppWebERS.Models{
     }
 
     
+
 
 }

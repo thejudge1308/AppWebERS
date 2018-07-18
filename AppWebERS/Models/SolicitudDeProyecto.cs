@@ -14,8 +14,9 @@ namespace AppWebERS.Models
          * Constructor vacío de la clase usuario (se agrega para cualquier otro uso que se le de en un futuro).
          * 
          */
-        public SolicitudDeProyecto(String idJefe){
+        public SolicitudDeProyecto(String idJefe,String idProyecto){
             this.jefeProyecto = idJefe;
+            this.idProyecto = idProyecto;
         }
 
         //privatw conector solo para testing.
@@ -57,13 +58,11 @@ namespace AppWebERS.Models
 
             List<SolicitudDeProyecto> listaSolicitudes = new List<SolicitudDeProyecto>();
 
-
-
             string consulta = "SELECT  users.userName, users.Id, proyecto.nombre, proyecto.id_proyecto " +
                 "FROM users, proyecto, solicitud_vinculacion_proyecto,Vinculo_usuario_proyecto " +
                 "WHERE vinculo_usuario_proyecto.rol = 'JEFEPROYECTO' AND vinculo_usuario_proyecto.ref_proyecto = proyecto.id_proyecto " +
-                "AND vinculo_usuario_proyecto.ref_usuario = '" +this.jefeProyecto+ "' AND users.id = solicitud_vinculacion_proyecto.ref_solicitante " +
-                 " AND proyecto.id_proyecto = solicitud_vinculacion_proyecto.ref_proyecto";
+                "AND vinculo_usuario_proyecto.ref_usuario = '" + this.jefeProyecto + "' AND users.id = solicitud_vinculacion_proyecto.ref_solicitante " +
+                 " AND '"+ this.idProyecto + "' = solicitud_vinculacion_proyecto.ref_proyecto";
 
 
             MySqlDataReader reader = this.conector.RealizarConsulta(consulta);

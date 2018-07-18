@@ -329,6 +329,7 @@
     <Content Include="Views\Proyecto\ListarProyectos.cshtml" />
     <Content Include="Views\Proyecto\InterfazUsuario.cshtml" />
     <Content Include="Views\Proyecto\Detalles.cshtml" />
+    <Content Include="Views\Proyecto\AgregarUsuarioAProyecto.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

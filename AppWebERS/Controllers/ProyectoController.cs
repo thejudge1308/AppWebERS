@@ -61,8 +61,8 @@ namespace AppWebERS.Controllers
             string ambiente_operacional = datos[9];
             string relacion_con_otros_proyectos = datos[10];
 
-            proyecto.ActualizarDatosProyecto(id, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambiente_operacional, relacion_con_otros_proyectos);            
-            return View(id);
+            proyecto.ActualizarDatosProyecto(id, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambiente_operacional, relacion_con_otros_proyectos);
+            return RedirectToAction("Detalles/" + id);
         }
 
 

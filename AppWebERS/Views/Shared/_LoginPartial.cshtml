@@ -1,16 +1,27 @@
 ﻿@using Microsoft.AspNet.Identity
+@using AppWebERS.Models
+
 @if (Request.IsAuthenticated)
 {
+    string rutUsuario = Html.Action("RetornarRutUsuarioAutentificado", "Cuenta").ToString();
     using (Html.BeginForm("LogOff", "Cuenta", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
     {
     @Html.AntiForgeryToken()
 
-    <ul class="nav navbar-nav navbar-right">
-        <li>
-            @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
-        </li>
-        <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
-    </ul>
+<ul class="nav navbar-nav navbar-right">
+    <div class="dropdown mr-5">
+        <button class="btn btn-secondary dropdown-toggle"
+                type="button" id="dropdownMenu1" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+            @User.Identity.GetUserName()
+        </button>
+        <div class="dropdown-menu mx-auto w-100" aria-labelledby="dropdownMenu1" id="menuDropdown">
+            
+            @Html.ActionLink("Cuenta de usuario", "ModificarCuenta", "Cuenta", new {rut = rutUsuario}, htmlAttributes: new { id = "cuentaLink", @class = "dropdown-item" })
+            <a class="dropdown-item" href="javascript:document.getElementById('logoutForm').submit()">Log out</a>
+        </div>
+    </div>
+</ul>
     }
 }
 else

@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -9,7 +10,7 @@
 
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top mx-0" >
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top mx-0">
         @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -19,7 +20,15 @@
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item mr-3">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link " })</li>
                 <li class="nav-item mr-3 ">@Html.ActionLink("About", "About", "Home", new { area = "" }, new { @class = "nav-link " })</li>
-                <li class="nav-item mr-3 ">@Html.ActionLink("Usuarios", "ListarUsuarios", "Usuario", new { area = "" }, new { @class = "nav-link " })</li>
+                @if (Request.IsAuthenticated)
+                {
+                    string usuario = Html.Action("RetornarTipoUsuarioAutentificado", "Cuenta").ToString();
+                    if (usuario.Equals("SYSADMIN"))
+                    {
+                        <li class="nav-item mr-3 ">@Html.ActionLink("Usuarios", "ListarUsuarios", "Cuenta", new { area = "" }, new { @class = "nav-link " })</li>
+                    }
+                }
+
             </ul>
             @Html.Partial("_LoginPartial")
         </div>
@@ -32,9 +41,12 @@
         </footer>
     </div>
 
+    <!--Incluye la alerta en la ventana solo si hay un TempData[alert] pendiente-->
+    @Html.Partial("_AlertaPartial")
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/popper")
     @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("/Scripts/alertaPartialScript.js")
     @RenderSection("scripts", required: false)
 </body>
 </html>

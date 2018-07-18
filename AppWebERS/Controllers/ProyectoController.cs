@@ -7,11 +7,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Data;
-using MySql.Data.MySqlClient;
 using Microsoft.AspNet.Identity;
 using AspNet.Identity.MySQL;
 using Microsoft.AspNet.Identity.Owin;
-using System.Diagnostics;
 
 namespace AppWebERS.Controllers
 {

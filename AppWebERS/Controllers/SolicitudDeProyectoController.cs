@@ -62,6 +62,9 @@ namespace AppWebERS.Controllers
          *NOTA: despues de cada una de las acciones hay que eliminar la solicitud 
          * 
          */
+        public ActionResult Volver() {
+            return RedirectToAction("Detalles", "Proyecto", new { id = 2 });
+        }
 
         private Boolean verificarExistencia(String idUsuario, String idProyecto)
         {

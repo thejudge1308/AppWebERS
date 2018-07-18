@@ -25,10 +25,12 @@ namespace AppWebERS.Controllers{
                 String rut = user.Rut;
 
             }
+            
             string idProyecto = id;
-            var sol = new SolicitudDeProyecto(s,id);
-            var modelo = sol.ListarTodos();
-            return View(modelo);
+            SolicitudDeProyecto sol = new SolicitudDeProyecto(s,id);
+            sol.ListarTodos();
+            
+            return View("SolicitudDeProyecto",sol);
         }
 
         public void ListaProyecto() {

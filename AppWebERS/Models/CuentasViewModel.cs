@@ -66,6 +66,43 @@ namespace AppWebERS.Models
         public string UserName { get; set; }
     }
 
+
+    public class ModificarViewModel
+    {
+
+        [RegularExpression("([ ]?[a-zA-Z])*", ErrorMessage = "Nombre no válido.")]
+        [StringLength(50, ErrorMessage = "El largo del nombre deber ser entre 1 a 50 caracteres.", MinimumLength = 1)]
+        [Display(Name = "Nombre")]
+        public string Nombre { get; set; }
+
+        [EmailAddress]
+        [Display(Name = "Email")]
+        public string Email { get; set; }
+
+        [StringLength(16, ErrorMessage = "La contraseña debe tener de 3 a 16 caracteres.", MinimumLength = 3)]
+        [DataType(DataType.Password)]
+        [Display(Name = "Contraseña")]
+        public string Password { get; set; }
+
+        public bool Estado { get; set; }
+
+        public string Rut { get; set;}
+        public string AntiguoNombre {get; set;}
+        public string AntiguoEmail { get; set; }
+        public bool AntiguoEstado { get; set; }
+
+        public ModificarViewModel() {
+        }
+
+        public ModificarViewModel(ApplicationUser usuario) : this()
+        {
+            this.Rut = usuario.Rut;
+            this.AntiguoNombre = usuario.UserName;
+            this.AntiguoEmail = usuario.Email;
+            this.AntiguoEstado = usuario.Estado;
+        }
+    }
+
     public class ResetPasswordViewModel
     {
         [Required]

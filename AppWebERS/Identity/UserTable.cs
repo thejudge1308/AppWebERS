@@ -117,9 +117,39 @@ namespace AspNet.Identity.MySQL
             return users;
         }
 
-        public List<TUser> GetUserByEmail(string email)
+        /*
+         * Creador: Maximo Hernandez
+         * Accion: Recupera el usuario por el email
+         * Retorno: El usuario
+         */
+        public TUser GetUserByEmail(string email)
         {
-            return null;
+            TUser user = null;
+            string commandText = "Select * from Users where Email = @Email";
+            Dictionary<string, object> parameters = new Dictionary<string, object>() { { "@Email", email } };
+
+            var rows = _database.Query(commandText, parameters);
+            if (rows != null && rows.Count == 1)
+            {
+                var row = rows[0];
+                user = (TUser)Activator.CreateInstance(typeof(TUser));
+                user.Id = row["Id"];
+                user.UserName = row["UserName"];
+                user.PasswordHash = string.IsNullOrEmpty(row["PasswordHash"]) ? null : row["PasswordHash"];
+                user.SecurityStamp = string.IsNullOrEmpty(row["SecurityStamp"]) ? null : row["SecurityStamp"];
+                user.Email = string.IsNullOrEmpty(row["Email"]) ? null : row["Email"];
+                user.EmailConfirmed = row["EmailConfirmed"] == "1" ? true : false;
+                user.PhoneNumber = string.IsNullOrEmpty(row["PhoneNumber"]) ? null : row["PhoneNumber"];
+                user.PhoneNumberConfirmed = row["PhoneNumberConfirmed"] == "1" ? true : false;
+                user.LockoutEnabled = row["LockoutEnabled"] == "1" ? true : false;
+                user.LockoutEndDateUtc = string.IsNullOrEmpty(row["LockoutEndDateUtc"]) ? DateTime.Now : DateTime.Parse(row["LockoutEndDateUtc"]);
+                user.AccessFailedCount = string.IsNullOrEmpty(row["AccessFailedCount"]) ? 0 : int.Parse(row["AccessFailedCount"]);
+                user.Rut = row["Rut"];
+                user.Tipo = row["Tipo"];
+                user.Estado = row["Estado"] == "1" ? true : false;
+            }
+
+            return user;
         }
 
         /// <summary>

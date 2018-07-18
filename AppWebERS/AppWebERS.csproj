@@ -188,6 +188,8 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ProyectoController.cs" />
     <Compile Include="Controllers\RequisitoController.cs" />
+    <Compile Include="Controllers\UserViewController.cs" />
+    <Compile Include="Controllers\SysAdmin2Controller.cs" />
     <Compile Include="Controllers\SysAdminController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
     <Compile Include="Global.asax.cs">
@@ -332,6 +334,8 @@
     <Content Include="Views\Proyecto\Detalles.cshtml" />
     <Content Include="Views\Proyecto\ListaUsuarios.cshtml" />
     <Content Include="Views\Proyecto\AgregarUsuarioAProyecto.cshtml" />
+    <Content Include="Views\SysAdmin2\Principal.cshtml" />
+    <Content Include="Views\UserView\Principal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

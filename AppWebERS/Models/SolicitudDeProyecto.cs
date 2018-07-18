@@ -60,9 +60,11 @@ namespace AppWebERS.Models
 
             string consulta = "SELECT  users.userName, users.Id, proyecto.nombre, proyecto.id_proyecto " +
                 "FROM users, proyecto, solicitud_vinculacion_proyecto,Vinculo_usuario_proyecto " +
-                "WHERE vinculo_usuario_proyecto.rol = 'JEFEPROYECTO' AND vinculo_usuario_proyecto.ref_proyecto = proyecto.id_proyecto " +
+                "WHERE proyecto.id_proyecto = " + this.idProyecto +
+                " AND vinculo_usuario_proyecto.rol = 'JEFEPROYECTO' AND vinculo_usuario_proyecto.ref_proyecto = proyecto.id_proyecto " +
                 "AND vinculo_usuario_proyecto.ref_usuario = '" + this.jefeProyecto + "' AND users.id = solicitud_vinculacion_proyecto.ref_solicitante " +
-                 " AND '"+ this.idProyecto + "' = solicitud_vinculacion_proyecto.ref_proyecto";
+                 " AND proyecto.id_proyecto = solicitud_vinculacion_proyecto.ref_proyecto";
+
 
 
             MySqlDataReader reader = this.conector.RealizarConsulta(consulta);

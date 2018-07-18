@@ -213,6 +213,7 @@ namespace AppWebERS.Controllers
                         if (proyecto.AsignarJefeProyecto(usuario, nombre))
                         {
                             ViewBag.Message1 = "Exito al crear Proyecto";
+                            return RedirectToAction("ListarProyectos", "Proyecto");
                         }
                         else {
                             ViewBag.Message1 = "";

@@ -1,0 +1,112 @@
+﻿@*
+    Vista creada por Gerardo Estrada
+*@
+
+@using AppWebERS.Models;
+@model Usuario
+@{
+    ViewBag.Title = "Lista de Usuarios";
+}
+
+@{
+    var ProyectoActual = (Proyecto)ViewData["proyecto"];
+    var TipoUsuario = (int)ViewData["permiso"];
+    var usuarios = (List<Usuario>)ViewData["usuarios"];
+}
+
+@if (ProyectoActual != null) {
+    <h2>Lista de usuarios.</h2>
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("Detalles", "Proyecto", new { id = ProyectoActual.IdProyecto})">Detalles</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" href="@Url.Action("ListaUsuarios","Proyecto",new { id = ProyectoActual.IdProyecto})">Usuarios</a>
+        </li>
+        @{
+            <!--
+            if(TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO || TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN) {
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Agregar usuario</a>
+                </li>
+            }
+
+            if(TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO) {
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Notificaciones</a>
+                </li>
+            }
+
+            if(TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN) {
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Cambiar jefe de proyecto</a>
+                </li>
+            }
+            -->
+        }
+    </ul>
+    <div class="form-group">
+            <div class="col-12">
+                @{ 
+                if (TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN) {
+                @Html.ActionLink("Modificar Jefe de Proyecto", "ModificarJefeProyecto", new { id = ProyectoActual.IdProyecto }, new { @class = "btn btn-primary", id = "btnModificarJP", type = "button" })
+                @Html.ActionLink("Agregar usuario", "AgregarUsuario", new { id = ProyectoActual.IdProyecto }, new { @class = "btn btn-primary", id = "btnAgregarUsuario", type = "button" })
+                }
+                if (TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO) {
+                @Html.ActionLink("Ver solicitudes de ingreso", "SolicitudDeProyecto","JefeProyecto" ,new { id = ProyectoActual.IdProyecto }, new { @class = "btn btn-primary", id = "btnVerSolicitudes", type = "button" })
+                @Html.ActionLink("Invitar usuario", "InvitarUsuario", new { id = ProyectoActual.IdProyecto }, new { @class = "btn btn-primary", id = "btnInvitarUsuario", type = "button" })
+                }
+                }
+            </div>
+    </div>
+            if (usuarios != null) {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Numero</th>
+                            <th scope="col">Rut</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Correo Electronico</th>
+                            <th scope="col">Tipo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            var auxiliar = 1;
+                            if (usuarios.Count != 0) {
+                                foreach (Usuario item in (List<Usuario>)usuarios) {
+                                    <tr>
+                                        <th scope="row">@auxiliar</th>
+                                        <td>@item.Rut</td>
+                                        <td>@item.Nombre</td>
+                                        <td>@item.CorreoElectronico</td>
+                                        <td>@item.Tipo</td>
+                                    </tr>
+                                    ++auxiliar;
+                                }
+                            }
+                            else {
+
+                            }
+
+                        }
+
+                    </tbody>
+
+                </table>
+                            }
+                            else {
+                                <div class="jumbotron jumbotron-fluid">
+                                    <div class="container">
+                                        <h1>No hay usuarios en el proyecto</h1>
+                                    </div>
+                                </div>
+                                }
+                            }
+                            else {
+                                <div class="jumbotron jumbotron-fluid">
+                                    <div class="container">
+                                        <h1>Proyecto no encontrado</h1>
+                                    </div>
+                                </div>
+                            }

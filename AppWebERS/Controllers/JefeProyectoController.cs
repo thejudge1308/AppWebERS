@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using AspNet.Identity.MySQL;
+using Microsoft.AspNet.Identity;
 
 namespace AppWebERS.Controllers{
     public class JefeProyectoController : Controller{
@@ -14,8 +16,17 @@ namespace AppWebERS.Controllers{
 
         public ActionResult SolicitudDeProyecto()
         {
-            var idJefeProyecto = "Juan Perez";//NO SE COMO OBTENER EL NOMBRE DEL JEFE LOGEADO AQUI
-            var sol = new SolicitudDeProyecto(idJefeProyecto);
+            string s;
+            using (var db = ApplicationDbContext.Create())
+            {
+                var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
+                s = User.Identity.GetUserId();
+                ApplicationUser user = userManager.FindByIdAsync(s).Result;
+                String rut = user.Rut;
+
+            }
+           
+            var sol = new SolicitudDeProyecto(s);
             var modelo = sol.ListarTodos();
             return View(modelo);
         }

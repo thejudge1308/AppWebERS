@@ -311,7 +311,7 @@ namespace AppWebERS.Controllers
          * Parámetros: PosProyecto. Es la posición que tiene el proyecto en la lista de proyectos
          */
         [HttpGet]
-        public void AgregarUsuarioAProyecto(string proyecto1)
+        public ActionResult AgregarUsuarioAProyecto(string proyecto1)
         {
             
             //int PosProyecto = Int32.Parse(proyecto1);
@@ -332,6 +332,8 @@ namespace AppWebERS.Controllers
             {
                 this.Conector.CerrarConexion();
             }
+
+            return View();
         }
 
        

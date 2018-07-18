@@ -1,0 +1,38 @@
+﻿@model List<AppWebERS.Models.NombreProyecto>
+
+@{
+    /**/
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    ViewBag.Title = "Lista de proyectos";
+}
+
+<h2>@ViewBag.Title.</h2>
+<div>
+	@Html.ActionLink("Crear Proyecto", "CrearProyecto", new {},new { @class = "btn btn-primary", id = "btnModificar", type = "button" })
+</div>
+
+@foreach (var proyecto in Model)
+{
+    if (proyecto.Nombre != "mitad")
+    {
+		
+        <div class="card">
+            <div class="card-header">
+                @proyecto.Nombre
+            </div>
+            <div class="card-body">
+                <h5 class="card-title"></h5>
+                <p class="card-text"></p>
+                <a href="Detalles/@proyecto.Id" class="btn btn-primary">Ver detalle</a>
+            </div>
+			
+        </div>
+		
+        <br><br>
+    }
+
+}

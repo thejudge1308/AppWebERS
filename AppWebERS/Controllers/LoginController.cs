@@ -3,6 +3,7 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -28,7 +29,7 @@ namespace AppWebERS.Controllers{
             {
                 return View(model);
             }
-            return this.Ingresar(model.Id, model.Contrasenia);
+            return this.Ingresar(model.Rut, model.Contrasenia);
         }
 
         //private MySqlConnection Con;//solo para test
@@ -39,7 +40,9 @@ namespace AppWebERS.Controllers{
         {
             //this.Con = new MySqlConnection("Server=localhost;Port=3306;Database=appers;Uid=conexion;Password=1234");
             this.conexion = ConectorBD.Instance;
-            
+            Debug.WriteLine(this.conexion);
+
+
         }
 
 
@@ -137,7 +140,8 @@ namespace AppWebERS.Controllers{
                 string contrasennaBD = reader["contrasenia"].ToString();
                 //Desencriptar contraseña de la BD 
                 contrasenia = this.encriptarClave(contrasenia);
-                if (contrasennaBD.Equals(contrasenia))
+                System.Diagnostics.Debug.WriteLine(contrasenia);
+                if(contrasennaBD.Equals(contrasenia))
                 {
                     conexion.CerrarConexion();
                     return true;
@@ -229,11 +233,11 @@ namespace AppWebERS.Controllers{
 
                     if(usuario.Tipo == "SYSADMIN")
                     {
-                        return RedirectToAction("ListarUsuarios", "Usuario");
+                        return RedirectToAction("Principal", "SysAdmin2", new { name = nombreBD });
                     }
                     else if(usuario.Tipo == "USUARIO")
                     {
-                        return RedirectToAction("VistaUsuario", "Usuario");
+                        return RedirectToAction("Principal", "UserView", new { name = nombreBD });
                     }
                     return View();
 
@@ -268,6 +272,7 @@ namespace AppWebERS.Controllers{
             }
             return false;
         }
+
         private string encriptarClave(string original)
         {
 

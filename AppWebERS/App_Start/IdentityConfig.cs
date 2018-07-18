@@ -6,7 +6,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
+using AspNet.Identity.MySQL;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
@@ -42,7 +42,7 @@ namespace AppWebERS
 
         public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context) 
         {
-            var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<ApplicationDbContext>()));
+            var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<ApplicationDbContext>() as MySQLDatabase));
             // Configure validation logic for usernames
             manager.UserValidator = new UserValidator<ApplicationUser>(manager)
             {
@@ -53,11 +53,11 @@ namespace AppWebERS
             // Configure validation logic for passwords
             manager.PasswordValidator = new PasswordValidator
             {
-                RequiredLength = 6,
-                RequireNonLetterOrDigit = true,
-                RequireDigit = true,
-                RequireLowercase = true,
-                RequireUppercase = true,
+                RequiredLength = 0,
+                RequireNonLetterOrDigit = false,
+                RequireDigit = false,
+                RequireLowercase = false,
+                RequireUppercase = false,
             };
 
             // Configure user lockout defaults
@@ -85,6 +85,183 @@ namespace AppWebERS
                     new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
             }
             return manager;
+        }
+
+        /*
+        * Creador: Gabriel Sanhueza
+        * Accion: Busca un usuario por rut
+        * Retorno: Una operacion asincrona (Parecida a las promesas de js)
+        */
+        public Task<ApplicationUser> FindByRutAsync(string rut)
+        {
+            using (var db = ApplicationDbContext.Create())
+            {
+                return new UserStore<ApplicationUser>(db).FindByRutAsync(rut);
+            }
+        }
+
+        /*
+        * Creador: Gabriel Sanhueza
+        * Accion: Busca un usuario por rut
+        * Retorno: Una operacion asincrona (Parecida a las promesas de js)
+        */
+        public Task<ApplicationUser> FindByEmailAsync(string email)
+        {
+            using (var db = ApplicationDbContext.Create())
+            {
+                return new UserStore<ApplicationUser>(db).FindByEmailAsync(email);
+            }
+        }
+
+        /*
+         * Creador: Gabriel Sanhueza
+         * Accion: Obtiene todos los usuarios
+         * Retorno: Una operacion asincrona (Parecida a las promesas de js)
+         */
+        public Task<List<ApplicationUser>> GetAllUsersAsync()
+        {
+            using (var db = ApplicationDbContext.Create())
+            {
+                return new UserStore<ApplicationUser>(db).GetAllUsersAsync();
+            }
+        }
+
+        /*
+        * Creador: Gabriel Sanhueza
+        * Accion: Busca un usuario por rut
+        * Retorno: Una operacion asincrona (Parecida a las promesas de js)
+        */
+        public async Task<bool> IsEstadoEnabledAsync(string userId)
+        {
+            using (var db = ApplicationDbContext.Create())
+            {
+                var store = new UserStore<ApplicationUser>(db);
+                var usuarioTask = store.FindByIdAsync(userId);
+                ApplicationUser usuario = await usuarioTask;
+                bool result = await store.GetEstadoAsync(usuario);
+                return result;
+            }
+        }
+
+        /*
+        * Creador: Gabriel Sanhueza
+        * Accion: Busca un usuario por rut
+        * Retorno: Una operacion asincrona (Parecida a las promesas de js) usar await para esperar que el resultado de la operacion este listo
+        */
+        public async Task setEstadoAsync(string userId, bool isEnabled)
+        {
+            using (var db = ApplicationDbContext.Create())
+            {
+                var store = new UserStore<ApplicationUser>(db);
+                var usuarioTask = store.FindByIdAsync(userId);
+                ApplicationUser usuario = await usuarioTask;
+                await store.SetEstadoAsync(usuario, isEnabled);
+                store.UpdateAsync(usuario);
+            }
+        }
+
+        /*
+         * Creador: Gabriel Sanhueza
+         * Accion: Busca un usuario por rut
+         * Retorno: Una operacion asincrona (Parecida a las promesas de js) usar await para esperar que el resultado de la operacion este listo
+         */
+        public async Task<string> getTipoAsync(string userId)
+        {
+            using (var db = ApplicationDbContext.Create())
+            {
+                var store = new UserStore<ApplicationUser>(db);
+                var usuarioTask = store.FindByIdAsync(userId);
+                ApplicationUser usuario = await usuarioTask;
+                return await store.GetTipoAsync(usuario);
+            }
+        }
+
+        public async Task<string> getRutAsync(string userId)
+        {
+            using (var db = ApplicationDbContext.Create())
+            {
+                var store = new UserStore<ApplicationUser>(db);
+                var usuarioTask = store.FindByIdAsync(userId);
+                ApplicationUser usuario = await usuarioTask;
+                return await store.GetRutAsync(usuario);
+            }
+        }
+
+        public async Task ChangePasswordAsync(string userId, string newPassword)
+        {
+            var store = this.Store as IUserPasswordStore<ApplicationUser>;
+            var usuario = await store.FindByIdAsync(userId);
+            var newPasswordHash = this.PasswordHasher.HashPassword(newPassword);
+            await store.SetPasswordHashAsync(usuario, newPasswordHash);
+            Task.FromResult<Object>(null);
+        }
+
+        /*
+         * Creador: Maximo Hernandez
+         * Accion: Verifica si UserName se encuentran en la base de datos
+         * Retorno: Boolean - Verdadero si UserName ya existe en la base de datos. Verdadero en caso contrario.
+         */
+        public async Task<bool> VerificarSiExisteNombre(string UserName)
+        {
+            if (!String.IsNullOrEmpty(UserName))
+            {
+                ApplicationUser usuario = await FindByNameAsync(UserName);
+                if (usuario == null)
+                    return false;
+                return true;
+            }
+            return false;
+        }
+
+        /*
+         * Creador: Maximo Hernandez
+         * Accion: Verifica si UserEmail se encuentran en la base de datos
+         * Retorno: Boolean - Verdadero si UserEmail ya existe en la base de datos. Falso en caso contrario.
+         */
+        public async Task<bool> VerificarSiExisteEmail(string UserEmail)
+        {
+            if (!String.IsNullOrEmpty(UserEmail))
+            {
+                ApplicationUser usuario = await FindByEmailAsync(UserEmail);
+                if (usuario == null)
+                    return false;
+                return true;
+            }
+            return false;
+        }
+
+
+
+        /*
+         * Creador: Maximo Hernandez
+         * Accion: Verifica si UserRut se encuentran en la base de datos
+         * Retorno: Boolean - Verdadero si UserRut ya existe en la base de datos. Falso en caso contrario.
+         */
+        public async Task<bool> VerificarSiExisteRut(string UserRut)
+        {
+            if (!String.IsNullOrEmpty(UserRut))
+            {
+                ApplicationUser usuario = await FindByRutAsync(UserRut);
+                if (usuario == null)
+                    return false;
+                return true;
+            }
+            return false;
+        }
+
+        /*
+        * Creador: Gabriel Sanhueza
+        * Accion: Verifica si la contraseña no es la misma que la que ya esta
+        * Retorno: Boolean - Verdadero si es la misma. Falso en caso contrario
+        */
+        public async Task<bool> VerificarSiExisteContrasenia(string UserRut, string password)
+        {
+            if (!String.IsNullOrEmpty(UserRut) && !String.IsNullOrEmpty(password))
+            {
+                ApplicationUser usuario = await FindByRutAsync(UserRut);
+                return PasswordHasher.VerifyHashedPassword(usuario.PasswordHash, password) == PasswordVerificationResult.Success;
+            }
+            return false;
         }
     }
 

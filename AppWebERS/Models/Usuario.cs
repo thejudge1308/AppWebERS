@@ -41,13 +41,29 @@ namespace AppWebERS.Models{
             this.CorreoElectronico = correoElectronico;
             this.Contrasenia = contrasenia;
             this.Tipo = tipo;
-            this.Estado = estado;
-             
-                    
-            
+            this.Estado = estado;                                
         }
 
-       
+        /*
+         * Autor: Gerardo Estrada
+         * 
+         * Constructor de la clase usuario (Para utilizar en la lista de usuarios de un proyecto).
+         * 
+         * <param name="rut">El rut del usuario.</param>
+         * <param name="nombre">El nombre del usuario.</param>
+         * <param name="correoElectronico">El correo electrónico del usuario.</param>
+         * <param name="tipo">El tipo del usuario (administrador, jefe de proyecto y usuario normal).</param>
+         * 
+         */
+        public Usuario(string rut, string nombre, string correoElectronico, string tipo) {
+            Rut = rut;
+            Nombre = nombre;
+            CorreoElectronico = correoElectronico;
+            Tipo = tipo;
+        }
+
+
+
 
         /*
          * Setter y getter de rut del usuario.
@@ -150,14 +166,36 @@ namespace AppWebERS.Models{
         }
 
         /**
+         * Gabriel Sanhueza
          * Método para listar un usuario específico
          * <returns>Retorna un usuario específico.</returns>
          **/
 
-       public void ListarEspecifico(Usuario usuario) {
-            
+       public Usuario ListarEspecifico(String rut) {
+            string consulta = $"SELECT * FROM usuario WHERE usuario.rut = '{rut}'";
+            MySqlDataReader reader = this.conector.RealizarConsulta(consulta);
+            if (reader == null)
+            {
+                this.conector.CerrarConexion();
+                return null;
+            }
+            else
+            {
+                while (reader.Read())
+                {
+                    Rut = reader.GetString(0);
+                    Nombre = reader.GetString(1);
+                    CorreoElectronico = reader.GetString(2);
+                    Contrasenia = reader.GetString(3);
+                    Tipo = reader.GetString(4);
+                    Estado = reader.GetBoolean(5);
+                }
+
+                this.conector.CerrarConexion();
+                return this;
+            }
         }
-        
+
 
         /**
          * Método para Crear un Usuario
@@ -189,24 +227,11 @@ namespace AppWebERS.Models{
         }
 
 
-        public bool ModificarUsuario(string rutAModificar, string nombre, string correo,
-            string contrasenia,string tipo,bool estado)
+        public void ModificarUsuario()
         {
-            string consulta = "UPDATE usuario SET nombre =" + nombre + "," + "correo_electronico =" +
-            correo + "," + "contrasenia =" + contrasenia + "," + "tipo =" + tipo + "," + "estado =" + estado +
-            "WHERE rut =" + rutAModificar;
-             MySqlDataReader reader = this.conector.RealizarConsulta(consulta);
-            if (reader.Read() )
-            {
-                this.conector.CerrarConexion();
-                return false;
-            }
-            else
-            {
-                this.conector.CerrarConexion();
-                return true;
-            }
-                
+            string consulta = $"UPDATE usuario SET nombre = '{Nombre}', correo_electronico = '{CorreoElectronico}',"+
+                $"contrasenia ='{Contrasenia}',tipo = '{Tipo}', estado = '{Estado}' WHERE rut = '{Rut}'";
+            this.conector.RealizarConsultaNoQuery(consulta);
         }
 
         /*
@@ -380,37 +405,7 @@ namespace AppWebERS.Models{
         }
     }
 
-    public class RegisterViewModel
-    {
-        [Required(ErrorMessage = "El campo Rut es obligatorio.")]
-        [RegularExpression("[0-9]*", ErrorMessage = "Rut no válido.")]
-        [StringLength(8, ErrorMessage = "El rut debe tener entre 7 a 8 caracteres (sin guión ni digito verif.)", MinimumLength = 7)]
-        [Display(Name = "Rut")]
-        public string Rut { get; set; }
-
-        [Required(ErrorMessage = "El campo Nombre es obligatorio.")]
-        [RegularExpression("([ ]?[a-zA-Z])*", ErrorMessage = "Nombre no válido.")]
-        [StringLength(50, ErrorMessage = "El largo del nombre deber ser entre 1 a 50 caracteres.", MinimumLength = 1)]
-        [Display(Name = "Nombre")]
-        public string Nombre { get; set; }
-
-        [Required(ErrorMessage = "El campo Email es obligatorio.")]
-        [EmailAddress]
-        [Display(Name = "Email")]
-        public string Email { get; set; }
-
-        [Required(ErrorMessage = "El campo Contraseña es obligatorio.")]
-        [StringLength(16, ErrorMessage = "La contraseña debe tener de 3 a 16 caracteres.", MinimumLength = 3)]
-        [DataType(DataType.Password)]
-        [Display(Name = "Contraseña")]
-        public string Password { get; set; }
-
-
-        [DataType(DataType.Password)]
-        [Display(Name = "Confirme contraseña")]
-        [Compare("Password", ErrorMessage = "Las contraseñas ingresadas no coinciden.")]
-        public string ConfirmPassword { get; set; }
-    }
+    
 
 
 }

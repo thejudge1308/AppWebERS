@@ -9,12 +9,16 @@ using System.Web.Mvc;
 
 
 
+using System.ComponentModel.DataAnnotations;
+using MySql.Data.MySqlClient;
+using System.Diagnostics;
 /**
- * Autor: Gerardo Estrada (Meister1412)
- **/
+* Autor: Gerardo Estrada (Meister1412)
+**/
 
 namespace AppWebERS.Models{
     public class Proyecto {
+
         #region Definicion de permisos para la vista de los proyectos
         /*
          * Autor: Patricio Quezada
@@ -23,7 +27,17 @@ namespace AppWebERS.Models{
         public const int AUTH_COMO_JEFE_DE_PROYECTO = 0;
         public const int AUTH_COMO_SYSADMIN = 1;
         public const int AUTH_COMO_USUARIO = 2;
+        public const int NO_AUTH = 3;
         #endregion
+
+        #region Roles de un proyecto en la Base de datos
+        public const String JefeDeProyecto_RolBD = "JEFEPROYECTO";
+        public const String Usuario_RolBD = "USUARIO";
+        public const String SysAdmin_RolBD = "SYSADMIN";
+        #endregion
+
+        public Proyecto() {
+        }
 
         /**
          * Constructor de la clase Proyecto
@@ -62,11 +76,7 @@ namespace AppWebERS.Models{
             this.CasosDeUso = new List<CasoDeUso>();
             this.Actores = new List<Actor>();
         }
-
-
-        public Proyecto() {
-
-        }
+        
 
         private ApplicationDbContext conexion = ApplicationDbContext.Create();
 
@@ -88,7 +98,6 @@ namespace AppWebERS.Models{
          * <param name = "casosDeUso" > La lista de casos de uso asociados al proyecto.</param>
          * <param name = "actores" > La lista de actores asociados al proyecto.</param>
          **/
-
         public Proyecto(int idProyecto, string nombre, string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string referencias, string ambienteOperacional, string relacionProyectos) {
             IdProyecto = idProyecto;
             Nombre = nombre;
@@ -102,10 +111,6 @@ namespace AppWebERS.Models{
             AmbienteOperacional = ambienteOperacional;
             RelacionProyectos = relacionProyectos;
         }
-
-
-
-
 
         /**
          * Setter y Getter de ID del proyecto
@@ -365,6 +370,142 @@ namespace AppWebERS.Models{
             this.conexion.EnsureConnectionClosed();
             return true;
         }
+
+        /**
+         * Creador:Patricio Quezada
+         * 
+         * <param name = "ID" >ID del proyecto buscado.</param>
+         * <returns>El proyecto con sus respectivos datos.</returns>
+         */
+        public Proyecto ObtenerProyectoPorID(int ID) {
+            Proyecto proyecto = null;
+            string consulta = "SELECT * FROM proyecto WHERE id_proyecto = " + ID + ";";
+            MySqlDataReader data = this.conexion.RealizarConsulta(consulta);
+            if(data != null) {
+                data.Read();
+                string nombre = data["nombre"].ToString();
+                string proposito = data["proposito"].ToString();
+                string alcance = data["alcance"].ToString();
+                string contexto = data["contexto"].ToString();
+                string definiciones = data["definiciones"].ToString();
+                string acronimos = data["acronimos"].ToString();
+                string abreviaturas = data["abreviaturas"].ToString();
+                string referencias = data["referencias"].ToString();
+                string ambiente_operacional = data["ambiente_operacional"].ToString();
+                string relacion_con_otros_proyectos = data["relacion_con_otros_proyectos"].ToString();
+
+
+                proyecto = new Proyecto(ID, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambiente_operacional, relacion_con_otros_proyectos);
+                //Debug.WriteLine(proyecto.Proposito);
+                this.conexion.EnsureConnectionClosed();
+            }
+            return proyecto;
+        }
+
+
+        /**
+         * Creador: Patricio Quezada 
+         * <param name="IdUsuario">id del usuario</param>
+         * <param name="Proyecto">id del proyecto</param>
+         * <returns>El rol del usuario en un proyecto</returns>
+         * <summary>Retorna el rol del usuario de un proyecto en particular</summary>
+         */
+        public int ObtenerRolDelUsuario(String IdUsuario,int Proyecto) {
+           int permiso = NO_AUTH; 
+           string consulta = "SELECT Tipo From users WHERE id='" + IdUsuario + "';";
+           MySqlDataReader data = this.conexion.RealizarConsulta(consulta);
+           if(data != null) {
+                data.Read();
+                string rol = data["Tipo"].ToString().Trim();
+                if(rol.Equals(SysAdmin_RolBD)) {
+                        permiso = AUTH_COMO_SYSADMIN;
+                } else {
+                    //this.conexion.CerrarConexion();
+                    //this.conexion = ConectorBD.Instance;
+                        this.conexion.EnsureConnectionClosed();
+                        consulta = "SELECT vinculo_usuario_proyecto.rol FROM vinculo_usuario_proyecto WHERE vinculo_usuario_proyecto.ref_usuario = '" + IdUsuario + "' AND vinculo_usuario_proyecto.ref_proyecto = " + Proyecto + ";";
+                        //Debug.WriteLine(consulta);
+                        MySqlDataReader data2 = this.conexion.RealizarConsulta(consulta);
+                        //Debug.WriteLine("data"+ data2);
+                        if(data2 != null) {
+                            while(data2.Read()) {
+                                rol = data2.GetString(0).ToString();
+                                //Debug.WriteLine("Rol: " + rol);
+                                if(rol.Equals(JefeDeProyecto_RolBD)) {
+                                    permiso = AUTH_COMO_JEFE_DE_PROYECTO;
+                                } else {
+                                    permiso = AUTH_COMO_USUARIO;
+                                }
+                            }  
+                        } else {
+                            permiso = NO_AUTH;
+                        }     
+                }
+                this.conexion.EnsureConnectionClosed();
+           } else {
+                permiso = NO_AUTH;
+           }
+            return permiso;
+        }
+
+        /**
+            * Autor: Gerardo Estrada
+            * <param name = "id" > Id del proyecto.</param>
+            * <returns>La lista de usuarios involucrados en el proyecto</returns>
+            **/
+        public List<Usuario> GetListaUsuarios(int id) {
+            List<Usuario> listaUsuarios = new List<Usuario>();
+
+            string consulta = "SELECT users.Rut, users.UserName, users.Email, vinculo_usuario_proyecto.rol FROM vinculo_usuario_proyecto INNER JOIN users on vinculo_usuario_proyecto.ref_usuario = users.Id WHERE vinculo_usuario_proyecto.ref_proyecto= " + id +";";
+            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
+            if (reader == null) {
+                this.conexion.EnsureConnectionClosed();
+                return null;
+            }
+            else {
+                while (reader.Read()) {
+                    string rut = reader.GetString(0);
+                    string nombre = reader.GetString(1);
+                    string correo = reader.GetString(2);
+                    string tipo = reader.GetString(3);
+                    if(tipo.Equals(JefeDeProyecto_RolBD)) {
+                        tipo = "Jefe de proyecto";
+                    } else {
+                        tipo = "Usuario";
+                    }
+
+                    listaUsuarios.Add(new Usuario(rut, nombre, correo, tipo));
+                }
+
+                this.conexion.EnsureConnectionClosed();
+                return listaUsuarios;
+            }
+
+
+            //Proyecto proyecto = null;
+            //this.conexion = ConectorBD.Instance;
+            //string consulta = "SELECT users.Nombre, users.Rut, users.Email, users.Tipo FROM users, vinculo_usuario_proyecto, proyecto WHERE id_proyecto = " + id + " AND vinculo_usuario_proyecto.ref_proyecto = id_proyecto AND vinculo_usuario_proyecto.ref_usuario = users.Rut ;";
+            //MySqlDataReader data = this.conexion.RealizarConsulta(consulta);
+            //if (data != null) {
+            //    data.Read();
+            //    string nombre = data["nombre"].ToString();
+            //    string rut = data["rut"].ToString();
+            //    string correo_electronico = data["correo_electronico"].ToString();
+            //    string tipo = data["tipo"].ToString();
+            //    this.conexion.CerrarConexion();
+
+            //}
+            //return Usuario;
+        }
+
+
+        public void ActualizarDatosProyecto(int idProyecto, string nombre, string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string referencias, string ambienteOperacional, string relacionProyectos)
+        {
+            string consulta = "UPDATE proyecto SET nombre='"+ nombre + "',proposito='" + proposito + "',alcance='" + alcance + "',contexto='" + contexto + "',definiciones='" + definiciones + "',acronimos='" + acronimos + "',abreviaturas='" + abreviaturas + "',referencias='" + referencias + "',ambiente_operacional='" + ambienteOperacional + "',relacion_con_otros_proyectos='" + relacionProyectos + "' WHERE id_proyecto=" + idProyecto;
+            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
+            this.conexion.EnsureConnectionClosed();
+        }
+
 
         /**
          * Método para cargar datos

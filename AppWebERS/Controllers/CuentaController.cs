@@ -73,10 +73,18 @@ namespace AppWebERS.Controllers
             {
                 return View(model);
             }
-            ApplicationUser usuario = await UserManager.FindByRutAsync(model.Rut);
+            ApplicationUser usuario;
+            if (model.isRut)
+            {
+                usuario = await UserManager.FindByRutAsync(model.RutName);
+            }
+            else
+            {
+                usuario = await UserManager.FindByNameAsync(model.RutName);
+            }
             if (usuario == null)
             {
-                TempData["alerta"] = new Alerta("Rut de usuario incorrecto.", TipoAlerta.ERROR);
+                TempData["alerta"] = new Alerta("Rut de usuario o nombre incorrecto.", TipoAlerta.ERROR);
                 return View(model);
             }
             if (!usuario.Estado)

@@ -121,7 +121,7 @@ namespace AppWebERS.Controllers
             {
                 if (!VerificarSiResgistroValido(model))
                 {
-                    var user = new ApplicationUser { UserName = model.UserName, Rut = model.Rut, Email = model.Email, Tipo = "USER" };
+                    var user = new ApplicationUser { UserName = model.UserName, Rut = model.Rut, Email = model.Email, Tipo = "USUARIO" };
                     var result = await UserManager.CreateAsync(user, model.Password);
                     if (result.Succeeded)
                     {

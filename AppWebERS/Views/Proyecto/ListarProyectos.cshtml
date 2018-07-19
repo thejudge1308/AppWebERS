@@ -11,12 +11,15 @@
 }
 
 <h2>@ViewBag.Title.</h2>
-
+<div>
+    <a class="btn btn-primary" href="@Url.Action("CrearProyecto","Proyecto")">Crear Proyecto</a>
+</div>
 
 @foreach (var proyecto in Model)
 {
     if (proyecto.Nombre != "mitad")
     {
+		
         <div class="card">
             <div class="card-header">
                 @proyecto.Nombre
@@ -26,7 +29,9 @@
                 <p class="card-text"></p>
                 <a href="Detalles/@proyecto.Id" class="btn btn-primary">Ver detalle</a>
             </div>
+			
         </div>
+		
         <br><br>
     }
 

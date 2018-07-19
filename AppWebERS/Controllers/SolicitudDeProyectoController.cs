@@ -65,8 +65,10 @@ namespace AppWebERS.Controllers
          *NOTA: despues de cada una de las acciones hay que eliminar la solicitud 
          * 
          */
-        public ActionResult Volver() {
-            return RedirectToAction("Detalles", "Proyecto", new { id = 2 });
+        public ActionResult Volver(string idProyecto) {
+            
+            int value = Int32.Parse(idProyecto);           
+            return RedirectToAction("Detalles", "Proyecto", new { id = value });
         }
 
         private Boolean verificarExistencia(String idUsuario, String idProyecto)

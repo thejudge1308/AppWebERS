@@ -7,68 +7,94 @@
 }
 
 @{
-    ViewBag.Title = "Lista de proyectos Asociados";
-    ViewBag.Title2 = "Lista de proyectos NO Asociados";
+    ViewBag.Title = "Lista de proyectos";
 
 }
+
 
 <h2>@ViewBag.Title.</h2>
 
+<!-- Bootstrap CSS -->
+<!-- jQuery first, then Bootstrap JS. -->
+<!-- Nav tabs -->
 
-@{int posicion = 0; }
+<ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" href="#asociados" role="tab" data-toggle="tab">Asociados</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#noasociados" role="tab" data-toggle="tab">No asociados</a>
+    </li>
 
+</ul>
 
-@for (int i = 0; i < Model.Count; i++)
-{
-
-    if (Model.ElementAt(i).Nombre != "mitad")
-    {
-
-        <div class="card">
-            <div class="card-header">
-               
-                @Model.ElementAt(i).Nombre
-            </div>
-            <div class="card-body">
-                <h5 class="card-title"></h5>
-                <p class="card-text"></p>
-                <a href="Detalles/@Model.ElementAt(i).Id" class="btn btn-primary">Ver detalle</a>
-            </div>
-        </div>
-        <br><br>
-    }
-    else
-    {
-        
-        posicion = i + 1;
-        break;
-    }
-}
+<!-- Tab panes -->
+<div class="tab-content">
+    <div role="tabpanel" class="tab-pane fade in active" id="asociados">
+        @{int posicion = 0; }
 
 
+        @for (int i = 0; i < Model.Count; i++)
+        {
 
-<h2>@ViewBag.Title2.</h2>
+            if (Model.ElementAt(i).Nombre != "mitad")
+            {
 
-@for (int i = posicion; i < Model.Count; i++)
-{
+                <div class="card">
+                    <div class="card-header">
+
+                        @Model.ElementAt(i).Nombre
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title"></h5>
+                        <p class="card-text"></p>
+                        <a href="Detalles/@Model.ElementAt(i).Id" class="btn btn-primary">Ver detalle</a>
+                    </div>
+                </div>
+                <br><br>
+            }
+            else
+            {
+
+                posicion = i + 1;
+                break;
+            }
+        }
 
 
-    if (Model.ElementAt(i).Nombre != "mitad")
-    {
-        <div class="card">
-            <div class="card-header">
-           
-                @Model.ElementAt(i).Nombre
-            </div>
-            <div class="card-body">
-                <h5 class="card-title"></h5>
-                <p class="card-text"></p>
-                <!--<a href="#" class="btn btn-primary">Unirse</a>-->
-                <a href="#" class="btn btn-primary" onclick="location.href='@Url.Action("AgregarUsuarioAProyecto", "Proyecto", new {proyecto1=Model.ElementAt(i).Id })'">Unirse</a>
-            </div>
-        </div>
-        <br><br>
-    }
+
+    </div>
 
 
-}
+    <div role="tabpanel" class="tab-pane fade" id="noasociados">
+        @for (int i = posicion; i < Model.Count; i++)
+        {
+
+
+            if (Model.ElementAt(i).Nombre != "mitad")
+            {
+                <div class="card">
+                    <div class="card-header">
+
+                        @Model.ElementAt(i).Nombre
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title"></h5>
+                        <p class="card-text"></p>
+                        <!--<a href="#" class="btn btn-primary">Unirse</a>-->
+                        <a href="#" class="btn btn-primary" onclick="location.href='@Url.Action("AgregarUsuarioAProyecto", "Proyecto", new {proyecto1=Model.ElementAt(i).Id })'">Unirse</a>
+                    </div>
+                </div>
+                <br><br>
+            }
+
+
+        }
+
+
+
+
+
+    </div>
+
+</div>

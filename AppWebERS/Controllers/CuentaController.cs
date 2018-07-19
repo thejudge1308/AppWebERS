@@ -286,6 +286,24 @@ namespace AppWebERS.Controllers
             return RedirectToAction("Index","Home");
         }
 
+        [HttpGet]
+        public async Task<ActionResult> DeshabilitarUsuario(string rut)
+        {
+            ViewBag.Title = "DeshabilitarUsuario";
+            if (!String.IsNullOrEmpty(rut))
+            {
+                ApplicationUser usuario = await UserManager.FindByRutAsync(rut);
+                if (usuario != null)
+                {
+                    await UserManager.setEstadoAsync(usuario.Id, !usuario.Estado);
+                    TempData["alerta"] = new Alerta("El usuario ha sido modificado exitosamente", TipoAlerta.SUCCESS);
+                    return RedirectToAction("ListarUsuarios","Cuenta");
+                }
+                TempData["alerta"] = new Alerta("Hubo un error al obtener al usuario", TipoAlerta.ERROR);
+            }
+            return RedirectToAction("Index", "Home");
+        }
+
         /*
          * Juan Abello
          * llama a la funcion de modificar la cuenta de un usuario en el modelo de este

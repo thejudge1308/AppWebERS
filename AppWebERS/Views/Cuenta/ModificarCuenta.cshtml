@@ -22,7 +22,7 @@
                         Editar
                     </button>
                     <div class="collapse colapsable" id="collapseExample">
-                        @Html.EditorFor(m => m.Nombre, new { htmlAttributes = new { @class = "form-control", placeholder = "Nuevo nombre de usuario" } })
+                        @Html.EditorFor(m => m.Nombre, new { htmlAttributes = new { @class = "form-control", placeholder = "Nuevo nombre de usuario"  } })
                         @Html.ValidationMessageFor(m => m.Nombre, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -69,22 +69,6 @@
                 </div>
             </div>
         </div>
-        <div class="btn-group btn-group-toggle w-100" data-toggle="buttons">
-            <label class="btn btn-secondary mt-3 w-100" id="LabelEstado">
-                <span id="spanEstado">
-                    @if (Model.AntiguoEstado)
-                    {
-                        @HttpUtility.HtmlEncode("Deshabilitar")
-                    }
-                    else
-                    {
-                        @HttpUtility.HtmlEncode("Habilitar")
-                    }
-                </span>
-                @Html.CheckBoxFor(m => m.Estado, new { @class = "form-control", @type = "checkbox", @autocomplete = "off" })
-            </label>
-        </div>
-
         @Html.HiddenFor(m => m.Rut);
         @Html.HiddenFor(m => m.AntiguoNombre);
         @Html.HiddenFor(m => m.AntiguoEmail);

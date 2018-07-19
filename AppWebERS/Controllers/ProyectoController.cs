@@ -479,6 +479,34 @@ namespace AppWebERS.Controllers
             }
         }
 
+        /*
+       * Autor Fabian Oyarce
+       * Metodo encargado de cambiar el estado de un proyecto a deshabilitado
+       * <param String id>
+       */
+        [HttpGet]
+        public void DeshabilitarProyecto(string id)
+        {
+            string nuevoEstado = "deshabilitado";
+            string consulta = "UPDATE proyecto SET estado = '" + nuevoEstado + "'" +
+                               "WHERE (id_proyecto ='" + id + "') ";
 
+            MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
+            if (reader == null)
+            {
+                this.Conector.CerrarConexion();
+                //Popup error
+            }
+            else
+            {
+                while (reader.Read())
+                {
+
+                    //Popups estado modificado
+                }
+
+                this.Conector.CerrarConexion();
+            }
+        }
     }
 }

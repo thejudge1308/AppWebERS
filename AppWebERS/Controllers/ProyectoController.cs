@@ -36,25 +36,36 @@ namespace AppWebERS.Controllers
             return View();
         }
 
+
+
+        /**
+         * <author>Matías Parra</author>
+         * <summary>
+         * Action POST que retorna una vista después se precionar el botón de guardar cambios en un proyecto.
+         * </summary>
+         * <param name="datos">parametro ingresado desde la vista Proyecto/Detalles/ID, son los datos de la vista</param>
+         * <param name="id">parametro ingresado desde la vista Proyecto/Detalles/ID, es el id del proyecto</param>
+         * <returns> la vista de éxito. </returns>
+         */
         // POST: Proyecto/Detalles/5
         [HttpPost]
         [Authorize]
-        public ActionResult Detalles(FormCollection datos) {
+        public ActionResult Detalles(FormCollection datos, int id) {
             //Captura de datos -> debe ser coherente al nombramiento del modelo
 
             Proyecto proyecto = new Proyecto();
-            var idProyecto = datos["Id del Proyecto"];
-            var nombre = datos["Nombre"];
-            var proposito = datos["Propósito"];
-            var alcance = datos["Alcance"];
-            var contexto = datos["Contexto"];
-            var definiciones = datos["Definición"];
-            var acronimos = datos["Acrónimo"];
-            var abreviaturas = datos["Abreviatura"];
-            var referencias = datos["Referencia"];
-            var ambienteOperacional = datos["Ambiente operacional"];
-            var relacionProyectos = datos["Relación proyectos"];
-            proyecto.ActualizarDatosProyecto(Int32.Parse(idProyecto), nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambienteOperacional, relacionProyectos);
+            string nombre = datos[1];
+            string proposito = datos[2];
+            string alcance = datos[3];
+            string contexto = datos[4];
+            string definiciones = datos[5];
+            string acronimos = datos[6];
+            string abreviaturas = datos[7];
+            string referencias = datos[8];
+            string ambiente_operacional = datos[9];
+            string relacion_con_otros_proyectos = datos[10];
+
+            proyecto.ActualizarDatosProyecto(id, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambiente_operacional, relacion_con_otros_proyectos);            
             return View();
         }
 
@@ -213,6 +224,7 @@ namespace AppWebERS.Controllers
                         if (proyecto.AsignarJefeProyecto(usuario, nombre))
                         {
                             ViewBag.Message1 = "Exito al crear Proyecto";
+                            return RedirectToAction("ListarProyectos", "Proyecto");
                         }
                         else {
                             ViewBag.Message1 = "";

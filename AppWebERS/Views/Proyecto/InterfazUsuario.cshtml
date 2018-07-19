@@ -1,0 +1,74 @@
+﻿
+@model List<AppWebERS.Models.NombreProyecto>
+
+@{
+    /**/
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    ViewBag.Title = "Lista de proyectos Asociados";
+    ViewBag.Title2 = "Lista de proyectos NO Asociados";
+
+}
+
+<h2>@ViewBag.Title.</h2>
+
+
+@{int posicion = 0; }
+
+
+@for (int i = 0; i < Model.Count; i++)
+{
+
+    if (Model.ElementAt(i).Nombre != "mitad")
+    {
+
+        <div class="card">
+            <div class="card-header">
+               
+                @Model.ElementAt(i).Nombre
+            </div>
+            <div class="card-body">
+                <h5 class="card-title"></h5>
+                <p class="card-text"></p>
+                <a href="Detalles/@Model.ElementAt(i).Id" class="btn btn-primary">Ver detalle</a>
+            </div>
+        </div>
+        <br><br>
+    }
+    else
+    {
+        
+        posicion = i + 1;
+        break;
+    }
+}
+
+
+
+<h2>@ViewBag.Title2.</h2>
+
+@for (int i = posicion; i < Model.Count; i++)
+{
+
+
+    if (Model.ElementAt(i).Nombre != "mitad")
+    {
+        <div class="card">
+            <div class="card-header">
+           
+                @Model.ElementAt(i).Nombre
+            </div>
+            <div class="card-body">
+                <h5 class="card-title"></h5>
+                <p class="card-text"></p>
+                <!--<a href="#" class="btn btn-primary">Unirse</a>-->
+                <a href="#" class="btn btn-primary" onclick="location.href='@Url.Action("AgregarUsuarioAProyecto", "Proyecto", new {proyecto1=Model.ElementAt(i).Id })'">Unirse</a>
+            </div>
+        </div>
+        <br><br>
+    }
+
+
+}

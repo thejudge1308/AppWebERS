@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using AppWebERS.Models;
 using System.Data.Entity;
+using AppWebERS.Utilidades;
 namespace AppWebERS.Controllers
 {
     [Authorize]
@@ -75,7 +76,12 @@ namespace AppWebERS.Controllers
             ApplicationUser usuario = await UserManager.FindByRutAsync(model.Rut);
             if (usuario == null)
             {
-                ModelState.AddModelError("", "Rut de usuario incorrecto");
+                TempData["alerta"] = new Alerta("Rut de usuario incorrecto.", TipoAlerta.ERROR);
+                return View(model);
+            }
+            if (!usuario.Estado)
+            {
+                TempData["alerta"] = new Alerta("La cuenta se encuentra deshabilitada.", TipoAlerta.ERROR);
                 return View(model);
             }
             // No cuenta los errores de inicio de sesión para el bloqueo de la cuenta
@@ -91,7 +97,7 @@ namespace AppWebERS.Controllers
                     return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
                 case SignInStatus.Failure:
                 default:
-                    ModelState.AddModelError("", "Intento de inicio de sesión no válido.");
+                    TempData["alerta"] = new Alerta("Intento de inicio de sesion no valido.", TipoAlerta.ERROR);
                     return View(model);
             }
         }
@@ -113,21 +119,24 @@ namespace AppWebERS.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.UserName, Rut = model.Rut, Email = model.Email , Tipo = "SYSADMIN"};
-                var result = await UserManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
+                if (!VerificarSiResgistroValido(model))
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
-                    // Para obtener más información sobre cómo habilitar la confirmación de cuentas y el restablecimiento de contraseña, visite https://go.microsoft.com/fwlink/?LinkID=320771
-                    // Enviar correo electrónico con este vínculo
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirmar cuenta", "Para confirmar la cuenta, haga clic <a href=\"" + callbackUrl + "\">aquí</a>");
+                    var user = new ApplicationUser { UserName = model.UserName, Rut = model.Rut, Email = model.Email, Tipo = "USUARIO" };
+                    var result = await UserManager.CreateAsync(user, model.Password);
+                    if (result.Succeeded)
+                    {
+                        //await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
-                    return RedirectToAction("Index", "Home");
+                        // Para obtener más información sobre cómo habilitar la confirmación de cuentas y el restablecimiento de contraseña, visite https://go.microsoft.com/fwlink/?LinkID=320771
+                        // Enviar correo electrónico con este vínculo
+                        // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                        // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                        // await UserManager.SendEmailAsync(user.Id, "Confirmar cuenta", "Para confirmar la cuenta, haga clic <a href=\"" + callbackUrl + "\">aquí</a>");
+                        TempData["alerta"] = new Alerta("El usuario ha sido registrado exitosamente", TipoAlerta.SUCCESS);
+                        return RedirectToAction("Index", "Home");
+                    }
+                    AddErrors(result);
                 }
-                AddErrors(result);
             }
 
             // Si llegamos a este punto, es que se ha producido un error y volvemos a mostrar el formulario
@@ -242,6 +251,155 @@ namespace AppWebERS.Controllers
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             return RedirectToAction("Index", "Home");
+        }
+
+        /* <autor>Diego Matus</autor>
+         * <summary>Metodo encargado de enviar la lista de usarios a la vista ListarUsuarios y mostrarla dicha
+         * lista</summary>
+         * <param void>
+         * <returns> 
+         * Retorna la vista correspodiente (ListarUsuarios).
+         * </returns>
+         * 
+         */
+        [HttpGet]
+        public async Task<ActionResult> ListarUsuarios()
+        {
+            ViewBag.Title = "ListarUsuarios";
+            var lista = await UserManager.GetAllUsersAsync();
+            return View(lista);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ModificarCuenta(string rut)
+        {
+            ViewBag.Title = "ModificarCuenta";
+            if (!String.IsNullOrEmpty(rut)) {
+                ApplicationUser usuario = await UserManager.FindByRutAsync(rut);
+                if (usuario != null)
+                {
+                    ModificarViewModel model = new ModificarViewModel(usuario);
+                    return View(model);
+                }
+                TempData["alerta"] = new Alerta("Hubo un error al obtener al usuario", TipoAlerta.ERROR);
+            }
+            return RedirectToAction("Index","Home");
+        }
+
+        /*
+         * Juan Abello
+         * llama a la funcion de modificar la cuenta de un usuario en el modelo de este
+         * usuario
+         * return RedirectToAction
+         */
+        [HttpPost]
+        public async Task<ActionResult> ModificarCuenta(ModificarViewModel usuarioViewModel)
+        {
+            ViewBag.Title = "ModificarCuenta";
+            if (ModelState.IsValid)
+            {
+                System.Diagnostics.Debug.WriteLine(usuarioViewModel.Email);
+                //VerificarSIUsuarioRepetido dentro arma un mensaje para mostrar en el popup con TempData["alerta"]
+                if (!VerificarSiUsuarioRepetido(usuarioViewModel))
+                {
+                    ApplicationUser usuario = await UserManager.FindByRutAsync(usuarioViewModel.Rut);
+                    usuario.Email = String.IsNullOrEmpty(usuarioViewModel.Email) ? usuario.Email : usuarioViewModel.Email;
+                    usuario.UserName = String.IsNullOrEmpty(usuarioViewModel.Nombre) ? usuario.UserName : usuarioViewModel.Nombre;
+                    usuario.Estado = usuarioViewModel.Estado ? !usuario.Estado : usuario.Estado;
+                    await UserManager.UpdateAsync(usuario);
+                    if (!String.IsNullOrEmpty(usuarioViewModel.Password))
+                    {
+                        await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), usuarioViewModel.Password);
+                    }
+                    TempData["alerta"] = new Alerta("El usuario se modifico exitosamente", TipoAlerta.SUCCESS);
+
+                    return RedirectToAction("ListarUsuarios", new {rut = usuarioViewModel.Rut});
+                }
+            }            
+            return View(usuarioViewModel);
+        }
+
+        /*
+         * Creador: Maximo Hernandez
+         * Accion: Verifica si alguno de los dos valores de usuario, UserName o UserEmail, se encuentran ya en la base de datos
+         * Retorno: Boolean - Verdadero si es que existe uno de los dos valores, Falso en caso contrario
+         */
+        public Boolean VerificarSiUsuarioRepetido(ModificarViewModel usuarioViewModels)
+        {
+            bool resultado = false;
+            string mensaje = "";
+            if (UserManager.VerificarSiExisteEmail(usuarioViewModels.Email).Result) {
+                mensaje += "Correo de usuario en uso </br>";
+                resultado |= true;  
+            }
+            if (UserManager.VerificarSiExisteNombre(usuarioViewModels.Nombre).Result) {
+                mensaje += "Nombre de usuario en uso <br/>";
+                resultado |= true;
+            }
+            if (UserManager.VerificarSiExisteContrasenia(usuarioViewModels.Rut, usuarioViewModels.Password).Result) {
+                mensaje += "La contraseña debe ser distinta de la que tiene actualmente <br/>";
+                resultado |= true;
+            }
+            if (resultado) {
+                TempData["alerta"] = new Alerta(mensaje, TipoAlerta.ERROR);
+            }
+            return resultado;
+            /*
+                if (UserManager.VerificarSiExisteEmail(usuarioViewModels.Email).Result ||
+                UserManager.VerificarSiExisteNombre(usuarioViewModels.Nombre).Result ||
+                UserManager.VerificarSiExisteContrasenia(usuarioViewModels.Rut, usuarioViewModels.Password).Result)
+                return true;
+            return false;
+            */
+        }
+
+        /*
+       * Creador: Maximo Hernandez-Diego Matus
+       * Accion: Verifica si alguno de los valores de usuario registrados ya existen dentro de la base de datos.
+       * Retorno: Boolean - Verdadero si el registro es valido. Falso en caso contrario.
+       */
+        public Boolean VerificarSiResgistroValido(RegisterViewModel usuarioViewModels)
+        {
+            bool resultado = false;
+            string mensaje = "";
+            if (UserManager.VerificarSiExisteEmail(usuarioViewModels.Email).Result)
+            {
+                mensaje += "Correo de usuario en uso </br>";
+                resultado |= true;
+            }
+            if (UserManager.VerificarSiExisteNombre(usuarioViewModels.UserName).Result)
+            {
+                mensaje += "Nombre de usuario en uso <br/>";
+                resultado |= true;
+            }
+            if(UserManager.VerificarSiExisteRut(usuarioViewModels.Rut).Result)
+            {
+                mensaje += "Rut en uso<br/>";
+                resultado |= true;
+            }
+            if (resultado)
+            {
+                TempData["alerta"] = new Alerta(mensaje, TipoAlerta.ERROR);
+            }
+            return resultado;
+
+        }
+
+        /*
+         * Creador: Maximo Hernandez
+         * Accion: Retorna el tipo del usuario autentificado
+         * Retorno: String con el tipo de usuario autentificado
+         */
+        public string RetornarTipoUsuarioAutentificado()
+        {
+                Task<string> tipo = UserManager.getTipoAsync((User.Identity.GetUserId()));
+                return tipo.Result;
+        }
+
+        public string RetornarRutUsuarioAutentificado()
+        {
+            Task<string> tipo = UserManager.getRutAsync((User.Identity.GetUserId()));
+            return tipo.Result;
         }
 
         protected override void Dispose(bool disposing)

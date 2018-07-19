@@ -121,7 +121,7 @@ namespace AppWebERS.Controllers
             {
                 if (!VerificarSiResgistroValido(model))
                 {
-                    var user = new ApplicationUser { UserName = model.UserName, Rut = model.Rut, Email = model.Email, Tipo = "USER" };
+                    var user = new ApplicationUser { UserName = model.UserName, Rut = model.Rut, Email = model.Email, Tipo = "USUARIO" };
                     var result = await UserManager.CreateAsync(user, model.Password);
                     if (result.Succeeded)
                     {
@@ -132,7 +132,7 @@ namespace AppWebERS.Controllers
                         // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                         // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                         // await UserManager.SendEmailAsync(user.Id, "Confirmar cuenta", "Para confirmar la cuenta, haga clic <a href=\"" + callbackUrl + "\">aquí</a>");
-
+                        TempData["alerta"] = new Alerta("El usuario ha sido registrado exitosamente", TipoAlerta.SUCCESS);
                         return RedirectToAction("Index", "Home");
                     }
                     AddErrors(result);

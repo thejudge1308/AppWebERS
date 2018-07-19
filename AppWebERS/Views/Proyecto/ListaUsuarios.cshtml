@@ -49,7 +49,7 @@
             <div class="col-12">
                 @{
                     if (TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN) {
-                        <a class="btn btn-primary" href="@Url.Action("ModificarJefeProyecto","SysAdmin",new { id = ProyectoActual.IdProyecto})">Modificar Jefe de Proyecto</a>
+                        <a class="btn btn-primary" href="@Url.Action("ModificarJefeProyecto","Proyecto",new { id = ProyectoActual.IdProyecto})">Modificar Jefe de Proyecto</a>
                         <a class="btn btn-primary" href="@Url.Action("AgregarUsuario","SysAdmin",new { id = ProyectoActual.IdProyecto})">Agregar usuario</a>
                     }
                     if (TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO) {

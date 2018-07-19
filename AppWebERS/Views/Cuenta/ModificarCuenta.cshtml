@@ -70,15 +70,17 @@
             </div>
         </div>
         <div class="btn-group btn-group-toggle w-100" data-toggle="buttons">
-            <label class="btn btn-secondary mt-3 w-100">
-                @if (Model.AntiguoEstado)
-                {
-                    @Html.Raw("Deshabilitar")
-                }
-                else
-                {
-                    @Html.Raw("Habilitar")
-                }
+            <label class="btn btn-secondary mt-3 w-100" id="LabelEstado">
+                <span id="spanEstado">
+                    @if (Model.AntiguoEstado)
+                    {
+                        @HttpUtility.HtmlEncode("Deshabilitar")
+                    }
+                    else
+                    {
+                        @HttpUtility.HtmlEncode("Habilitar")
+                    }
+                </span>
                 @Html.CheckBoxFor(m => m.Estado, new { @class = "form-control", @type = "checkbox", @autocomplete = "off" })
             </label>
         </div>
@@ -95,4 +97,18 @@
 
 @section scripts{
     @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $("#LabelEstado").on("click", (event) => {
+            console.log("Evento")
+            let spanEstado = $("#spanEstado").text().trim();
+            if (spanEstado === "Deshabilitar") {
+                $("#spanEstado").text("Habilitar");
+                console.log("Cambiado texto a Habilitar")
+            }
+            else {
+                $("#spanEstado").text("Deshabilitar");
+                console.log("Cambiado texto a Deshabilitar")
+            }
+        })
+    </script>
 }

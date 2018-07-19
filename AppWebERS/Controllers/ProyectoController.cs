@@ -65,8 +65,8 @@ namespace AppWebERS.Controllers
             string ambiente_operacional = datos[9];
             string relacion_con_otros_proyectos = datos[10];
 
-            proyecto.ActualizarDatosProyecto(id, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambiente_operacional, relacion_con_otros_proyectos);            
-            return View();
+            proyecto.ActualizarDatosProyecto(id, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambiente_operacional, relacion_con_otros_proyectos);
+            return RedirectToAction("Detalles/" + id);
         }
 
 
@@ -224,6 +224,7 @@ namespace AppWebERS.Controllers
                         if (proyecto.AsignarJefeProyecto(usuario, nombre))
                         {
                             ViewBag.Message1 = "Exito al crear Proyecto";
+                            return RedirectToAction("ListarProyectos", "Proyecto");
                         }
                         else {
                             ViewBag.Message1 = "";

@@ -3,6 +3,7 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using AppWebERS.Utilidades;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -10,6 +11,7 @@ using System.Data;
 using Microsoft.AspNet.Identity;
 using AspNet.Identity.MySQL;
 using Microsoft.AspNet.Identity.Owin;
+using AppWebERS.Utilidades;
 
 namespace AppWebERS.Controllers
 {
@@ -498,10 +500,11 @@ namespace AppWebERS.Controllers
         [HttpGet]
         public ActionResult AgregarUsuarioAProyecto(string proyecto1)
         {
-            
+
             //int PosProyecto = Int32.Parse(proyecto1);
             //List<string> ListaProyectos = ListaProyectosIds();
             //string IdProyectoAUnirse = ListaProyectos[PosProyecto];
+            TempData["alerta"] = new Alerta("Solicitud enviada", TipoAlerta.SUCCESS);
             string UsuarioSolicitanteRut = ObtenerIdUsuarioActivo();
            
             //proyecto1 = "1";
@@ -518,7 +521,7 @@ namespace AppWebERS.Controllers
                 this.Conector.CerrarConexion();
             }
 
-            return View();
+            return RedirectToAction("ListarProyectos", "Proyecto");
         }
 
        
@@ -579,8 +582,11 @@ namespace AppWebERS.Controllers
        * <param String id>
        */
         [HttpGet]
-        public void DeshabilitarProyecto(string id)
+        public ActionResult DeshabilitarProyecto(string id)
         {
+            //Popups estado modificado
+            TempData["alerta"] = new Alerta("Estado Modificado", TipoAlerta.SUCCESS);
+
             string nuevoEstado = "deshabilitado";
             string consulta = "UPDATE proyecto SET referencias = '" + nuevoEstado + "'" +
                                "WHERE (id_proyecto ='" + id + "') ";
@@ -589,18 +595,20 @@ namespace AppWebERS.Controllers
             if (reader == null)
             {
                 this.Conector.CerrarConexion();
-                //Popup error
+                
             }
             else
             {
                 while (reader.Read())
                 {
 
-                    //Popups estado modificado
+                    
                 }
 
                 this.Conector.CerrarConexion();
             }
+
+           return RedirectToAction( "ListarProyectos", "Proyecto");
         }
 
 
@@ -610,8 +618,9 @@ namespace AppWebERS.Controllers
       * <param String id>
       */
         [HttpGet]
-        public void HabilitarProyecto(string id)
+        public ActionResult HabilitarProyecto(string id)
         {
+            TempData["alerta"] = new Alerta("Estado Modificado", TipoAlerta.SUCCESS);
             string nuevoEstado = "habilitado";
             string consulta = "UPDATE proyecto SET referencias = '" + nuevoEstado + "'" +
                                "WHERE (id_proyecto ='" + id + "') ";
@@ -632,6 +641,8 @@ namespace AppWebERS.Controllers
 
                 this.Conector.CerrarConexion();
             }
+
+            return RedirectToAction("ListarProyectos", "Proyecto");
         }
 
 

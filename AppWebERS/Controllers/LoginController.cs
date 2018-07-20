@@ -233,11 +233,11 @@ namespace AppWebERS.Controllers{
 
                     if(usuario.Tipo == "SYSADMIN")
                     {
-                        return RedirectToAction("ListarUsuarios", "Usuario");
+                        return RedirectToAction("Principal", "SysAdmin2", new { name = nombreBD });
                     }
                     else if(usuario.Tipo == "USUARIO")
                     {
-                        return RedirectToAction("VistaUsuario", "Usuario");
+                        return RedirectToAction("Principal", "UserView", new { name = nombreBD });
                     }
                     return View();
 

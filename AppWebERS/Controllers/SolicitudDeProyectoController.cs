@@ -40,7 +40,7 @@ namespace AppWebERS.Controllers
                     "COMMIT;";
                 conector.RealizarConsultaNoQuery(delete);
                 conector.CerrarConexion();
-                return RedirectToAction("SolicitudDeProyecto", "JefeProyecto", new { id = idProyecto });
+                return RedirectToAction("ListaUsuarios", "Proyecto", new { id = idProyecto });
            
         }
 
@@ -58,7 +58,7 @@ namespace AppWebERS.Controllers
                 "DELETE FROM solicitud_vinculacion_proyecto WHERE ref_solicitante='" + idUsuario + "' AND ref_proyecto='" + idProyecto + "';"
                 +"COMMIT;";
             conector.RealizarConsultaNoQuery(consulta);
-            return RedirectToAction("SolicitudDeProyecto", "JefeProyecto", new { id = idProyecto }); //Lo deje asi por mientras
+            return RedirectToAction("ListaUsuarios", "Proyecto", new { id = idProyecto }); //Lo deje asi por mientras
         }
 
         /*

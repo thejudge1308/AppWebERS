@@ -16,9 +16,11 @@ namespace AppWebERS.Controllers
     public class ProyectoController : Controller
     {
         List<NombreProyecto> listaProyectosNombres = new List<NombreProyecto>();
+        List<NombreProyecto> listaTodosLosProyectosNombres = new List<NombreProyecto>();
         private int id_proyecto;
         private ConectorBD conexion;
         private ConectorBD Conector = ConectorBD.Instance;
+
 
         // GET: Proyecto/Detalles/5
         [Authorize]
@@ -89,10 +91,160 @@ namespace AppWebERS.Controllers
          */
         public ActionResult ListarProyectos()
         {
-            var model = ObtenerProyectos();
-            return View(model);
+            String TipoUsuario = ObtenerTipoUsuarioActivo();
+            
+
+            if (TipoUsuario== "SYSADMIN")
+            {
+                var model = ListaDeTodosLosProyectos();
+                return View(model);
+            }
+            else
+            {
+                var model = ObtenerTodosLosProyectos();
+                return View(model);
+            }
+           
+            
 
         }
+
+
+        /**
+      * <author>Fabian Oyarce</author>
+      * <summary>
+      * obtiene los proyectos asociados y no asociados y los une a una sola lista
+      * </summary>
+      * <returns>lista proyectos nombres </returns>
+      */
+        public List<NombreProyecto> ObtenerTodosLosProyectos()
+        {
+
+            ListaDeProyectosAsociados(ObtenerIdUsuarioActivo());
+            ListaDeProyectoNoAsociados(ObtenerIdUsuarioActivo());
+            return listaProyectosNombres;
+
+        }
+
+        /*
+    * Autor Fabian Oyarce
+    * Metodo encargado de obtener los nombres de todos los proyectos.
+    * <param String rut>
+    * <returns> listaProyectosNombres 
+    */
+        public List<NombreProyecto> ListaDeTodosLosProyectos()
+        {
+
+            string consulta = "SELECT proyecto.nombre, proyecto.id_proyecto, proyecto.referencias " +
+                                "FROM proyecto";
+            int bandera = 0;
+            MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
+            if (reader == null)
+            {
+                this.Conector.CerrarConexion();
+                listaTodosLosProyectosNombres.Add(new NombreProyecto("mitad", "id","estado"));
+                return listaTodosLosProyectosNombres;
+                //return null;
+            }
+            else
+            {
+                while (reader.Read())
+                {
+
+                    if (bandera == 0)
+                    {
+                        listaTodosLosProyectosNombres.Add(new NombreProyecto("SYSADMIN", "-99","estado"));
+                        bandera = 1;
+
+                    }
+                    
+                    string Nombre = reader.GetString(0);
+                    string Id = reader.GetString(1);
+                    string Estado = reader.GetString(2);
+                    listaTodosLosProyectosNombres.Add(new NombreProyecto(Nombre, Id,Estado));
+                }
+
+                this.Conector.CerrarConexion();
+                listaTodosLosProyectosNombres.Add(new NombreProyecto("mitad", "id","estado"));
+                return listaTodosLosProyectosNombres;
+            }
+        }
+
+
+        /*
+        * Autor Juan Abello
+        * Metodo encargado de obtener los nombres de los proyectos en los que se encuentra un usuario,guardarlos en una lista y retornar esta.
+        * <param String rut>
+        * <returns> listaProyectosNombres 
+        */
+        public List<NombreProyecto> ListaDeProyectosAsociados(string id)
+        {
+
+            string estado = "habilitado";
+            string consulta = "SELECT proyecto.nombre, proyecto.id_proyecto, proyecto.referencias FROM proyecto, users, vinculo_usuario_proyecto " +
+                               "WHERE proyecto.referencias =  '" + estado + "' AND users.id = '" + id + "' AND vinculo_usuario_proyecto.ref_proyecto = " +
+                               "proyecto.id_proyecto AND vinculo_usuario_proyecto.ref_usuario = users.id";
+            MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
+            if (reader == null)
+            {
+                this.Conector.CerrarConexion();
+                listaProyectosNombres.Add(new NombreProyecto("mitad", "id","estado"));
+                return listaProyectosNombres;
+                //return null;
+            }
+            else
+            {
+                while (reader.Read())
+                {
+
+                    string Nombre = reader.GetString(0);
+                    string Id = reader.GetString(1);
+                    string Estado = reader.GetString(2);
+                    listaProyectosNombres.Add(new NombreProyecto(Nombre, Id,Estado));
+                }
+
+                this.Conector.CerrarConexion();
+                listaProyectosNombres.Add(new NombreProyecto("mitad", "id","estado"));
+                return listaProyectosNombres;
+            }
+        }
+
+        /*
+        * Autor Juan Abello
+        * Metodo encargado de obtener los nombres de los proyectos en los que se no encuentra un usuario,guardarlos en una lista y retornar esta.
+        * <param String rut>
+        * <returns> listaProyectosNombres 
+        */
+        public List<NombreProyecto> ListaDeProyectoNoAsociados(string id)
+        {
+            string estado = "habilitado";
+            string consulta = "SELECT Proyecto.nombre ,proyecto.id_proyecto ,proyecto.referencias FROM Proyecto where  proyecto.referencias = '" + estado + "' AND " +
+                              "Proyecto.nombre NOT IN" +
+                              "(SELECT Proyecto.nombre FROM Proyecto, users, vinculo_usuario_proyecto " +
+                              "WHERE users.id ='" + id + "'  AND Vinculo_usuario_proyecto.ref_proyecto = Proyecto.id_proyecto AND Vinculo_usuario_proyecto.ref_usuario = users.id)";
+
+            MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
+            if (reader == null)
+            {
+                this.Conector.CerrarConexion();
+                return null;
+            }
+            else
+            {
+                while (reader.Read())
+                {
+
+                    string Nombre = reader.GetString(0);
+                    string Id = reader.GetString(1);
+                    string Estado = reader.GetString(2);
+                    listaProyectosNombres.Add(new NombreProyecto(Nombre, Id,Estado));
+                }
+
+                this.Conector.CerrarConexion();
+                return listaProyectosNombres;
+            }
+        }
+
 
         public string ObtenerIdUsuarioActivo()
         {
@@ -106,21 +258,7 @@ namespace AppWebERS.Controllers
             }
         }
 
-        /**
-        * <author>Fabian Oyarce</author>
-        * <summary>
-        * obtiene los proyectos asociados y no asociados y los une a una sola lista
-        * </summary>
-        * <returns>lista proyectos nombres </returns>
-        */
-        public List<NombreProyecto> ObtenerProyectos()
-        {
-
-            ListaDeProyectosUsuario(ObtenerIdUsuarioActivo());
-            ListaDeProyectoNoAsociados(ObtenerIdUsuarioActivo());
-            return listaProyectosNombres;
-         
-        }
+      
 
         /**
         * Autor: Patricio Quezada
@@ -385,47 +523,8 @@ namespace AppWebERS.Controllers
             }
         }
 
-        public ActionResult InterfazUsuario()
-        {
-            var model = ObtenerProyectos();
-            return View(model);
+      
 
-        }
-
-        /*
-        * Autor Juan Abello
-        * Metodo encargado de obtener los nombres de los proyectos en los que se encuentra un usuario,guardarlos en una lista y retornar esta.
-        * <param String rut>
-        * <returns> listaProyectosNombres 
-        */
-        public List<NombreProyecto> ListaDeProyectosUsuario(string id)
-        {
-            string consulta = "SELECT proyecto.nombre, proyecto.id_proyecto FROM proyecto, users, vinculo_usuario_proyecto " +
-                               "WHERE users.id = '" + id + "' AND vinculo_usuario_proyecto.ref_proyecto = " +
-                               "proyecto.id_proyecto AND vinculo_usuario_proyecto.ref_usuario = users.id";
-            MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
-            if (reader == null)
-            {
-                this.Conector.CerrarConexion();
-                listaProyectosNombres.Add(new NombreProyecto("mitad", "id"));
-                return listaProyectosNombres;
-                //return null;
-            }
-            else
-            {
-                while (reader.Read())
-                {
-
-                    string Nombre = reader.GetString(0);
-                    string Id = reader.GetString(1);
-                    listaProyectosNombres.Add(new NombreProyecto(Nombre,Id));
-                }
-
-                this.Conector.CerrarConexion();
-                listaProyectosNombres.Add(new NombreProyecto("mitad","id"));
-                return listaProyectosNombres;
-            }
-        }
 
         /*
          * Autor: Nicolás Hervias
@@ -447,39 +546,6 @@ namespace AppWebERS.Controllers
 
 
         /*
-        * Autor Juan Abello
-        * Metodo encargado de obtener los nombres de los proyectos en los que se no encuentra un usuario,guardarlos en una lista y retornar esta.
-        * <param String rut>
-        * <returns> listaProyectosNombres 
-        */
-        public List<NombreProyecto> ListaDeProyectoNoAsociados(string id)
-        {
-            string consulta = "SELECT Proyecto.nombre ,proyecto.id_proyecto FROM Proyecto where Proyecto.nombre NOT IN" +
-                              "(SELECT Proyecto.nombre FROM Proyecto, users, vinculo_usuario_proyecto " +
-                              "WHERE users.id ='"+id+"'  AND Vinculo_usuario_proyecto.ref_proyecto = Proyecto.id_proyecto AND Vinculo_usuario_proyecto.ref_usuario = users.id)";
-
-            MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
-            if (reader == null)
-            {
-                this.Conector.CerrarConexion();
-                return null;
-            }
-            else
-            {
-                while (reader.Read())
-                {
-
-                    string Nombre = reader.GetString(0);
-                    string Id = reader.GetString(1);
-                    listaProyectosNombres.Add(new NombreProyecto(Nombre,Id));
-                }
-
-                this.Conector.CerrarConexion();
-                return listaProyectosNombres;
-            }
-        }
-
-        /*
        * Autor Fabian Oyarce
        * Metodo encargado de cambiar el estado de un proyecto a deshabilitado
        * <param String id>
@@ -488,7 +554,7 @@ namespace AppWebERS.Controllers
         public void DeshabilitarProyecto(string id)
         {
             string nuevoEstado = "deshabilitado";
-            string consulta = "UPDATE proyecto SET estado = '" + nuevoEstado + "'" +
+            string consulta = "UPDATE proyecto SET referencias = '" + nuevoEstado + "'" +
                                "WHERE (id_proyecto ='" + id + "') ";
 
             MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
@@ -508,5 +574,55 @@ namespace AppWebERS.Controllers
                 this.Conector.CerrarConexion();
             }
         }
+
+
+        /*
+      * Autor Fabian Oyarce
+      * Metodo encargado de cambiar el estado de un proyecto a habilitado
+      * <param String id>
+      */
+        [HttpGet]
+        public void HabilitarProyecto(string id)
+        {
+            string nuevoEstado = "habilitado";
+            string consulta = "UPDATE proyecto SET referencias = '" + nuevoEstado + "'" +
+                               "WHERE (id_proyecto ='" + id + "') ";
+
+            MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
+            if (reader == null)
+            {
+                this.Conector.CerrarConexion();
+                //Popup error
+            }
+            else
+            {
+                while (reader.Read())
+                {
+
+                    //Popups estado modificado
+                }
+
+                this.Conector.CerrarConexion();
+            }
+        }
+
+
+        /*
+      * Autor Fabian Oyarce
+      * Metodo encargado de obtner el rol de un usuario activo
+      * <param String id>
+      */
+        public string ObtenerTipoUsuarioActivo()
+        {
+            using (var Db = ApplicationDbContext.Create())
+            {
+                var UserManager = new ApplicationUserManager(new UserStore<ApplicationUser>(Db));
+                string UsuarioSolicitante = base.User.Identity.GetUserId();
+                ApplicationUser User = UserManager.FindByIdAsync(UsuarioSolicitante).Result;
+                string TipoUsuario = User.Tipo;
+                return TipoUsuario;
+            }
+        }
+
     }
 }

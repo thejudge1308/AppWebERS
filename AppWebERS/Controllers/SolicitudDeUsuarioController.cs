@@ -33,9 +33,10 @@ namespace AppWebERS.Controllers
             ViewBag.MiListadoSolicitudes = list;
             if (list.Count == 0)
             {
-                ViewBag.vacio = false;
+                ViewBag.vacio = true;
+                return View();
             }
-            ViewBag.vacio = true;
+            ViewBag.vacio = false;
             return View();
         }
 

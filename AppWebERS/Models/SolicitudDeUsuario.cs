@@ -50,28 +50,30 @@ namespace AppWebERS.Models
 
 
         public string ObtenerNombreProyecto(string id) {
+            ApplicationDbContext conexion1 = ApplicationDbContext.Create();
             string nombre = String.Empty;
             string consulta = "SELECT proyecto.nombre FROM proyecto WHERE id_proyecto = '" + id + "';";
-            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
+            MySqlDataReader reader = conexion1.RealizarConsulta(consulta);
             if (reader != null)
             {
                 reader.Read();
                 nombre = reader["nombre"].ToString();
             }
-            this.conexion.EnsureConnectionClosed();
+            conexion1.EnsureConnectionClosed();
             return nombre;
         }
 
         public string ObtenerNombreJefeProyecto(string id) {
+            ApplicationDbContext conexion1 = ApplicationDbContext.Create();
             string nombre = String.Empty;
             string consulta = "SELECT users.UserName FROM users,(SELECT vinculo_usuario_proyecto.ref_usuario FROM vinculo_usuario_proyecto WHERE ref_proyecto = '"+id+"' AND rol = 'JEFEPROYECTO') AS T1 WHERE Id = T1.ref_usuario;";
-            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
+            MySqlDataReader reader = conexion1.RealizarConsulta(consulta);
             if (reader != null)
             {
                 reader.Read();
                 nombre = reader["UserName"].ToString();
             }
-            this.conexion.EnsureConnectionClosed();
+            conexion1.EnsureConnectionClosed();
             return nombre;
         }
 

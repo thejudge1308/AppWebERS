@@ -10,6 +10,7 @@ using System.Data;
 using Microsoft.AspNet.Identity;
 using AspNet.Identity.MySQL;
 using Microsoft.AspNet.Identity.Owin;
+using AppWebERS.Utilidades;
 
 namespace AppWebERS.Controllers
 {
@@ -223,6 +224,7 @@ namespace AppWebERS.Controllers
                     {
                         if (proyecto.AsignarJefeProyecto(usuario, nombre))
                         {
+                            TempData["alerta"] = new Alerta("Exito al crear Proyecto", TipoAlerta.SUCCESS);
                             ViewBag.Message1 = "Exito al crear Proyecto";
                             return RedirectToAction("ListarProyectos", "Proyecto");
                         }
@@ -326,6 +328,7 @@ namespace AppWebERS.Controllers
             var list = proyecto.ObtenerUsuarios2(id);
             if (list.Count == 0)
             {
+                
                 ViewBag.MessageErrorProyectos = "No Hay Usuarios Disponibles";
                 ViewBag.MiListadoUsuarios = list;
                 ViewBag.listaVacia = true;

@@ -509,7 +509,7 @@ namespace AppWebERS.Controllers
         }
 
 
-        public ActionResult SolicitudDeProyecto(string id)
+        public ActionResult SolicitudDeProyecto(int id)
         {
             string s;
             using (var db = ApplicationDbContext.Create())
@@ -521,9 +521,9 @@ namespace AppWebERS.Controllers
 
             }
 
-            string idProyecto = id;
+            
             SolicitudDeProyecto sol = new SolicitudDeProyecto(s, id);
-            sol.ListarTodos();
+            sol.listaSolicitudes = new Proyecto().GetSolicitudesProyecto(id);
 
             return View("SolicitudDeProyecto", sol);
         }

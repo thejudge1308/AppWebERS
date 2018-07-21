@@ -525,7 +525,7 @@ namespace AppWebERS.Models{
                     string nombreUsuario = reader.GetString(0);
                     string idUsuario = reader.GetString(1);
                     string nombreProyecto = reader.GetString(2);
-                    string idProyecto = reader.GetString(3);
+                    int idProyecto = Int32.Parse(reader.GetString(3));
 
                     listaSolicitudes.Add(new SolicitudDeProyecto(nombreUsuario, idUsuario, nombreProyecto, idProyecto));
                 }

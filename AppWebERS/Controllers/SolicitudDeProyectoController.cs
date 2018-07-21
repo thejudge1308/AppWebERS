@@ -12,7 +12,7 @@ namespace AppWebERS.Controllers
     {
 
         //privatw conector solo para testing.
-        private ConectorBD conector = ConectorBD.Instance;
+        private ApplicationDbContext conector = ApplicationDbContext.Create();
 
         // GET: SolicitudDeProyecto
         public ActionResult Index()
@@ -39,8 +39,8 @@ namespace AppWebERS.Controllers
                     "DELETE FROM solicitud_vinculacion_proyecto WHERE ref_solicitante='" + idUsuario + "' AND ref_proyecto='" + idProyecto + "';"+
                     "COMMIT;";
                 conector.RealizarConsultaNoQuery(delete);
-                conector.CerrarConexion();
-                return RedirectToAction("SolicitudDeProyecto", "JefeProyecto", new { id = idProyecto });
+                conector.EnsureConnectionClosed();
+                return RedirectToAction("ListaUsuarios", "Proyecto", new { id = idProyecto });
            
         }
 
@@ -58,7 +58,8 @@ namespace AppWebERS.Controllers
                 "DELETE FROM solicitud_vinculacion_proyecto WHERE ref_solicitante='" + idUsuario + "' AND ref_proyecto='" + idProyecto + "';"
                 +"COMMIT;";
             conector.RealizarConsultaNoQuery(consulta);
-            return RedirectToAction("SolicitudDeProyecto", "JefeProyecto", new { id = idProyecto }); //Lo deje asi por mientras
+            conector.EnsureConnectionClosed();
+            return RedirectToAction("ListaUsuarios", "Proyecto", new { id = idProyecto }); //Lo deje asi por mientras
         }
 
         /*
@@ -79,10 +80,12 @@ namespace AppWebERS.Controllers
 
             if(reader!= null)
             {
+                conector.EnsureConnectionClosed();
                 return true;
             }
             else
             {
+                conector.EnsureConnectionClosed();
                 return false;
             }
         }

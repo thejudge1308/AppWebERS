@@ -1,4 +1,4 @@
-﻿@*
+﻿﻿@*
     Vista creada por Gerardo Estrada
 *@
 
@@ -6,22 +6,27 @@
 @model Usuario
 @{
     ViewBag.Title = "Lista de Usuarios";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
 }
+@Html.Partial("_AlertaPartial")
+
 
 @{
     var ProyectoActual = (Proyecto)ViewData["proyecto"];
     var TipoUsuario = (int)ViewData["permiso"];
     var usuarios = (List<Usuario>)ViewData["usuarios"];
+    var solicitudes = (List<SolicitudDeProyecto>)ViewData["solicitudes"];
 }
-
-@if (ProyectoActual != null) {
+@if (ProyectoActual != null)
+{
     <h2>Lista de usuarios.</h2>
     <ul class="nav nav-tabs">
         <li class="nav-item">
-            <a class="nav-link" href="@Url.Action("Detalles", "Proyecto", new { id = ProyectoActual.IdProyecto})">Detalles</a>
+            <a class="nav-link" href="@Url.Action("Detalles", "Proyecto", new { id = ProyectoActual.IdProyecto })">Detalles</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" href="@Url.Action("ListaUsuarios","Proyecto",new { id = ProyectoActual.IdProyecto})">Usuarios</a>
+            <a class="nav-link active" href="@Url.Action("ListaUsuarios", "Proyecto", new { id = ProyectoActual.IdProyecto })">Usuarios</a>
         </li>
         @{
             <!--
@@ -46,67 +51,141 @@
         }
     </ul>
     <div class="form-group">
-            <div class="col-12">
+        <div class="col-12">
+            @{
+                if (TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN)
+                {
+                    <a class="btn btn-primary" href="@Url.Action("ModificarJefeProyecto", "Proyecto", new { id = ProyectoActual.IdProyecto })">Modificar Jefe de Proyecto</a>
+                    <a class="btn btn-primary" href="@Url.Action("AgregarUsuario", "SysAdmin", new { id = ProyectoActual.IdProyecto })">Agregar usuario</a>
+                }
+
+            }
+        </div>
+    </div>
+                if (usuarios != null)
+                {
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Numero</th>
+                    <th scope="col">Rut</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Correo Electronico</th>
+                    <th scope="col">Tipo</th>
+                </tr>
+            </thead>
+            <tbody>
                 @{
-                    if (TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN) {
-                        <a class="btn btn-primary" href="@Url.Action("ModificarJefeProyecto","Proyecto",new { id = ProyectoActual.IdProyecto})">Modificar Jefe de Proyecto</a>
-                        <a class="btn btn-primary" href="@Url.Action("AgregarUsuario","SysAdmin",new { id = ProyectoActual.IdProyecto})">Agregar usuario</a>
-                    }
-                    if (TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO) {
-                        <a class="btn btn-primary" href="@Url.Action("SolicitudDeProyecto","JefeProyecto",new { id = ProyectoActual.IdProyecto})">Ver solicitudes de ingreso</a>
-                        <a class="btn btn-primary" href="@Url.Action("InvitarUsuario","JefeProyecto",new { id = ProyectoActual.IdProyecto})">Invitar usuario</a>
+                    var auxiliar = 1;
+                    if (usuarios.Count != 0)
+                    {
+                        foreach (Usuario item in (List<Usuario>)usuarios)
+                        {
+                            <tr>
+                                <th scope="row">@auxiliar</th>
+                                <td>@item.Rut</td>
+                                <td>@item.Nombre</td>
+                                <td>@item.CorreoElectronico</td>
+                                <td>@item.Tipo</td>
+                            </tr>
+                            ++auxiliar;
+                        }
                     }
                 }
-            </div>
-    </div>
-            if (usuarios != null) {
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Numero</th>
-                            <th scope="col">Rut</th>
-                            <th scope="col">Nombre</th>
-                            <th scope="col">Correo Electronico</th>
-                            <th scope="col">Tipo</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @{
-                            var auxiliar = 1;
-                            if (usuarios.Count != 0) {
-                                foreach (Usuario item in (List<Usuario>)usuarios) {
-                                    <tr>
-                                        <th scope="row">@auxiliar</th>
-                                        <td>@item.Rut</td>
-                                        <td>@item.Nombre</td>
-                                        <td>@item.CorreoElectronico</td>
-                                        <td>@item.Tipo</td>
-                                    </tr>
-                                    ++auxiliar;
-                                }
-                            }
-                            else {
+            </tbody>
 
-                            }
-
+        </table>
+                    }
+                    else
+                    {
+                        <div class="jumbotron jumbotron-fluid">
+                            <div class="container">
+                                <h1>No hay usuarios en el proyecto</h1>
+                            </div>
+                        </div>
                         }
+                    }
+                    else
+                    {
+        <div class="jumbotron jumbotron-fluid">
+            <div class="container">
+                <h1>Proyecto no encontrado</h1>
+            </div>
+        </div>
+                    }
+        <div class=" form-group">
+            @if (TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO)
+            {
+        <a class="btn btn-primary " href="@Url.Action("InvitarUsuario", "JefeProyecto", new { id = ProyectoActual.IdProyecto })" style="float: right;">Invitar usuario</a>
+}
+            <div style="clear: both;"></div>
+        </div>
+       
+    
 
-                    </tbody>
+        <div class="form-group">
+            @if (TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO)
+            {
+            <div id="accordion">
+                <div class="card">
+                    <div class="card-header" id="tablaSolicitudes">
 
-                </table>
-                            }
-                            else {
-                                <div class="jumbotron jumbotron-fluid">
-                                    <div class="container">
-                                        <h1>No hay usuarios en el proyecto</h1>
-                                    </div>
-                                </div>
+                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseTable" aria-expanded="true" aria-controls="collapseTable">
+                            <h4>Lista de Solicitudes</h4>
+                        </button>
+
+                    </div>
+                    <div id="collapseTable" class="collapse" aria-labelledby="tablaSolicitudes" data-parent="#accordion">
+                        <div class="card-body">
+                            @try
+                            {
+                                <a class="btn btn-link" data-toggle="collapse" href=#collapseTable role="button" aria-expanded="false" aria-controls="collapseTable"> </a>
+                            <div class="card-body table-responsive" id="collapseTable">
+                                @if (solicitudes.Count != 0)
+                                {
+                        <table class="table">
+                            <thead>
+                                <tr class="text-center">
+                                    <th scope="col">Nombre de Usuario</th>
+                                    <th scope="col">Nombre de Proyecto</th>
+                                    <th scope="col">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var solicitud in (List<SolicitudDeProyecto>)solicitudes)
+                                {
+                            <tr class="text-center">
+                                <td>@solicitud.usuario</td>
+                                <td>@solicitud.proyecto</td>
+                                <td>
+                                    <button type="button" id="btnAceptar" onclick="location.href='@Url.Action("Aceptar", "SolicitudDeProyecto", new { idUsuario = @solicitud.idUsuario, idProyecto = solicitud.idProyecto })'" class="btn btn-success boton2">Aceptar</button>
+                                    <button type="button" onclick="location.href='@Url.Action("Rechazar", "SolicitudDeProyecto", new { idUsuario = @solicitud.idUsuario, idProyecto = solicitud.idProyecto })'" class="btn btn-danger boton">Rechazar</button>
+                                </td>
+                            </tr>
                                 }
+                            </tbody>
+                        </table>
+                                }
+                        </div>
+
                             }
-                            else {
-                                <div class="jumbotron jumbotron-fluid">
-                                    <div class="container">
-                                        <h1>Proyecto no encontrado</h1>
-                                    </div>
-                                </div>
+                            catch (Exception e)
+                            {
+                <div class="alert alert-warning fade show w-50 mx-auto mt-3" role="alert">
+                    <strong>No hay solicitudes pendientes!</strong> <br />
+                </div>
                             }
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+      
+            }
+    @section scripts{
+        <script type="text/javascript" src="~/Scripts/alertaSolicitud.js"></script>
+    }
+            </div>
+
+

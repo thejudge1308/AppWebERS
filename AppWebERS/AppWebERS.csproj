@@ -344,6 +344,7 @@
     <Content Include="Views\Proyecto\AgregarUsuarioAProyecto.cshtml" />
     <Content Include="Views\SysAdmin2\Principal.cshtml" />
     <Content Include="Views\UserView\Principal.cshtml" />
+    <Content Include="Views\SolicitudDeUsuario\ListadoSolicitudUsuario.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,4 +1,5 @@
 ﻿using AppWebERS.Models;
+using AppWebERS.Utilidades;
 using AspNet.Identity.MySQL;
 using Microsoft.AspNet.Identity;
 using System;
@@ -40,16 +41,50 @@ namespace AppWebERS.Controllers
             return View();
         }
 
-        [HttpGet]
         public ActionResult Aceptar(int idProyecto)
         {
-            return null;
+            SolicitudDeUsuario solicitud = new SolicitudDeUsuario();
+            String id;
+            using (var db = ApplicationDbContext.Create())
+            {
+                var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
+                string s = User.Identity.GetUserId();
+                ApplicationUser user = userManager.FindByIdAsync(s).Result;
+                id = user.Id;
+
+            }
+            if (solicitud.AceptarSolicitud(idProyecto,id))
+            {
+                TempData["alerta"] = new Alerta("Solicitud Aceptada Exitosamente", TipoAlerta.SUCCESS);
+            }
+            else
+            {
+                TempData["alerta"] = new Alerta("ERROR al Aceptar Solicitud", TipoAlerta.ERROR);
+            }
+            return RedirectToAction("ListadoSolicitudUsuario", "SolicitudDeUsuario") ;
         }
 
-        [HttpGet]
         public ActionResult Rechazar(int idProyecto)
         {
-            return null;
+            SolicitudDeUsuario solicitud = new SolicitudDeUsuario();
+            String id;
+            using (var db = ApplicationDbContext.Create())
+            {
+                var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
+                string s = User.Identity.GetUserId();
+                ApplicationUser user = userManager.FindByIdAsync(s).Result;
+                id = user.Id;
+
+            }
+            if (solicitud.RechazarSolicitud(idProyecto, id))
+            {
+                TempData["alerta"] = new Alerta("Solicitud Rechazada Exitosamente", TipoAlerta.SUCCESS);
+            }
+            else
+            {
+                TempData["alerta"] = new Alerta("ERROR al Rechazar Solicitud", TipoAlerta.ERROR);
+            }
+            return RedirectToAction("ListadoSolicitudUsuario", "SolicitudDeUsuario");
         }
 
     }

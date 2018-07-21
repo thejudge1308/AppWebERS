@@ -29,8 +29,8 @@
                             <td data-info="info">@solicitud.Proyecto</td>
                             <td data-info="info">@solicitud.JefeProyecto</td>
                             <td>
-                                <button type="button" id="btnAceptar" onclick="location.href='@Url.Action("Aceptar", "SolicitudDeProyecto", new { idProyecto = @solicitud.IdProyecto })'" class="btn btn-success boton2">Aceptar</button>
-                                <button type="button" onclick="location.href='@Url.Action("Rechazar", "SolicitudDeProyecto", new { idProyecto = @solicitud.IdProyecto })'" class="btn btn-danger boton">Rechazar</button>
+                                <button type="button" id="btnAceptar" onclick="location.href='@Url.Action("Aceptar", "SolicitudDeUsuario", new { idProyecto = @solicitud.IdProyecto })'" class="btn btn-success boton2">Aceptar</button>
+                                <button type="button" onclick="location.href='@Url.Action("Rechazar", "SolicitudDeUsuario", new { idProyecto = @solicitud.IdProyecto })'" class="btn btn-danger boton">Rechazar</button>
                             </td>
                         </tr>
                     }

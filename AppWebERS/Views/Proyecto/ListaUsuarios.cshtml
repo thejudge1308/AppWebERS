@@ -23,10 +23,10 @@
     <h2>Lista de usuarios.</h2>
     <ul class="nav nav-tabs">
         <li class="nav-item">
-            <a class="nav-link" href="@Url.Action("Detalles", "Proyecto", new { id = ProyectoActual.IdProyecto})">Detalles</a>
+            <a class="nav-link" href="@Url.Action("Detalles", "Proyecto", new { id = ProyectoActual.IdProyecto })">Detalles</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" href="@Url.Action("ListaUsuarios","Proyecto",new { id = ProyectoActual.IdProyecto})">Usuarios</a>
+            <a class="nav-link active" href="@Url.Action("ListaUsuarios", "Proyecto", new { id = ProyectoActual.IdProyecto })">Usuarios</a>
         </li>
         @{
             <!--
@@ -113,78 +113,79 @@
                 <h1>Proyecto no encontrado</h1>
             </div>
         </div>
-        }
+                    }
         <div class=" form-group">
             @if (TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO)
-    {
-        <a class="btn btn-primary " href="@Url.Action("InvitarUsuario","JefeProyecto",new { id = ProyectoActual.IdProyecto} )" style="float: right;">Invitar usuario</a>
+            {
+        <a class="btn btn-primary " href="@Url.Action("InvitarUsuario", "JefeProyecto", new { id = ProyectoActual.IdProyecto })" style="float: right;">Invitar usuario</a>
 }
             <div style="clear: both;"></div>
         </div>
        
     
 
-    <div class="form-group">
+        <div class="form-group">
+            @if (TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO)
+            {
+            <div id="accordion">
+                <div class="card">
+                    <div class="card-header" id="tablaSolicitudes">
 
-        <div id="accordion">
-            <div class="card">
-                <div class="card-header" id="tablaSolicitudes">
+                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseTable" aria-expanded="true" aria-controls="collapseTable">
+                            <h4>Lista de Solicitudes</h4>
+                        </button>
 
-                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseTable" aria-expanded="true" aria-controls="collapseTable">
-                        <h4>Lista de Solicitudes</h4>
-                    </button>
-
-                </div>
-                <div id="collapseTable" class="collapse" aria-labelledby="tablaSolicitudes" data-parent="#accordion">
-                    <div class="card-body">
-                        @try
-                        {
-                            if (TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO)
+                    </div>
+                    <div id="collapseTable" class="collapse" aria-labelledby="tablaSolicitudes" data-parent="#accordion">
+                        <div class="card-body">
+                            @try
                             {
                                 <a class="btn btn-link" data-toggle="collapse" href=#collapseTable role="button" aria-expanded="false" aria-controls="collapseTable"> </a>
-                                <div class="card-body table-responsive" id="collapseTable">
-                                    @if (solicitudes.Count != 0)
-                                    {
-                                        <table class="table">
-                                            <thead>
-                                                <tr class="text-center">
-                                                    <th scope="col">Nombre de Usuario</th>
-                                                    <th scope="col">Nombre de Proyecto</th>
-                                                    <th scope="col">Acciones</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach (var solicitud in (List<SolicitudDeProyecto>)solicitudes)
-                                                {
-                                                    <tr class="text-center">
-                                                        <td>@solicitud.usuario</td>
-                                                        <td>@solicitud.proyecto</td>
-                                                        <td>
-                                                            <button type="button" id="btnAceptar" onclick="location.href='@Url.Action("Aceptar", "SolicitudDeProyecto", new { idUsuario = @solicitud.idUsuario, idProyecto = solicitud.idProyecto })'" class="btn btn-success boton2">Aceptar</button>
-                                                            <button type="button" onclick="location.href='@Url.Action("Rechazar", "SolicitudDeProyecto", new { idUsuario = @solicitud.idUsuario, idProyecto = solicitud.idProyecto })'" class="btn btn-danger boton">Rechazar</button>
-                                                        </td>
-                                                    </tr>
-                                                }
-                                            </tbody>
-                                        </table>
-                                    }
-                                </div>
+                            <div class="card-body table-responsive" id="collapseTable">
+                                @if (solicitudes.Count != 0)
+                                {
+                        <table class="table">
+                            <thead>
+                                <tr class="text-center">
+                                    <th scope="col">Nombre de Usuario</th>
+                                    <th scope="col">Nombre de Proyecto</th>
+                                    <th scope="col">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var solicitud in (List<SolicitudDeProyecto>)solicitudes)
+                                {
+                            <tr class="text-center">
+                                <td>@solicitud.usuario</td>
+                                <td>@solicitud.proyecto</td>
+                                <td>
+                                    <button type="button" id="btnAceptar" onclick="location.href='@Url.Action("Aceptar", "SolicitudDeProyecto", new { idUsuario = @solicitud.idUsuario, idProyecto = solicitud.idProyecto })'" class="btn btn-success boton2">Aceptar</button>
+                                    <button type="button" onclick="location.href='@Url.Action("Rechazar", "SolicitudDeProyecto", new { idUsuario = @solicitud.idUsuario, idProyecto = solicitud.idProyecto })'" class="btn btn-danger boton">Rechazar</button>
+                                </td>
+                            </tr>
+                                }
+                            </tbody>
+                        </table>
+                                }
+                        </div>
+
                             }
-                        }
-                        catch (Exception e)
-                        {
-                            <div class="alert alert-warning fade show w-50 mx-auto mt-3" role="alert">
-                                <strong>No hay solicitudes pendientes!</strong> <br />
-                            </div>
-                        }
+                            catch (Exception e)
+                            {
+                <div class="alert alert-warning fade show w-50 mx-auto mt-3" role="alert">
+                    <strong>No hay solicitudes pendientes!</strong> <br />
+                </div>
+                            }
+                            
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-
-    </div>
+      
+            }
     @section scripts{
         <script type="text/javascript" src="~/Scripts/alertaSolicitud.js"></script>
     }
-    </div>
+            </div>
+
 

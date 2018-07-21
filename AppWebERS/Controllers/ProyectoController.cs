@@ -225,26 +225,23 @@ namespace AppWebERS.Controllers
                         if (proyecto.AsignarJefeProyecto(usuario, nombre))
                         {
                             TempData["alerta"] = new Alerta("Exito al crear Proyecto", TipoAlerta.SUCCESS);
-                            ViewBag.Message1 = "Exito al crear Proyecto";
                             return RedirectToAction("ListarProyectos", "Proyecto");
                         }
                         else {
-                            ViewBag.Message1 = "";
-                            ViewBag.Message = "Error al crear proyecto";
+                            TempData["alerta"] = new Alerta("Error al crear Proyecto", TipoAlerta.ERROR);
                         }
 
                     }
                     else
                     {
-                        ViewBag.Message1 = "";
-                        ViewBag.Message = "Error al crear proyecto";
+                        TempData["alerta"] = new Alerta("Error al crear Proyecto", TipoAlerta.ERROR);
                     }
                 }
                 else
-                    ViewBag.Message = "Este nombre ya esta asociado a un proyecto";
+                   TempData["alerta"] = new Alerta("Este nombre ya esta asociado a un proyecto", TipoAlerta.ERROR);
             }
             else
-                ViewBag.Message = "Modelo no valido";
+                TempData["alerta"] = new Alerta("Modelo no valido", TipoAlerta.ERROR);
             return View();
         }
         /**

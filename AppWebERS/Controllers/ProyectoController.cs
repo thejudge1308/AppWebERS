@@ -148,7 +148,7 @@ namespace AppWebERS.Controllers
         public List<NombreProyecto> ListaDeTodosLosProyectos()
         {
 
-            string consulta = "SELECT proyecto.nombre, proyecto.id_proyecto, proyecto.referencias " +
+            string consulta = "SELECT proyecto.nombre, proyecto.id_proyecto, proyecto.estado " +
                                 "FROM proyecto";
             int bandera = 0;
             MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
@@ -194,8 +194,8 @@ namespace AppWebERS.Controllers
         {
 
             string estado = "habilitado";
-            string consulta = "SELECT proyecto.nombre, proyecto.id_proyecto, proyecto.referencias FROM proyecto, users, vinculo_usuario_proyecto " +
-                               "WHERE proyecto.referencias =  '" + estado + "' AND users.id = '" + id + "' AND vinculo_usuario_proyecto.ref_proyecto = " +
+            string consulta = "SELECT proyecto.nombre, proyecto.id_proyecto, proyecto.estado FROM proyecto, users, vinculo_usuario_proyecto " +
+                               "WHERE proyecto.estado =  '" + estado + "' AND users.id = '" + id + "' AND vinculo_usuario_proyecto.ref_proyecto = " +
                                "proyecto.id_proyecto AND vinculo_usuario_proyecto.ref_usuario = users.id";
             MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
             if (reader == null)
@@ -231,7 +231,7 @@ namespace AppWebERS.Controllers
         public List<NombreProyecto> ListaDeProyectoNoAsociados(string id)
         {
             string estado = "habilitado";
-            string consulta = "SELECT Proyecto.nombre ,proyecto.id_proyecto ,proyecto.referencias FROM Proyecto where  proyecto.referencias = '" + estado + "' AND " +
+            string consulta = "SELECT Proyecto.nombre ,proyecto.id_proyecto ,proyecto.estado FROM Proyecto where  proyecto.estado = '" + estado + "' AND " +
                               "Proyecto.nombre NOT IN" +
                               "(SELECT Proyecto.nombre FROM Proyecto, users, vinculo_usuario_proyecto " +
                               "WHERE users.id ='" + id + "'  AND Vinculo_usuario_proyecto.ref_proyecto = Proyecto.id_proyecto AND Vinculo_usuario_proyecto.ref_usuario = users.id)";
@@ -588,7 +588,7 @@ namespace AppWebERS.Controllers
             TempData["alerta"] = new Alerta("Estado Modificado", TipoAlerta.SUCCESS);
 
             string nuevoEstado = "deshabilitado";
-            string consulta = "UPDATE proyecto SET referencias = '" + nuevoEstado + "'" +
+            string consulta = "UPDATE proyecto SET estado = '" + nuevoEstado + "'" +
                                "WHERE (id_proyecto ='" + id + "') ";
 
             MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
@@ -622,7 +622,7 @@ namespace AppWebERS.Controllers
         {
             TempData["alerta"] = new Alerta("Estado Modificado", TipoAlerta.SUCCESS);
             string nuevoEstado = "habilitado";
-            string consulta = "UPDATE proyecto SET referencias = '" + nuevoEstado + "'" +
+            string consulta = "UPDATE proyecto SET estado = '" + nuevoEstado + "'" +
                                "WHERE (id_proyecto ='" + id + "') ";
 
             MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);

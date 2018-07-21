@@ -413,6 +413,10 @@ namespace AppWebERS.Controllers
             }
         }
 
+        public ActionResult Requisito() {
+            return View();
+        }
+
         public ActionResult InterfazUsuario()
         {
             var model = ObtenerProyectos();

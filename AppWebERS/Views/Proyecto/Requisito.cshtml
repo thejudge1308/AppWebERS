@@ -1,0 +1,95 @@
+﻿@model AppWebERS.Models.Requisito
+@{
+    ViewBag.Title = "Tarjeta de Volere";
+}
+
+<h2>TarjetaVolere</h2>
+<div class="card">
+    <div class="card-header">
+        <form class="form-inline">
+            <div class="form-group">
+                @Html.LabelFor(m => m.IdRequisito, new { @class="col-sm-2 col-form-label"})
+                @Html.TextBoxFor(m => m.IdRequisito, new { @class = "form-control mx-sm-2 col-sm-4", placeholder = "1234", maxlenght = "6"  })
+
+                @Html.LabelFor(m => m.Nombre, new { @class = "col-sm-2 col-form-label" })
+                    @Html.TextBoxFor(m => m.Nombre, new { placeholder = "Ingrese Nombre del Requisito", @class = "form-control mx-sm-2 " })
+            </div>
+        </form>
+    </div>
+    <div class="card-body">
+        <form class="form-inline">
+            <div class="form-group">
+                @Html.LabelFor(m => m.Descripcion)
+                @Html.TextAreaFor(m => m.Descripcion, new { placeholder = "Ingrese la descripción del requisito", @class = "form-control mx-sm-4"})
+
+            </div>
+        </form>
+        <form class="form-inline">
+            <div class="form-group">
+                @Html.LabelFor(m => m.Fuente)
+                @Html.TextBoxFor(m => m.Fuente, new { placeholder = "", @class = "form-control mx-sm-2" })
+            </div>
+        </form>
+        <form class="form-inline">
+            <div class="form-group">
+                @Html.LabelFor(m => m.TipoUsuario)
+                @Html.TextBoxFor(m => m.TipoUsuario, new { placeholder = "", @class = "form-control mx-sm-2" })
+            </div>
+        </form>
+        <form class="form-inline">
+            <div class="form-group">
+                @Html.LabelFor(m => m.TipoRequisito)
+                <select class="form-control">
+                    <option>Funcional</option>
+                    <option>No Funcional</option>
+                </select>
+                @Html.LabelFor(m => m.Estado)
+                <select class="form-control">
+                    <option>No Cumple</option>
+                    <option>Cumple</option>
+                </select>
+            </div>
+        </form>
+        <form class="form-inline">
+            <div class="form-group">
+                @Html.LabelFor(m => m.Prioridad)
+                <select class="form-control">
+                    <option>Crítica</option>
+                    <option>No Crítica</option>
+                </select>
+                @Html.LabelFor(m => m.Estabilidad)
+                <select class="form-control">
+                    <option>Transable</option>
+                    <option>Intransable</option>
+                </select>
+            </div>
+        </form>
+        <form class="form-inline">
+            <div class="form-group">
+                @Html.LabelFor(m => m.Medida)
+                @Html.TextBoxFor(m => m.Medida, new { placeholder = "Ingrese la medida", @class = "form-control mx-sm-2" })
+            </div>
+        </form>
+        <form class="form-inline">
+            <div class="form-group">
+                @Html.LabelFor(m => m.Escala)
+                @Html.TextBoxFor(m => m.Escala, new { placeholder = "Ingrese la escala", @class = "form-control mx-sm-2" })
+            </div>
+        </form>
+            <form class="form-inline">
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Fecha)
+                    <input id="datepicker" width="276" />
+                    <script>
+                        $('#datepicker').datepicker({
+                            uiLibrary: 'bootstrap4'
+                        });
+                    </script>
+
+                    @Html.LabelFor(m => m.Incremento)
+                    @Html.TextBoxFor(m => m.Incremento, new { maxlenght = "6", @class = "form-control mx-sm-2" })
+
+                </div>
+            </form>
+    </div>
+</div>

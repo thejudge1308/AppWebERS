@@ -1,0 +1,49 @@
+﻿@{
+    /**/
+
+    ViewBag.Title = " Modificar Jefe Proyecto";
+
+}
+@Html.Partial("_AlertaPartial")
+@using (Html.BeginForm("ListadoSolicitudUsuario", "SolicitudDeUsuarioController"))
+{
+<div class="card my-1 mx-5 h-100">
+    <div class="card-header">
+        <h4>Solicitudes pendientes</h4>
+    </div>
+    @if (!ViewBag.vacio)
+    {
+        <div class="card-body table-responsive">
+            <table class="table">
+                <thead class="thead-dark">
+                    <tr class="text-center">
+                        <th scope="col">Nombre Proyecto</th>
+                        <th scope="col">Nombre Jefe Proyecto</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var solicitud in @ViewBag.MiListadoSolicitudes)
+                    {
+                        <tr class="text-center">
+                            <td data-info="info">@solicitud.Proyecto</td>
+                            <td data-info="info">@solicitud.JefeProyecto</td>
+                            <td>
+                                <button type="button" id="btnAceptar" onclick="location.href='@Url.Action("Aceptar", "SolicitudDeProyecto", new { idProyecto = @solicitud.IdProyecto })'" class="btn btn-success boton2">Aceptar</button>
+                                <button type="button" onclick="location.href='@Url.Action("Rechazar", "SolicitudDeProyecto", new { idProyecto = @solicitud.idProyecto })'" class="btn btn-danger boton">Rechazar</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning fade show w-50 mx-auto mt-3" role="alert">
+            <strong>No hay solicitudes pendientes!</strong> <br />
+        </div>
+    }
+
+</div>
+}

@@ -74,7 +74,7 @@ namespace AppWebERS.Controllers
                 return View(model);
             }
             ApplicationUser usuario;
-            if (model.isRut)
+            if (model.esRut())
             {
                 usuario = await UserManager.FindByRutAsync(model.RutName);
             }

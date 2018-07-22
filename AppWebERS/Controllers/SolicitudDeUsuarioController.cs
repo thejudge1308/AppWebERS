@@ -16,7 +16,14 @@ namespace AppWebERS.Controllers
         {
             return View();
         }
-
+        /**
+         * <author>Ariel Cornejo</author>
+         * <sumary>
+         * Metodo encargado de de devolver la interfaz asociada a lista de solictudes pendientes para un usuario.
+         * </sumary>
+         * <returns>La vista ListadoSolictudUsuario la cual contiene la tabla con las solicitudes pendientes del usuario</returns>
+         * 
+         */
         [HttpGet]
         public ActionResult ListadoSolicitudUsuario()
         {

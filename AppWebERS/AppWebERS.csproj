@@ -274,6 +274,8 @@
     <Content Include="Scripts\popper-utils.min.js" />
     <Content Include="Scripts\popper.js" />
     <Content Include="Scripts\popper.min.js" />
+    <Content Include="Scripts\Proyecto\Detalles_sysadmin_quill.min.js" />
+    <Content Include="Scripts\Proyecto\Detalles_sysadmin_quill.js" />
     <Content Include="Scripts\quilljs\quill.bubble.css" />
     <Content Include="Scripts\quilljs\quill.core.css" />
     <Content Include="Scripts\quilljs\quill.core.js" />

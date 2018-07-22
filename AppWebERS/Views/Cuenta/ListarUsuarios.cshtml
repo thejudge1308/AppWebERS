@@ -25,6 +25,7 @@
                                 <th scope="col">Nombre de Usuario</th>
                                 <th scope="col">Rut</th>
                                 <th scope="col">Correo Electronico</th>
+                                <th scope="col">Nombre Completo</th>
                                 <th scope="col">Tipo</th>
                                 <th scope="col">Acciones</th>
                             </tr>
@@ -32,29 +33,30 @@
                         <tbody>
                             @foreach (var usuario in Model)
                             {
-                                <tr class="text-center">
-                                    <td data-info="info">@usuario.UserName</td><!-- Reemplazar por como quiera que le pongan en el foreach a la variable. Ej: (arroba)Item.Nombre -->
-                                    <td data-info="info">@usuario.Rut</td>
-                                    <td data-info="info">@usuario.Email</td>
-                                    <td data-info="info">@usuario.Tipo</td>
-                                    <td>
-                                        <div class="d-none d-lg-block">
-                                            @Html.ActionLink("Modificar", "ModificarCuenta", new { rut = usuario.Rut }, new { @class = "btn btn-secondary", id = "btnModificar", type = "button" })
-                                            @if (usuario.Estado)
-                                            {
-                                                texto = "Deshabilitar";
-                                            }
-                                            else
-                                            {
-                                                texto = "Habilitar";
-                                            }
+                            <tr class="text-center">
+                                <td data-info="info">@usuario.UserName</td><!-- Reemplazar por como quiera que le pongan en el foreach a la variable. Ej: (arroba)Item.Nombre -->
+                                <td data-info="info">@usuario.Rut</td>
+                                <td data-info="info">@usuario.Email</td>
+                                <td data-info="info">@(@usuario.Nombre + " " + @usuario.Apellido)</td>
+                                <td data-info="info">@usuario.Tipo</td>
+                                <td>
+                                    <div class="d-none d-lg-block">
+                                        @Html.ActionLink("Modificar", "ModificarCuenta", new { rut = usuario.Rut }, new { @class = "btn btn-secondary", id = "btnModificar", type = "button" })
+                                        @if (usuario.Estado)
+            {
+                texto = "Deshabilitar";
+            }
+            else
+            {
+                texto = "Habilitar";
+            }
 
-                                            @Html.ActionLink(texto, "DeshabilitarUsuario", "Cuenta", new { rut = usuario.Rut }, new { @class = "btn btn-secondary", type = "button", d = "btnModificar" })
+                                        @Html.ActionLink(texto, "DeshabilitarUsuario", "Cuenta", new { rut = usuario.Rut }, new { @class = "btn btn-secondary", type = "button", d = "btnModificar" })
 
-                                        </div>
-                                      
-                    </td>
-                    </tr>
+                                    </div>
+
+                                </td>
+                            </tr>
                 }
                             </tbody>
                             </table>

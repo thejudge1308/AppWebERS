@@ -8,18 +8,36 @@
     {
     @Html.AntiForgeryToken()
 
+
+
 <ul class="nav navbar-nav navbar-right">
     <div class="dropdown mr-5">
-        <button class="btn btn-secondary dropdown-toggle"
-                type="button" id="dropdownMenu1" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">
-            @User.Identity.GetUserName()
-        </button>
-        <div class="dropdown-menu mx-auto w-100" aria-labelledby="dropdownMenu1" id="menuDropdown">
-            
-            @Html.ActionLink("Cuenta de usuario", "ModificarCuenta", "Cuenta", new {rut = rutUsuario}, htmlAttributes: new { id = "cuentaLink", @class = "dropdown-item" })
-            <a class="dropdown-item" href="javascript:document.getElementById('logoutForm').submit()">Log out</a>
-        </div>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-user" style="text-align: center;"></i>
+                <i class="glyphicon glyphicon-user" style="text-align: center;"></i> @User.Identity.GetUserName()
+            </a>
+
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                @Html.ActionLink("Modificar Cuenta", "ModificarCuenta", "Cuenta", new { rut = rutUsuario }, htmlAttributes: new { id = "cuentaLink", @class = "dropdown-item" })
+                @if (Request.IsAuthenticated)
+                {
+                    string usuario = Html.Action("RetornarTipoUsuarioAutentificado", "Cuenta").ToString();
+                    if (usuario.Equals("USUARIO"))
+                    {
+                        @Html.ActionLink("Invitaciones", "Solicitud", "SolicitudDeProyecto", new { rut = rutUsuario }, htmlAttributes: new { id = "cuentaLink", @class = "dropdown-item" })                    
+                    }
+                }
+                
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="javascript:document.getElementById('logoutForm').submit()">Salir</a>
+
+                
+            </div>
+
+
+
+        </li>
     </div>
 </ul>
     }
@@ -27,7 +45,7 @@
 else
 {
     <ul class="nav navbar-nav navbar-right">
-        <li class="nav-item mr-3 text-white">@Html.ActionLink("Register", "Register", "Cuenta", routeValues: null, htmlAttributes: new { id = "registerLink", @class = "nav-link" })</li>
-        <li class="nav-item mr-3 text-white">@Html.ActionLink("Log in", "Login", "Cuenta", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "nav-link" })</li>
+        <li class="nav-item mr-3 text-white">@Html.ActionLink("Registrar", "Register", "Cuenta", routeValues: null, htmlAttributes: new { id = "registerLink", @class = "nav-link" })</li>
+        <li class="nav-item mr-3 text-white">@Html.ActionLink("Ingresar", "Login", "Cuenta", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "nav-link" })</li>
     </ul>
 }

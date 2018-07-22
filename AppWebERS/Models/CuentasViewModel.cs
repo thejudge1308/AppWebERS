@@ -7,12 +7,10 @@ using System.Web;
 
 namespace AppWebERS.Models
 {
-    public class LoginViewModel : IValidatableObject
+    public class LoginViewModel
     {
         [Required]
         [Display(Name = "Rut o nombre")]
-        [RegularExpression("([1-9][0-9]*|([ ]?[a-zA-Z0-9])*)", ErrorMessage = "El formato del campo no es valido")]
-        //[StringLength(8, ErrorMessage = "El campo Rut debe tener 7 caractener como minimo y 8 como máximo", MinimumLength = 7)]
         /**
          * <param name="RutName">Rut</param>  
          */
@@ -34,28 +32,14 @@ namespace AppWebERS.Models
         */
         public bool RememberMe { get; set; }
 
-        public bool isRut = true;
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        public bool esRut()
         {
-            var errores = new List<ValidationResult>();
-            Regex regexRut = new Regex("([1-9][0-9]*)");
+            Regex regexRut = new Regex("(^[a-zA-Z])");
             if (regexRut.IsMatch(RutName))
             {
-                if(!(RutName.Length == 7 || RutName.Length == 8))
-                {
-                    errores.Add(new ValidationResult("El Rut debe tener 7 caractener como minimo y 8 como máximo", new string[] {"RutName"}));
-                }
-                isRut = true;
+                return false;
             }
-            else
-            {
-                if (!(RutName.Length >= 5 && RutName.Length <= 50))
-                {
-                    errores.Add(new ValidationResult("El largo del nombre deber ser entre 5 a 50 caracteres.", new string[] {"RutName"}));
-                }
-                isRut = false;
-            }
-            return errores;
+            return true;
         }
     }
 

@@ -48,11 +48,23 @@ namespace AppWebERS.Controllers
          * <returns> la vista de éxito. </returns>
          */
         // POST: Proyecto/Detalles/5
+        public class ProyectoJsonRespuesta {
+            public string id { set; get; }
+            public string atributo { set; get; }
+            public string valor { set; get; }
+        }
         [HttpPost]
         [Authorize]
-        public ActionResult Detalles(FormCollection datos, int id) {
+        public ActionResult Detalles(ProyectoJsonRespuesta json) {
+            Debug.WriteLine("JSON: " + json.id);
+          
+            switch(json.atributo) {
+                case "nombre":
+                    return Json(true, JsonRequestBehavior.AllowGet);
+                    break;
+            }
             //Captura de datos -> debe ser coherente al nombramiento del modelo
-
+            /*
             Proyecto proyecto = new Proyecto();
             string nombre = datos[1];
             string proposito = datos[2];
@@ -66,7 +78,8 @@ namespace AppWebERS.Controllers
             string relacion_con_otros_proyectos = datos[10];
 
             proyecto.ActualizarDatosProyecto(id, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambiente_operacional, relacion_con_otros_proyectos);
-            return RedirectToAction("Detalles/" + id);
+            return RedirectToAction("Detalles/" + id);*/
+            return Json(false, JsonRequestBehavior.AllowGet);
         }
 
         
@@ -80,13 +93,9 @@ namespace AppWebERS.Controllers
         // GET: Proyecto/ListaUsuarios/5
         public ActionResult ListaUsuarios(int id) {
             Proyecto proyecto = this.GetProyecto(id);
-
             List<Usuario> usuarios = new Proyecto().GetListaUsuarios(id);
-
-            //Debug.WriteLine("Permiso: " + TipoDePermiso());
             ViewData["proyecto"] = proyecto;
             ViewData["usuarios"] = usuarios;
-            Debug.WriteLine("Lista de usuarios" + usuarios);
             ViewData["permiso"] = TipoDePermiso(id);
             return View();
         }
@@ -161,7 +170,6 @@ namespace AppWebERS.Controllers
             //Obtiene id del usuario de la sesion
             var UsuarioActual = User.Identity.GetUserId();
             int ModoVista = new Proyecto().ObtenerRolDelUsuario(UsuarioActual.ToString(),id);
-            Debug.WriteLine(ModoVista + "jaskdjakdaksdjakdjakdj");
             return ModoVista;
         }
         /**

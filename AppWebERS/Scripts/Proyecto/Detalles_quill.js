@@ -48,10 +48,9 @@ $(document).ready(function () {
     //obtiene la informacion
     var urlget = "/Proyecto/infoProyecto/" + $("#ProyectoActual_IdProyecto").val();
     $.get(urlget, function () {
-        
         })
         .done(function (data) {
-            console.log(data);
+           //console.log(data);
             var emptydata = "<p></br></p>";
             //obtener valores
             var nombre = data.Nombre === "" ? emptydata : data.Nombre;
@@ -97,25 +96,85 @@ $(document).ready(function () {
             //alert("finished");
         });
 
-
-    //var container = $('.editor').get(0);
-    //var editor = new Quill(container);
-    /*quill.on('text-change', function () {
-        var html = editor.getHTML();
-        HTML_Container.value = "<p>here is some <strong>awesome</strong> text</p>"; // make this a <textarea>
-    });*/
-
     $('#nombre-button').on('click', function () {
         console.log(nombreQ.root.innerHTML);
-       // quill.root.innerHtml = '<p>Hello World!</p><h1 class="ql-align-right">Some initial <strong>bold</strong> text</h1><p><br></p>';
-        //console.log(quill.root.innerHTML);
-
-        ///var htmlToInsert = "<p>here is some <strong>awesome</strong> text</p>";
-        //$('#editor .ql-editor').empty();
-       // $('#editor .ql-editor').append(htmlToInsert);
-        
-
-
+        info_post($("#ProyectoActual_IdProyecto").val(), "nombre", nombreQ.root.innerHTML);
     });
+    $('#proposito-button').on('click', function () {
+        console.log(propositoQ.root.innerHTML);
+        info_post($("#ProyectoActual_IdProyecto").val(), "proposito", propositoQ.root.innerHTML);
+    });
+    $('#alcance-button').on('click', function () {
+        console.log(alcanceQ.root.innerHTML);
+        info_post($("#ProyectoActual_IdProyecto").val(), "alcance", alcanceQ.root.innerHTML);
+    });
+    $('#contexto-button').on('click', function () {
+        console.log(contextoQ.root.innerHTML);
+        info_post($("#ProyectoActual_IdProyecto").val(), "contexto", contextoQ.root.innerHTML);
+    });
+    $('#definicion-button').on('click', function () {
+        console.log(definicionQ.root.innerHTML);
+        info_post($("#ProyectoActual_IdProyecto").val(), "definicion", definicionQ.root.innerHTML);
+    });
+    $('#acronimo-button').on('click', function () {
+        console.log(acronimoQ.root.innerHTML);
+        info_post($("#ProyectoActual_IdProyecto").val(), "acronimo", acronimoQ.root.innerHTML);
+    });
+    $('#abreviatura-button').on('click', function () {
+        console.log(abreviaturaQ.root.innerHTML);
+        info_post($("#ProyectoActual_IdProyecto").val(), "abreviatura", abreviaturaQ.root.innerHTML);
+    });
+    $('#referencia-button').on('click', function () {
+        console.log(referenciaQ.root.innerHTML);
+        info_post($("#ProyectoActual_IdProyecto").val(), "referencia", referenciaQ.root.innerHTML);
+    });
+    $('#ambiente-button').on('click', function () {
+        console.log(ambienteQ.root.innerHTML);
+        info_post($("#ProyectoActual_IdProyecto").val(), "ambiente", ambienteQ.root.innerHTML);
+    });
+    $('#relacion-button').on('click', function () {
+        console.log(relacionQ.root.innerHTML);
+        info_post($("#ProyectoActual_IdProyecto").val(), "relacion", relacionQ.root.innerHTML);
+    });
+
+    function info_post(idProyecto,attr,informacion) {
+        var ProyectoJsonRespuesta = {
+            id : idProyecto,
+            atributo : attr,
+            valor: informacion
+        };
+        console.log(ProyectoJsonRespuesta);
+       /* $.post(ProyectoJsonRespuesta, function () {
+            // si es necesario, colocar inicio de Wait aqui
+             })
+            .done(function (i) {
+                console.log(i);
+            })
+            .fail(function () {
+                alert("No se ha podido modificar");
+            })
+            .always(function () {
+               
+            });*/
+
+        $.ajax({
+            type: "POST",
+            url: "/Proyecto/Detalles",
+            data: JSON.stringify(ProyectoJsonRespuesta),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                console.log(response);
+            },
+            failure: function (response) {
+                alert(response.responseText);
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+        });  
+
+    }
+
 });
 

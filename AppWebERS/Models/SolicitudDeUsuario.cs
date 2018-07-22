@@ -16,12 +16,33 @@ namespace AppWebERS.Models
 
         }
 
-
+        /**
+         * Getter y Setter del nombre de un proyecto.
+         * <param name = "Proyecto" > string con el nombre de un proyecto.</param>
+         * <returns>Retorna el valor string del nombre.</returns>
+         **/
         public string Proyecto { get; set; }
+        /**
+         * Getter y Setter del id de un proyecto.
+         * <param name = "IdProyecto" > string con el id de un proyecto.</param>
+         * <returns>Retorna el valor string del id de un proyecto.</returns>
+         **/
         public string IdProyecto { get; set; }
+        /**
+         * Getter y Setter del nombre de un jefe proyecto.
+         * <param name = "JefeProyecto" > string con el nombre de un jefe de proyecto.</param>
+         * <returns>Retorna el valor string del nombre de jefe de proyecto.</returns>
+         **/
         public string JefeProyecto { get; set; }
- 
 
+        /**
+         * <author>Roberto Ureta</author>
+         * Constructor de Solicitud de usuario.
+         * 
+         * <param name = "Proyecto" > string con el nombre de un proyecto.</param>
+         * <param name = "IdProyecto" > string con el id de un proyecto.</param>
+         * <param name = "JefeProyecto" > string con el nombre de un jefe de proyecto.</param>
+         **/
         public SolicitudDeUsuario(string proyecto, string idProyecto, string jefeProyecto) {
             this.Proyecto = proyecto;
             this.IdProyecto = idProyecto;
@@ -29,7 +50,14 @@ namespace AppWebERS.Models
         }
 
 
-
+        /**
+        * <author>Roberto Ureta</author>
+        * <summary>
+        * Obtiene una lista con las solicitudes de union a un proyecto que tiene un usuario.
+        * </summary>
+        * <param name="idUsuario">id del usuario para recuperar las solicitudes.</param>
+        * <returns> lista con las solicitudes de un usuario. </returns>
+        */
         public List<SolicitudDeUsuario> ObtenerSolicitudesDeUsuario(string idUsuario) {
             List<SolicitudDeUsuario> listaSolicitudes = new List<SolicitudDeUsuario>();
             string consulta = "SELECT solicitud_jefeproyecto_usuario.ref_proyecto FROM solicitud_jefeproyecto_usuario WHERE ref_destinario = '"+idUsuario+"' AND estado = 0;";
@@ -48,7 +76,14 @@ namespace AppWebERS.Models
             return listaSolicitudes;
         }
 
-
+        /**
+        * <author>Roberto Ureta</author>
+        * <summary>
+        * Obtiene el nombre de un proyecto de acuerdo a su id.
+        * </summary>
+        * <param name="id">id del proyecto.</param>
+        * <returns> string con el nombre del proyecto. </returns>
+        */
         public string ObtenerNombreProyecto(string id) {
             ApplicationDbContext conexion1 = ApplicationDbContext.Create();
             string nombre = String.Empty;
@@ -63,6 +98,14 @@ namespace AppWebERS.Models
             return nombre;
         }
 
+        /**
+        * <author>Roberto Ureta</author>
+        * <summary>
+        * Obtiene el nombre del jefe de un proyecto de acuerdo al id de un proyecto.
+        * </summary>
+        * <param name="id">id del proyecto.</param>
+        * <returns> string que contiene el nombre del jefe de proyecto asociado a un proyecto. </returns>
+        */
         public string ObtenerNombreJefeProyecto(string id) {
             ApplicationDbContext conexion1 = ApplicationDbContext.Create();
             string nombre = String.Empty;
@@ -77,6 +120,19 @@ namespace AppWebERS.Models
             return nombre;
         }
 
+        /**
+         * 
+         * <author>Diego Iturriaga</author>
+         * <summary>
+         * Metodo para registrar en la base de datos la solicitud aceptada por un usuario y crear
+         * el vinculo con el respectivo proyecto al que este se ha unido.
+         * </summary>
+         * <param name="idProyecto">id del proyecto al cual se unira el usuario logeado en el sistema.</param>
+         * <param name="idUsuario">id del usuario que acepto la solicitud para unirse a un proyecto.</param>
+         * <returns>El metodo retorna True si se registran los cambios exitosamente. Retorna False si se 
+         * genera algun error en el registro.</returns>
+         * 
+         **/
         public bool AceptarSolicitud(int idProyecto, string idUsuario)
         {
             string consultaUpdate = "UPDATE Solicitud_jefeproyecto_usuario SET estado = 1 WHERE ref_destinario='"+idUsuario+"' AND ref_proyecto="+idProyecto+" AND estado=0;";
@@ -90,7 +146,19 @@ namespace AppWebERS.Models
             }
             return false;
         }
-        
+
+        /**
+         * 
+         * <author>Diego Iturriaga</author>
+         * <summary>
+         * Metodo para registrar en la base de datos la solicitud rechazada por un usuario.
+         * </summary>
+         * <param name="idProyecto">id del proyecto cuya solicitud fue rechazada por el usuario logeado en el sistema.</param>
+         * <param name="idUsuario">id del usuario que rechaza la solicitud paraunirse  a un proyecto.</param>
+         * <returns>El metodo retorna True si se registran los cambios exitosamente. Retorna False si se 
+         * genera algun error en el registro.</returns>
+         * 
+         **/
         public bool RechazarSolicitud(int idProyecto, string idUsuario)
         {
             string consultaUpdate = "UPDATE Solicitud_jefeproyecto_usuario SET estado = 2 WHERE ref_destinario='" + idUsuario + "' AND ref_proyecto='" + idProyecto + "' AND estado=0;";

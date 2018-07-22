@@ -63,6 +63,7 @@ namespace AppWebERS.Models
             return nombre;
         }
 
+        
         public string ObtenerNombreJefeProyecto(string id) {
             ApplicationDbContext conexion1 = ApplicationDbContext.Create();
             string nombre = String.Empty;
@@ -77,6 +78,19 @@ namespace AppWebERS.Models
             return nombre;
         }
 
+        /**
+         * 
+         * <author>Diego Iturriaga</author>
+         * <summary>
+         * Metodo para registrar en la base de datos la solicitud aceptada por un usuario y crear
+         * el vinculo con el respectivo proyecto al que este se ha unido.
+         * </summary>
+         * <param name="idProyecto">id del proyecto al cual se unira el usuario logeado en el sistema.</param>
+         * <param name="idUsuario">id del usuario que acepto la solicitud para unirse a un proyecto.</param>
+         * <returns>El metodo retorna True si se registran los cambios exitosamente. Retorna False si se 
+         * genera algun error en el registro.</returns>
+         * 
+         **/
         public bool AceptarSolicitud(int idProyecto, string idUsuario)
         {
             string consultaUpdate = "UPDATE Solicitud_jefeproyecto_usuario SET estado = 1 WHERE ref_destinario='"+idUsuario+"' AND ref_proyecto="+idProyecto+" AND estado=0;";
@@ -90,7 +104,19 @@ namespace AppWebERS.Models
             }
             return false;
         }
-        
+
+        /**
+         * 
+         * <author>Diego Iturriaga</author>
+         * <summary>
+         * Metodo para registrar en la base de datos la solicitud rechazada por un usuario.
+         * </summary>
+         * <param name="idProyecto">id del proyecto cuya solicitud fue rechazada por el usuario logeado en el sistema.</param>
+         * <param name="idUsuario">id del usuario que rechaza la solicitud paraunirse  a un proyecto.</param>
+         * <returns>El metodo retorna True si se registran los cambios exitosamente. Retorna False si se 
+         * genera algun error en el registro.</returns>
+         * 
+         **/
         public bool RechazarSolicitud(int idProyecto, string idUsuario)
         {
             string consultaUpdate = "UPDATE Solicitud_jefeproyecto_usuario SET estado = 2 WHERE ref_destinario='" + idUsuario + "' AND ref_proyecto='" + idProyecto + "' AND estado=0;";

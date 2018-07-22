@@ -41,6 +41,17 @@ namespace AppWebERS.Controllers
             return View();
         }
 
+        /**
+         * 
+         * <author>Diego Iturriaga</author>
+         * <summary>
+         * Metodo para el funcionamiento del boton aceptar de la interfaz y asi obtener el id del usuario a partir del usuario 
+         * logeado y el id del proyecto enviada por la interfaz para poder registra la aceptacion de la solicitud
+         * </summary>
+         * <param name="idProyecto">id del proyecto cuya solicitud fue Aceptada por el usuario logeado en el sistema.</param>
+         * <returns>Retorna la misma vista para actualizar la tabla.</returns>
+         * 
+         **/
         public ActionResult Aceptar(int idProyecto)
         {
             SolicitudDeUsuario solicitud = new SolicitudDeUsuario();
@@ -65,6 +76,17 @@ namespace AppWebERS.Controllers
             return RedirectToAction("ListadoSolicitudUsuario", "SolicitudDeUsuario");
         }
 
+        /**
+         * 
+         * <author>Diego Iturriaga</author>
+         * <summary>
+         * Metodo para el funcionamiento del boton rechazar de la interfaz y asi obtener el id del usuario a partir del usuario 
+         * logeado y el id del proyecto enviada por la interfaz para poder registra el rechazo de la solicitud
+         * </summary>
+         * <param name="idProyecto">id del proyecto cuya solicitud fue Rechazada por el usuario logeado en el sistema.</param>
+         * <returns>Retorna la misma vista para actualizar la tabla.</returns>
+         * 
+         **/
         public ActionResult Rechazar(int idProyecto)
         {
             SolicitudDeUsuario solicitud = new SolicitudDeUsuario();

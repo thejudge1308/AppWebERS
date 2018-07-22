@@ -38,6 +38,30 @@
                                     <td data-info="info">@usuario.Email</td>
                                     <td data-info="info">@usuario.Tipo</td>
                                     <td>
+
+                                        <div class="dropdown d-lg-none">
+                                            <button class="btn btn-secondary dropdown-toggle" type="submit" id="triggerId" data-toggle="dropdown" aria-haspopup="true"
+                                                    aria-expanded="false" data-flip="false">
+                                                Opciones
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="triggerId">
+
+                                                @Html.ActionLink("Modificar", "ModificarCuenta", new { rut = usuario.Rut }, new { @class = "dropdown-item", id = "btnModificar" })
+                                                @if (usuario.Estado)
+                                                {
+                                                    texto = "Deshabilitar";
+                                                }
+                                                else
+                                                {
+                                                    texto = "Habilitar";
+                                                }
+
+                                                @Html.ActionLink(texto, "DeshabilitarUsuario", "Cuenta", new { rut = usuario.Rut }, new { @class = "dropdown-item", d = "btnModificar" })
+
+
+                                            </div>
+                                        </div>
+
                                         <div class="d-none d-lg-block">
                                             @Html.ActionLink("Modificar", "ModificarCuenta", new { rut = usuario.Rut }, new { @class = "btn btn-secondary", id = "btnModificar", type = "button" })
                                             @if (usuario.Estado)
@@ -52,8 +76,8 @@
                                             @Html.ActionLink(texto, "DeshabilitarUsuario", "Cuenta", new { rut = usuario.Rut }, new { @class = "btn btn-secondary", type = "button", d = "btnModificar" })
 
                                         </div>
-                                      
-                    </td>
+
+                                    </td>
                     </tr>
                 }
                             </tbody>

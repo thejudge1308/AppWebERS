@@ -27,6 +27,10 @@
                     {
                         <li class="nav-item mr-3 ">@Html.ActionLink("Usuarios", "ListarUsuarios", "Cuenta", new { area = "" }, new { @class = "nav-link " })</li>
                     }
+                    else
+                    {
+                        <li class="nav-item mr-3">@Html.ActionLink("Solicitudes", "ListadoSolicitudUsuario", "SolicitudDeUsuario", new { area = "" }, new { @class = "nav-link " })</li>
+                    }
                 }
 
             </ul>

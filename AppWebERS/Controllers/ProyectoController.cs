@@ -10,6 +10,7 @@ using System.Data;
 using Microsoft.AspNet.Identity;
 using AspNet.Identity.MySQL;
 using Microsoft.AspNet.Identity.Owin;
+using AppWebERS.Utilidades;
 
 namespace AppWebERS.Controllers
 {
@@ -223,26 +224,24 @@ namespace AppWebERS.Controllers
                     {
                         if (proyecto.AsignarJefeProyecto(usuario, nombre))
                         {
-                            ViewBag.Message1 = "Exito al crear Proyecto";
+                            TempData["alerta"] = new Alerta("Exito al crear Proyecto", TipoAlerta.SUCCESS);
                             return RedirectToAction("ListarProyectos", "Proyecto");
                         }
                         else {
-                            ViewBag.Message1 = "";
-                            ViewBag.Message = "Error al crear proyecto";
+                            TempData["alerta"] = new Alerta("Error al crear Proyecto", TipoAlerta.ERROR);
                         }
 
                     }
                     else
                     {
-                        ViewBag.Message1 = "";
-                        ViewBag.Message = "Error al crear proyecto";
+                        TempData["alerta"] = new Alerta("Error al crear Proyecto", TipoAlerta.ERROR);
                     }
                 }
                 else
-                    ViewBag.Message = "Este nombre ya esta asociado a un proyecto";
+                   TempData["alerta"] = new Alerta("Este nombre ya esta asociado a un proyecto", TipoAlerta.ERROR);
             }
             else
-                ViewBag.Message = "Modelo no valido";
+                TempData["alerta"] = new Alerta("Modelo no valido", TipoAlerta.ERROR);
             return View();
         }
         /**
@@ -326,6 +325,7 @@ namespace AppWebERS.Controllers
             var list = proyecto.ObtenerUsuarios2(id);
             if (list.Count == 0)
             {
+                
                 ViewBag.MessageErrorProyectos = "No Hay Usuarios Disponibles";
                 ViewBag.MiListadoUsuarios = list;
                 ViewBag.listaVacia = true;

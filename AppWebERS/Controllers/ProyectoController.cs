@@ -69,6 +69,13 @@ namespace AppWebERS.Controllers
             return RedirectToAction("Detalles/" + id);
         }
 
+        
+        [Authorize]
+        // Get: Proyecto/infoProyecto/5
+        public ActionResult infoProyecto(int id) {
+            Proyecto proyecto = this.GetProyecto(id);
+            return Json(proyecto, JsonRequestBehavior.AllowGet);
+        }
 
         // GET: Proyecto/ListaUsuarios/5
         public ActionResult ListaUsuarios(int id) {

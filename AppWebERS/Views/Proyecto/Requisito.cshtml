@@ -6,90 +6,93 @@
 <h2>TarjetaVolere</h2>
 <div class="card">
     <div class="card-header">
-        <form class="form-inline">
-            <div class="form-group">
-                @Html.LabelFor(m => m.IdRequisito, new { @class="col-sm-2 col-form-label"})
-                @Html.TextBoxFor(m => m.IdRequisito, new { @class = "form-control mx-sm-2 col-sm-4", placeholder = "1234", maxlenght = "6"  })
-
-                @Html.LabelFor(m => m.Nombre, new { @class = "col-sm-2 col-form-label" })
-                    @Html.TextBoxFor(m => m.Nombre, new { placeholder = "Ingrese Nombre del Requisito", @class = "form-control mx-sm-2 " })
+        <div class="form-group row">
+            @Html.LabelFor(m => m.IdRequisito, new { @class = "col-form-label", style = "margin-left:15px" })
+            <div class="col-sm-3">
+                @Html.TextBoxFor(m => m.IdRequisito, new { @class = "form-control mx-sm-2", placeholder = "RU1234", maxlenght = "6" })
             </div>
-        </form>
+
+            @Html.LabelFor(m => m.Nombre, new { @class = "col-form-label", style = "margin-left:10px;margin-right:5px" })
+            @Html.TextBoxFor(m => m.Nombre, new { placeholder = "Ingrese Nombre del Requisito", @class = "form-control col-sm-7 " })
+        </div>
     </div>
     <div class="card-body">
-        <form class="form-inline">
-            <div class="form-group">
-                @Html.LabelFor(m => m.Descripcion)
-                @Html.TextAreaFor(m => m.Descripcion, new { placeholder = "Ingrese la descripción del requisito", @class = "form-control mx-sm-4"})
+        <div>
+            @Html.LabelFor(m => m.Descripcion)
+            @Html.TextAreaFor(m => m.Descripcion, new { placeholder = "Ingrese la descripción del requisito", @class = "form-control", style = "min-width:100%;margin-bottom:10px", rows = "5" })
 
-            </div>
-        </form>
-        <form class="form-inline">
-            <div class="form-group">
-                @Html.LabelFor(m => m.Fuente)
-                @Html.TextBoxFor(m => m.Fuente, new { placeholder = "", @class = "form-control mx-sm-2" })
-            </div>
-        </form>
-        <form class="form-inline">
-            <div class="form-group">
-                @Html.LabelFor(m => m.TipoUsuario)
-                @Html.TextBoxFor(m => m.TipoUsuario, new { placeholder = "", @class = "form-control mx-sm-2" })
-            </div>
-        </form>
-        <form class="form-inline">
-            <div class="form-group">
-                @Html.LabelFor(m => m.TipoRequisito)
-                <select class="form-control">
+        </div>
+        <div>
+            @Html.LabelFor(m => m.Fuente)
+            @Html.TextBoxFor(m => m.Fuente, new { placeholder = "", style = "min-width:100%;margin-bottom:10px", @class = "form-control" })
+        </div>
+        <div>
+            @Html.LabelFor(m => m.TipoUsuario)
+            @Html.TextBoxFor(m => m.TipoUsuario, new { placeholder = "", @class = "form-control", style = "min-width:100%;margin-bottom:10px" })
+        </div>
+
+        <div class="form-group row" style="margin-bottom:10px">
+            @Html.LabelFor(m => m.TipoRequisito, new { @class = "col-form-label", style = "margin-left:15px" })
+            <div class="col-sm-3">
+                <select class="form-control mx-sm-2">
                     <option>Funcional</option>
                     <option>No Funcional</option>
                 </select>
-                @Html.LabelFor(m => m.Estado)
-                <select class="form-control">
+            </div>
+            @Html.LabelFor(m => m.Estado, new { @class = "col-form-label", style = "margin-right:30px" })
+            <div class="col-sm-3">
+                <select class="form-control mx-sm-2">
                     <option>No Cumple</option>
                     <option>Cumple</option>
                 </select>
             </div>
-        </form>
-        <form class="form-inline">
-            <div class="form-group">
-                @Html.LabelFor(m => m.Prioridad)
-                <select class="form-control">
+        </div>
+
+        <div class="form-group row" style="margin-bottom:10px">
+            @Html.LabelFor(m => m.Prioridad, new { @class = "col-form-label", style = "margin-left:15px;margin-right:35px" })
+            <div class="col-sm-3">
+                <select class="form-control mx-sm-2">
                     <option>Crítica</option>
                     <option>No Crítica</option>
                 </select>
-                @Html.LabelFor(m => m.Estabilidad)
-                <select class="form-control">
+            </div>
+            @Html.LabelFor(m => m.Estabilidad, new { @class = "col-form-label" })
+            <div class="col-sm-3">
+                <select class="form-control mx-sm-2">
                     <option>Transable</option>
                     <option>Intransable</option>
                 </select>
             </div>
-        </form>
-        <form class="form-inline">
-            <div class="form-group">
-                @Html.LabelFor(m => m.Medida)
-                @Html.TextBoxFor(m => m.Medida, new { placeholder = "Ingrese la medida", @class = "form-control mx-sm-2" })
-            </div>
-        </form>
-        <form class="form-inline">
-            <div class="form-group">
-                @Html.LabelFor(m => m.Escala)
-                @Html.TextBoxFor(m => m.Escala, new { placeholder = "Ingrese la escala", @class = "form-control mx-sm-2" })
-            </div>
-        </form>
-            <form class="form-inline">
-                <div class="form-group">
-                    @Html.LabelFor(m => m.Fecha)
-                    <input id="datepicker" width="276" />
-                    <script>
-                        $('#datepicker').datepicker({
-                            uiLibrary: 'bootstrap4'
-                        });
-                    </script>
+        </div>
 
-                    @Html.LabelFor(m => m.Incremento)
-                    @Html.TextBoxFor(m => m.Incremento, new { maxlenght = "6", @class = "form-control mx-sm-2" })
-
+        <form class="form-inline">
+            <div class="form-group row" style="margin-bottom:10px">
+                @Html.LabelFor(m => m.Medida, new { @class = "col-sm-3 col-form-label" })
+                <div class="col-sm-8">
+                    @Html.TextBoxFor(m => m.Medida, new { placeholder = "Ingrese la medida", @class = "form-control mx-sm-2" })
                 </div>
+            </div>
+        </form>
+        <form class="form-inline">
+            <div class="form-group row" style="margin-bottom:10px">
+                @Html.LabelFor(m => m.Escala, new { @class = "col-sm-3 col-form-label" })
+                <div class="col-sm-8">
+                    @Html.TextBoxFor(m => m.Escala, new { placeholder = "Ingrese la escala", @class = "form-control mx-sm-2" })
+                </div>
+            </div>
+        </form>
+        <form class="form-inline">
+            <div class="form-group">
+                @Html.LabelFor(m => m.Fecha)
+                @Html.TextBoxFor(m => m.Fecha, new { placeholder = "Ingrese fecha", @class = "form-control mx-sm-2" })
+
+                @Html.LabelFor(m => m.Incremento, new { style = "margin-left:15px" })
+                @Html.TextBoxFor(m => m.Incremento, new { maxlenght = "6", @class = "form-control mx-sm-2" })
+
+            </div>
             </form>
     </div>
+</div>
+<div style="margin-top:10px;align">
+    <button type="button" class="btn btn-success">Ingresar</button>
 </div>

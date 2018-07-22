@@ -29,7 +29,7 @@ namespace AppWebERS.Controllers{
             {
                 return View(model);
             }
-            return this.Ingresar(model.Rut, model.Contrasenia);
+            return this.Ingresar(model.RutName, model.Contrasenia);
         }
 
         //private MySqlConnection Con;//solo para test

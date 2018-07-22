@@ -60,8 +60,9 @@ namespace AppWebERS.Controllers
             else
             {
                 TempData["alerta"] = new Alerta("ERROR al Aceptar Solicitud", TipoAlerta.ERROR);
+                
             }
-            return RedirectToAction("ListadoSolicitudUsuario", "SolicitudDeUsuario") ;
+            return RedirectToAction("ListadoSolicitudUsuario", "SolicitudDeUsuario");
         }
 
         public ActionResult Rechazar(int idProyecto)

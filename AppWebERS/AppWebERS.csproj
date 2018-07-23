@@ -351,10 +351,8 @@
     <Content Include="Views\Proyecto\ModificarJefeProyecto.cshtml" />
     <Content Include="Views\Cuenta\Register.cshtml" />
     <Content Include="Views\Proyecto\ListarProyectos.cshtml" />
-    <Content Include="Views\Proyecto\InterfazUsuario.cshtml" />
     <Content Include="Views\Proyecto\Detalles.cshtml" />
     <Content Include="Views\Proyecto\ListaUsuarios.cshtml" />
-    <Content Include="Views\Proyecto\AgregarUsuarioAProyecto.cshtml" />
     <Content Include="Views\SysAdmin2\Principal.cshtml" />
     <Content Include="Views\UserView\Principal.cshtml" />
     <Content Include="Views\SolicitudDeUsuario\ListadoSolicitudUsuario.cshtml" />

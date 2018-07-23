@@ -1,109 +1,144 @@
 ﻿@model AppWebERS.Models.Requisito
+
 @{
-    ViewBag.Title = "Tarjeta de Volere";
+    ViewBag.Title = "Requisito";
 }
 
+<h2>Requisito</h2>
 
-<h2>TarjetaVolere</h2>
 
-
-<div class="card">
-    <div class="card-header">
-        <div class="form-group row">
-            @Html.LabelFor(m => m.IdRequisito, new { @class = "col-form-label", style = "margin-left:15px" })
-            <div class="col-sm-3">
-                @Html.TextBoxFor(m => m.IdRequisito, new { @class = "form-control mx-sm-2", placeholder = "RU1234", maxlenght = "6" })
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>Requisito</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.IdRequisito, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.IdRequisito, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.IdRequisito, "", new { @class = "text-danger" })
             </div>
+        </div>
 
-            @Html.LabelFor(m => m.Nombre, new { @class = "col-form-label", style = "margin-left:10px;margin-right:5px" })
-            @Html.TextBoxFor(m => m.Nombre, new { placeholder = "Ingrese Nombre del Requisito", @class = "form-control col-sm-7 " })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Descripcion, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Descripcion, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Prioridad, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Prioridad, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Prioridad, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Fuente, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Fuente, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Fuente, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Estabilidad, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Estabilidad, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Estabilidad, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Estado, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Estado, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Estado, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.TipoUsuario, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.TipoUsuario, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.TipoUsuario, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.TipoRequisito, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.TipoRequisito, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.TipoRequisito, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Medida, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Medida, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Medida, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Escala, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Escala, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Escala, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Fecha, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Fecha, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Fecha, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Incremento, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Incremento, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Incremento, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Tipo, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Tipo, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Tipo, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
         </div>
     </div>
-    <div class="card-body">
-        <div>
-            @Html.LabelFor(m => m.Descripcion)
-            @Html.TextAreaFor(m => m.Descripcion, new { placeholder = "Ingrese la descripción del requisito", @class = "form-control", style = "min-width:100%;margin-bottom:10px", rows = "5" })
+}
 
-        </div>
-        <div>
-            @Html.LabelFor(m => m.Fuente)
-            @Html.TextBoxFor(m => m.Fuente, new { placeholder = "", style = "min-width:100%;margin-bottom:10px", @class = "form-control" })
-        </div>
-        <div>
-            @Html.LabelFor(m => m.TipoUsuario)
-            @Html.TextBoxFor(m => m.TipoUsuario, new { placeholder = "", @class = "form-control", style = "min-width:100%;margin-bottom:10px" })
-        </div>
-
-        <div class="form-group row" style="margin-bottom:10px">
-            @Html.LabelFor(m => m.TipoRequisito, new { @class = "col-form-label", style = "margin-left:15px" })
-            <div class="col-sm-3">
-                <select class="form-control mx-sm-2">
-                    <option>Funcional</option>
-                    <option>No Funcional</option>
-                </select>
-            </div>
-            @Html.LabelFor(m => m.Estado, new { @class = "col-form-label", style = "margin-right:30px" })
-            <div class="col-sm-3">
-                <select class="form-control mx-sm-2">
-                    <option>No Cumple</option>
-                    <option>Cumple</option>
-                </select>
-            </div>
-			@Html.LabelFor(m => m.Tipo, new { @class = "col-form-label" })
-            <div class="col-sm-3">
-                <select class="form-control mx-sm-2">
-                    <option>Usuario</option>
-                    <option>Sistema</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="form-group row" style="margin-bottom:10px">
-            @Html.LabelFor(m => m.Prioridad, new { @class = "col-form-label", style = "margin-left:15px;margin-right:35px" })
-            <div class="col-sm-3">
-                <select class="form-control mx-sm-2">
-                    <option>Crítica</option>
-                    <option>No Crítica</option>
-                </select>
-            </div>
-            @Html.LabelFor(m => m.Estabilidad, new { @class = "col-form-label" })
-            <div class="col-sm-3">
-                <select class="form-control mx-sm-2">
-                    <option>Transable</option>
-                    <option>Intransable</option>
-                </select>
-            </div>
-			
-        </div>
-
-        <form class="form-inline">
-            <div class="form-group row" style="margin-bottom:10px">
-                @Html.LabelFor(m => m.Medida, new { @class = "col-sm-3 col-form-label" })
-                <div class="col-sm-8">
-                    @Html.TextBoxFor(m => m.Medida, new { placeholder = "Ingrese la medida", @class = "form-control mx-sm-2" })
-                </div>
-            </div>
-        </form>
-        <form class="form-inline">
-            <div class="form-group row" style="margin-bottom:10px">
-                @Html.LabelFor(m => m.Escala, new { @class = "col-sm-3 col-form-label" })
-                <div class="col-sm-8">
-                    @Html.TextBoxFor(m => m.Escala, new { placeholder = "Ingrese la escala", @class = "form-control mx-sm-2" })
-                </div>
-            </div>
-        </form>
-        <form class="form-inline">
-            <div class="form-group">
-                @Html.LabelFor(m => m.Fecha)
-                @Html.TextBoxFor(m => m.Fecha, new { placeholder = "Ingrese fecha", @class = "form-control mx-sm-2" })
-
-                @Html.LabelFor(m => m.Incremento, new { style = "margin-left:15px" })
-                @Html.TextBoxFor(m => m.Incremento, new { maxlenght = "6", @class = "form-control mx-sm-2" })
-
-            </div>
-            </form>
-    </div>
+<div>
+    @Html.ActionLink("Back to List", "Index")
 </div>
-<div style="margin-top:10px;align">
-	<button type="button" class="btn btn-success" onclick="location.href='@Url.Action("IngresarRequisito", "Proyecto", new { idRequisito = Model.IdRequisito, nombre = Model.Nombre, descripcion = Model.Descripcion, prioridad = Model.Fuente, estabilidad = Model.Estabilidad, estado = Model.Estado, tipoUsuario = Model.TipoUsuario, tipoRequisito = Model.TipoRequisito, medida = Model.Medida, escala = Model.Escala, fecha = Model.Fecha, incremento = Model.Incremento, tipo = Model.Tipo, idProyecto = @ViewBag.IdProyecto })'">Ingresar</button> 
-</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

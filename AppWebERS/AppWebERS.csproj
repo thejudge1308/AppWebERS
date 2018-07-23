@@ -343,6 +343,8 @@
     <Content Include="Views\SysAdmin2\Principal.cshtml" />
     <Content Include="Views\UserView\Principal.cshtml" />
     <Content Include="Views\Proyecto\Requisito.cshtml" />
+    <Content Include="Views\JefeProyecto\InvitarUsuario.cshtml" />
+    <Content Include="Views\SysAdmin\AgregarUsuarioProyecto.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

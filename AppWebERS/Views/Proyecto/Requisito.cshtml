@@ -3,7 +3,10 @@
     ViewBag.Title = "Tarjeta de Volere";
 }
 
+
 <h2>TarjetaVolere</h2>
+
+
 <div class="card">
     <div class="card-header">
         <div class="form-group row">
@@ -46,6 +49,13 @@
                     <option>Cumple</option>
                 </select>
             </div>
+			@Html.LabelFor(m => m.Tipo, new { @class = "col-form-label" })
+            <div class="col-sm-3">
+                <select class="form-control mx-sm-2">
+                    <option>Usuario</option>
+                    <option>Sistema</option>
+                </select>
+            </div>
         </div>
 
         <div class="form-group row" style="margin-bottom:10px">
@@ -63,6 +73,7 @@
                     <option>Intransable</option>
                 </select>
             </div>
+			
         </div>
 
         <form class="form-inline">
@@ -94,5 +105,5 @@
     </div>
 </div>
 <div style="margin-top:10px;align">
-    <button type="button" class="btn btn-success">Ingresar</button>
+	<button type="button" class="btn btn-success" onclick="location.href='@Url.Action("IngresarRequisito", "Proyecto", new { idRequisito = Model.IdRequisito, nombre = Model.Nombre, descripcion = Model.Descripcion, prioridad = Model.Fuente, estabilidad = Model.Estabilidad, estado = Model.Estado, tipoUsuario = Model.TipoUsuario, tipoRequisito = Model.TipoRequisito, medida = Model.Medida, escala = Model.Escala, fecha = Model.Fecha, incremento = Model.Incremento, tipo = Model.Tipo, idProyecto = @ViewBag.IdProyecto })'">Ingresar</button> 
 </div>

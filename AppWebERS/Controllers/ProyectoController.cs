@@ -414,7 +414,20 @@ namespace AppWebERS.Controllers
             }
         }
 
-        public ActionResult Requisito() {
+        [HttpGet]
+        public ActionResult Requisito(int id)
+        {
+            ViewBag.IdProyecto = id;
+
+            return View();
+        }
+        [HttpPost]
+        public ActionResult IngresarRequisito(string idRequisito, string nombre, string descripcion, string prioridad, string fuente,
+            string estabilidad, string estado, string tipoUsuario, string tipoRequisito, string medida, string escala,
+            string fecha, string incremento, string tipo, string idProyecto)
+        {
+            Requisito requisito = new Requisito(idRequisito, nombre, descripcion, prioridad, fuente, estabilidad, estado,
+                tipoUsuario, tipoRequisito, medida, escala, fecha, incremento, tipo);
             return View();
         }
 

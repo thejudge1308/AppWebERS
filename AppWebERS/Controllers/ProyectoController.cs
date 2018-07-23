@@ -76,10 +76,11 @@ namespace AppWebERS.Controllers
             Proyecto proyecto = this.GetProyecto(id);
 
             List<Usuario> usuarios = new Proyecto().GetListaUsuarios(id);
-
+            List<SolicitudDeProyecto> solicitudes = new Proyecto().GetSolicitudesProyecto(id);
             //Debug.WriteLine("Permiso: " + TipoDePermiso());
             ViewData["proyecto"] = proyecto;
             ViewData["usuarios"] = usuarios;
+            ViewData["solicitudes"] = solicitudes;
             Debug.WriteLine("Lista de usuarios" + usuarios);
             ViewData["permiso"] = TipoDePermiso(id);
             return View();
@@ -413,6 +414,10 @@ namespace AppWebERS.Controllers
             }
         }
 
+        public ActionResult Requisito() {
+            return View();
+        }
+
         public ActionResult InterfazUsuario()
         {
             var model = ObtenerProyectos();
@@ -505,6 +510,26 @@ namespace AppWebERS.Controllers
                 this.Conector.CerrarConexion();
                 return listaProyectosNombres;
             }
+        }
+
+
+        public ActionResult SolicitudDeProyecto(int id)
+        {
+            string s;
+            using (var db = ApplicationDbContext.Create())
+            {
+                var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
+                s = User.Identity.GetUserId();
+                ApplicationUser user = userManager.FindByIdAsync(s).Result;
+                String rut = user.Rut;
+
+            }
+
+            
+            SolicitudDeProyecto sol = new SolicitudDeProyecto(s, id);
+            sol.listaSolicitudes = new Proyecto().GetSolicitudesProyecto(id);
+
+            return View("SolicitudDeProyecto", sol);
         }
 
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Linq;
 using System.Web;
@@ -18,24 +19,30 @@ namespace AppWebERS.Models {
          * <param name = "nombre" > El nombre del requisito.</param>
          * <param name = "descripcion" > La descripcion del requisito.</param>
          * <param name = "prioridad" > La prioridad asignada al requisito.</param>
-         * <param name = "categoria" > La categoria del requisito.</param>
          * <param name = "fuente" > La fuente del requisito.</param>
          * <param name = "estabilidad" > La estabilidad requerida para el requisito.</param>
          * <param name = "estado" > El estado del requisito.</param>
          * <param name = "tipo" > El tipo  del requisito.</param>
          * <param name = "actores" > Lista de actores que tienen algún tipo de participación en el requisito.</param>
+         * FALTAN UNOS
          **/
 
-        public Requisito(int idRequisito, string nombre, string descripcion, string prioridad, string categoria, string fuente, string estabilidad, string estado, string tipo, List<Actor> actores) {
+        public Requisito(int idRequisito, string nombre, string tipoUsuario,string medida, string fecha, string incremento,
+            string descripcion, string prioridad, string fuente, string estabilidad, string estado, string tipoReq, List<Actor> actores) {
             this.IdRequisito = idRequisito;
             this.Nombre = nombre;
             this.Descripcion = descripcion;
-            this.Prioridad = prioridad;
-            this.Categoria = categoria;
             this.Fuente = fuente;
-            this.Estabilidad = estabilidad;
+            this.TipoUsuario = tipoUsuario;
+            this.TipoRequisito = tipoReq;
             this.Estado = estado;
-            this.Tipo = tipo;
+            this.Prioridad = prioridad;
+            this.Estabilidad = estabilidad;
+            this.Medida = medida;
+            this.Fecha = fecha;
+            this.Incremento = incremento;
+
+            //LOS ACTORES NO SE SI SON LAS FUENTES?
             this.Actores = new List<Actor>();
         }
 
@@ -47,6 +54,7 @@ namespace AppWebERS.Models {
          * 
          **/
 
+        [Display(Name = "Código")]
         public int IdRequisito {get; set;}
 
         /**
@@ -56,7 +64,7 @@ namespace AppWebERS.Models {
          * <returns>Retorna el valor string del nombre.</returns>
          * 
          **/
-
+        [Display(Name = "Nombre")]
         public string Nombre {get; set;}
 
         /**
@@ -66,7 +74,7 @@ namespace AppWebERS.Models {
          * <returns>Retorna el valor string de la descripcion.</returns>
          * 
          **/
-
+        [Display(Name = "Descripción")]
         public string Descripcion {get; set;}
 
         /**
@@ -76,18 +84,8 @@ namespace AppWebERS.Models {
          * <returns>Retorna el valor string de la prioridad.</returns>
          * 
          **/
-
+        [Display(Name = "Prioridad")]
         public string Prioridad {get; set;}
-
-        /**
-         * Setter y Getter de la categoria del requisito.
-         * 
-         * <param name = "categoria" > La categoria del requisito.</param>
-         * <returns>Retorna el valor string de la categoria.</returns>
-         * 
-         **/
-
-        public string Categoria {get; set;}
 
         /**
          * Setter y Getter de la fuente del requisito.
@@ -96,7 +94,7 @@ namespace AppWebERS.Models {
          * <returns>Retorna el valor string de la fuente.</returns>
          * 
          **/
-
+        [Display(Name = "Fuente")]
         public string Fuente {get; set;}
 
         /**
@@ -106,7 +104,7 @@ namespace AppWebERS.Models {
          * <returns>Retorna el valor string de la estabilidad.</returns>
          * 
          **/
-
+        [Display(Name = "Estabilidad")]
         public string Estabilidad {get; set;}
 
         /**
@@ -116,19 +114,68 @@ namespace AppWebERS.Models {
          * <returns>Retorna el valor string del estado.</returns>
          * 
          **/
-
+        [Display(Name = "Estado")]
         public string Estado {get; set;}
 
         /**
          * Setter y Getter del tipo del requisito.
          * 
-         * <param name = "tipo" > El tipo del requisito.</param>
+         * <param name = "tipo" > El tipo de usuario.</param>
          * <returns>Retorna el valor string del tipo.</returns>
          * 
          **/
+        [Display(Name = "Tipo Usuario")]
+        public string TipoUsuario {get; set;}
 
-        public string Tipo {get; set;}
+        /**
+         * Setter y Getter del tipo del requisito.
+         * 
+         * <param name = "tipo requisito" > El tipo del requisito.</param>
+         * <returns>Retorna el valor string del tipo.</returns>
+         * 
+         **/
+        [Display(Name = "Tipo Requisito")]
+        public string TipoRequisito { get; set; }
 
+        /**
+         * Setter y Getter del tipo de medida.
+         * 
+         * <param name = "medida" > La medida.</param>
+         * <returns>Retorna el valor string de la medida.</returns>
+         * 
+         **/
+        [Display(Name = "Medida")]
+        public string Medida { get; set; }
+
+        /**
+         * Setter y Getter del tipo de la escala.
+         * 
+         * <param name = "escala" > La escala del requisito.</param>
+         * <returns>Retorna el valor string de la escala.</returns>
+         * 
+         **/
+        [Display(Name = "Escala")]
+        public string Escala { get; set; }
+
+        /**
+         * Setter y Getter de la fecha actualizacion.
+         * 
+         * <param name = "fecha" > Fecha del requisito.</param>
+         * <returns>.</returns>
+         * 
+         **/
+        [Display(Name = "Fecha Actualización")]
+        public string Fecha { get; set; }
+
+        /**
+         * Setter y Getter del incremento.
+         * 
+         * <param name = "incremento" > El incremento del requisito.</param>
+         * <returns>Retorna el valor string del incremento.</returns>
+         * 
+         **/
+        [Display(Name = "Incremento")]
+        public string Incremento { get; set; }
         /**
          * Setter y Getter de los actores del requisito.
          * 
@@ -136,14 +183,13 @@ namespace AppWebERS.Models {
          * <returns>Retorna la lista de actores.</returns>
          * 
          **/
-
+        [Display(Name = "Actores")]
         public List<Actor> Actores {get; set;}
 
         /**
          * Método para Crear un Requisito
          * <returns>Retorna un boolean que indica el correcto registro del requisito.</returns>
          **/
-
         public bool Crear() {
             return true;
         }

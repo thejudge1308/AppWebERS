@@ -13,38 +13,43 @@ namespace AppWebERS.Models {
     public class Requisito {
 
         /**
-         * Constructor de la clase Requisito
-         * 
-         * <param name = "idRequisito" > El identificador del requisito.</param>
-         * <param name = "nombre" > El nombre del requisito.</param>
-         * <param name = "descripcion" > La descripcion del requisito.</param>
-         * <param name = "prioridad" > La prioridad asignada al requisito.</param>
-         * <param name = "fuente" > La fuente del requisito.</param>
-         * <param name = "estabilidad" > La estabilidad requerida para el requisito.</param>
-         * <param name = "estado" > El estado del requisito.</param>
-         * <param name = "tipo" > El tipo  del requisito.</param>
-         * <param name = "actores" > Lista de actores que tienen algún tipo de participación en el requisito.</param>
-         * FALTAN UNOS
-         **/
-
-        public Requisito(int idRequisito, string nombre, string tipoUsuario,string medida, string fecha, string incremento,
-            string descripcion, string prioridad, string fuente, string estabilidad, string estado, string tipoReq, List<Actor> actores) {
-            this.IdRequisito = idRequisito;
-            this.Nombre = nombre;
-            this.Descripcion = descripcion;
-            this.Fuente = fuente;
-            this.TipoUsuario = tipoUsuario;
-            this.TipoRequisito = tipoReq;
-            this.Estado = estado;
-            this.Prioridad = prioridad;
-            this.Estabilidad = estabilidad;
-            this.Medida = medida;
-            this.Fecha = fecha;
-            this.Incremento = incremento;
+        * Constructor de la clase Requisito
+        * 
+        * <param name = "idRequisito" > El identificador del requisito.</param>
+        * <param name = "nombre" > El nombre del requisito.</param>
+        * <param name = "descripcion" > La descripcion del requisito.</param>
+        * <param name = "prioridad" > La prioridad asignada al requisito.</param>
+        * <param name = "fuente" > La fuente del requisito.</param>
+        * <param name = "estabilidad" > La estabilidad requerida para el requisito.</param>
+        * <param name = "estado" > El estado del requisito.</param>
+        * <param name = "tipo" > El tipo  del requisito.</param>
+        * <param name = "actores" > Lista de actores que tienen algún tipo de participación en el requisito.</param>
+        * FALTAN UNOS
+        **/
+        public Requisito(string idRequisito, string nombre, string descripcion, string prioridad, string fuente, 
+            string estabilidad, string estado, string tipoUsuario, string tipoRequisito, string medida, string escala, 
+            string fecha, string incremento, string tipo)
+        {
+            IdRequisito = idRequisito;
+            Nombre = nombre;
+            Descripcion = descripcion;
+            Prioridad = prioridad;
+            Fuente = fuente;
+            Estabilidad = estabilidad;
+            Estado = estado;
+            TipoUsuario = tipoUsuario;
+            TipoRequisito = tipoRequisito; //Categoria en la BD
+            Medida = medida;
+            Escala = escala;
+            Fecha = fecha; //AAAA-MM-DD
+            Incremento = incremento;
+            Tipo = tipo;
 
             //LOS ACTORES NO SE SI SON LAS FUENTES?
             this.Actores = new List<Actor>();
         }
+
+        private ApplicationDbContext conexion = ApplicationDbContext.Create();
 
         /**
          * Setter y Getter de ID del requisito
@@ -55,7 +60,7 @@ namespace AppWebERS.Models {
          **/
 
         [Display(Name = "Código")]
-        public int IdRequisito {get; set;}
+        public string IdRequisito {get; set;}
 
         /**
          * Setter y Getter del nombre del requisito.
@@ -177,6 +182,15 @@ namespace AppWebERS.Models {
         [Display(Name = "Incremento")]
         public string Incremento { get; set; }
         /**
+         * Setter y Getter del incremento.
+         * 
+         * <param name = "tipo" > El Tipo del requisito.</param>
+         * <returns>Retorna el valor string del Tipo.</returns>
+         * 
+         **/
+        [Display(Name = "Tipo")]
+        public string Tipo { get; set; }
+        /**
          * Setter y Getter de los actores del requisito.
          * 
          * <param name = "actores" > La lista de actores involucrados en el requisito.</param>
@@ -217,6 +231,20 @@ namespace AppWebERS.Models {
 
         public void CargarDatos(DataRow dr ) {
 
+        }
+
+        public bool RegistrarRequisito(int idProyecto)
+        {
+            string consultaInsert = "INSERT INTO requisito(id_requisito, nombre, descripcion, fuente, tipo_usuario, categoria, " +
+                "prioridad, estabilidad, estado, medida, escala, incremento, fecha_actualizacion, ref_proyecto, tipo) " +
+                "VALUES ('"+this.IdRequisito+ "','" +this.Nombre + "','" +this.Descripcion + "','" +this.Fuente + "','" +this.TipoUsuario + "','" +
+                 this.TipoRequisito+"','" +this.Prioridad + "','" +this.Estabilidad + "','" +this.Estado + "','" +this.Medida
+                 + "','" +this.Escala + "','" +this.Incremento + "','" +this.Fecha + "'," +idProyecto+ ",'"+this.Tipo+ "'); ";
+            if (this.conexion.RealizarConsultaNoQuery(consultaInsert))
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

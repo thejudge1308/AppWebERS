@@ -194,7 +194,7 @@ namespace AppWebERS.Controllers
         public List<NombreProyecto> ListaDeProyectosAsociados(string id)
         {
 
-            string estado = "habilitado";
+            string estado = "HABILITADO";
             string consulta = "SELECT proyecto.nombre, proyecto.id_proyecto, proyecto.estado FROM proyecto, users, vinculo_usuario_proyecto " +
                                "WHERE proyecto.estado =  '" + estado + "' AND users.id = '" + id + "' AND vinculo_usuario_proyecto.ref_proyecto = " +
                                "proyecto.id_proyecto AND vinculo_usuario_proyecto.ref_usuario = users.id";
@@ -231,7 +231,7 @@ namespace AppWebERS.Controllers
         */
         public List<NombreProyecto> ListaDeProyectoNoAsociados(string id)
         {
-            string estado = "habilitado";
+            string estado = "HABILITADO";
             string consulta = "SELECT Proyecto.nombre ,proyecto.id_proyecto ,proyecto.estado FROM Proyecto where  proyecto.estado = '" + estado + "' AND " +
                               "Proyecto.nombre NOT IN" +
                               "(SELECT Proyecto.nombre FROM Proyecto, users, vinculo_usuario_proyecto " +
@@ -588,7 +588,7 @@ namespace AppWebERS.Controllers
             //Popups estado modificado
             TempData["alerta"] = new Alerta("Estado Modificado", TipoAlerta.SUCCESS);
 
-            string nuevoEstado = "deshabilitado";
+            string nuevoEstado = "DESHABILITADO";
             string consulta = "UPDATE proyecto SET estado = '" + nuevoEstado + "'" +
                                "WHERE (id_proyecto ='" + id + "') ";
 
@@ -622,7 +622,7 @@ namespace AppWebERS.Controllers
         public ActionResult HabilitarProyecto(string id)
         {
             TempData["alerta"] = new Alerta("Estado Modificado", TipoAlerta.SUCCESS);
-            string nuevoEstado = "habilitado";
+            string nuevoEstado = "HABILITADO";
             string consulta = "UPDATE proyecto SET estado = '" + nuevoEstado + "'" +
                                "WHERE (id_proyecto ='" + id + "') ";
 

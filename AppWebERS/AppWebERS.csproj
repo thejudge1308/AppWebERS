@@ -188,6 +188,7 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ProyectoController.cs" />
     <Compile Include="Controllers\RequisitoController.cs" />
+    <Compile Include="Controllers\SolicitudDeUsuarioController.cs" />
     <Compile Include="Controllers\UserViewController.cs" />
     <Compile Include="Controllers\SysAdmin2Controller.cs" />
     <Compile Include="Controllers\SolicitudDeProyectoController.cs" />
@@ -217,6 +218,7 @@
     <Compile Include="Models\Proyecto.cs" />
     <Compile Include="Models\Requisito.cs" />
     <Compile Include="Models\SolicitudDeProyecto.cs" />
+    <Compile Include="Models\SolicitudDeUsuario.cs" />
     <Compile Include="Models\Usuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -349,12 +351,11 @@
     <Content Include="Views\Proyecto\ModificarJefeProyecto.cshtml" />
     <Content Include="Views\Cuenta\Register.cshtml" />
     <Content Include="Views\Proyecto\ListarProyectos.cshtml" />
-    <Content Include="Views\Proyecto\InterfazUsuario.cshtml" />
     <Content Include="Views\Proyecto\Detalles.cshtml" />
     <Content Include="Views\Proyecto\ListaUsuarios.cshtml" />
-    <Content Include="Views\Proyecto\AgregarUsuarioAProyecto.cshtml" />
     <Content Include="Views\SysAdmin2\Principal.cshtml" />
     <Content Include="Views\UserView\Principal.cshtml" />
+    <Content Include="Views\SolicitudDeUsuario\ListadoSolicitudUsuario.cshtml" />
     <Content Include="Views\Proyecto\Requisito.cshtml" />
   </ItemGroup>
   <ItemGroup>

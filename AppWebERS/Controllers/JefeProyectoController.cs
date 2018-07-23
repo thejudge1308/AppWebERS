@@ -8,6 +8,7 @@ using AspNet.Identity.MySQL;
 using Microsoft.AspNet.Identity;
 using System.Diagnostics;
 using MySql.Data.MySqlClient;
+using AppWebERS.Utilidades;
 
 
 namespace AppWebERS.Controllers{
@@ -30,9 +31,64 @@ namespace AppWebERS.Controllers{
         }
 
         //Get: JefeProyecto/EnviarSolicitud
+        /*
+ * Autor Fabian Oyarce
+  * Metodo encargado de solicitar vincular un usuario a un proyecto
+  * <param String rut>
+  *  * <param String idProyecto>
+ */     private ConectorBD Conector = ConectorBD.Instance;
+        [HttpGet]
         public ActionResult EnviarSolicitud(String rut, String idProyecto)
         {
-            return null;
+
+            string idUsuario = this.BuscaIdUsuarioPorRut(rut);
+
+            string Values = "'" + idProyecto + "','" + idUsuario + "'";
+            string Consulta = "INSERT INTO solicitud_vinculacion_proyecto (ref_proyecto,ref_solicitante) VALUES (" + Values + ");";
+            Debug.Write(Consulta);
+            if (this.Conector.RealizarConsultaNoQuery(Consulta))
+            {
+                this.Conector.CerrarConexion();
+                ViewBag.Message = "Solicitud enviada";
+                TempData["alerta"] = new Alerta("Solicitud enviada", TipoAlerta.SUCCESS);
+            }
+            else
+            {
+                this.Conector.CerrarConexion();
+            }
+
+            return RedirectToAction("ListarProyectos", "Proyecto");
+           
+        }
+        /*
+         * Autor Fabian Oyarce
+          * Metodo encargado de buscar el id de un usuario dado un rut
+          * <param String rut>
+         */
+        public string BuscaIdUsuarioPorRut(string rut)
+        {
+
+            string consulta = "SELECT users.id FROM users WHERE users.Rut ='" + rut + "'";
+            string idUsuario = null;
+            MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
+            if (reader == null)
+            {
+                this.Conector.CerrarConexion();
+
+            }
+            else
+            {
+
+                while (reader.Read())
+                {
+                    idUsuario = reader.GetString(0);
+
+                }
+
+                this.Conector.CerrarConexion();
+            }
+
+            return idUsuario;
         }
 
         public List<Usuario> listaDeUsuarios(String idProyecto)

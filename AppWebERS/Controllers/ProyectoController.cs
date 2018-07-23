@@ -665,67 +665,9 @@ namespace AppWebERS.Controllers
         }
 
 
-        /*
-        * Autor Fabian Oyarce
-         * Metodo encargado de vincular un usuario a un proyecto
-         * <param String id>
-        */
-        [HttpGet]
-        public ActionResult VincularUsuarioAProyecto(string idUsuario,string idProyecto, string rol )
-        {
+       
 
-            string consulta = "INSERT INTO vinculo_usuario_proyecto VALUES('" + idUsuario + "','" + idProyecto + "','" + rol + "')";
-
-            MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
-            if (reader == null)
-            {
-                this.Conector.CerrarConexion();
-
-            }
-            else
-            {
-                TempData["alerta"] = new Alerta("Usuario vinculado", TipoAlerta.SUCCESS);
-                while (reader.Read())
-                {
-
-
-                }
-
-                this.Conector.CerrarConexion();
-            }
-
-            return RedirectToAction("ListarProyectos", "Proyecto");
-        }
-
-        /*
-     * Autor Fabian Oyarce
-      * Metodo encargado de solicitar vincular un usuario a un proyecto
-      * <param String id>
-     */
-        [HttpGet]
-        public ActionResult SolicitarVincularUsuarioAProyecto(string idUsuario, string idProyecto, string rol)
-        {
-
-            
-            string UsuarioSolicitanteRut = ObtenerIdUsuarioActivo();
-
-            string Values = "'" + idProyecto + "','" + idUsuario + "'";
-            string Consulta = "INSERT INTO solicitud_vinculacion_proyecto (ref_proyecto,ref_solicitante) VALUES (" + Values + ");";
-
-            if (this.Conector.RealizarConsultaNoQuery(Consulta))
-            {
-                this.Conector.CerrarConexion();
-                ViewBag.Message = "Solicitud enviada";
-                TempData["alerta"] = new Alerta("Solicitud enviada", TipoAlerta.SUCCESS);
-            }
-            else
-            {
-                this.Conector.CerrarConexion();
-            }
-
-            return RedirectToAction("ListarProyectos", "Proyecto");
-        }
-
+ 
         public ActionResult SolicitudDeProyecto(int id)
         {
             string s;

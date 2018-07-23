@@ -1,5 +1,7 @@
 ﻿@using AppWebERS.Models
-@model List<ApplicationUser> 
+@model List<ApplicationUser>
+
+
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -9,9 +11,13 @@
     <div class="card-header">
         <h4>Usuarios disponibles</h4>
     </div>
-    @try {
-        if (Model.Count != 0) {
-            using (Html.BeginForm()) {
+    @try
+    {
+        if (Model.Count != 0)
+        {
+            using (Html.BeginForm())
+            {
+                string texto;
                 <div class="card-body table-responsive">
                     <table class="table">
                         <thead class="thead-dark">
@@ -24,18 +30,58 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var usuario in Model) {
-                                <tr class="text-center">
-                                    <td data-info="info">@usuario.UserName</td><!-- Reemplazar por como quiera que le pongan en el foreach a la variable. Ej: (arroba)Item.Nombre -->
-                                    <td data-info="info">@usuario.Rut</td>
-                                    <td data-info="info">@usuario.Email</td>
-                                    <td data-info="info">@usuario.Tipo</td>
-                                    <td>
-                                        <div class="d-none d-lg-block">
-                                            @Html.ActionLink("Modificar", "ModificarCuenta", new { rut = usuario.Rut }, new { @class = "btn btn-secondary", id = "btnModificar", type = "button" })
-                                        </div>
-                                    </td>
-                                </tr>
+                            @foreach (var usuario in Model)
+                            {
+                                if (usuario.Tipo.Equals("USUARIO"))
+                                {
+                                    <tr class="text-center">
+                                        <td data-info="info">@usuario.UserName</td><!-- Reemplazar por como quiera que le pongan en el foreach a la variable. Ej: (arroba)Item.Nombre -->
+                                        <td data-info="info">@usuario.Rut</td>
+                                        <td data-info="info">@usuario.Email</td>
+                                        <td data-info="info">@usuario.Tipo</td>
+                                        <td>
+
+                                            <div class="dropdown d-lg-none">
+                                                <button class="btn btn-secondary dropdown-toggle" type="submit" id="triggerId" data-toggle="dropdown" aria-haspopup="true"
+                                                        aria-expanded="false" data-flip="false">
+                                                    Opciones
+                                                </button>
+                                                <div class="dropdown-menu" aria-labelledby="triggerId">
+
+                                                    @Html.ActionLink("Modificar", "ModificarCuenta", new { rut = usuario.Rut }, new { @class = "dropdown-item", id = "btnModificar" })
+                                                    @if (usuario.Estado)
+                                                    {
+                                                        texto = "Deshabilitar";
+                                                    }
+                                                    else
+                                                    {
+                                                        texto = "Habilitar";
+                                                    }
+
+                                                    @Html.ActionLink(texto, "DeshabilitarUsuario", "Cuenta", new { rut = usuario.Rut }, new { @class = "dropdown-item", d = "btnModificar" })
+
+
+                                                </div>
+                                            </div>
+
+                                            <div class="d-none d-lg-block">
+                                                @Html.ActionLink("Modificar", "ModificarCuenta", new { rut = usuario.Rut }, new { @class = "btn btn-secondary", id = "btnModificar", type = "button" })
+                                                @if (usuario.Estado)
+                                                {
+                                                    texto = "Deshabilitar";
+                                                }
+                                                else
+                                                {
+                                                    texto = "Habilitar";
+                                                }
+
+                                                @Html.ActionLink(texto, "DeshabilitarUsuario", "Cuenta", new { rut = usuario.Rut }, new { @class = "btn btn-secondary", type = "button", d = "btnModificar" })
+
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                }
                             }
                         </tbody>
                     </table>
@@ -43,14 +89,15 @@
             }
         }
     }
-    catch (Exception e) {
-       <!-- <h5>No existen usuarios registrados</h5>-->
+    catch (Exception e)
+    {
+        <!-- <h5>No existen usuarios registrados</h5>-->
         <div class="alert alert-warning fade show w-50 mx-auto mt-3" role="alert">
             <strong>No hay usuarios registrados!</strong> <br /> Debe registrar usuarios para poder modificar su cuenta.
         </div>
     }
-    <a class="btn btn-primary" href="@Url.Action("Register","Cuenta")">Agregar Usuario</a>
 </div>
+
 
 <div>
 </div>

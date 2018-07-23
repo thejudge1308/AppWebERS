@@ -56,7 +56,7 @@
                 if (TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN)
                 {
                     <a class="btn btn-primary" href="@Url.Action("ModificarJefeProyecto", "Proyecto", new { id = ProyectoActual.IdProyecto })">Modificar Jefe de Proyecto</a>
-                    <a class="btn btn-primary" href="@Url.Action("AgregarUsuario", "SysAdmin", new { id = ProyectoActual.IdProyecto })">Agregar usuario</a>
+                    <a class="btn btn-primary" href="@Url.Action("AgregarUsuarioProyecto", "SysAdmin", new { id = ProyectoActual.IdProyecto })">Agregar usuario</a>
                 }
 
             }

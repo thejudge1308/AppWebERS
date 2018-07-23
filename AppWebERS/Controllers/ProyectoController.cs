@@ -10,6 +10,9 @@ using System.Data;
 using Microsoft.AspNet.Identity;
 using AspNet.Identity.MySQL;
 using Microsoft.AspNet.Identity.Owin;
+using iTextSharp.text;
+using System.IO;
+using iTextSharp.text.pdf;
 
 namespace AppWebERS.Controllers
 {
@@ -67,6 +70,47 @@ namespace AppWebERS.Controllers
 
             proyecto.ActualizarDatosProyecto(id, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambiente_operacional, relacion_con_otros_proyectos);
             return RedirectToAction("Detalles/" + id);
+        }
+
+        public FileResult ExportarPDF( int id)
+        {
+            Proyecto proyecto = this.GetProyecto(id);
+          
+            Document doc = new Document(PageSize.A5);
+
+            MemoryStream stream = new MemoryStream();
+            PdfWriter pdfWriter = PdfWriter.GetInstance(doc, stream);
+            pdfWriter.CloseStream = false;
+            string fecha = "Fecha: " + DateTime.Now.ToString();
+            Font fuente = new Font(FontFactory.GetFont("ARIAL", 8));
+
+            doc.Open();
+            Chunk chunk = new Chunk("Detalles del proyecto" + ".", FontFactory.GetFont("ARIAL", 12, iTextSharp.text.Font.BOLD));
+            doc.Add(new Paragraph(chunk));
+            doc.Add(new Paragraph(" ", fuente));
+            doc.Add(new Paragraph("------------------------------------------------------------------------------------------", fuente));
+            doc.Add(new Paragraph(fecha, fuente));
+            doc.Add(new Paragraph("------------------------------------------------------------------------------------------", fuente));
+            doc.Add(new Paragraph(" ", fuente));
+            doc.Add(new Paragraph("Nombre Proyecto: " + proyecto.Nombre, fuente));
+            doc.Add(new Paragraph("Proposito: " + proyecto.Proposito, fuente));
+            doc.Add(new Paragraph("Alcance: " + proyecto.Alcance, fuente));
+            doc.Add(new Paragraph("Contexto: " + proyecto.Contexto, fuente));
+            doc.Add(new Paragraph("Definiciones: " + proyecto.Definiciones, fuente));
+            doc.Add(new Paragraph("Acronimos: " + proyecto.Acronimos, fuente));
+            doc.Add(new Paragraph("Abreviaturas: " + proyecto.Abreviaturas, fuente));
+            doc.Add(new Paragraph("Referencias: " + proyecto.Referencias, fuente));
+            doc.Add(new Paragraph("Ambiente Operacional: " + proyecto.AmbienteOperacional, fuente));
+            doc.Add(new Paragraph("Relacion con otros proyectos: " + proyecto.RelacionProyectos, fuente));
+
+
+            doc.AddCreationDate();
+            doc.Close();
+
+            stream.Flush(); //Always catches me out
+            stream.Position = 0; //Not sure if this is required
+
+            return File(stream, "application/pdf");
         }
 
 

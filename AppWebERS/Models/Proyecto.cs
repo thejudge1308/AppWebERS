@@ -110,6 +110,7 @@ namespace AppWebERS.Models{
             Referencias = referencias;
             AmbienteOperacional = ambienteOperacional;
             RelacionProyectos = relacionProyectos;
+            Estado = "HABILITADO";
         }
 
         /**
@@ -235,6 +236,16 @@ namespace AppWebERS.Models{
         **/
         [Display(Name = "Relacion con otros proyectos")]
         public string RelacionProyectos {get; set;}
+
+        /**
+        * Setter y Getter del atributo que contiene la relacion con otros proyectos
+        * 
+        * <param name = "estado" > La relacion con otros proyectos del proyecto.</param>
+        * <returns>Retorna el valor string de la relacion con otros proyectos del proyecto.</returns>
+        * 
+        **/
+        public string Estado { get; set; }
+
 
         /**
          * Setter y Getter de los usuarios relacionados con el proyecto.
@@ -498,6 +509,44 @@ namespace AppWebERS.Models{
             //return Usuario;
         }
 
+        public List<SolicitudDeProyecto> GetSolicitudesProyecto(int id)
+        {
+            string jefeProyecto = this.GetJefeProyecto(id);
+            List<SolicitudDeProyecto> listaSolicitudes = new List<SolicitudDeProyecto>();
+
+            string consulta = "SELECT  users.userName, users.Id, proyecto.nombre, proyecto.id_proyecto " +
+                "FROM users, proyecto, solicitud_vinculacion_proyecto,Vinculo_usuario_proyecto " +
+                "WHERE proyecto.id_proyecto = " + id +
+                " AND vinculo_usuario_proyecto.rol = 'JEFEPROYECTO' AND vinculo_usuario_proyecto.ref_proyecto = proyecto.id_proyecto " +
+                "AND vinculo_usuario_proyecto.ref_usuario = '" + jefeProyecto + "' AND users.id = solicitud_vinculacion_proyecto.ref_solicitante " +
+                 " AND proyecto.id_proyecto = solicitud_vinculacion_proyecto.ref_proyecto";
+
+
+
+            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
+            if (reader == null)
+            {
+                this.conexion.EnsureConnectionClosed();
+                return null;
+            }
+            else
+            {
+                while (reader.Read())
+                {
+                    string nombreUsuario = reader.GetString(0);
+                    string idUsuario = reader.GetString(1);
+                    string nombreProyecto = reader.GetString(2);
+                    int idProyecto = Int32.Parse(reader.GetString(3));
+
+                    listaSolicitudes.Add(new SolicitudDeProyecto(nombreUsuario, idUsuario, nombreProyecto, idProyecto));
+                }
+
+                this.conexion.EnsureConnectionClosed();
+                return listaSolicitudes;
+            }
+
+        }
+
 
         /**
          * <author>Matías Parra</author>
@@ -531,6 +580,21 @@ namespace AppWebERS.Models{
         public void CargarDatos(DataRow dr)
         {
 
+        }
+
+        public string GetJefeProyecto(int id)
+        {
+            string consulta = "SELECT vinculo_usuario_proyecto.ref_usuario FROM vinculo_usuario_proyecto" +
+                " WHERE vinculo_usuario_proyecto.rol = 'JEFEPROYECTO' AND vinculo_usuario_proyecto.ref_proyecto = " + id;
+            string jefe ="";
+            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
+            if (reader!= null)
+            {
+                reader.Read();
+                jefe = reader["ref_usuario"].ToString();
+            }
+            this.conexion.EnsureConnectionClosed();
+            return jefe;
         }
 
         /**
@@ -568,8 +632,8 @@ namespace AppWebERS.Models{
             String referencias = proyecto.Referencias;
             String ambiente = proyecto.AmbienteOperacional;
             String relacion = proyecto.RelacionProyectos;
-            String consulta = "INSERT INTO proyecto (nombre,proposito,alcance,contexto,definiciones,acronimos,abreviaturas,referencias,ambiente_operacional,relacion_con_otros_proyectos)" +
-                " VALUES ('" + nombre + "', '" + proposito + "','" + alcance + "','" + contexto + "','" + definiciones + "','" + acronimos + "','" + abreviaturas + "','" + referencias + "','" + ambiente + "','" + relacion + "')";
+            String consulta = "INSERT INTO proyecto (nombre,proposito,alcance,contexto,definiciones,acronimos,abreviaturas,referencias,ambiente_operacional,relacion_con_otros_proyectos,estado)" +
+                " VALUES ('" + nombre + "', '" + proposito + "','" + alcance + "','" + contexto + "','" + definiciones + "','" + acronimos + "','" + abreviaturas + "','" + referencias + "','" + ambiente + "','" + relacion + "','HABILITADO')";
             return this.conexion.RealizarConsultaNoQuery(consulta);
         }
         //Metodos para Asignar Jefes de Proyectos

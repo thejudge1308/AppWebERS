@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 using System.Linq;
 using System.Web;
 
@@ -9,13 +10,11 @@ namespace AppWebERS.Models
     public class LoginViewModel
     {
         [Required]
-        [Display(Name = "Rut")]
-        [RegularExpression("([1-9][0-9]*)", ErrorMessage = "El campo Rut debe tener solo números.")]
-        [StringLength(8, ErrorMessage = "El campo Rut debe tener 7 caractener como minimo y 8 como máximo", MinimumLength = 7)]
+        [Display(Name = "Rut o nombre")]
         /**
-         * <param name="Rut">Rut</param>  
+         * <param name="RutName">Rut</param>  
          */
-        public string Rut { get; set; }
+        public string RutName { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
@@ -32,6 +31,16 @@ namespace AppWebERS.Models
         * <summary> For more information = https://www.youtube.com/watch?v=rWK_VlekdwM </summary>>
         */
         public bool RememberMe { get; set; }
+
+        public bool esRut()
+        {
+            Regex regexRut = new Regex("(^[a-zA-Z])");
+            if (regexRut.IsMatch(RutName))
+            {
+                return false;
+            }
+            return true;
+        }
     }
 
     public class RegisterViewModel
@@ -44,7 +53,7 @@ namespace AppWebERS.Models
         public string Rut { get; set; }
 
         [Required(ErrorMessage = "El campo Correo electrónico es obligatorio")]
-        [EmailAddress]
+        [RegularExpression(@"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,3})(\]?)$", ErrorMessage = "Por favor ingrese un correo válido")]
         [Display(Name = "Correo electrónico")]
         public string Email { get; set; }
 

@@ -23,7 +23,6 @@ $(document).ready(function () {
 
     })
         .done(function (data) {
-            console.log(data);
             var emptydata = "<p></p>";
             //obtener valores
             var nombre = data.Nombre === "" ? emptydata : data.Nombre;
@@ -33,7 +32,7 @@ $(document).ready(function () {
             var definicion = data.Definiciones === "" ? emptydata : data.Definiciones;
             var acronimo = data.Acronimos === "" ? emptydata : data.Acronimos;
             var abreviatura = data.Abreviaturas === "" ? emptydata : data.Abreviaturas;
-            var referencia = data.referencia === "" ? emptydata : data.referencia;
+            var referencia = data.Referencia === "" ? emptydata : data.Referencia;
             var ambiente = data.AmbienteOperacional === "" ? emptydata : data.AmbienteOperacional;
             var relacion = data.RelacionProyectos === "" ? emptydata : data.RelacionProyectos;
 

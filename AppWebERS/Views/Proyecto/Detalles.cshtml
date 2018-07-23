@@ -14,7 +14,8 @@
     var TipoUsuario = (int)ViewData["permiso"];
 }
 
-@if(ProyectoActual != null && TipoUsuario != Proyecto.NO_AUTH) {
+@if (ProyectoActual != null && TipoUsuario != Proyecto.NO_AUTH)
+{
     <h2>Detalles</h2>
 
     <ul class="nav nav-tabs">
@@ -43,7 +44,7 @@
                     <a class="nav-link" href="#">Cambiar jefe de proyecto</a>
                 </li>
             }-->
-            
+
         }
     </ul>
 
@@ -51,7 +52,8 @@
 
 
 
-    using(Html.BeginForm("Detalles", "Proyecto", FormMethod.Post, new { @class = "form-horizontal", role = "form" })) {
+    using (Html.BeginForm("Detalles", "Proyecto", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
 
 
         <div class="row">
@@ -71,10 +73,13 @@
                     @{@Html.LabelFor(p => ProyectoActual.Nombre, new { @class = "col-md-12 control-label" })}
                     <div class="col-12">
                         @{
-                            if(TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN) {
+                            if (TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN)
+                            {
                                 @Html.TextBoxFor(p => ProyectoActual.Nombre, new { @class = "form-control font-weight-bold", placeholder = "Nombre del proyecto.", Style = "max-width:100%;", disabled = "disabled" })
 
-                            } else {
+                            }
+                            else
+                            {
                                 @Html.TextBoxFor(p => ProyectoActual.Nombre, new { @class = "form-control font-weight-bold", placeholder = "Nombre del proyecto.", Style = "max-width:100%;" })
                                 @Html.ValidationMessageFor(p => p.Nombre, "", new { @class = "text-danger" })
                             }
@@ -89,10 +94,13 @@
                     <div class="col-12">
 
                         @{
-                            if(TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN) {
+                            if (TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN)
+                            {
                                 @Html.TextAreaFor(p => ProyectoActual.Proposito, new { @class = "form-control font-weight-bold", placeholder = "Proposito.", Style = "max-width:100%;", disabled = "disabled" })
 
-                            } else {
+                            }
+                            else
+                            {
                                 @Html.TextAreaFor(p => ProyectoActual.Proposito, new { @class = "form-control font-weight-bold", placeholder = "Proposito.", Style = "max-width:100%;" })
                                 @Html.ValidationMessageFor(p => p.Proposito, "", new { @class = "text-danger" })
                             }
@@ -105,9 +113,12 @@
                     @{@Html.LabelFor(p => ProyectoActual.Alcance, new { @class = "col-md-12 control-label" })}
                     <div class="col-12">
                         @{
-                            if(TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN) {
+                            if (TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN)
+                            {
                                 @Html.TextAreaFor(p => ProyectoActual.Alcance, new { @class = "form-control font-weight-bold", placeholder = "Alcance.", Style = "max-width:100%;", disabled = "disabled" })
-                            } else {
+                            }
+                            else
+                            {
                                 @Html.TextAreaFor(p => ProyectoActual.Alcance, new { @class = "form-control font-weight-bold", placeholder = "Alcance.", Style = "max-width:100%;" })
                                 @Html.ValidationMessageFor(p => p.Alcance, "", new { @class = "text-danger" })
                             }
@@ -122,9 +133,12 @@
                     @{@Html.LabelFor(p => ProyectoActual.Contexto, new { @class = "col-md-12 control-label" })}
                     <div class="col-12">
                         @{
-                            if(TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN) {
+                            if (TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN)
+                            {
                                 @Html.TextAreaFor(p => ProyectoActual.Contexto, new { @class = "form-control font-weight-bold", placeholder = "Contexto.", Style = "max-width:100%;", disabled = "disabled" })
-                            } else {
+                            }
+                            else
+                            {
                                 @Html.TextAreaFor(p => ProyectoActual.Contexto, new { @class = "form-control font-weight-bold", placeholder = "Contexto.", Style = "max-width:100%;" })
                                 @Html.ValidationMessageFor(p => p.Contexto, "", new { @class = "text-danger" })
                             }
@@ -139,10 +153,13 @@
                     @{@Html.LabelFor(p => ProyectoActual.Definiciones, new { @class = "col-md-12 control-label" })}
                     <div class="col-12">
                         @{
-                            if(TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN) {
+                            if (TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN)
+                            {
                                 @Html.TextAreaFor(p => ProyectoActual.Definiciones, new { @class = "form-control font-weight-bold", placeholder = "Definiciones.", Style = "max-width:100%;", disabled = "disabled" })
 
-                            } else {
+                            }
+                            else
+                            {
                                 @Html.TextAreaFor(p => ProyectoActual.Definiciones, new { @class = "form-control font-weight-bold", placeholder = "Definiciones.", Style = "max-width:100%;" })
 
                             }
@@ -155,9 +172,12 @@
 
                     <div class="col-12">
                         @{
-                            if(TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN) {
+                            if (TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN)
+                            {
                                 @Html.TextAreaFor(p => ProyectoActual.Acronimos, new { @class = "form-control font-weight-bold", placeholder = "Acronimos.", Style = "max-width:100%;", disabled = "disabled" })
-                            } else {
+                            }
+                            else
+                            {
                                 @Html.TextAreaFor(p => ProyectoActual.Acronimos, new { @class = "form-control font-weight-bold", placeholder = "Acronimos.", Style = "max-width:100%;" })
 
                             }
@@ -169,10 +189,13 @@
                     @{@Html.LabelFor(p => ProyectoActual.Abreviaturas, new { @class = "col-md-12 control-label" })}
                     <div class="col-12">
                         @{
-                            if(TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN) {
+                            if (TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN)
+                            {
                                 @Html.TextAreaFor(p => ProyectoActual.Abreviaturas, new { @class = "form-control font-weight-bold", placeholder = "Abreviaturas.", Style = "max-width:100%;", disabled = "disabled" })
 
-                            } else {
+                            }
+                            else
+                            {
                                 @Html.TextAreaFor(p => ProyectoActual.Abreviaturas, new { @class = "form-control font-weight-bold", placeholder = "Abreviaturas.", Style = "max-width:100%;" })
 
                             }
@@ -184,10 +207,13 @@
                     @{@Html.LabelFor(p => ProyectoActual.Referencias, new { @class = "col-md-12 control-label" })}
                     <div class="col-md-12">
                         @{
-                            if(TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN) {
+                            if (TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN)
+                            {
                                 @Html.TextAreaFor(p => ProyectoActual.Referencias, new { @class = "form-control font-weight-bold", placeholder = "Referencias.", Style = "max-width:100%;", disabled = "disabled" })
 
-                            } else {
+                            }
+                            else
+                            {
                                 @Html.TextAreaFor(p => ProyectoActual.Referencias, new { @class = "form-control font-weight-bold", placeholder = "Referencias.", Style = "max-width:100%;" })
 
                             }
@@ -200,10 +226,13 @@
                     @{@Html.LabelFor(p => ProyectoActual.AmbienteOperacional, new { @class = "col-md-12 control-label" })}
                     <div class="col-12">
                         @{
-                            if(TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN) {
+                            if (TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN)
+                            {
                                 @Html.TextAreaFor(p => ProyectoActual.AmbienteOperacional, new { @class = "form-control font-weight-bold", placeholder = "Ambiente operacional.", Style = "max-width:100%;", disabled = "disabled" })
 
-                            } else {
+                            }
+                            else
+                            {
                                 @Html.TextAreaFor(p => ProyectoActual.AmbienteOperacional, new { @class = "form-control font-weight-bold", placeholder = "Ambiente operacional.", Style = "max-width:100%;" })
                                 @Html.ValidationMessageFor(p => p.AmbienteOperacional, "", new { @class = "text-danger" })
                             }
@@ -218,9 +247,12 @@
                     @{@Html.LabelFor(p => ProyectoActual.RelacionProyectos, new { @class = "col-md-12 control-label" })}
                     <div class="col-12">
                         @{
-                            if(TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN) {
+                            if (TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN)
+                            {
                                 @Html.TextAreaFor(p => ProyectoActual.RelacionProyectos, new { @class = "form-control font-weight-bold", placeholder = "Relación con otros proyectos.", Style = "max-width:100%;", disabled = "disabled" })
-                            } else {
+                            }
+                            else
+                            {
                                 @Html.TextAreaFor(p => ProyectoActual.RelacionProyectos, new { @class = "form-control font-weight-bold", placeholder = "Relación con otros proyectos.", Style = "max-width:100%;" })
 
                             }
@@ -228,12 +260,14 @@
                     </div>
                 </div>
                 @{
-                    if (TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN) {
+                    if (TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN)
+                    {
                         <div class="col-12">
                             <button type="button" class="btn btn-primary">Atras</button>
                         </div>
                     }
-                    else {
+                    else
+                    {
 
                         <div class="form-group">
                             <div class="col-12">
@@ -243,22 +277,30 @@
                     }
                 }
             </div>
+
+        </div>
+        <div class="col-12">
+            @Html.ActionLink("Generar PDF", "ExportarPDF", "Proyecto", new { id = ProyectoActual.IdProyecto }, new { miAtributo = "valor1", @class = "btn btn-danger" })
         </div>
 
     }
-} else if(TipoUsuario == Proyecto.NO_AUTH) {
+}
+else if (TipoUsuario == Proyecto.NO_AUTH)
+{
     <div class="jumbotron jumbotron-fluid">
         <div class="container">
             <h1>No tiene permisos para ver estre proyecto.</h1>
         </div>
     </div>
 
-} else {
+}
+else
+{
     <div class="jumbotron jumbotron-fluid">
         <div class="container">
             <h1>Proyecto no encontrado</h1>
         </div>
-    </div> 
+    </div>
 }
 
 

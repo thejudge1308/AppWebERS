@@ -192,8 +192,6 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ProyectoController.cs" />
     <Compile Include="Controllers\RequisitoController.cs" />
-    <Compile Include="Controllers\UserViewController.cs" />
-    <Compile Include="Controllers\SysAdmin2Controller.cs" />
     <Compile Include="Controllers\SolicitudDeProyectoController.cs" />
     <Compile Include="Controllers\SysAdminController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />

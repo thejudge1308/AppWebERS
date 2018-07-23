@@ -421,6 +421,7 @@ namespace AppWebERS.Controllers
 
             return View();
         }
+        //ATENCION: FORMTATO FECHA: AAAA-MM-DD
         [HttpPost]
         public ActionResult IngresarRequisito(string idRequisito, string nombre, string descripcion, string prioridad, string fuente,
             string estabilidad, string estado, string tipoUsuario, string tipoRequisito, string medida, string escala,
@@ -428,7 +429,18 @@ namespace AppWebERS.Controllers
         {
             Requisito requisito = new Requisito(idRequisito, nombre, descripcion, prioridad, fuente, estabilidad, estado,
                 tipoUsuario, tipoRequisito, medida, escala, fecha, incremento, tipo);
-            return View();
+            int id = Int32.Parse(idProyecto);
+            if (requisito.RegistrarRequisito(id))
+            {
+                TempData["alerta"] = new Alerta("Exito al crear Requisito", TipoAlerta.SUCCESS);
+                return RedirectToAction("Detalles/" + id, "Proyecto");
+                
+            }
+            else
+            {
+                TempData["alerta"] = new Alerta("ERROR al crear Requisito", TipoAlerta.ERROR);
+            }
+            return RedirectToAction("Requisito/" + id, "Proyecto");
         }
 
         public ActionResult InterfazUsuario()

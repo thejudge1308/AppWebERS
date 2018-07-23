@@ -13,11 +13,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using MySql.Data.MySqlClient;
 
 namespace AppWebERS.Controllers
 {
     public class SysAdminController : Controller
     {
+        private ConectorBD conector = ConectorBD.Instance;
         // GET: SysAdmin
 
 
@@ -39,6 +41,48 @@ namespace AppWebERS.Controllers
 
         public void CrearProyecto()
         {
+
+        }
+
+        public ActionResult AgregarUsuarioProyecto(String idProyecto)
+        {
+            List<Usuario> lista = this.listaDeUsuarios();
+            ViewData["proyecto"] = idProyecto;
+
+            return View(lista);
+        }
+
+        public ActionResult VincularUsuarioProyecto(String rut, String idProyecto)
+        {
+            return null;
+        }
+
+        public List<Usuario> listaDeUsuarios()
+        {
+            List<Usuario> listaUsuarios = new List<Usuario>();
+            string consulta = "SELECT UserName, Rut, Email, Tipo FROM users";
+            MySqlDataReader reader = this.conector.RealizarConsulta(consulta);
+
+            if (reader == null)
+            {
+                this.conector.CerrarConexion();
+                return null;
+            }
+            else
+            {
+                while (reader.Read())
+                {
+                    string nombre = reader.GetString(0);
+                    string rut = reader.GetString(1);
+                    string correo = reader.GetString(2);
+                    string tipo = reader.GetString(3);
+
+                    listaUsuarios.Add(new Usuario(rut, nombre, correo, tipo));
+                }
+
+                this.conector.CerrarConexion();
+                return listaUsuarios;
+            }
 
         }
 

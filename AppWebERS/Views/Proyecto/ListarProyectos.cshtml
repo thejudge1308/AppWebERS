@@ -120,7 +120,7 @@
                         <p class="card-text"></p>
                         <a href="Detalles/@proyecto.Id" class="btn btn-primary">Ver detalle</a>
                         @{
-                            if (proyecto.Estado == "habilitado")
+                            if (proyecto.Estado == "HABILITADO")
                             {
                                 <a href="#" class="btn btn-primary" onclick="location.href='@Url.Action("DeshabilitarProyecto", "Proyecto", new {id=proyecto.Id })'">Deshabilitar</a>
 

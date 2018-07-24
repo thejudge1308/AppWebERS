@@ -572,7 +572,7 @@ namespace AppWebERS.Controllers
             }
         }
         
-         public ActionResult Requisito() {
+       
         [HttpGet]
         public ActionResult Requisito(int id)
         {

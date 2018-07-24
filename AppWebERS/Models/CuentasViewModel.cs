@@ -44,7 +44,7 @@ namespace AppWebERS.Models
         public string Rut { get; set; }
 
         [Required(ErrorMessage = "El campo Correo electrónico es obligatorio")]
-        [EmailAddress]
+        [RegularExpression(@"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,3})(\]?)$", ErrorMessage = "Por favor ingrese un correo válido")]
         [Display(Name = "Correo electrónico")]
         public string Email { get; set; }
 

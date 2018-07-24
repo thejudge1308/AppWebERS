@@ -352,6 +352,7 @@
     <Content Include="Views\SysAdmin2\Principal.cshtml" />
     <Content Include="Views\UserView\Principal.cshtml" />
     <Content Include="Scripts\quilljs\quill.min.js.map" />
+    <Content Include="Views\Proyecto\Requisito.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -498,6 +498,44 @@ namespace AppWebERS.Models{
             //return Usuario;
         }
 
+        public List<SolicitudDeProyecto> GetSolicitudesProyecto(int id)
+        {
+            string jefeProyecto = this.GetJefeProyecto(id);
+            List<SolicitudDeProyecto> listaSolicitudes = new List<SolicitudDeProyecto>();
+
+            string consulta = "SELECT  users.userName, users.Id, proyecto.nombre, proyecto.id_proyecto " +
+                "FROM users, proyecto, solicitud_vinculacion_proyecto,Vinculo_usuario_proyecto " +
+                "WHERE proyecto.id_proyecto = " + id +
+                " AND vinculo_usuario_proyecto.rol = 'JEFEPROYECTO' AND vinculo_usuario_proyecto.ref_proyecto = proyecto.id_proyecto " +
+                "AND vinculo_usuario_proyecto.ref_usuario = '" + jefeProyecto + "' AND users.id = solicitud_vinculacion_proyecto.ref_solicitante " +
+                 " AND proyecto.id_proyecto = solicitud_vinculacion_proyecto.ref_proyecto";
+
+
+
+            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
+            if (reader == null)
+            {
+                this.conexion.EnsureConnectionClosed();
+                return null;
+            }
+            else
+            {
+                while (reader.Read())
+                {
+                    string nombreUsuario = reader.GetString(0);
+                    string idUsuario = reader.GetString(1);
+                    string nombreProyecto = reader.GetString(2);
+                    int idProyecto = Int32.Parse(reader.GetString(3));
+
+                    listaSolicitudes.Add(new SolicitudDeProyecto(nombreUsuario, idUsuario, nombreProyecto, idProyecto));
+                }
+
+                this.conexion.EnsureConnectionClosed();
+                return listaSolicitudes;
+            }
+
+        }
+
 
         /**
          * <author>Matías Parra</author>
@@ -585,6 +623,21 @@ namespace AppWebERS.Models{
         public void CargarDatos(DataRow dr)
         {
 
+        }
+
+        public string GetJefeProyecto(int id)
+        {
+            string consulta = "SELECT vinculo_usuario_proyecto.ref_usuario FROM vinculo_usuario_proyecto" +
+                " WHERE vinculo_usuario_proyecto.rol = 'JEFEPROYECTO' AND vinculo_usuario_proyecto.ref_proyecto = " + id;
+            string jefe ="";
+            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
+            if (reader!= null)
+            {
+                reader.Read();
+                jefe = reader["ref_usuario"].ToString();
+            }
+            this.conexion.EnsureConnectionClosed();
+            return jefe;
         }
 
         /**

@@ -20,47 +20,40 @@
 <!-- jQuery first, then Bootstrap JS. -->
 <!-- Nav tabs -->
 
-@if (usuarioActual == "SYSADMIN")
-{
-    <div class="row">
-        <div class="col-4 mb-2 mt-2">
-            <a class="btn btn-primary" href="@Url.Action("CrearProyecto","Proyecto")">Crear nuevo proyecto</a>
-        </div>
-    </div>
 
-}
-
-
-<ul class="nav nav-tabs" role="tablist">
-
-    @{
-        if (usuarioActual == "SYSADMIN")
+        @if (usuarioActual == "SYSADMIN")
         {
-            <li class="nav-item" id="myTab1">
-                <a id="todosButton" class="nav-link" href="#todos" role="tab" data-toggle="tab">Todos</a>
-            </li>
+            <div class="row">
+                <div class="col-4 mb-2 mt-2">
+                    <a class="btn btn-primary" href="@Url.Action("CrearProyecto","Proyecto")">Crear nuevo proyecto</a>
+                </div>
+            </div>
 
         }
-        else
-        {
-            <li class="nav-item" id="myTab2">
-                <a id="asociados_button" class="nav-link" href="#asociados" role="tab" data-toggle="tab">Asociados</a>
-            </li>
-            <li class="nav-item" id="myTab3">
-                <a class="nav-link" href="#noasociados" role="tab" data-toggle="tab">No asociados</a>
-            </li>
+            <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    @{
+                        if (usuarioActual == "SYSADMIN")
+                        {
+                            <a class="nav-item nav-link active" id="nav-todos-tab" data-toggle="tab" href="#nav-todos" role="tab" aria-controls="nav-asociados" aria-selected="true">Todos</a>
+
+                        }
+                        else
+                        {
+
+                            <a class="nav-item nav-link active" id="nav-asociados-tab" data-toggle="tab" href="#nav-asociados" role="tab" aria-controls="nav-asociados" aria-selected="false">Asociados</a>
+                            <a class="nav-item nav-link" id="nav-noasociados-tab" data-toggle="tab" href="#nav-noasociados" role="tab" aria-controls="nav-noasociados" aria-selected="false">No asociados</a>
 
 
-        }
-    }
+                        }
+                    }
 
-
-</ul>
-
+                </div>
+            </nav>
 
 <!-- Tab panes -->
-<div class="tab-content">
-    <div role="tabpanel" class="tab-pane fade in active" id="asociados">
+<div class="tab-content mb-2 mt-2" id="nav-tabContent">
+    <div class="tab-pane fade show active" id="nav-asociados" role="tabpanel" aria-labelledby="nav-home-tab">
         @{int posicion = 0; }
 
         @for (int i = 0; i < Model.Count; i++)
@@ -93,7 +86,7 @@
     </div>
 
 
-    <div role="tabpanel" class="tab-pane fade" id="noasociados">
+    <div class="tab-pane fade" id="nav-noasociados" role="tabpanel" aria-labelledby="nav-profile-tab">
         @for (int i = posicion; i < Model.Count; i++)
         {
             if (Model.ElementAt(i).Nombre != "mitad")
@@ -118,7 +111,7 @@
 
 
 
-    <div role="tabpanel" class="tab-pane fade in active" id="todos">
+    <div class="tab-pane fade" id="nav-todos" role="tabpanel" aria-labelledby="nav-contact-tab">
 
 
         @foreach (var proyecto in Model)

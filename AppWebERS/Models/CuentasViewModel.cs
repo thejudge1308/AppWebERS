@@ -64,12 +64,14 @@ namespace AppWebERS.Models
         public string Password { get; set; }
 
         [Required(ErrorMessage = "El campo Nombre es obligatorio.")]
-        [RegularExpression("[a-zA-Z]*", ErrorMessage = "Nombre no valido.")]
+        [StringLength(35, ErrorMessage = "El largo del nombre deber ser entre 2 a 35 caracteres.", MinimumLength = 2)]
+        [RegularExpression("[a-zA-ZñÑáéíóúÁÉÍÓÚ]*", ErrorMessage = "Nombre no valido.")]
         [Display(Name = "Nombre")]
         public string Nombre { get; set; }
 
         [Required(ErrorMessage = "El campo Apellido es obligatorio.")]
-        [RegularExpression("[a-zA-Z]*", ErrorMessage = "Apellido no valido.")]
+        [StringLength(35, ErrorMessage = "El largo del apellido deber ser entre 2 a 35 caracteres.", MinimumLength = 2)]
+        [RegularExpression("[a-zA-ZñÑáéíóúÁÉÍÓÚ]*", ErrorMessage = "Apellido no valido.")]
         [Display(Name = "Apellido")]
         public string Apellido { get; set; }
 

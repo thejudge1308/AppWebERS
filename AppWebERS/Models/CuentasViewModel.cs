@@ -91,7 +91,7 @@ namespace AppWebERS.Models
     {
 
         [RegularExpression("([ ]?[a-zA-Z0-9])*", ErrorMessage = "Nombre no válido.")]
-        [StringLength(50, ErrorMessage = "El largo del nombre deber ser entre 1 a 50 caracteres.", MinimumLength = 5)]
+        [StringLength(50, ErrorMessage = "El largo del nombre deber ser entre 5 a 50 caracteres.", MinimumLength = 5)]
         [Display(Name = "Nombre")]
         public string Nombre { get; set; }
 

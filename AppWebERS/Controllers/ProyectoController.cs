@@ -273,7 +273,15 @@ namespace AppWebERS.Controllers
         }
 
       
+        public ActionResult AgregarUsuarioProyecto(int id)
+        {
+            return RedirectToAction("AgregarUsuarioProyecto","SysAdmin", new { idProyecto = id});
+        }
 
+        public ActionResult InvitarUsuario(int id)
+        {
+            return RedirectToAction("InvitarUsuario", "JefeProyecto", new { idProyecto = id });
+        }
         /**
         * Autor: Patricio Quezada
         * <param name = "id" > Id del proyecto.</param>
@@ -498,7 +506,7 @@ namespace AppWebERS.Controllers
          * Parámetros: PosProyecto. Es la posición que tiene el proyecto en la lista de proyectos
          */
         [HttpGet]
-        public ActionResult AgregarUsuarioAProyecto(string proyecto1)
+        public ActionResult AgregarUsuarioAProyecto(int proyecto1)
         {
 
             //int PosProyecto = Int32.Parse(proyecto1);
@@ -524,14 +532,14 @@ namespace AppWebERS.Controllers
             return RedirectToAction("ListarProyectos", "Proyecto");
         }
 
-       
+
 
         /*
          * Autor: Nicolás Hervias
          * Crea una lista de ids de todos los proyectos
          * Parametros: N/A
          */
-         [HttpGet]
+        [HttpGet]
         public List<string> ListaProyectosIds()
         {
             List<String> ListaProyectos = new List<String>();
@@ -671,31 +679,22 @@ namespace AppWebERS.Controllers
          * <param String id>
         */
         [HttpGet]
-        public ActionResult VincularUsuarioAProyecto(string idUsuario,string idProyecto, string rol )
+        public ActionResult VincularUsuarioAProyecto(string rutUsuario,int idProyecto )
         {
+            string idUsuario = this.ObtenerIdPorRut(rutUsuario);
 
-            string consulta = "INSERT INTO vinculo_usuario_proyecto VALUES('" + idUsuario + "','" + idProyecto + "','" + rol + "')";
+            string consulta = "START TRANSACTION;"+
+                "INSERT INTO vinculo_usuario_proyecto VALUES('" + idUsuario + "','" + idProyecto + "','USUARIO');"+
+                "COMMIT;";
 
-            MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
-            if (reader == null)
-            {
-                this.Conector.CerrarConexion();
+            this.Conector.RealizarConsultaNoQuery(consulta);
+            this.Conector.CerrarConexion();
 
-            }
-            else
-            {
-                TempData["alerta"] = new Alerta("Usuario vinculado", TipoAlerta.SUCCESS);
-                while (reader.Read())
-                {
-
-
-                }
-
-                this.Conector.CerrarConexion();
-            }
-
-            return RedirectToAction("ListarProyectos", "Proyecto");
+            return RedirectToAction("Detalles", "Proyecto", new { id = idProyecto });
         }
+
+        
+
 
         /*
      * Autor Fabian Oyarce
@@ -703,12 +702,12 @@ namespace AppWebERS.Controllers
       * <param String id>
      */
         [HttpGet]
-        public ActionResult SolicitarVincularUsuarioAProyecto(string idUsuario, string idProyecto, string rol)
+        public ActionResult SolicitarVincularUsuarioAProyecto(string rutUsuario, int idProyecto)
         {
 
             
             string UsuarioSolicitanteRut = ObtenerIdUsuarioActivo();
-
+            string idUsuario = this.ObtenerIdPorRut(rutUsuario);
             string Values = "'" + idProyecto + "','" + idUsuario + "'";
             string Consulta = "INSERT INTO solicitud_vinculacion_proyecto (ref_proyecto,ref_solicitante) VALUES (" + Values + ");";
 
@@ -745,6 +744,19 @@ namespace AppWebERS.Controllers
             return View("SolicitudDeProyecto", sol);
         }
 
-
+        private string ObtenerIdPorRut(string rut)
+        {
+            string value = "";
+            string consulta = "SELECT users.id FROM users WHERE users.Rut = '" + rut + "'";
+            MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
+            if(reader!= null)
+            {
+                reader.Read();
+                value = reader[0].ToString();
+            }
+             return value;
+        }
     }
+
+   
 }

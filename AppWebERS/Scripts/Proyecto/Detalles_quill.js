@@ -157,6 +157,9 @@ $(document).ready(function () {
                
             });*/
 
+        //Autor (Modificacion): Gerardo Estrada
+        //Se agregan los mensajes de alerta
+
         $.ajax({
             type: "POST",
             url: "/Proyecto/Detalles",
@@ -165,12 +168,18 @@ $(document).ready(function () {
             dataType: "json",
             success: function (response) {
                 console.log(response);
+                if (response) {
+                    mostrarAlerta("Cambios guardados exitosamente");
+                }
+                else {
+                    mostrarAlerta("No se ha podido guardar la modificación");
+                }
             },
             failure: function (response) {
-                alert(response.responseText);
+                mostrarAlerta(response.responseText);
             },
             error: function (response) {
-                alert(response.responseText);
+                mostrarAlerta(response.responseText);
             }
         });  
 

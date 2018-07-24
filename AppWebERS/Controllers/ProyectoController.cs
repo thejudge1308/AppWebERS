@@ -3,6 +3,7 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using AppWebERS.Utilidades;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -10,15 +11,18 @@ using System.Data;
 using Microsoft.AspNet.Identity;
 using AspNet.Identity.MySQL;
 using Microsoft.AspNet.Identity.Owin;
+using AppWebERS.Utilidades;
 
 namespace AppWebERS.Controllers
 {
     public class ProyectoController : Controller
     {
         List<NombreProyecto> listaProyectosNombres = new List<NombreProyecto>();
+        List<NombreProyecto> listaTodosLosProyectosNombres = new List<NombreProyecto>();
         private int id_proyecto;
         private ConectorBD conexion;
         private ConectorBD Conector = ConectorBD.Instance;
+
 
         // GET: Proyecto/Detalles/5
         [Authorize]
@@ -75,10 +79,11 @@ namespace AppWebERS.Controllers
             Proyecto proyecto = this.GetProyecto(id);
 
             List<Usuario> usuarios = new Proyecto().GetListaUsuarios(id);
-
+            List<SolicitudDeProyecto> solicitudes = new Proyecto().GetSolicitudesProyecto(id);
             //Debug.WriteLine("Permiso: " + TipoDePermiso());
             ViewData["proyecto"] = proyecto;
             ViewData["usuarios"] = usuarios;
+            ViewData["solicitudes"] = solicitudes;
             Debug.WriteLine("Lista de usuarios" + usuarios);
             ViewData["permiso"] = TipoDePermiso(id);
             return View();
@@ -100,10 +105,160 @@ namespace AppWebERS.Controllers
          */
         public ActionResult ListarProyectos()
         {
-            var model = ObtenerProyectos();
-            return View(model);
+            String TipoUsuario = ObtenerTipoUsuarioActivo();
+            
+
+            if (TipoUsuario== "SYSADMIN")
+            {
+                var model = ListaDeTodosLosProyectos();
+                return View(model);
+            }
+            else
+            {
+                var model = ObtenerTodosLosProyectos();
+                return View(model);
+            }
+           
+            
 
         }
+
+
+        /**
+      * <author>Fabian Oyarce</author>
+      * <summary>
+      * obtiene los proyectos asociados y no asociados y los une a una sola lista
+      * </summary>
+      * <returns>lista proyectos nombres </returns>
+      */
+        public List<NombreProyecto> ObtenerTodosLosProyectos()
+        {
+
+            ListaDeProyectosAsociados(ObtenerIdUsuarioActivo());
+            ListaDeProyectoNoAsociados(ObtenerIdUsuarioActivo());
+            return listaProyectosNombres;
+
+        }
+
+        /*
+    * Autor Fabian Oyarce
+    * Metodo encargado de obtener los nombres de todos los proyectos.
+    * <param String rut>
+    * <returns> listaProyectosNombres 
+    */
+        public List<NombreProyecto> ListaDeTodosLosProyectos()
+        {
+
+            string consulta = "SELECT proyecto.nombre, proyecto.id_proyecto, proyecto.estado " +
+                                "FROM proyecto";
+            int bandera = 0;
+            MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
+            if (reader == null)
+            {
+                this.Conector.CerrarConexion();
+                listaTodosLosProyectosNombres.Add(new NombreProyecto("mitad", "id","estado"));
+                return listaTodosLosProyectosNombres;
+                //return null;
+            }
+            else
+            {
+                while (reader.Read())
+                {
+
+                    if (bandera == 0)
+                    {
+                        listaTodosLosProyectosNombres.Add(new NombreProyecto("SYSADMIN", "-99","estado"));
+                        bandera = 1;
+
+                    }
+                    
+                    string Nombre = reader.GetString(0);
+                    string Id = reader.GetString(1);
+                    string Estado = reader.GetString(2);
+                    listaTodosLosProyectosNombres.Add(new NombreProyecto(Nombre, Id,Estado));
+                }
+
+                this.Conector.CerrarConexion();
+                listaTodosLosProyectosNombres.Add(new NombreProyecto("mitad", "id","estado"));
+                return listaTodosLosProyectosNombres;
+            }
+        }
+
+
+        /*
+        * Autor Juan Abello
+        * Metodo encargado de obtener los nombres de los proyectos en los que se encuentra un usuario,guardarlos en una lista y retornar esta.
+        * <param String rut>
+        * <returns> listaProyectosNombres 
+        */
+        public List<NombreProyecto> ListaDeProyectosAsociados(string id)
+        {
+
+            string estado = "HABILITADO";
+            string consulta = "SELECT proyecto.nombre, proyecto.id_proyecto, proyecto.estado FROM proyecto, users, vinculo_usuario_proyecto " +
+                               "WHERE proyecto.estado =  '" + estado + "' AND users.id = '" + id + "' AND vinculo_usuario_proyecto.ref_proyecto = " +
+                               "proyecto.id_proyecto AND vinculo_usuario_proyecto.ref_usuario = users.id";
+            MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
+            if (reader == null)
+            {
+                this.Conector.CerrarConexion();
+                listaProyectosNombres.Add(new NombreProyecto("mitad", "id","estado"));
+                return listaProyectosNombres;
+                //return null;
+            }
+            else
+            {
+                while (reader.Read())
+                {
+
+                    string Nombre = reader.GetString(0);
+                    string Id = reader.GetString(1);
+                    string Estado = reader.GetString(2);
+                    listaProyectosNombres.Add(new NombreProyecto(Nombre, Id,Estado));
+                }
+
+                this.Conector.CerrarConexion();
+                listaProyectosNombres.Add(new NombreProyecto("mitad", "id","estado"));
+                return listaProyectosNombres;
+            }
+        }
+
+        /*
+        * Autor Juan Abello
+        * Metodo encargado de obtener los nombres de los proyectos en los que se no encuentra un usuario,guardarlos en una lista y retornar esta.
+        * <param String rut>
+        * <returns> listaProyectosNombres 
+        */
+        public List<NombreProyecto> ListaDeProyectoNoAsociados(string id)
+        {
+            string estado = "HABILITADO";
+            string consulta = "SELECT Proyecto.nombre ,proyecto.id_proyecto ,proyecto.estado FROM Proyecto where  proyecto.estado = '" + estado + "' AND " +
+                              "Proyecto.nombre NOT IN" +
+                              "(SELECT Proyecto.nombre FROM Proyecto, users, vinculo_usuario_proyecto " +
+                              "WHERE users.id ='" + id + "'  AND Vinculo_usuario_proyecto.ref_proyecto = Proyecto.id_proyecto AND Vinculo_usuario_proyecto.ref_usuario = users.id)";
+
+            MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
+            if (reader == null)
+            {
+                this.Conector.CerrarConexion();
+                return null;
+            }
+            else
+            {
+                while (reader.Read())
+                {
+
+                    string Nombre = reader.GetString(0);
+                    string Id = reader.GetString(1);
+                    string Estado = reader.GetString(2);
+                    listaProyectosNombres.Add(new NombreProyecto(Nombre, Id,Estado));
+                }
+
+                this.Conector.CerrarConexion();
+                return listaProyectosNombres;
+            }
+        }
+
 
         public string ObtenerIdUsuarioActivo()
         {
@@ -117,21 +272,7 @@ namespace AppWebERS.Controllers
             }
         }
 
-        /**
-        * <author>Fabian Oyarce</author>
-        * <summary>
-        * obtiene los proyectos asociados y no asociados y los une a una sola lista
-        * </summary>
-        * <returns>lista proyectos nombres </returns>
-        */
-        public List<NombreProyecto> ObtenerProyectos()
-        {
-
-            ListaDeProyectosUsuario(ObtenerIdUsuarioActivo());
-            ListaDeProyectoNoAsociados(ObtenerIdUsuarioActivo());
-            return listaProyectosNombres;
-         
-        }
+      
 
         /**
         * Autor: Patricio Quezada
@@ -223,26 +364,24 @@ namespace AppWebERS.Controllers
                     {
                         if (proyecto.AsignarJefeProyecto(usuario, nombre))
                         {
-                            ViewBag.Message1 = "Exito al crear Proyecto";
+                            TempData["alerta"] = new Alerta("Exito al crear Proyecto", TipoAlerta.SUCCESS);
                             return RedirectToAction("ListarProyectos", "Proyecto");
                         }
                         else {
-                            ViewBag.Message1 = "";
-                            ViewBag.Message = "Error al crear proyecto";
+                            TempData["alerta"] = new Alerta("Error al crear Proyecto", TipoAlerta.ERROR);
                         }
 
                     }
                     else
                     {
-                        ViewBag.Message1 = "";
-                        ViewBag.Message = "Error al crear proyecto";
+                        TempData["alerta"] = new Alerta("Error al crear Proyecto", TipoAlerta.ERROR);
                     }
                 }
                 else
-                    ViewBag.Message = "Este nombre ya esta asociado a un proyecto";
+                   TempData["alerta"] = new Alerta("Este nombre ya esta asociado a un proyecto", TipoAlerta.ERROR);
             }
             else
-                ViewBag.Message = "Modelo no valido";
+                TempData["alerta"] = new Alerta("Modelo no valido", TipoAlerta.ERROR);
             return View();
         }
         /**
@@ -326,6 +465,7 @@ namespace AppWebERS.Controllers
             var list = proyecto.ObtenerUsuarios2(id);
             if (list.Count == 0)
             {
+                
                 ViewBag.MessageErrorProyectos = "No Hay Usuarios Disponibles";
                 ViewBag.MiListadoUsuarios = list;
                 ViewBag.listaVacia = true;
@@ -360,10 +500,11 @@ namespace AppWebERS.Controllers
         [HttpGet]
         public ActionResult AgregarUsuarioAProyecto(string proyecto1)
         {
-            
+
             //int PosProyecto = Int32.Parse(proyecto1);
             //List<string> ListaProyectos = ListaProyectosIds();
             //string IdProyectoAUnirse = ListaProyectos[PosProyecto];
+            TempData["alerta"] = new Alerta("Solicitud enviada", TipoAlerta.SUCCESS);
             string UsuarioSolicitanteRut = ObtenerIdUsuarioActivo();
            
             //proyecto1 = "1";
@@ -380,7 +521,7 @@ namespace AppWebERS.Controllers
                 this.Conector.CerrarConexion();
             }
 
-            return View();
+            return RedirectToAction("ListarProyectos", "Proyecto");
         }
 
        
@@ -413,48 +554,6 @@ namespace AppWebERS.Controllers
             }
         }
 
-        public ActionResult InterfazUsuario()
-        {
-            var model = ObtenerProyectos();
-            return View(model);
-
-        }
-
-        /*
-        * Autor Juan Abello
-        * Metodo encargado de obtener los nombres de los proyectos en los que se encuentra un usuario,guardarlos en una lista y retornar esta.
-        * <param String rut>
-        * <returns> listaProyectosNombres 
-        */
-        public List<NombreProyecto> ListaDeProyectosUsuario(string id)
-        {
-            string consulta = "SELECT proyecto.nombre, proyecto.id_proyecto FROM proyecto, users, vinculo_usuario_proyecto " +
-                               "WHERE users.id = '" + id + "' AND vinculo_usuario_proyecto.ref_proyecto = " +
-                               "proyecto.id_proyecto AND vinculo_usuario_proyecto.ref_usuario = users.id";
-            MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
-            if (reader == null)
-            {
-                this.Conector.CerrarConexion();
-                listaProyectosNombres.Add(new NombreProyecto("mitad", "id"));
-                return listaProyectosNombres;
-                //return null;
-            }
-            else
-            {
-                while (reader.Read())
-                {
-
-                    string Nombre = reader.GetString(0);
-                    string Id = reader.GetString(1);
-                    listaProyectosNombres.Add(new NombreProyecto(Nombre,Id));
-                }
-
-                this.Conector.CerrarConexion();
-                listaProyectosNombres.Add(new NombreProyecto("mitad","id"));
-                return listaProyectosNombres;
-            }
-        }
-
         /*
          * Autor: Nicolás Hervias
          * Obtiene el rut del usuario actual
@@ -472,39 +571,146 @@ namespace AppWebERS.Controllers
                 return UsuarioSolicitanteRut;
             }
         }
+        
+       
+        [HttpGet]
+        public ActionResult Requisito(int id)
+        {
+            ViewBag.IdProyecto = id;
+
+            return View();
+        }
+        //ATENCION: FORMTATO FECHA: AAAA-MM-DD
+        [HttpPost]
+        public ActionResult IngresarRequisito(string idRequisito, string nombre, string descripcion, string prioridad, string fuente,
+            string estabilidad, string estado, string tipoUsuario, string tipoRequisito, string medida, string escala,
+            string fecha, string incremento, string tipo, string idProyecto)
+        {
+            Requisito requisito = new Requisito(idRequisito, nombre, descripcion, prioridad, fuente, estabilidad, estado,
+                tipoUsuario, tipoRequisito, medida, escala, fecha, incremento, tipo);
+            int id = Int32.Parse(idProyecto);
+            if (requisito.RegistrarRequisito(id))
+            {
+                TempData["alerta"] = new Alerta("Exito al crear Requisito", TipoAlerta.SUCCESS);
+                return RedirectToAction("Detalles/" + id, "Proyecto");
+                
+            }
+            else
+            {
+                TempData["alerta"] = new Alerta("ERROR al crear Requisito", TipoAlerta.ERROR);
+            }
+            return RedirectToAction("Requisito/" + id, "Proyecto");
+        }
 
 
         /*
-        * Autor Juan Abello
-        * Metodo encargado de obtener los nombres de los proyectos en los que se no encuentra un usuario,guardarlos en una lista y retornar esta.
-        * <param String rut>
-        * <returns> listaProyectosNombres 
-        */
-        public List<NombreProyecto> ListaDeProyectoNoAsociados(string id)
+       * Autor Fabian Oyarce
+       * Metodo encargado de cambiar el estado de un proyecto a deshabilitado
+       * <param String id>
+       */
+        [HttpGet]
+        public ActionResult DeshabilitarProyecto(string id)
         {
-            string consulta = "SELECT Proyecto.nombre ,proyecto.id_proyecto FROM Proyecto where Proyecto.nombre NOT IN" +
-                              "(SELECT Proyecto.nombre FROM Proyecto, users, vinculo_usuario_proyecto " +
-                              "WHERE users.id ='"+id+"'  AND Vinculo_usuario_proyecto.ref_proyecto = Proyecto.id_proyecto AND Vinculo_usuario_proyecto.ref_usuario = users.id)";
+            //Popups estado modificado
+            TempData["alerta"] = new Alerta("Estado Modificado", TipoAlerta.SUCCESS);
+
+            string nuevoEstado = "DESHABILITADO";
+            string consulta = "UPDATE proyecto SET estado = '" + nuevoEstado + "'" +
+                               "WHERE (id_proyecto ='" + id + "') ";
 
             MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
             if (reader == null)
             {
                 this.Conector.CerrarConexion();
-                return null;
+                
             }
             else
             {
                 while (reader.Read())
                 {
 
-                    string Nombre = reader.GetString(0);
-                    string Id = reader.GetString(1);
-                    listaProyectosNombres.Add(new NombreProyecto(Nombre,Id));
+                    
                 }
 
                 this.Conector.CerrarConexion();
-                return listaProyectosNombres;
             }
+
+           return RedirectToAction( "ListarProyectos", "Proyecto");
+        }
+
+
+        /*
+      * Autor Fabian Oyarce
+      * Metodo encargado de cambiar el estado de un proyecto a habilitado
+      * <param String id>
+      */
+        [HttpGet]
+        public ActionResult HabilitarProyecto(string id)
+        {
+            TempData["alerta"] = new Alerta("Estado Modificado", TipoAlerta.SUCCESS);
+            string nuevoEstado = "HABILITADO";
+            string consulta = "UPDATE proyecto SET estado = '" + nuevoEstado + "'" +
+                               "WHERE (id_proyecto ='" + id + "') ";
+
+            MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
+            if (reader == null)
+            {
+                this.Conector.CerrarConexion();
+                //Popup error
+            }
+            else
+            {
+                while (reader.Read())
+                {
+
+                    //Popups estado modificado
+                }
+
+                this.Conector.CerrarConexion();
+            }
+
+            return RedirectToAction("ListarProyectos", "Proyecto");
+        }
+
+
+        /*
+      * Autor Fabian Oyarce
+      * Metodo encargado de obtner el rol de un usuario activo
+      * <param String id>
+      */
+        public string ObtenerTipoUsuarioActivo()
+        {
+            using (var Db = ApplicationDbContext.Create())
+            {
+                var UserManager = new ApplicationUserManager(new UserStore<ApplicationUser>(Db));
+                string UsuarioSolicitante = base.User.Identity.GetUserId();
+                ApplicationUser User = UserManager.FindByIdAsync(UsuarioSolicitante).Result;
+                string TipoUsuario = User.Tipo;
+                return TipoUsuario;
+            }
+        }
+
+
+       
+
+ 
+        public ActionResult SolicitudDeProyecto(int id)
+        {
+            string s;
+            using (var db = ApplicationDbContext.Create())
+            {
+                var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
+                s = User.Identity.GetUserId();
+                ApplicationUser user = userManager.FindByIdAsync(s).Result;
+                String rut = user.Rut;
+
+            }
+
+            
+            SolicitudDeProyecto sol = new SolicitudDeProyecto(s, id);
+            sol.listaSolicitudes = new Proyecto().GetSolicitudesProyecto(id);
+
+            return View("SolicitudDeProyecto", sol);
         }
 
 

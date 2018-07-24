@@ -13,11 +13,15 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using MySql.Data.MySqlClient;
+using AppWebERS.Utilidades;
+using System.Diagnostics;
 
 namespace AppWebERS.Controllers
 {
     public class SysAdminController : Controller
     {
+        private ConectorBD conector = ConectorBD.Instance;
         // GET: SysAdmin
 
 
@@ -39,6 +43,111 @@ namespace AppWebERS.Controllers
 
         public void CrearProyecto()
         {
+
+        }
+
+        public ActionResult AgregarUsuarioProyecto(String idProyecto)
+        {
+            List<Usuario> lista = this.listaDeUsuarios();
+            ViewData["proyecto"] = idProyecto;
+
+            return View(lista);
+        }
+
+        /*
+       * Autor Fabian Oyarce
+        * Metodo encargado de vincular un usuario a un proyecto
+        * <param String rut>
+        * <param String idProyecto>
+       */
+        private ConectorBD Conector = ConectorBD.Instance;
+        [HttpGet]
+        public ActionResult VincularUsuarioProyecto(String rut, String idProyecto)
+        {
+
+            string idUsuario = this.BuscaIdUsuarioPorRut(rut);
+            string rol = "USUARIO";
+            string consulta = "INSERT INTO vinculo_usuario_proyecto VALUES('" + idUsuario + "','" + idProyecto + "','" + rol + "')";
+            Debug.Write(consulta);
+            MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
+            if (reader == null)
+            {
+                this.Conector.CerrarConexion();
+
+            }
+            else
+            {
+                TempData["alerta"] = new Alerta("Usuario vinculado", TipoAlerta.SUCCESS);
+                while (reader.Read())
+                {
+
+
+                }
+
+                this.Conector.CerrarConexion();
+            }
+
+            return RedirectToAction("ListarProyectos", "Proyecto");
+           
+        }
+
+        /*
+     * Autor Fabian Oyarce
+      * Metodo encargado de buscar el id de un usuario dado un rut
+      * <param String rut>
+     */
+        public string BuscaIdUsuarioPorRut(string rut)
+        {
+
+            string consulta = "SELECT users.id FROM users WHERE users.Rut ='" + rut + "'";
+            string idUsuario = null;
+            MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
+            if (reader == null)
+            {
+                this.Conector.CerrarConexion();
+
+            }
+            else
+            {
+               
+                while (reader.Read())
+                {
+                    idUsuario = reader.GetString(0);
+
+                }
+
+                this.Conector.CerrarConexion();
+            }
+          
+            return idUsuario;
+        }
+
+        public List<Usuario> listaDeUsuarios()
+        {
+            List<Usuario> listaUsuarios = new List<Usuario>();
+            string consulta = "SELECT UserName, Rut, Email, Tipo FROM users";
+            MySqlDataReader reader = this.conector.RealizarConsulta(consulta);
+
+            if (reader == null)
+            {
+                this.conector.CerrarConexion();
+                return null;
+            }
+            else
+            {
+                while (reader.Read())
+                {
+                    string nombre = reader.GetString(0);
+                    string rut = reader.GetString(1);
+                    string correo = reader.GetString(2);
+                    string tipo = reader.GetString(3);
+
+                    listaUsuarios.Add(new Usuario(rut, nombre, correo, tipo));
+                }
+
+                this.conector.CerrarConexion();
+                return listaUsuarios;
+            }
 
         }
 

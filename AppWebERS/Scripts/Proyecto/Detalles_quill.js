@@ -179,7 +179,6 @@ $(document).ready(function () {
                 setTimeout(function () {
                     location.reload();
                 }, 5000);
-                //;
             },
             failure: function (response) {
                 mostrarAlerta(response.responseText);

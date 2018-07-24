@@ -50,6 +50,7 @@ $(document).ready(function () {
     $.get(urlget, function () {
         })
         .done(function (data) {
+            console.log(data);
            //console.log(data);
             var emptydata = "<p></br></p>";
             //obtener valores
@@ -60,7 +61,7 @@ $(document).ready(function () {
             var definicion = data.Definiciones === "" ? emptydata : data.Definiciones;
             var acronimo = data.Acronimos === "" ? emptydata : data.Acronimos;
             var abreviatura = data.Abreviaturas === "" ? emptydata : data.Abreviaturas;
-            var referencia = data.Referencia === "" ? emptydata : data.Referencia;
+            var referencia = data.Referencias === "" ? emptydata : data.Referencias;
             var ambiente = data.AmbienteOperacional === "" ? emptydata : data.AmbienteOperacional;
             var relacion = data.RelacionProyectos === "" ? emptydata : data.RelacionProyectos;
 
@@ -167,6 +168,7 @@ $(document).ready(function () {
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (response) {
+                 mostrarAlerta("Modificado con exito");
                 console.log(response);
                 if (response) {
                     mostrarAlerta("Cambios guardados exitosamente");
@@ -174,6 +176,10 @@ $(document).ready(function () {
                 else {
                     mostrarAlerta("No se ha podido guardar la modificación");
                 }
+                setTimeout(function () {
+                    location.reload();
+                }, 5000);
+                //;
             },
             failure: function (response) {
                 mostrarAlerta(response.responseText);

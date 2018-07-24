@@ -2,7 +2,7 @@
 //Descripcion, script que configura la vista del SysAdmin
 $(document).ready(function () {
     //Configuracion de Quilljs
-    var config = {
+   /* var config = {
         theme: 'bubble', 
         readOnly: true,
     };
@@ -16,14 +16,14 @@ $(document).ready(function () {
     var abreviaturaQ = new Quill('#abreviatura-edit', config);
     var referenciaQ = new Quill('#referencia-edit', config);
     var ambienteQ = new Quill('#ambiente-edit', config);
-    var relacionQ = new Quill('#relacion-edit', config);
+    var relacionQ = new Quill('#relacion-edit', config);*/
     //obtiene la informacion
     var urlget = "/Proyecto/infoProyecto/" + $("#ProyectoActual_IdProyecto").val();
     $.get(urlget, function () {
 
     })
         .done(function (data) {
-            var emptydata = "<p></p>";
+            var emptydata = "<p></br></p>";
             //obtener valores
             var nombre = data.Nombre === "" ? emptydata : data.Nombre;
             var proposito = data.Proposito === "" ? emptydata : data.Proposito;
@@ -37,30 +37,30 @@ $(document).ready(function () {
             var relacion = data.RelacionProyectos === "" ? emptydata : data.RelacionProyectos;
 
             //Set space
-            $('#nombre-edit .ql-editor').empty();
-            $('#proposito-edit .ql-editor').empty();
-            $('#alcance-edit .ql-editor').empty();
-            $('#contexto-edit .ql-editor').empty();
-            $('#definicion-edit .ql-editor').empty();
-            $('#acronimo-edit .ql-editor').empty();
-            $('#abreviatura-edit .ql-editor').empty();
-            $('#referencia-edit .ql-editor').empty();
-            $('#ambiente-edit .ql-editor').empty();
-            $('#relacion-edit .ql-editor').empty();
+            $('#nombre-edit').addClass('border border-dark p-3');
+            $('#proposito-edit').addClass('border border-dark p-3');
+            $('#alcance-edit').addClass('border border-dark p-3');
+            $('#contexto-edit').addClass('border border-dark p-3');
+            $('#definicion-edit').addClass('border border-dark p-3');
+            $('#acronimo-edit').addClass('border border-dark p-3');
+            $('#abreviatura-edit').addClass('border border-dark p-3');
+            $('#referencia-edit').addClass('border border-dark p-3');
+            $('#ambiente-edit').addClass('border border-dark p-3');
+            $('#relacion-edit').addClass('border border-dark p-3');
 
             //cargar la informacion 
-            $('#nombre-edit .ql-editor').append(nombre);
-            $('#proposito-edit .ql-editor').append(proposito);
-            $('#alcance-edit .ql-editor').append(alcance);
-            $('#contexto-edit .ql-editor').append(contexto);
-            $('#definicion-edit .ql-editor').append(definicion);
-            $('#acronimo-edit .ql-editor').append(acronimo);
-            $('#abreviatura-edit .ql-editor').append(abreviatura);
-            $('#referencia-edit .ql-editor').append(referencia);
-            $('#ambiente-edit .ql-editor').append(ambiente);
-            $('#relacion-edit .ql-editor').append(relacion);
+            $('#nombre-edit').append(nombre);
+            $('#proposito-edit').append(proposito);
+            $('#alcance-edit').append(alcance);
+            $('#contexto-edit').append(contexto);
+            $('#definicion-edit').append(definicion);
+            $('#acronimo-edit').append(acronimo);
+            $('#abreviatura-edit').append(abreviatura);
+            $('#referencia-edit').append(referencia);
+            $('#ambiente-edit').append(ambiente);
+            $('#relacion-edit').append(relacion);
 
-            $('.ql-editor').addClass('border border-dark');
+           // $('.ql-editor').addClass('border border-dark');
         })
         .fail(function () {
             //alert("error");

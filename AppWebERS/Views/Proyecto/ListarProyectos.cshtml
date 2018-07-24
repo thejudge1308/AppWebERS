@@ -1,4 +1,5 @@
-﻿@model List<AppWebERS.Models.NombreProyecto>
+﻿@using AppWebERS.Models;
+@model List<AppWebERS.Models.NombreProyecto>
 
 @{
     /**/
@@ -7,6 +8,7 @@
 
 @{
     ViewBag.Title = "Proyectos";
+    var usuarioActual = (string)ViewData["usuario_actual"];
 
 }
 
@@ -18,20 +20,31 @@
 <!-- jQuery first, then Bootstrap JS. -->
 <!-- Nav tabs -->
 
+@if (usuarioActual == "SYSADMIN")
+{
+    <div class="row">
+        <div class="col-4 mb-2 mt-2">
+            <a class="btn btn-primary" href="@Url.Action("CrearProyecto","Proyecto")">Crear nuevo proyecto</a>
+        </div>
+    </div>
+
+}
+
+
 <ul class="nav nav-tabs" role="tablist">
 
     @{
-        if (Model.ElementAt(0).Nombre == "SYSADMIN")
+        if (usuarioActual == "SYSADMIN")
         {
             <li class="nav-item" id="myTab1">
-                <a class="nav-link" href="#todos" role="tab" data-toggle="tab">Todos</a>
+                <a id="todosButton" class="nav-link" href="#todos" role="tab" data-toggle="tab">Todos</a>
             </li>
 
         }
         else
         {
             <li class="nav-item" id="myTab2">
-                <a class="nav-link" href="#asociados" role="tab" data-toggle="tab">Asociados</a>
+                <a id="asociados_button" class="nav-link" href="#asociados" role="tab" data-toggle="tab">Asociados</a>
             </li>
             <li class="nav-item" id="myTab3">
                 <a class="nav-link" href="#noasociados" role="tab" data-toggle="tab">No asociados</a>
@@ -43,6 +56,7 @@
 
 
 </ul>
+
 
 <!-- Tab panes -->
 <div class="tab-content">
@@ -143,7 +157,6 @@
 
 </div>
 
-<div>
-    <a class="btn btn-primary" href="@Url.Action("CrearProyecto","Proyecto")">Crear nuevo proyecto</a>
-</div>
+
+
 

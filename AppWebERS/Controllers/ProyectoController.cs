@@ -10,9 +10,8 @@ using System.Data;
 using Microsoft.AspNet.Identity;
 using AspNet.Identity.MySQL;
 using Microsoft.AspNet.Identity.Owin;
-using iTextSharp.text;
 using System.IO;
-using iTextSharp.text.pdf;
+
 
 namespace AppWebERS.Controllers
 {
@@ -30,9 +29,9 @@ namespace AppWebERS.Controllers
             Proyecto proyecto = this.GetProyecto(id);
             //string UsuarioActual = System.Web.HttpContext.Current.User.Identity.Name; // pregunta el usuario actual
             var UsuarioActual = User.Identity.GetUserId();
-           // Debug.WriteLine("Usuario actual: " + UsuarioActual);
-           // Debug.WriteLine("Proyecto actual: " + proyecto);
-           // Debug.WriteLine("Permiso: " + TipoDePermiso());
+            // Debug.WriteLine("Usuario actual: " + UsuarioActual);
+            // Debug.WriteLine("Proyecto actual: " + proyecto);
+            // Debug.WriteLine("Permiso: " + TipoDePermiso());
             ViewData["proyecto"] = proyecto;
             ViewData["permiso"] = TipoDePermiso(id);
 
@@ -72,46 +71,23 @@ namespace AppWebERS.Controllers
             return RedirectToAction("Detalles/" + id);
         }
 
-        public FileResult ExportarPDF( int id)
-        {
+        public FileResult ExportarPDF(int id) {
             Proyecto proyecto = this.GetProyecto(id);
-          
-            Document doc = new Document(PageSize.A5);
 
-            MemoryStream stream = new MemoryStream();
-            PdfWriter pdfWriter = PdfWriter.GetInstance(doc, stream);
-            pdfWriter.CloseStream = false;
-            string fecha = "Fecha: " + DateTime.Now.ToString();
-            Font fuente = new Font(FontFactory.GetFont("ARIAL", 8));
+            string fecha =  DateTime.Now.ToString();
+            String html = "<html> <head> <style> body { margin: 2cm; } .logo { font-size: 40px; font-weigth: bold; } .titulo { text-align: center; } .fecha { margin-left: 20px; } .espacio-izq { margin-left: 20px; } table td{ font-size: 18px; padding-bottom: 15px; } </style> </head> <body> <table> <tr> <td class=\"logo\">AppWebERS</td> <td </tr> </table> <h1 class=\"titulo\">Detalles de proyecto</h1> <hr> <p class=\"fecha\">Fecha: " + fecha +"</p> <hr> <table class=\"espacio-izq\"> <tr> <td>Nombre proyecto</td> <td>: " + proyecto.Nombre + "</td> </tr> <tr> <td>Proposito</td> <td>: " + proyecto.Proposito + "</td> </tr> <tr> <td>Alcance</td> <td>: " + proyecto.Alcance + "</td> </tr> <tr> <td>Contexto</td> <td>: " + proyecto.Contexto + "</td> </tr> <tr> <td>Definiciones</td> <td>: " + proyecto.Definiciones + "</td> </tr> <tr> <td>Acronimos</td> <td>: "+ proyecto.Acronimos + "</td> </tr> <tr> <td>Abreviaturas</td> <td>: " + proyecto.Abreviaturas + "</td> </tr> <tr> <td>Referencias</td> <td>: " + proyecto.Referencias + "</td> </tr> <tr> <td>Ambiente operacional</td> <td>: " + proyecto.AmbienteOperacional + "</td> </tr> <tr> <td>Relacion con otros proyectos</td> <td>: " + proyecto.RelacionProyectos +  "</td> </tr> </table> </body> </html>";
+            String html2 = "<h1>Texto</h1> <p> de</p> <p><sup><strong>prueba</strong></sup></p> <p><em>para</em></p> <h2><s>probar</s></h2> <p><br></p> <ol> <li>el</li> </ol> <p><sub>formato</sub></p> <p><span>pdf</span></p> <p><span>es</span></p> <p><span style=\"background - color: red; \">resposive</span></p> <p><span style=\"color: yellow; background - color: green; \">porsia</span></p> <p>Fin</p>";
+            
 
-            doc.Open();
-            Chunk chunk = new Chunk("Detalles del proyecto" + ".", FontFactory.GetFont("ARIAL", 12, iTextSharp.text.Font.BOLD));
-            doc.Add(new Paragraph(chunk));
-            doc.Add(new Paragraph(" ", fuente));
-            doc.Add(new Paragraph("------------------------------------------------------------------------------------------", fuente));
-            doc.Add(new Paragraph(fecha, fuente));
-            doc.Add(new Paragraph("------------------------------------------------------------------------------------------", fuente));
-            doc.Add(new Paragraph(" ", fuente));
-            doc.Add(new Paragraph("Nombre Proyecto: " + proyecto.Nombre, fuente));
-            doc.Add(new Paragraph("Proposito: " + proyecto.Proposito, fuente));
-            doc.Add(new Paragraph("Alcance: " + proyecto.Alcance, fuente));
-            doc.Add(new Paragraph("Contexto: " + proyecto.Contexto, fuente));
-            doc.Add(new Paragraph("Definiciones: " + proyecto.Definiciones, fuente));
-            doc.Add(new Paragraph("Acronimos: " + proyecto.Acronimos, fuente));
-            doc.Add(new Paragraph("Abreviaturas: " + proyecto.Abreviaturas, fuente));
-            doc.Add(new Paragraph("Referencias: " + proyecto.Referencias, fuente));
-            doc.Add(new Paragraph("Ambiente Operacional: " + proyecto.AmbienteOperacional, fuente));
-            doc.Add(new Paragraph("Relacion con otros proyectos: " + proyecto.RelacionProyectos, fuente));
+            var htmlToPdf = new NReco.PdfGenerator.HtmlToPdfConverter();
+            var pdfBytes = htmlToPdf.GeneratePdf(html);
+            MemoryStream ms = new MemoryStream(pdfBytes);
+           
 
-
-            doc.AddCreationDate();
-            doc.Close();
-
-            stream.Flush(); //Always catches me out
-            stream.Position = 0; //Not sure if this is required
-
-            return File(stream, "application/pdf");
+            return File(ms, "application/pdf"); ;
         }
+
+        
 
 
         // GET: Proyecto/ListaUsuarios/5

@@ -158,9 +158,10 @@ namespace AppWebERS.Controllers
             String TipoUsuario = ObtenerTipoUsuarioActivo();
             
 
-            if (TipoUsuario== "SYSADMIN")
+            if (TipoUsuario.Equals(Proyecto.SysAdmin_RolBD))
             {
                 var model = ListaDeTodosLosProyectos();
+                ViewData["usuario_actual"] = Proyecto.SysAdmin_RolBD;
                 return View(model);
             }
             else

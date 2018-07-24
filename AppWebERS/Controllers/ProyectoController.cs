@@ -572,8 +572,34 @@ namespace AppWebERS.Controllers
             }
         }
         
-         public ActionResult Requisito() {
+       
+        [HttpGet]
+        public ActionResult Requisito(int id)
+        {
+            ViewBag.IdProyecto = id;
+
             return View();
+        }
+        //ATENCION: FORMTATO FECHA: AAAA-MM-DD
+        [HttpPost]
+        public ActionResult IngresarRequisito(string idRequisito, string nombre, string descripcion, string prioridad, string fuente,
+            string estabilidad, string estado, string tipoUsuario, string tipoRequisito, string medida, string escala,
+            string fecha, string incremento, string tipo, string idProyecto)
+        {
+            Requisito requisito = new Requisito(idRequisito, nombre, descripcion, prioridad, fuente, estabilidad, estado,
+                tipoUsuario, tipoRequisito, medida, escala, fecha, incremento, tipo);
+            int id = Int32.Parse(idProyecto);
+            if (requisito.RegistrarRequisito(id))
+            {
+                TempData["alerta"] = new Alerta("Exito al crear Requisito", TipoAlerta.SUCCESS);
+                return RedirectToAction("Detalles/" + id, "Proyecto");
+                
+            }
+            else
+            {
+                TempData["alerta"] = new Alerta("ERROR al crear Requisito", TipoAlerta.ERROR);
+            }
+            return RedirectToAction("Requisito/" + id, "Proyecto");
         }
 
 
@@ -665,67 +691,9 @@ namespace AppWebERS.Controllers
         }
 
 
-        /*
-        * Autor Fabian Oyarce
-         * Metodo encargado de vincular un usuario a un proyecto
-         * <param String id>
-        */
-        [HttpGet]
-        public ActionResult VincularUsuarioAProyecto(string idUsuario,string idProyecto, string rol )
-        {
+       
 
-            string consulta = "INSERT INTO vinculo_usuario_proyecto VALUES('" + idUsuario + "','" + idProyecto + "','" + rol + "')";
-
-            MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
-            if (reader == null)
-            {
-                this.Conector.CerrarConexion();
-
-            }
-            else
-            {
-                TempData["alerta"] = new Alerta("Usuario vinculado", TipoAlerta.SUCCESS);
-                while (reader.Read())
-                {
-
-
-                }
-
-                this.Conector.CerrarConexion();
-            }
-
-            return RedirectToAction("ListarProyectos", "Proyecto");
-        }
-
-        /*
-     * Autor Fabian Oyarce
-      * Metodo encargado de solicitar vincular un usuario a un proyecto
-      * <param String id>
-     */
-        [HttpGet]
-        public ActionResult SolicitarVincularUsuarioAProyecto(string idUsuario, string idProyecto, string rol)
-        {
-
-            
-            string UsuarioSolicitanteRut = ObtenerIdUsuarioActivo();
-
-            string Values = "'" + idProyecto + "','" + idUsuario + "'";
-            string Consulta = "INSERT INTO solicitud_vinculacion_proyecto (ref_proyecto,ref_solicitante) VALUES (" + Values + ");";
-
-            if (this.Conector.RealizarConsultaNoQuery(Consulta))
-            {
-                this.Conector.CerrarConexion();
-                ViewBag.Message = "Solicitud enviada";
-                TempData["alerta"] = new Alerta("Solicitud enviada", TipoAlerta.SUCCESS);
-            }
-            else
-            {
-                this.Conector.CerrarConexion();
-            }
-
-            return RedirectToAction("ListarProyectos", "Proyecto");
-        }
-
+ 
         public ActionResult SolicitudDeProyecto(int id)
         {
             string s;

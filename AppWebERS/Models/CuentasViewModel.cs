@@ -63,6 +63,16 @@ namespace AppWebERS.Models
         [Display(Name = "Contraseña")]
         public string Password { get; set; }
 
+        [Required(ErrorMessage = "El campo Nombre es obligatorio.")]
+        [RegularExpression("[a-zA-Z]*", ErrorMessage = "Nombre no valido.")]
+        [Display(Name = "Nombre")]
+        public string Nombre { get; set; }
+
+        [Required(ErrorMessage = "El campo Apellido es obligatorio.")]
+        [RegularExpression("[a-zA-Z]*", ErrorMessage = "Apellido no valido.")]
+        [Display(Name = "Apellido")]
+        public string Apellido { get; set; }
+
         [Required]
         [DataType(DataType.Password)]
         [Display(Name = "Confirme contraseña")]

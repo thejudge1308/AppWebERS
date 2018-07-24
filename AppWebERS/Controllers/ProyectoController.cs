@@ -43,37 +43,87 @@ namespace AppWebERS.Controllers
          * <summary>
          * Action POST que retorna una vista después se precionar el botón de guardar cambios en un proyecto.
          * </summary>
-         * <param name="datos">parametro ingresado desde la vista Proyecto/Detalles/ID, son los datos de la vista</param>
-         * <param name="id">parametro ingresado desde la vista Proyecto/Detalles/ID, es el id del proyecto</param>
          * <returns> la vista de éxito. </returns>
          */
         // POST: Proyecto/Detalles/5
+        public class ProyectoJsonRespuesta {
+            public string id { set; get; }
+            public string atributo { set; get; }
+            public string valor { set; get; }
+        }
         [HttpPost]
         [Authorize]
-        public ActionResult Detalles(FormCollection datos, int id) {
+        public ActionResult Detalles(ProyectoJsonRespuesta json) {
             //Captura de datos -> debe ser coherente al nombramiento del modelo
-
             Proyecto proyecto = new Proyecto();
-            string nombre = datos[1];
-            string proposito = datos[2];
-            string alcance = datos[3];
-            string contexto = datos[4];
-            string definiciones = datos[5];
-            string acronimos = datos[6];
-            string abreviaturas = datos[7];
-            string referencias = datos[8];
-            string ambiente_operacional = datos[9];
-            string relacion_con_otros_proyectos = datos[10];
 
-            proyecto.ActualizarDatosProyecto(id, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambiente_operacional, relacion_con_otros_proyectos);
-            return RedirectToAction("Detalles/" + id);
+            switch (json.atributo) {
+
+                case "nombre":        
+                    proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo);
+                    return Json(true, JsonRequestBehavior.AllowGet);
+                    break;
+
+                case "proposito":
+                    proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo);
+                    return Json(true, JsonRequestBehavior.AllowGet);
+                    break;
+
+                case "alcance":
+                    proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo);
+                    return Json(true, JsonRequestBehavior.AllowGet);
+                    break;
+
+                case "contexto":
+                    proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo);
+                    return Json(true, JsonRequestBehavior.AllowGet);
+                    break;
+
+                case "definicion":
+                    proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo);
+                    return Json(true, JsonRequestBehavior.AllowGet);
+                    break;
+
+                case "acronimo":
+                    proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo);
+                    return Json(true, JsonRequestBehavior.AllowGet);
+                    break;
+
+                case "abreviatura":
+                    proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo);
+                    return Json(true, JsonRequestBehavior.AllowGet);
+                    break;
+
+                case "referencia":
+                    proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo);
+                    return Json(true, JsonRequestBehavior.AllowGet);
+                    break;
+
+                case "ambiente":
+                    proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo);
+                    return Json(true, JsonRequestBehavior.AllowGet);
+                    break;
+
+                case "relacion":
+                    proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo);
+                    return Json(true, JsonRequestBehavior.AllowGet);
+                    break;
+            }
+            
+            return Json(false, JsonRequestBehavior.AllowGet);
         }
 
+        
+        [Authorize]
+        // Get: Proyecto/infoProyecto/5
+        public ActionResult infoProyecto(int id) {
+            Proyecto proyecto = this.GetProyecto(id);
+            return Json(proyecto, JsonRequestBehavior.AllowGet);
+        }
 
         // GET: Proyecto/ListaUsuarios/5
         public ActionResult ListaUsuarios(int id) {
             Proyecto proyecto = this.GetProyecto(id);
-
             List<Usuario> usuarios = new Proyecto().GetListaUsuarios(id);
             List<SolicitudDeProyecto> solicitudes = new Proyecto().GetSolicitudesProyecto(id);
             //Debug.WriteLine("Permiso: " + TipoDePermiso());
@@ -155,7 +205,6 @@ namespace AppWebERS.Controllers
             //Obtiene id del usuario de la sesion
             var UsuarioActual = User.Identity.GetUserId();
             int ModoVista = new Proyecto().ObtenerRolDelUsuario(UsuarioActual.ToString(),id);
-            Debug.WriteLine(ModoVista + "jaskdjakdaksdjakdjakdj");
             return ModoVista;
         }
         /**

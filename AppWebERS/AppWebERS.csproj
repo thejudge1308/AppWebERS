@@ -274,8 +274,17 @@
     <Content Include="Scripts\popper-utils.min.js" />
     <Content Include="Scripts\popper.js" />
     <Content Include="Scripts\popper.min.js" />
+    <Content Include="Scripts\Proyecto\Detalles_sysadmin_quill.min.js" />
+    <Content Include="Scripts\Proyecto\Detalles_sysadmin_quill.js" />
+    <Content Include="Scripts\quilljs\quill.bubble.css" />
+    <Content Include="Scripts\quilljs\quill.core.css" />
+    <Content Include="Scripts\quilljs\quill.core.js" />
+    <Content Include="Scripts\quilljs\quill.js" />
+    <Content Include="Scripts\quilljs\quill.min.js" />
+    <Content Include="Scripts\quilljs\quill.snow.css" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\Proyecto\Detalles_quill.js" />
     <Content Include="Scripts\umd\popper-utils.js" />
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
@@ -342,6 +351,7 @@
     <Content Include="Views\Proyecto\AgregarUsuarioAProyecto.cshtml" />
     <Content Include="Views\SysAdmin2\Principal.cshtml" />
     <Content Include="Views\UserView\Principal.cshtml" />
+    <Content Include="Scripts\quilljs\quill.min.js.map" />
     <Content Include="Views\Proyecto\Requisito.cshtml" />
   </ItemGroup>
   <ItemGroup>

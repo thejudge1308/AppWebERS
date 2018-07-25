@@ -344,7 +344,15 @@ namespace AppWebERS.Controllers
         }
 
       
+        public ActionResult AgregarUsuarioProyecto(int id)
+        {
+            return RedirectToAction("AgregarUsuarioProyecto","SysAdmin", new { idProyecto = id});
+        }
 
+        public ActionResult InvitarUsuario(int id)
+        {
+            return RedirectToAction("InvitarUsuario", "JefeProyecto", new { idProyecto = id });
+        }
         /**
         * Autor: Patricio Quezada
         * <param name = "id" > Id del proyecto.</param>
@@ -568,7 +576,7 @@ namespace AppWebERS.Controllers
          * Parámetros: PosProyecto. Es la posición que tiene el proyecto en la lista de proyectos
          */
         [HttpGet]
-        public ActionResult AgregarUsuarioAProyecto(string proyecto1)
+        public ActionResult AgregarUsuarioAProyecto(int proyecto1)
         {
 
             //int PosProyecto = Int32.Parse(proyecto1);
@@ -594,14 +602,14 @@ namespace AppWebERS.Controllers
             return RedirectToAction("ListarProyectos", "Proyecto");
         }
 
-       
+
 
         /*
          * Autor: Nicolás Hervias
          * Crea una lista de ids de todos los proyectos
          * Parametros: N/A
          */
-         [HttpGet]
+        [HttpGet]
         public List<string> ListaProyectosIds()
         {
             List<String> ListaProyectos = new List<String>();
@@ -647,8 +655,8 @@ namespace AppWebERS.Controllers
         public ActionResult Requisito(int id)
         {
             ViewBag.IdProyecto = id;
-
-            return View();
+            Requisito requisito = new Requisito();
+            return View(requisito);
         }
         //ATENCION: FORMTATO FECHA: AAAA-MM-DD
         [HttpPost]
@@ -761,9 +769,58 @@ namespace AppWebERS.Controllers
         }
 
 
-       
+        /*
+        * Autor Fabian Oyarce
+         * Metodo encargado de vincular un usuario a un proyecto
+         * <param String id>
+        */
+        [HttpGet]
+        public ActionResult VincularUsuarioAProyecto(string rutUsuario,int idProyecto )
+        {
+            string idUsuario = this.ObtenerIdPorRut(rutUsuario);
 
- 
+            string consulta = "START TRANSACTION;"+
+                "INSERT INTO vinculo_usuario_proyecto VALUES('" + idUsuario + "','" + idProyecto + "','USUARIO');"+
+                "COMMIT;";
+
+            this.Conector.RealizarConsultaNoQuery(consulta);
+            this.Conector.CerrarConexion();
+
+            return RedirectToAction("Detalles", "Proyecto", new { id = idProyecto });
+        }
+
+        
+
+
+        /*
+     * Autor Fabian Oyarce
+      * Metodo encargado de solicitar vincular un usuario a un proyecto
+      * <param String id>
+     */
+        [HttpGet]
+        public ActionResult SolicitarVincularUsuarioAProyecto(string rutUsuario, int idProyecto)
+        {
+
+            
+            string UsuarioSolicitanteRut = ObtenerIdUsuarioActivo();
+            string idUsuario = this.ObtenerIdPorRut(rutUsuario);
+            string Values = "'" + idProyecto + "','" + idUsuario + "'";
+            string Consulta = "INSERT INTO solicitud_vinculacion_proyecto (ref_proyecto,ref_solicitante) VALUES (" + Values + ");";
+
+            if (this.Conector.RealizarConsultaNoQuery(Consulta))
+            {
+                this.Conector.CerrarConexion();
+                ViewBag.Message = "Solicitud enviada";
+                TempData["alerta"] = new Alerta("Solicitud enviada", TipoAlerta.SUCCESS);
+            }
+            else
+            {
+                this.Conector.CerrarConexion();
+            }
+
+            return RedirectToAction("ListarProyectos", "Proyecto");
+        }
+
         public ActionResult SolicitudDeProyecto(int id)
         {
             string s;
@@ -783,6 +840,19 @@ namespace AppWebERS.Controllers
             return View("SolicitudDeProyecto", sol);
         }
 
-
+        private string ObtenerIdPorRut(string rut)
+        {
+            string value = "";
+            string consulta = "SELECT users.id FROM users WHERE users.Rut = '" + rut + "'";
+            MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
+            if(reader!= null)
+            {
+                reader.Read();
+                value = reader[0].ToString();
+            }
+             return value;
+        }
     }
+
+   
 }

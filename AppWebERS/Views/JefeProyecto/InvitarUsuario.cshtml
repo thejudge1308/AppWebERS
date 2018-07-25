@@ -1,10 +1,15 @@
 ﻿@using AppWebERS.Models
-@model List<Usuario>
+@model Usuario
 
 @{
 
     ViewBag.Title = "Invitar Usuario";
     Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    var ProyectoActual = (Proyecto)ViewData["proyecto"];
+    var usuarios = (List<Usuario>)ViewData["usuarios"];
 }
 
 <div class="card my-1 mx-5 h-100">
@@ -13,7 +18,7 @@
     </div>
     @try
     {
-        if (Model.Count != 0)
+        if (usuarios.Count != 0)
         {
             using (Html.BeginForm())
             {
@@ -29,7 +34,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var usuario in Model)
+                            @foreach (var usuario in usuarios)
                             {
                                 <tr class="text-center">
                                     <td data-info="info">@usuario.Nombre</td><!-- Reemplazar por como quiera que le pongan en el foreach a la variable. Ej: (arroba)Item.Nombre -->
@@ -38,7 +43,7 @@
                                     <td data-info="info">@usuario.Tipo</td>
                                     <td>
                                         <div class="d-none d-lg-block">
-                                            @Html.ActionLink("Invitar", "EnviarSolicitud", new { rut = usuario.Rut, idProyecto = ViewData["proyecto"] }, new { @class = "btn btn-secondary", id = "btnModificar", type = "button" })
+                                            <button type="button" id="btnAceptar" onclick="location.href='@Url.Action("SolicitarVincularUsuarioAProyecto", "Proyecto", new {  rutUsuario = @usuario.Rut, idProyecto = ProyectoActual.IdProyecto})'" class="btn btn-success boton2">Invitar</button>
                                         </div>
                                     </td>
                                 </tr>

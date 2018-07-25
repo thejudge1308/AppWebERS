@@ -370,6 +370,8 @@
     <Content Include="Views\SolicitudDeUsuario\ListadoSolicitudUsuario.cshtml" />
     <Content Include="Scripts\quilljs\quill.min.js.map" />
     <Content Include="Views\Proyecto\Requisito.cshtml" />
+    <Content Include="Views\JefeProyecto\InvitarUsuario.cshtml" />
+    <Content Include="Views\SysAdmin\AgregarUsuarioProyecto.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

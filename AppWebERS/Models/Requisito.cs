@@ -49,6 +49,24 @@ namespace AppWebERS.Models {
             this.Actores = new List<Actor>();
         }
 
+        public Requisito()
+        {
+            this.IdRequisito = "";
+            this.Nombre = "";
+            this.Descripcion = "";
+            this.Prioridad = "";
+            this.Fuente = "";
+            this.Estabilidad = "";
+            this.Estado = "";
+            this.TipoUsuario = "";
+            this.TipoRequisito = "";
+            this.Medida = "";
+            this.Escala = "";
+            this.Fecha = "";
+            this.Incremento = "";
+            this.Tipo = "";
+        }
+
         private ApplicationDbContext conexion = ApplicationDbContext.Create();
 
         /**

@@ -1,0 +1,64 @@
+﻿@using AppWebERS.Models
+@model Usuario
+
+@{
+
+    ViewBag.Title = "Invitar Usuario";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    var ProyectoActual = (Proyecto)ViewData["proyecto"];
+    var usuarios = (List<Usuario>)ViewData["usuarios"];
+}
+
+<div class="card my-1 mx-5 h-100">
+    <div class="card-header">
+        <h4>Usuarios disponibles</h4>
+    </div>
+    @try
+    {
+        if (usuarios.Count != 0)
+        {
+            using (Html.BeginForm())
+            {
+                <div class="card-body table-responsive">
+                    <table class="table">
+                        <thead class="thead-dark">
+                            <tr class="text-center">
+                                <th scope="col">Nombre de Usuario</th>
+                                <th scope="col">Rut</th>
+                                <th scope="col">Correo Electronico</th>
+                                <th scope="col">Tipo</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var usuario in usuarios)
+                            {
+                                <tr class="text-center">
+                                    <td data-info="info">@usuario.Nombre</td><!-- Reemplazar por como quiera que le pongan en el foreach a la variable. Ej: (arroba)Item.Nombre -->
+                                    <td data-info="info">@usuario.Rut</td>
+                                    <td data-info="info">@usuario.CorreoElectronico</td>
+                                    <td data-info="info">@usuario.Tipo</td>
+                                    <td>
+                                        <div class="d-none d-lg-block">
+                                            <button type="button" id="btnAceptar" onclick="location.href='@Url.Action("SolicitarVincularUsuarioAProyecto", "Proyecto", new {  rutUsuario = @usuario.Rut, idProyecto = ProyectoActual.IdProyecto})'" class="btn btn-success boton2">Invitar</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        }
+    }
+    catch (Exception e)
+    {
+        <!-- <h5>No existen usuarios registrados</h5>-->
+        <div class="alert alert-warning fade show w-50 mx-auto mt-3" role="alert">
+            <strong>No hay usuarios Disponibles!</strong> <br />.
+        </div>
+    }
+</div>

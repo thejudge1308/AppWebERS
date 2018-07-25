@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using MySql.Data.MySqlClient;
+using AppWebERS.Utilidades;
 
 namespace AppWebERS.Controllers
 {
@@ -12,7 +13,7 @@ namespace AppWebERS.Controllers
     {
 
         //privatw conector solo para testing.
-        private ConectorBD conector = ConectorBD.Instance;
+        private ApplicationDbContext conector = ApplicationDbContext.Create();
 
         // GET: SolicitudDeProyecto
         public ActionResult Index()
@@ -27,20 +28,26 @@ namespace AppWebERS.Controllers
         * <param name="idProyecto"> El string con el id del proyecto al cual se desea unir</param>
         * <returns> </returns>
         */
-        public ActionResult Aceptar( String idUsuario, String idProyecto) {
-            
+        public ActionResult Aceptar(String idUsuario, String idProyecto) {
 
+            try { 
                 String insert = "START TRANSACTION;" +
                     "INSERT INTO vinculo_usuario_proyecto(ref_usuario, ref_proyecto, rol) VALUES('" + idUsuario + "', '" + idProyecto + "', 'USUARIO');" +
-                    "COMMIT;" ;
-                conector.RealizarConsultaNoQuery(insert);
-                
-                String delete ="START TRANSACTION;" +
-                    "DELETE FROM solicitud_vinculacion_proyecto WHERE ref_solicitante='" + idUsuario + "' AND ref_proyecto='" + idProyecto + "';"+
                     "COMMIT;";
+                conector.RealizarConsultaNoQuery(insert);
+
+                String delete = "START TRANSACTION;" +
+                "DELETE FROM solicitud_vinculacion_proyecto WHERE ref_solicitante='" + idUsuario + "' AND ref_proyecto='" + idProyecto + "';" +
+                "COMMIT;";
                 conector.RealizarConsultaNoQuery(delete);
-                conector.CerrarConexion();
-                return RedirectToAction("SolicitudDeProyecto", "JefeProyecto", new { id = idProyecto });
+                conector.EnsureConnectionClosed();
+                TempData["alerta"] = new Alerta("Se ha aceptado la solicitud", TipoAlerta.SUCCESS);
+
+                return RedirectToAction("ListaUsuarios", "Proyecto", new { id = idProyecto });
+             }catch(Exception e){
+                TempData["alerta"] = new Alerta("ERROR: No se ha podido aceptar la solicitud", TipoAlerta.ERROR);
+                return RedirectToAction("ListaUsuarios", "Proyecto", new { id = idProyecto });
+            }
            
         }
 
@@ -53,12 +60,20 @@ namespace AppWebERS.Controllers
         */
         public ActionResult Rechazar(String idUsuario, String idProyecto)
         {
-            
-            String consulta = "START TRANSACTION; " +
-                "DELETE FROM solicitud_vinculacion_proyecto WHERE ref_solicitante='" + idUsuario + "' AND ref_proyecto='" + idProyecto + "';"
-                +"COMMIT;";
-            conector.RealizarConsultaNoQuery(consulta);
-            return RedirectToAction("SolicitudDeProyecto", "JefeProyecto", new { id = idProyecto }); //Lo deje asi por mientras
+            try
+            {
+                String consulta = "START TRANSACTION; " +
+                    "DELETE FROM solicitud_vinculacion_proyecto WHERE ref_solicitante='" + idUsuario + "' AND ref_proyecto='" + idProyecto + "';"
+                    + "COMMIT;";
+                conector.RealizarConsultaNoQuery(consulta);
+                conector.EnsureConnectionClosed();
+                TempData["alerta"] = new Alerta("Se ha rechazado la solicitud", TipoAlerta.SUCCESS);
+                return RedirectToAction("ListaUsuarios", "Proyecto", new { id = idProyecto }); 
+            }
+            catch (Exception e) {
+                TempData["alerta"] = new Alerta("ERROR: No se ha podido rechazar la solicitud", TipoAlerta.ERROR);
+                return RedirectToAction("ListaUsuarios", "Proyecto", new { id = idProyecto });
+            }
         }
 
         /*
@@ -79,10 +94,12 @@ namespace AppWebERS.Controllers
 
             if(reader!= null)
             {
+                conector.EnsureConnectionClosed();
                 return true;
             }
             else
             {
+                conector.EnsureConnectionClosed();
                 return false;
             }
         }

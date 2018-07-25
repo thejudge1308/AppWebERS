@@ -655,8 +655,8 @@ namespace AppWebERS.Controllers
         public ActionResult Requisito(int id)
         {
             ViewBag.IdProyecto = id;
-
-            return View();
+            Requisito requisito = new Requisito();
+            return View(requisito);
         }
         //ATENCION: FORMTATO FECHA: AAAA-MM-DD
         [HttpPost]

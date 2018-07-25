@@ -1,12 +1,32 @@
 ﻿@model AppWebERS.Models.Requisito
 @{
-    ViewBag.Title = "Tarjeta de Volere";
+                /**/
+
+                ViewBag.Title = "Tarjeta de Volere";
 }
 
 
 <h2>TarjetaVolere</h2>
 
-
+@using (Html.BeginForm("IngresarRequisito", "Proyecto", new
+{
+    idRequisito = Model.IdRequisito,
+    nombre = Model.Nombre,
+    descripcion = Model.Descripcion,
+    prioridad = Model.Prioridad,
+    fuente = Model.Fuente,
+    estabilidad = Model.Estabilidad,
+    estado = Model.Estado,
+    tipoUsuario = Model.TipoUsuario,
+    tipoRequisito = Model.TipoRequisito,
+    medida = Model.Medida,
+    escala = Model.Escala,
+    fecha = Model.Fecha,
+    incremento = Model.Incremento,
+    tipo = Model.Tipo,
+    idProyecto = @ViewBag.IdProyecto
+}, FormMethod.Post))
+{
 <div class="card">
     <div class="card-header">
         <div class="form-group row">
@@ -37,21 +57,22 @@
         <div class="form-group row" style="margin-bottom:10px">
             @Html.LabelFor(m => m.TipoRequisito, new { @class = "col-form-label", style = "margin-left:15px" })
             <div class="col-sm-3">
-                <select class="form-control mx-sm-2">
+                <select id="TipoRequisito" name="TipoRquisito" class="form-control mx-sm-2">
                     <option>Funcional</option>
                     <option>No Funcional</option>
                 </select>
             </div>
+
             @Html.LabelFor(m => m.Estado, new { @class = "col-form-label", style = "margin-right:30px" })
             <div class="col-sm-3">
-                <select class="form-control mx-sm-2">
+                <select id="Estado" name="Estado" class="form-control mx-sm-2">
                     <option>No Cumple</option>
                     <option>Cumple</option>
                 </select>
             </div>
-			@Html.LabelFor(m => m.Tipo, new { @class = "col-form-label" })
+            @Html.LabelFor(m => m.Tipo, new { @class = "col-form-label" })
             <div class="col-sm-3">
-                <select class="form-control mx-sm-2">
+                <select id="Tipo" name="Tipo" class="form-control mx-sm-2">
                     <option>Usuario</option>
                     <option>Sistema</option>
                 </select>
@@ -61,19 +82,19 @@
         <div class="form-group row" style="margin-bottom:10px">
             @Html.LabelFor(m => m.Prioridad, new { @class = "col-form-label", style = "margin-left:15px;margin-right:35px" })
             <div class="col-sm-3">
-                <select class="form-control mx-sm-2">
+                <select id="Prioridad" name="Prioridad" class="form-control mx-sm-2">
                     <option>Crítica</option>
                     <option>No Crítica</option>
                 </select>
             </div>
             @Html.LabelFor(m => m.Estabilidad, new { @class = "col-form-label" })
             <div class="col-sm-3">
-                <select class="form-control mx-sm-2">
+                <select id="Estabilidad" name="Estabilidad" class="form-control mx-sm-2">
                     <option>Transable</option>
                     <option>Intransable</option>
                 </select>
             </div>
-			
+
         </div>
 
         <form class="form-inline">
@@ -94,16 +115,22 @@
         </form>
         <form class="form-inline">
             <div class="form-group">
-                @Html.LabelFor(m => m.Fecha)
+                @Html.LabelFor(m => m.Fecha, new { @class = "col-sm-3 col-form-label" })
                 @Html.TextBoxFor(m => m.Fecha, new { placeholder = "Ingrese fecha", @class = "form-control mx-sm-2" })
 
                 @Html.LabelFor(m => m.Incremento, new { style = "margin-left:15px" })
                 @Html.TextBoxFor(m => m.Incremento, new { maxlenght = "6", @class = "form-control mx-sm-2" })
 
             </div>
-            </form>
+        </form>
     </div>
+    <div class="form-group">
+        <div style="margin-top:10px;align">
+            <button type="submit" class="btn btn-success">Guardar cambios</button>
+        </div>
+    </div>
+
 </div>
-<div style="margin-top:10px;align">
-	<button type="button" class="btn btn-success" onclick="location.href='@Url.Action("IngresarRequisito", "Proyecto", new { idRequisito = Model.IdRequisito, nombre = Model.Nombre, descripcion = Model.Descripcion, prioridad = Model.Fuente, estabilidad = Model.Estabilidad, estado = Model.Estado, tipoUsuario = Model.TipoUsuario, tipoRequisito = Model.TipoRequisito, medida = Model.Medida, escala = Model.Escala, fecha = Model.Fecha, incremento = Model.Incremento, tipo = Model.Tipo, idProyecto = @ViewBag.IdProyecto })'">Ingresar</button> 
-</div>
+}
+
+

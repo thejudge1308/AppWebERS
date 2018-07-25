@@ -73,10 +73,18 @@ namespace AppWebERS.Controllers
             {
                 return View(model);
             }
-            ApplicationUser usuario = await UserManager.FindByRutAsync(model.Rut);
+            ApplicationUser usuario;
+            if (model.esRut())
+            {
+                usuario = await UserManager.FindByRutAsync(model.RutName);
+            }
+            else
+            {
+                usuario = await UserManager.FindByNameAsync(model.RutName);
+            }
             if (usuario == null)
             {
-                TempData["alerta"] = new Alerta("Rut de usuario incorrecto.", TipoAlerta.ERROR);
+                TempData["alerta"] = new Alerta("Rut de usuario o nombre incorrecto.", TipoAlerta.ERROR);
                 return View(model);
             }
             if (!usuario.Estado)
@@ -121,7 +129,8 @@ namespace AppWebERS.Controllers
             {
                 if (!VerificarSiResgistroValido(model))
                 {
-                    var user = new ApplicationUser { UserName = model.UserName, Rut = model.Rut, Email = model.Email, Tipo = "USUARIO" };
+                    var user = new ApplicationUser { UserName = model.UserName, Rut = model.Rut, Email = model.Email, Nombre = model.Nombre,
+                        Apellido = model.Apellido, Tipo = "USUARIO" };
                     var result = await UserManager.CreateAsync(user, model.Password);
                     if (result.Succeeded)
                     {
@@ -284,6 +293,24 @@ namespace AppWebERS.Controllers
                 TempData["alerta"] = new Alerta("Hubo un error al obtener al usuario", TipoAlerta.ERROR);
             }
             return RedirectToAction("Index","Home");
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DeshabilitarUsuario(string rut)
+        {
+            ViewBag.Title = "DeshabilitarUsuario";
+            if (!String.IsNullOrEmpty(rut))
+            {
+                ApplicationUser usuario = await UserManager.FindByRutAsync(rut);
+                if (usuario != null)
+                {
+                    await UserManager.setEstadoAsync(usuario.Id, !usuario.Estado);
+                    TempData["alerta"] = new Alerta("El usuario ha sido modificado exitosamente", TipoAlerta.SUCCESS);
+                    return RedirectToAction("ListarUsuarios","Cuenta");
+                }
+                TempData["alerta"] = new Alerta("Hubo un error al obtener al usuario", TipoAlerta.ERROR);
+            }
+            return RedirectToAction("Index", "Home");
         }
 
         /*

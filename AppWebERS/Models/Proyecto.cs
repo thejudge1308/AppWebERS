@@ -110,6 +110,7 @@ namespace AppWebERS.Models{
             Referencias = referencias;
             AmbienteOperacional = ambienteOperacional;
             RelacionProyectos = relacionProyectos;
+            Estado = "HABILITADO";
         }
 
         /**
@@ -235,6 +236,16 @@ namespace AppWebERS.Models{
         **/
         [Display(Name = "Relacion con otros proyectos")]
         public string RelacionProyectos {get; set;}
+
+        /**
+        * Setter y Getter del atributo que contiene la relacion con otros proyectos
+        * 
+        * <param name = "estado" > La relacion con otros proyectos del proyecto.</param>
+        * <returns>Retorna el valor string de la relacion con otros proyectos del proyecto.</returns>
+        * 
+        **/
+        public string Estado { get; set; }
+
 
         /**
          * Setter y Getter de los usuarios relacionados con el proyecto.
@@ -675,8 +686,8 @@ namespace AppWebERS.Models{
             String referencias = proyecto.Referencias;
             String ambiente = proyecto.AmbienteOperacional;
             String relacion = proyecto.RelacionProyectos;
-            String consulta = "INSERT INTO proyecto (nombre,proposito,alcance,contexto,definiciones,acronimos,abreviaturas,referencias,ambiente_operacional,relacion_con_otros_proyectos)" +
-                " VALUES ('" + nombre + "', '" + proposito + "','" + alcance + "','" + contexto + "','" + definiciones + "','" + acronimos + "','" + abreviaturas + "','" + referencias + "','" + ambiente + "','" + relacion + "')";
+            String consulta = "INSERT INTO proyecto (nombre,proposito,alcance,contexto,definiciones,acronimos,abreviaturas,referencias,ambiente_operacional,relacion_con_otros_proyectos,estado)" +
+                " VALUES ('" + nombre + "', '" + proposito + "','" + alcance + "','" + contexto + "','" + definiciones + "','" + acronimos + "','" + abreviaturas + "','" + referencias + "','" + ambiente + "','" + relacion + "','HABILITADO')";
             return this.conexion.RealizarConsultaNoQuery(consulta);
         }
         //Metodos para Asignar Jefes de Proyectos

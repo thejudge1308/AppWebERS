@@ -14,6 +14,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using MySql.Data.MySqlClient;
+using System.Diagnostics;
 using AppWebERS.Utilidades;
 using System.Diagnostics;
 
@@ -21,6 +22,8 @@ namespace AppWebERS.Controllers
 {
     public class SysAdminController : Controller
     {
+
+        private int idProyecto;
         private ConectorBD conector = ConectorBD.Instance;
         // GET: SysAdmin
 
@@ -46,12 +49,15 @@ namespace AppWebERS.Controllers
 
         }
 
-        public ActionResult AgregarUsuarioProyecto(String idProyecto)
+        public ActionResult AgregarUsuarioProyecto(int idProyecto)
         {
-            List<Usuario> lista = this.listaDeUsuarios();
-            ViewData["proyecto"] = idProyecto;
-
-            return View(lista);
+            Proyecto proyecto = new Proyecto().ObtenerProyectoPorID(idProyecto);
+            this.idProyecto = idProyecto;
+            List<Usuario> usuarios = this.listaDeUsuarios();
+            ViewData["proyecto"] = proyecto;
+            ViewData["usuarios"] = usuarios;
+            Debug.WriteLine("iDpROY" + proyecto.IdProyecto);
+            return View();
         }
 
         /*

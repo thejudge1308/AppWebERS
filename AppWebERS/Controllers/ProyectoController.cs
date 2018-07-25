@@ -788,6 +788,9 @@ namespace AppWebERS.Controllers
         {
             string idUsuario = this.ObtenerIdPorRut(rutUsuario);
 
+
+            this.EliminarSolitudYaAceptada(idUsuario, idProyecto);
+
             string consulta = "START TRANSACTION;"+
                 "INSERT INTO vinculo_usuario_proyecto (ref_usuario, ref_proyecto, rol) VALUES('" + idUsuario + "','" + idProyecto + "','USUARIO');"+
                 "COMMIT;";
@@ -798,7 +801,18 @@ namespace AppWebERS.Controllers
             return RedirectToAction("Detalles", "Proyecto", new { id = idProyecto });
         }
 
-        
+
+        public void EliminarSolitudYaAceptada(string idUsuario, int idProyecto)
+        {
+            string consulta = "START TRANSACTION;" +
+         "UPDATE solicitud_jefeproyecto_usuario SET estado = 2 WHERE(ref_proyecto = " + idProyecto + " AND ref_destinario = '" + idUsuario + "');"+
+                "COMMIT;";
+            this.Conector.RealizarConsultaNoQuery(consulta);
+            Debug.WriteLine(consulta);
+            this.Conector.CerrarConexion();
+        }
+
+
 
 
         /*

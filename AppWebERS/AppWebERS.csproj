@@ -282,7 +282,6 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\alertaPartialScript.js" />
-    <Content Include="Scripts\alertaSolicitud.js" />
     <Content Include="Scripts\listaUsuario.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\popper-utils.js" />
@@ -337,7 +336,7 @@
     <Content Include="Views\Usuario\CasoDeUso.cshtml" />
     <Content Include="Views\SysAdmin\VistaSysAdmin.cshtml" />
     <Content Include="Views\SysAdmin\CrearProyecto.cshtml" />
-     <Content Include="Views\SysAdmin\AgregarUsuarioProyecto.cshtml" />
+    <Content Include="Views\SysAdmin\AgregarUsuarioProyecto.cshtml" />
     <Content Include="Views\JefeProyecto\VistaJP.cshtml" />
     <Content Include="Views\JefeProyecto\VistaAdministrarParticipantes.cshtml" />
     <Content Include="Views\Cuenta\ListarUsuarios.cshtml" />
@@ -346,7 +345,6 @@
     <Content Include="Views\Usuario\Modificar2.cshtml" />
     <Content Include="Views\Usuario\Deshabilitar2.cshtml" />
     <Content Include="Views\JefeProyecto\SolicitudDeProyecto.cshtml" />
-    <Content Include="Views\JefeProyecto\_AlertaPartial.cshtml" />
     <Content Include="Views\JefeProyecto\InvitarUsuario.cshtml" />
     <Content Include="Views\Proyecto\CrearProyecto.cshtml" />
     <Content Include="Views\Proyecto\AsignarJefeProyecto.cshtml" />

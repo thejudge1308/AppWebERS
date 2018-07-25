@@ -7,7 +7,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@Html.Partial("_AlertaPartial")
 
 <div class="card my-1 mx-5 h-100">
     <div class="card-header">
@@ -16,7 +15,7 @@
 
     @try
     {
-        
+
         if (Model.listaSolicitudes.Count != 0)
         {
 
@@ -38,7 +37,7 @@
 
                                 <tr class="text-center">
 
-                                  
+
                                     <td>@solicitud.usuario</td>
                                     <td>@solicitud.proyecto</td>
                                     <td>
@@ -65,8 +64,7 @@
 </div>
 
 
-@section scripts{
-    <script type="text/javascript" src="~/Scripts/alertaSolicitud.js"></script>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
 }
-    </div>
 

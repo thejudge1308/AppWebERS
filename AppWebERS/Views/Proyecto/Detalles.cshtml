@@ -14,7 +14,8 @@
     var TipoUsuario = (int)ViewData["permiso"];
 }
 
-@if(ProyectoActual != null && TipoUsuario != Proyecto.NO_AUTH) {
+@if (ProyectoActual != null && TipoUsuario != Proyecto.NO_AUTH)
+{
     <h2>Detalles</h2>
 
     <ul class="nav nav-tabs">
@@ -169,10 +170,11 @@
             <div class="col-12">
                 <div id="relacion-edit"></div>
             </div>
-            @if(TipoUsuario != Proyecto.AUTH_COMO_SYSADMIN) {
+            @if (TipoUsuario != Proyecto.AUTH_COMO_SYSADMIN) {
                 <div class="mt-2 d-flex flex-row-reverse">
                     <div class="p-2">
                         <a id="relacion-button" class="btn btn-primary text-white">Guardar cambios</a>
+                        @Html.ActionLink("Generar PDF", "ExportarPDF", "Proyecto", new { id = ProyectoActual.IdProyecto }, new { miAtributo = "valor1", @class = "btn btn-danger" })
                     </div>
                 </div>
             }
@@ -338,7 +340,7 @@
                                     @Html.ValidationMessageFor(p => p.AmbienteOperacional, "", new { @class = "text-danger" })
                                 }
 
-                            }
+}
 
                         </div>
 
@@ -362,12 +364,15 @@
                     @{@Html.LabelFor(p => ProyectoActual.RelacionProyectos, new { @class = "col-md-12 control-label" })}
                     <div class="col-12">
                         @{
-                            if(TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN) {
-                                @Html.TextAreaFor(p => ProyectoActual.RelacionProyectos, new { @class = "form-control font-weight-bold", placeholder = "Relación con otros proyectos.", Style = "max-width:100%;", disabled = "disabled" })
-                            } else {
-                                @Html.TextAreaFor(p => ProyectoActual.RelacionProyectos, new { @class = "form-control font-weight-bold", placeholder = "Relación con otros proyectos.", Style = "max-width:100%;" })
+                if (TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN)
+                {
+                    @Html.TextAreaFor(p => ProyectoActual.RelacionProyectos, new { @class = "form-control font-weight-bold", placeholder = "Relación con otros proyectos.", Style = "max-width:100%;", disabled = "disabled" })
+    }
+    else
+    {
+            @Html.TextAreaFor(p => ProyectoActual.RelacionProyectos, new { @class = "form-control font-weight-bold", placeholder = "Relación con otros proyectos.", Style = "max-width:100%;" })
 
-                            }
+}
                         }
                     </div>
                 </div>
@@ -416,7 +421,9 @@
         </div>
     </div>
 
-} else {
+}
+else
+{
     <div class="jumbotron jumbotron-fluid">
         <div class="container">
             <h1>Proyecto no encontrado</h1>

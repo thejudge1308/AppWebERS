@@ -14,6 +14,7 @@ using AppWebERS.Utilidades;
 namespace AppWebERS.Controllers{
     public class JefeProyectoController : Controller{
         // GET: JefeProyecto
+        private int idProyecto;
 
         private ConectorBD conector = ConectorBD.Instance;
 
@@ -22,12 +23,15 @@ namespace AppWebERS.Controllers{
         }
 
         // GET: JefeProyecto/InvitarUsuario
-        public ActionResult InvitarUsuario(String idProyecto){
-            List<Usuario> lista = this.listaDeUsuarios(idProyecto);
+        public ActionResult InvitarUsuario(int idProyecto){
 
-            ViewData["proyecto"] = idProyecto;
-
-            return View(lista);
+            Proyecto proyecto = new Proyecto().ObtenerProyectoPorID(idProyecto);
+            this.idProyecto = idProyecto;
+            List<Usuario> usuarios = this.listaDeUsuarios();
+            ViewData["proyecto"] = proyecto;
+            ViewData["usuarios"] = usuarios;
+            Debug.WriteLine("iDpROY" + proyecto.IdProyecto);
+            return View();
         }
 
         //Get: JefeProyecto/EnviarSolicitud
@@ -91,7 +95,7 @@ namespace AppWebERS.Controllers{
             return idUsuario;
         }
 
-        public List<Usuario> listaDeUsuarios(String idProyecto)
+        public List<Usuario> listaDeUsuarios()
         {
             List<Usuario> listaUsuarios = new List<Usuario>();
             string consulta = "SELECT UserName, Rut, Email, Tipo FROM users";

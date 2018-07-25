@@ -125,7 +125,8 @@
                             <div class="card-body">
                                 <h5 class="card-title"></h5>
                                 <p class="card-text"></p>
-                                <a href="Detalles/@item.IdProyecto" class="btn btn-primary">Ver detalle</a>
+                                <!--<a href="#" class="btn btn-primary">Unirse</a>--> 
+                                <a href="#" class="btn btn-primary" onclick="location.href='@Url.Action("AgregarUsuarioAProyecto", "Proyecto", new {proyecto1=item.IdProyecto })'">Unirse</a> 
                             </div>
                         </div>
                         <br><br>

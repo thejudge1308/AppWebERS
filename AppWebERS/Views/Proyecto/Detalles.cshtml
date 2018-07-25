@@ -179,6 +179,16 @@
                 </div>
             }
             </div>
+        <div class="form-group">
+            <div class="col-12">
+                @{ 
+                    if ( TipoUsuario == Proyecto.AUTH_COMO_USUARIO || TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO)
+                    {
+                         <a class="btn btn-primary" href="@Url.Action("Requisito","Proyecto",new { id = ProyectoActual.IdProyecto})">Nuevo Requisito</a>
+                    }
+                }
+            </div>
+        </div>
     </div>
 
 

@@ -663,9 +663,10 @@ namespace AppWebERS.Controllers
         public ActionResult Requisito(int id)
         {
             ViewBag.IdProyecto = id;
-            Requisito requisito = new Requisito();
+            Requisito requisito = new Requisito(null,null,null,null,null,null,null,null,null,null,null, DateTime.Now.ToString("yyyy-MM-dd"), null,null);
             return View(requisito);
         }
+
         //ATENCION: FORMTATO FECHA: AAAA-MM-DD
         [HttpPost]
         public ActionResult IngresarRequisito(string idRequisito, string nombre, string descripcion, string prioridad, string fuente,
@@ -787,8 +788,11 @@ namespace AppWebERS.Controllers
         {
             string idUsuario = this.ObtenerIdPorRut(rutUsuario);
 
+
+            this.EliminarSolitudYaAceptada(idUsuario, idProyecto);
+
             string consulta = "START TRANSACTION;"+
-                "INSERT INTO vinculo_usuario_proyecto VALUES('" + idUsuario + "','" + idProyecto + "','USUARIO');"+
+                "INSERT INTO vinculo_usuario_proyecto (ref_usuario, ref_proyecto, rol) VALUES('" + idUsuario + "','" + idProyecto + "','USUARIO');"+
                 "COMMIT;";
 
             this.Conector.RealizarConsultaNoQuery(consulta);
@@ -797,7 +801,18 @@ namespace AppWebERS.Controllers
             return RedirectToAction("Detalles", "Proyecto", new { id = idProyecto });
         }
 
-        
+
+        public void EliminarSolitudYaAceptada(string idUsuario, int idProyecto)
+        {
+            string consulta = "START TRANSACTION;" +
+         "UPDATE solicitud_jefeproyecto_usuario SET estado = 2 WHERE(ref_proyecto = " + idProyecto + " AND ref_destinario = '" + idUsuario + "');"+
+                "COMMIT;";
+            this.Conector.RealizarConsultaNoQuery(consulta);
+            Debug.WriteLine(consulta);
+            this.Conector.CerrarConexion();
+        }
+
+
 
 
         /*
@@ -813,9 +828,9 @@ namespace AppWebERS.Controllers
             string UsuarioSolicitanteRut = ObtenerIdUsuarioActivo();
             string idUsuario = this.ObtenerIdPorRut(rutUsuario);
             string Values = "'" + idProyecto + "','" + idUsuario + "'";
-            string Consulta = "INSERT INTO solicitud_vinculacion_proyecto (ref_proyecto,ref_solicitante) VALUES (" + Values + ");";
-
-            if (this.Conector.RealizarConsultaNoQuery(Consulta))
+            string Consulta = "INSERT INTO solicitud_jefeproyecto_usuario (ref_proyecto,ref_destinario,estado) VALUES (" + Values + ",0);";
+            Debug.WriteLine(Consulta);
+            if (this.Conector.RealizarConsultaNoQuery(Consulta) == true)
             {
                 this.Conector.CerrarConexion();
                 ViewBag.Message = "Solicitud enviada";
@@ -851,12 +866,15 @@ namespace AppWebERS.Controllers
         private string ObtenerIdPorRut(string rut)
         {
             string value = "";
-            string consulta = "SELECT users.id FROM users WHERE users.Rut = '" + rut + "'";
+            string consulta = "SELECT users.Id FROM users WHERE users.Rut = '" + rut + "'";
             MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
             if(reader!= null)
             {
-                reader.Read();
-                value = reader[0].ToString();
+                while(reader.Read())
+                {
+                    value = reader[0].ToString();
+                }
+                Conector.CerrarConexion();
             }
              return value;
         }

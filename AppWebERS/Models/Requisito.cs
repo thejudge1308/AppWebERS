@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 using System.Data;
 using System.Linq;
 using System.Web;
@@ -76,7 +77,9 @@ namespace AppWebERS.Models {
          * <returns>Retorna el valor int del idRequisito.</returns>
          * 
          **/
-
+        [Required(ErrorMessage = "El campo Código es obligatorio.")]
+        //[RegularExpression("[0-9]*", ErrorMessage = ".")]
+        [StringLength(20, ErrorMessage = "El código debe tener entre 3 a 20 caracteres ", MinimumLength = 3)]
         [Display(Name = "Código")]
         public string IdRequisito {get; set;}
 
@@ -87,6 +90,7 @@ namespace AppWebERS.Models {
          * <returns>Retorna el valor string del nombre.</returns>
          * 
          **/
+        [Required(ErrorMessage = "El campo Nombre es obligatorio.")]
         [Display(Name = "Nombre")]
         public string Nombre {get; set;}
 
@@ -97,6 +101,7 @@ namespace AppWebERS.Models {
          * <returns>Retorna el valor string de la descripcion.</returns>
          * 
          **/
+        [Required(ErrorMessage = "El campo Descripción es obligatorio.")]
         [Display(Name = "Descripción")]
         public string Descripcion {get; set;}
 
@@ -117,6 +122,8 @@ namespace AppWebERS.Models {
          * <returns>Retorna el valor string de la fuente.</returns>
          * 
          **/
+        [Required(ErrorMessage = "El campo Fuente es obligatorio.")]
+        [StringLength(20, ErrorMessage = "La fuente debe tener menos de 20 caracteres ", MinimumLength = 1)]
         [Display(Name = "Fuente")]
         public string Fuente {get; set;}
 
@@ -147,6 +154,8 @@ namespace AppWebERS.Models {
          * <returns>Retorna el valor string del tipo.</returns>
          * 
          **/
+        [Required(ErrorMessage = "El campo Tipo Usuario es obligatorio.")]
+        [StringLength(20, ErrorMessage = "El tipo de usuario debe tener menos de 20 caracteres ", MinimumLength = 1)]
         [Display(Name = "Tipo Usuario")]
         public string TipoUsuario {get; set;}
 
@@ -167,6 +176,8 @@ namespace AppWebERS.Models {
          * <returns>Retorna el valor string de la medida.</returns>
          * 
          **/
+        [Required(ErrorMessage = "El campo Medida es obligatorio.")]
+        [StringLength(20, ErrorMessage = "La medida debe tener a lo más 20 caracteres ", MinimumLength = 1)]
         [Display(Name = "Medida")]
         public string Medida { get; set; }
 
@@ -177,6 +188,8 @@ namespace AppWebERS.Models {
          * <returns>Retorna el valor string de la escala.</returns>
          * 
          **/
+        [Required(ErrorMessage = "El campo Escala es obligatorio.")]
+        [StringLength(20, ErrorMessage = "La Escala debe tener a lo más 20 caracteres ", MinimumLength = 1)]
         [Display(Name = "Escala")]
         public string Escala { get; set; }
 
@@ -187,6 +200,8 @@ namespace AppWebERS.Models {
          * <returns>.</returns>
          * 
          **/
+        [Required(ErrorMessage = "El campo Fecha es obligatorio.")]
+        [RegularExpression("^[0-9]{4}-[0-9]{2}-[0-9]{2}", ErrorMessage = "La fecha debe seguir el formato AAAA-MM-DD")]
         [Display(Name = "Fecha Actualización")]
         public string Fecha { get; set; }
 
@@ -198,6 +213,8 @@ namespace AppWebERS.Models {
          * 
          **/
         [Display(Name = "Incremento")]
+        [Required(ErrorMessage = "El campo Incremento es obligatorio.")]
+        [StringLength(20, ErrorMessage = "El Incremento debe tener a lo más 20 caracteres", MinimumLength = 1)]
         public string Incremento { get; set; }
         /**
          * Setter y Getter del incremento.

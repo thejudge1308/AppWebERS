@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 using System.Linq;
 using System.Web;
 
@@ -9,13 +10,11 @@ namespace AppWebERS.Models
     public class LoginViewModel
     {
         [Required]
-        [Display(Name = "Rut")]
-        [RegularExpression("([1-9][0-9]*)", ErrorMessage = "El campo Rut debe tener solo números.")]
-        [StringLength(8, ErrorMessage = "El campo Rut debe tener 7 caractener como minimo y 8 como máximo", MinimumLength = 7)]
+        [Display(Name = "Rut o nombre")]
         /**
-         * <param name="Rut">Rut</param>  
+         * <param name="RutName">Rut</param>  
          */
-        public string Rut { get; set; }
+        public string RutName { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
@@ -32,6 +31,16 @@ namespace AppWebERS.Models
         * <summary> For more information = https://www.youtube.com/watch?v=rWK_VlekdwM </summary>>
         */
         public bool RememberMe { get; set; }
+
+        public bool esRut()
+        {
+            Regex regexRut = new Regex("(^[a-zA-Z])");
+            if (regexRut.IsMatch(RutName))
+            {
+                return false;
+            }
+            return true;
+        }
     }
 
     public class RegisterViewModel
@@ -54,6 +63,18 @@ namespace AppWebERS.Models
         [Display(Name = "Contraseña")]
         public string Password { get; set; }
 
+        [Required(ErrorMessage = "El campo Nombre es obligatorio.")]
+        [StringLength(35, ErrorMessage = "El largo del nombre deber ser entre 2 a 35 caracteres.", MinimumLength = 2)]
+        [RegularExpression("[a-zA-ZñÑáéíóúÁÉÍÓÚ]*", ErrorMessage = "Nombre no valido.")]
+        [Display(Name = "Nombre")]
+        public string Nombre { get; set; }
+
+        [Required(ErrorMessage = "El campo Apellido es obligatorio.")]
+        [StringLength(35, ErrorMessage = "El largo del apellido deber ser entre 2 a 35 caracteres.", MinimumLength = 2)]
+        [RegularExpression("[a-zA-ZñÑáéíóúÁÉÍÓÚ]*", ErrorMessage = "Apellido no valido.")]
+        [Display(Name = "Apellido")]
+        public string Apellido { get; set; }
+
         [Required]
         [DataType(DataType.Password)]
         [Display(Name = "Confirme contraseña")]
@@ -72,7 +93,7 @@ namespace AppWebERS.Models
     {
 
         [RegularExpression("([ ]?[a-zA-Z0-9])*", ErrorMessage = "Nombre no válido.")]
-        [StringLength(50, ErrorMessage = "El largo del nombre deber ser entre 1 a 50 caracteres.", MinimumLength = 5)]
+        [StringLength(50, ErrorMessage = "El largo del nombre deber ser entre 5 a 50 caracteres.", MinimumLength = 5)]
         [Display(Name = "Nombre")]
         public string Nombre { get; set; }
 

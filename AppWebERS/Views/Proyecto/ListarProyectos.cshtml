@@ -1,4 +1,4 @@
-﻿@model List<AppWebERS.Models.NombreProyecto>
+﻿@using AppWebERS.Models;
 
 @{
     /**/
@@ -7,143 +7,138 @@
 
 @{
     ViewBag.Title = "Proyectos";
+    var usuarioActual = (string)ViewData["usuario_actual"];
+    var proyectosTodos = (List<Proyecto>)ViewData["proyectosTodos"];
+    var proyectosAsociados = (List<Proyecto>)ViewData["proyectosAsociados"];
+    var proyectosNoAsociados = (List<Proyecto>)ViewData["proyectosNoAsociados"];
 
 }
 
 
-<h2>@ViewBag.Title.</h2>
+<h2>@ViewBag.Title</h2>
 
 
 <!-- Bootstrap CSS -->
 <!-- jQuery first, then Bootstrap JS. -->
 <!-- Nav tabs -->
 
-<ul class="nav nav-tabs" role="tablist">
 
-    @{
-        if (Model.ElementAt(0).Nombre == "SYSADMIN")
+        @if (usuarioActual.Equals("SYSADMIN"))
         {
-            <li class="nav-item" id="myTab1">
-                <a class="nav-link" href="#todos" role="tab" data-toggle="tab">Todos</a>
-            </li>
+            <div class="row">
+                <div class="col-4 mb-2 mt-2">
+                    <a class="btn btn-primary" href="@Url.Action("CrearProyecto","Proyecto")">Crear nuevo proyecto</a>
+                </div>
+            </div>
 
         }
-        else
-        {
-            <li class="nav-item" id="myTab2">
-                <a class="nav-link" href="#asociados" role="tab" data-toggle="tab">Asociados</a>
-            </li>
-            <li class="nav-item" id="myTab3">
-                <a class="nav-link" href="#noasociados" role="tab" data-toggle="tab">No asociados</a>
-            </li>
+            <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    @{
+                        if (usuarioActual.Equals("SYSADMIN"))
+                        {
+                            <a class="nav-item nav-link active" id="nav-todos-tab" data-toggle="tab" href="#nav-todos" role="tab" aria-controls="nav-todos" aria-selected="false">Todos</a>
+
+                        }
+                        else
+                        {
+
+                            <a class="nav-item nav-link active" id="nav-asociados-tab" data-toggle="tab" href="#nav-asociados" role="tab" aria-controls="nav-asociados" aria-selected="false">Asociados</a>
+                            <a class="nav-item nav-link" id="nav-noasociados-tab" data-toggle="tab" href="#nav-noasociados" role="tab" aria-controls="nav-noasociados" aria-selected="false">No asociados</a>
 
 
-        }
-    }
+                        }
+                    }
 
-
-</ul>
+                </div>
+            </nav>
 
 <!-- Tab panes -->
-<div class="tab-content">
-    <div role="tabpanel" class="tab-pane fade in active" id="asociados">
-        @{int posicion = 0; }
+            <div class="tab-content mb-2 mt-2" id="nav-tabContent">
 
-        @for (int i = 0; i < Model.Count; i++)
-        {
+                <div class="tab-pane fade show active" id="nav-todos" role="tabpanel" aria-labelledby="nav-todos-tab">
 
-            if (Model.ElementAt(i).Nombre != "mitad")
-            {
 
-                <div class="card">
-                    <div class="card-header">
+                    @foreach (Proyecto item in (List<Proyecto>)proyectosTodos)
+                    {
+                        <div class="card">
+                            <div class="card-header">
 
-                        @Model.ElementAt(i).Nombre
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title"></h5>
-                        <p class="card-text"></p>
-                        <a href="Detalles/@Model.ElementAt(i).Id" class="btn btn-primary">Ver detalle</a>
-                    </div>
+                                @item.Nombre
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title"></h5>
+                                <p class="card-text"></p>
+                                <a href="Detalles/@item.IdProyecto" class="btn btn-primary">Ver detalle</a>
+                                @{
+                                    if (item.Estado == "HABILITADO")
+                                    {
+                                        <a href="#" class="btn btn-primary" onclick="location.href='@Url.Action("DeshabilitarProyecto", "Proyecto", new {id=item.IdProyecto })'">Deshabilitar</a>
+
+                                    }
+                                    else
+                                    {
+                                        <a href="#" class="btn btn-primary" onclick="location.href='@Url.Action("HabilitarProyecto", "Proyecto", new {id=item.IdProyecto })'">Habilitar</a>
+
+                                    }
+                                }
+                            </div>
+                        </div>
+                        <br><br>
+
+
+                    }
+
                 </div>
-                <br><br>
-            }
-            else
-            {
 
-                posicion = i + 1;
-                break;
-            }
-        }
+                <div class="tab-pane fade show active" id="nav-asociados" role="tabpanel" aria-labelledby="nav-asociados-tab">
 
-    </div>
+                    @foreach (Proyecto item in (List<Proyecto>)proyectosAsociados)
+                    {
 
+                        <div class="card">
+                            <div class="card-header">
 
-    <div role="tabpanel" class="tab-pane fade" id="noasociados">
-        @for (int i = posicion; i < Model.Count; i++)
-        {
-            if (Model.ElementAt(i).Nombre != "mitad")
-            {
-                <div class="card">
-                    <div class="card-header">
+                                @item.Nombre
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title"></h5>
+                                <p class="card-text"></p>
+                                <a href="Detalles/@item.IdProyecto" class="btn btn-primary">Ver detalle</a>
+                            </div>
+                        </div>
+                        <br><br>
 
-                        @Model.ElementAt(i).Nombre
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title"></h5>
-                        <p class="card-text"></p>
-                        <!--<a href="#" class="btn btn-primary">Unirse</a>-->
-                        <a href="#" class="btn btn-primary" onclick="location.href='@Url.Action("AgregarUsuarioAProyecto", "Proyecto", new {proyecto1=Model.ElementAt(i).Id })'">Unirse</a>
-                    </div>
+                    }
+
                 </div>
-                <br><br>
-            }
-
-        }
-    </div>
 
 
+                <div class="tab-pane fade" id="nav-noasociados" role="tabpanel" aria-labelledby="nav-noasociados-tab">
+                    @foreach (Proyecto item in (List<Proyecto>)proyectosNoAsociados)
+                    {
+                        <div class="card">
+                            <div class="card-header">
 
-    <div role="tabpanel" class="tab-pane fade in active" id="todos">
-
-
-        @foreach (var proyecto in Model)
-        {
-            if (proyecto.Nombre != "mitad" & proyecto.Nombre != "SYSADMIN")
-            {
-                <div class="card">
-                    <div class="card-header">
-                        @proyecto.Nombre
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title"></h5>
-                        <p class="card-text"></p>
-                        <a href="Detalles/@proyecto.Id" class="btn btn-primary">Ver detalle</a>
-                        @{
-                            if (proyecto.Estado == "HABILITADO")
-                            {
-                                <a href="#" class="btn btn-primary" onclick="location.href='@Url.Action("DeshabilitarProyecto", "Proyecto", new {id=proyecto.Id })'">Deshabilitar</a>
-
-                            }
-                            else
-                            {
-                                <a href="#" class="btn btn-primary" onclick="location.href='@Url.Action("HabilitarProyecto", "Proyecto", new {id=proyecto.Id })'">Habilitar</a>
-
-                            }
-                        }
-
-                    </div>
+                                @item.Nombre
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title"></h5>
+                                <p class="card-text"></p>
+                                <!--<a href="#" class="btn btn-primary">Unirse</a>--> 
+                                <a href="#" class="btn btn-primary" onclick="location.href='@Url.Action("AgregarUsuarioAProyecto", "Proyecto", new {proyecto1=item.IdProyecto })'">Unirse</a> 
+                            </div>
+                        </div>
+                        <br><br>
+                    }
                 </div>
-                <br><br>
-            }
 
-        }
 
-    </div>
 
-</div>
 
-<div>
-    <a class="btn btn-primary" href="@Url.Action("CrearProyecto","Proyecto")">Crear nuevo proyecto</a>
-</div>
+
+            </div>
+
+
+
 

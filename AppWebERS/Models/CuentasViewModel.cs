@@ -63,6 +63,18 @@ namespace AppWebERS.Models
         [Display(Name = "Contraseña")]
         public string Password { get; set; }
 
+        [Required(ErrorMessage = "El campo Nombre es obligatorio.")]
+        [StringLength(35, ErrorMessage = "El largo del nombre deber ser entre 2 a 35 caracteres.", MinimumLength = 2)]
+        [RegularExpression("[a-zA-ZñÑáéíóúÁÉÍÓÚ]*", ErrorMessage = "Nombre no valido.")]
+        [Display(Name = "Nombre")]
+        public string Nombre { get; set; }
+
+        [Required(ErrorMessage = "El campo Apellido es obligatorio.")]
+        [StringLength(35, ErrorMessage = "El largo del apellido deber ser entre 2 a 35 caracteres.", MinimumLength = 2)]
+        [RegularExpression("[a-zA-ZñÑáéíóúÁÉÍÓÚ]*", ErrorMessage = "Apellido no valido.")]
+        [Display(Name = "Apellido")]
+        public string Apellido { get; set; }
+
         [Required]
         [DataType(DataType.Password)]
         [Display(Name = "Confirme contraseña")]
@@ -81,7 +93,7 @@ namespace AppWebERS.Models
     {
 
         [RegularExpression("([ ]?[a-zA-Z0-9])*", ErrorMessage = "Nombre no válido.")]
-        [StringLength(50, ErrorMessage = "El largo del nombre deber ser entre 1 a 50 caracteres.", MinimumLength = 5)]
+        [StringLength(50, ErrorMessage = "El largo del nombre deber ser entre 5 a 50 caracteres.", MinimumLength = 5)]
         [Display(Name = "Nombre")]
         public string Nombre { get; set; }
 

@@ -25,6 +25,7 @@
                                 <th scope="col">Nombre de Usuario</th>
                                 <th scope="col">Rut</th>
                                 <th scope="col">Correo Electronico</th>
+                                <th scope="col">Nombre Completo</th>
                                 <th scope="col">Tipo</th>
                                 <th scope="col">Acciones</th>
                             </tr>
@@ -38,6 +39,7 @@
                                         <td data-info="info">@usuario.UserName</td><!-- Reemplazar por como quiera que le pongan en el foreach a la variable. Ej: (arroba)Item.Nombre -->
                                         <td data-info="info">@usuario.Rut</td>
                                         <td data-info="info">@usuario.Email</td>
+                                <td data-info="info">@(@usuario.Nombre + " " + @usuario.Apellido)</td>
                                         <td data-info="info">@usuario.Tipo</td>
                                         <td>
 
@@ -96,6 +98,7 @@
             <strong>No hay usuarios registrados!</strong> <br /> Debe registrar usuarios para poder modificar su cuenta.
         </div>
     }
+    <a class="btn btn-primary" href="@Url.Action("Register","Cuenta")">Agregar Usuario</a>
 </div>
 
 

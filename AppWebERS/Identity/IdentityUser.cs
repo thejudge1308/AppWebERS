@@ -87,7 +87,6 @@ namespace AspNet.Identity.MySQL
         ///     Used to record failures for the purposes of lockout
         /// </summary>
         public virtual int AccessFailedCount { get; set; }
-
         /*
          * Creador: Gabriel Sanhueza
          */
@@ -100,5 +99,13 @@ namespace AspNet.Identity.MySQL
          * Creador: Gabriel Sanhueza
          */
         public virtual bool Estado { get; set; }
+        /*
+         * Creador: Maximo Hernandez
+         */
+        public virtual string Nombre { get; set; }
+        /*
+         * Creador: Maximo Hernandez
+         */
+        public virtual string Apellido { get; set; }
     }
 }

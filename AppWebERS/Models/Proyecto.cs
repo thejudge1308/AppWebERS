@@ -554,21 +554,75 @@ namespace AppWebERS.Models{
          * Actualiza la base de datos de la tabla proyectos, con los nuevos datos.
          * </summary>
          * <param name = "idProyecto" > El identificador del proyecto.</param>
-         * <param name = "nombre" > El nombre del proyecto.</param>
-         * <param name = "proposito" > El proposito del proyecto.</param>
-         * <param name = "alcance" > El alcance del proyecto.</param>
-         * <param name = "contexto" > El contexto del proyecto.</param>
-         * <param name = "definiciones" > Las definiciones del proyecto.</param>
-         * <param name = "acronimos" > Los acronimos del proyecto.</param>
-         * <param name = "abreviaturas" > Las abreviaturas del proyecto.</param>
-         * <param name = "referencias" > Las referencias del proyecto.</param>
-         * <param name = "ambienteOperacional" > El ambiente operacional del proyecto.</param>
-         * <param name = "relacionProyectos" > La relacion con otros proyectos del proyecto.</param>
+         * <param name = "valor" > El nombre del JSON, el cual será un string compuesto por HTML y e valor de la base de datos del atributo al que hace referencia.</param>
+         * <param name = "atributo" > La etiqueta para reconocer a qué atributo se debe actualizar en la base de datos.</param>
          */
-        public void ActualizarDatosProyecto(int idProyecto, string nombre, string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string referencias, string ambienteOperacional, string relacionProyectos)
+        public void ActualizarDatosProyecto(int idProyecto, string valor, string atributo)
         {
-            string consulta = "UPDATE proyecto SET nombre='"+ nombre + "',proposito='" + proposito + "',alcance='" + alcance + "',contexto='" + contexto + "',definiciones='" + definiciones + "',acronimos='" + acronimos + "',abreviaturas='" + abreviaturas + "',referencias='" + referencias + "',ambiente_operacional='" + ambienteOperacional + "',relacion_con_otros_proyectos='" + relacionProyectos + "' WHERE id_proyecto=" + idProyecto;
-            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
+            string consulta;
+            MySqlDataReader reader;
+            switch (atributo)
+            {
+                case "nombre":
+                    consulta = "UPDATE proyecto SET nombre='" + valor + "' WHERE id_proyecto=" + idProyecto;
+                    reader = this.conexion.RealizarConsulta(consulta);
+                    this.conexion.EnsureConnectionClosed();
+                    break;
+
+                case "proposito":
+                    consulta = "UPDATE proyecto SET proposito='" + valor + "' WHERE id_proyecto=" + idProyecto;
+                    reader = this.conexion.RealizarConsulta(consulta);
+                    this.conexion.EnsureConnectionClosed();
+                    break;                    
+
+                case "alcance":
+                    consulta = "UPDATE proyecto SET alcance='" + valor + "' WHERE id_proyecto=" + idProyecto;
+                    reader = this.conexion.RealizarConsulta(consulta);
+                    this.conexion.EnsureConnectionClosed();
+                    break;
+
+                case "contexto":
+                    consulta = "UPDATE proyecto SET contexto='" + valor + "' WHERE id_proyecto=" + idProyecto;
+                    reader = this.conexion.RealizarConsulta(consulta);
+                    this.conexion.EnsureConnectionClosed();
+                    break;
+
+                case "definicion":
+                    consulta = "UPDATE proyecto SET definiciones='" + valor + "' WHERE id_proyecto=" + idProyecto;
+                    reader = this.conexion.RealizarConsulta(consulta);
+                    this.conexion.EnsureConnectionClosed();
+                    break;
+
+                case "acronimo":
+                    consulta = "UPDATE proyecto SET acronimos='" + valor + "' WHERE id_proyecto=" + idProyecto;
+                    reader = this.conexion.RealizarConsulta(consulta);
+                    this.conexion.EnsureConnectionClosed();
+                    break;
+
+                case "abreviatura":
+                    consulta = "UPDATE proyecto SET abreviaturas='" + valor + "' WHERE id_proyecto=" + idProyecto;
+                    reader = this.conexion.RealizarConsulta(consulta);
+                    this.conexion.EnsureConnectionClosed();
+                    break;
+
+                case "referencia":
+                    consulta = "UPDATE proyecto SET referencias='" + valor + "' WHERE id_proyecto=" + idProyecto;
+                    reader = this.conexion.RealizarConsulta(consulta);
+                    this.conexion.EnsureConnectionClosed();
+                    break;
+
+                case "ambiente":
+                    consulta = "UPDATE proyecto SET ambiente_operacional='" + valor + "' WHERE id_proyecto=" + idProyecto;
+                    reader = this.conexion.RealizarConsulta(consulta);
+                    this.conexion.EnsureConnectionClosed();
+                    break;
+
+                case "relacion":
+                    consulta = "UPDATE proyecto SET relacion_con_otros_proyectos='" + valor + "' WHERE id_proyecto=" + idProyecto;
+                    reader = this.conexion.RealizarConsulta(consulta);
+                    this.conexion.EnsureConnectionClosed();
+                    break;
+            }
             this.conexion.EnsureConnectionClosed();
         }
 

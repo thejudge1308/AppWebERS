@@ -164,10 +164,11 @@
             <div class="col-12">
                 <div id="relacion-edit"></div>
             </div>
-            @if(TipoUsuario != Proyecto.AUTH_COMO_SYSADMIN) {
+            @if (TipoUsuario != Proyecto.AUTH_COMO_SYSADMIN) {
                 <div class="mt-2 d-flex flex-row-reverse">
                     <div class="p-2">
                         <a id="relacion-button" class="btn btn-primary text-white">Guardar cambios</a>
+                        @Html.ActionLink("Generar PDF", "ExportarPDF", "Proyecto", new { id = ProyectoActual.IdProyecto }, new { miAtributo = "valor1", @class = "btn btn-danger" })
                     </div>
                 </div>
             }

@@ -193,8 +193,6 @@
     <Compile Include="Controllers\ProyectoController.cs" />
     <Compile Include="Controllers\RequisitoController.cs" />
     <Compile Include="Controllers\SolicitudDeUsuarioController.cs" />
-    <Compile Include="Controllers\UserViewController.cs" />
-    <Compile Include="Controllers\SysAdmin2Controller.cs" />
     <Compile Include="Controllers\SolicitudDeProyectoController.cs" />
     <Compile Include="Controllers\SysAdminController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
@@ -350,7 +348,7 @@
     <Content Include="Views\Usuario\CasoDeUso.cshtml" />
     <Content Include="Views\SysAdmin\VistaSysAdmin.cshtml" />
     <Content Include="Views\SysAdmin\CrearProyecto.cshtml" />
-     <Content Include="Views\SysAdmin\AgregarUsuarioProyecto.cshtml" />
+    <Content Include="Views\SysAdmin\AgregarUsuarioProyecto.cshtml" />
     <Content Include="Views\JefeProyecto\VistaJP.cshtml" />
     <Content Include="Views\JefeProyecto\VistaAdministrarParticipantes.cshtml" />
     <Content Include="Views\Cuenta\ListarUsuarios.cshtml" />
@@ -368,8 +366,6 @@
     <Content Include="Views\Proyecto\ListarProyectos.cshtml" />
     <Content Include="Views\Proyecto\Detalles.cshtml" />
     <Content Include="Views\Proyecto\ListaUsuarios.cshtml" />
-    <Content Include="Views\SysAdmin2\Principal.cshtml" />
-    <Content Include="Views\UserView\Principal.cshtml" />
     <Content Include="Views\SolicitudDeUsuario\ListadoSolicitudUsuario.cshtml" />
     <Content Include="Scripts\quilljs\quill.min.js.map" />
     <Content Include="Views\Proyecto\Requisito.cshtml" />

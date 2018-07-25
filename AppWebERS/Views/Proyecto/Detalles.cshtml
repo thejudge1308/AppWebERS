@@ -39,9 +39,15 @@
         <div class="form-group">
             @{@Html.LabelFor(p => ProyectoActual.Nombre, new { @class = "col-md-12 control-label" })}
             <div class="col-12">
-                <div id="nombre-edit"></div>
+                @if (TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO) {
+                    <div id="nombre-edit"></div>
+                }
+                else {
+                    {@Html.TextBoxFor(p => ProyectoActual.Nombre, new { @class = "form-control font-weight-bold", disabled = "disabled" })}
+                }
+
             </div>
-            @if(TipoUsuario != Proyecto.AUTH_COMO_SYSADMIN) {
+            @if(TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO) {
                 <div class="mt-2 d-flex flex-row-reverse">
                     <div class="p-2">
                         <a id="nombre-button" class="btn btn-primary text-white">Guardar cambios</a>

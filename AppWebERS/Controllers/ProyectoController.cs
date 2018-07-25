@@ -805,8 +805,8 @@ namespace AppWebERS.Controllers
             string UsuarioSolicitanteRut = ObtenerIdUsuarioActivo();
             string idUsuario = this.ObtenerIdPorRut(rutUsuario);
             string Values = "'" + idProyecto + "','" + idUsuario + "'";
-            string Consulta = "INSERT INTO solicitud_vinculacion_proyecto (ref_proyecto,ref_solicitante) VALUES (" + Values + ");";
-
+            string Consulta = "INSERT INTO solicitud_jefeproyecto_usuario (ref_proyecto,ref_destinario,estado) VALUES (" + Values + ",0);";
+            Debug.WriteLine(Consulta);
             if (this.Conector.RealizarConsultaNoQuery(Consulta) == true)
             {
                 this.Conector.CerrarConexion();

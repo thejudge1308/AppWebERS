@@ -56,7 +56,7 @@
                 if (TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN)
                 {
                     <a class="btn btn-primary" href="@Url.Action("ModificarJefeProyecto", "Proyecto", new { id = ProyectoActual.IdProyecto })">Modificar Jefe de Proyecto</a>
-                    <a class="btn btn-primary" href="@Url.Action("AgregarUsuarioProyecto", "SysAdmin", new { id = ProyectoActual.IdProyecto })">Agregar usuario</a>
+                    <a class="btn btn-primary" href="@Url.Action("AgregarUsuarioProyecto", "Proyecto", new { id = ProyectoActual.IdProyecto })">Agregar usuario</a>
                 }
 
             }
@@ -118,7 +118,7 @@
         <div class=" form-group">
             @if (TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO)
             {
-        <a class="btn btn-primary " href="@Url.Action("InvitarUsuario", "JefeProyecto", new { id = ProyectoActual.IdProyecto })" style="float: right;">Invitar usuario</a>
+        <a class="btn btn-primary " href="@Url.Action("InvitarUsuario", "Proyecto", new { id = ProyectoActual.IdProyecto })" style="float: right;">Invitar usuario</a>
 }
             <div style="clear: both;"></div>
         </div>

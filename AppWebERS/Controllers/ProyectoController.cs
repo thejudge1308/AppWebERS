@@ -12,6 +12,8 @@ using Microsoft.AspNet.Identity;
 using AspNet.Identity.MySQL;
 using Microsoft.AspNet.Identity.Owin;
 using AppWebERS.Utilidades;
+using System.IO;
+
 
 namespace AppWebERS.Controllers
 {
@@ -31,9 +33,9 @@ namespace AppWebERS.Controllers
             Proyecto proyecto = this.GetProyecto(id);
             //string UsuarioActual = System.Web.HttpContext.Current.User.Identity.Name; // pregunta el usuario actual
             var UsuarioActual = User.Identity.GetUserId();
-           // Debug.WriteLine("Usuario actual: " + UsuarioActual);
-           // Debug.WriteLine("Proyecto actual: " + proyecto);
-           // Debug.WriteLine("Permiso: " + TipoDePermiso());
+            // Debug.WriteLine("Usuario actual: " + UsuarioActual);
+            // Debug.WriteLine("Proyecto actual: " + proyecto);
+            // Debug.WriteLine("Permiso: " + TipoDePermiso());
             ViewData["proyecto"] = proyecto;
             ViewData["permiso"] = TipoDePermiso(id);
 
@@ -124,6 +126,24 @@ namespace AppWebERS.Controllers
             Proyecto proyecto = this.GetProyecto(id);
             return Json(proyecto, JsonRequestBehavior.AllowGet);
         }
+        public FileResult ExportarPDF(int id) {
+            Proyecto proyecto = this.GetProyecto(id);
+
+            string fecha =  DateTime.Now.ToString();
+            String html = "<html> <head> <style> body { margin: 2cm; } .logo { font-size: 40px; font-weigth: bold; } .titulo { text-align: center; } .fecha { margin-left: 20px; } .espacio-izq { margin-left: 20px; } table td{ font-size: 18px; padding-bottom: 15px; } </style> </head> <body> <table> <tr> <td class=\"logo\">AppWebERS</td> <td </tr> </table> <h1 class=\"titulo\">Detalles de proyecto</h1> <hr> <p class=\"fecha\">Fecha: " + fecha +"</p> <hr> <table class=\"espacio-izq\"> <tr> <td>Nombre proyecto</td> <td>: " + proyecto.Nombre + "</td> </tr> <tr> <td>Proposito</td> <td>: " + proyecto.Proposito + "</td> </tr> <tr> <td>Alcance</td> <td>: " + proyecto.Alcance + "</td> </tr> <tr> <td>Contexto</td> <td>: " + proyecto.Contexto + "</td> </tr> <tr> <td>Definiciones</td> <td>: " + proyecto.Definiciones + "</td> </tr> <tr> <td>Acronimos</td> <td>: "+ proyecto.Acronimos + "</td> </tr> <tr> <td>Abreviaturas</td> <td>: " + proyecto.Abreviaturas + "</td> </tr> <tr> <td>Referencias</td> <td>: " + proyecto.Referencias + "</td> </tr> <tr> <td>Ambiente operacional</td> <td>: " + proyecto.AmbienteOperacional + "</td> </tr> <tr> <td>Relacion con otros proyectos</td> <td>: " + proyecto.RelacionProyectos +  "</td> </tr> </table> </body> </html>";
+            String html2 = "<h1>Texto</h1> <p> de</p> <p><sup><strong>prueba</strong></sup></p> <p><em>para</em></p> <h2><s>probar</s></h2> <p><br></p> <ol> <li>el</li> </ol> <p><sub>formato</sub></p> <p><span>pdf</span></p> <p><span>es</span></p> <p><span style=\"background - color: red; \">resposive</span></p> <p><span style=\"color: yellow; background - color: green; \">porsia</span></p> <p>Fin</p>";
+            
+
+            var htmlToPdf = new NReco.PdfGenerator.HtmlToPdfConverter();
+            var pdfBytes = htmlToPdf.GeneratePdf(html);
+            MemoryStream ms = new MemoryStream(pdfBytes);
+           
+
+            return File(ms, "application/pdf"); ;
+        }
+
+        
+
 
         // GET: Proyecto/ListaUsuarios/5
         public ActionResult ListaUsuarios(int id) {

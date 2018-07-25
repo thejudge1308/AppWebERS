@@ -1,8 +1,8 @@
 ﻿@model AppWebERS.Models.Requisito
 @{
-                /**/
+    /**/
 
-                ViewBag.Title = "Tarjeta de Volere";
+    ViewBag.Title = "Tarjeta de Volere";
 }
 
 
@@ -45,6 +45,7 @@
             @Html.TextAreaFor(m => m.Descripcion, new { placeholder = "Ingrese la descripción del requisito", @class = "form-control", style = "min-width:100%;margin-bottom:10px", rows = "5" })
 
         </div>
+
         <div>
             @Html.LabelFor(m => m.Fuente)
             @Html.TextBoxFor(m => m.Fuente, new { placeholder = "", style = "min-width:100%;margin-bottom:10px", @class = "form-control" })
@@ -57,7 +58,7 @@
         <div class="form-group row" style="margin-bottom:10px">
             @Html.LabelFor(m => m.TipoRequisito, new { @class = "col-form-label", style = "margin-left:15px" })
             <div class="col-sm-3">
-                <select id="TipoRequisito" name="TipoRquisito" class="form-control mx-sm-2">
+                <select id="TipoRequisito" name="TipoRequisito" class="form-control mx-sm-2">
                     <option>Funcional</option>
                     <option>No Funcional</option>
                 </select>
@@ -105,32 +106,39 @@
                 </div>
             </div>
         </form>
-        <form class="form-inline">
+        <div>
+            @Html.LabelFor(m => m.Escala)
+            @Html.TextBoxFor(m => m.Escala, new { placeholder = "Escala", @class = "form-control col-form-label" })
+
+        </div>
+        @*<form class="form-inline">
             <div class="form-group row" style="margin-bottom:10px">
-                @Html.LabelFor(m => m.Escala, new { @class = "col-sm-3 col-form-label" })
+                @Html.LabelFor(m => m.Fecha, new { @class = "col-sm-3 col-form-label" })
                 <div class="col-sm-8">
-                    @Html.TextBoxFor(m => m.Escala, new { placeholder = "Ingrese la escala", @class = "form-control mx-sm-2" })
+                    @Html.TextBoxFor(m => m.Fecha, new { placeholder = "Fecha Actualización", @class = "form-control mx-sm-2" })
                 </div>
             </div>
-        </form>
-        <form class="form-inline">
-            <div class="form-group">
-                @Html.LabelFor(m => m.Fecha, new { @class = "col-sm-3 col-form-label" })
-                @Html.TextBoxFor(m => m.Fecha, new { placeholder = "Ingrese fecha", @class = "form-control mx-sm-2" })
+        </form>*@
+        <div>
+            @Html.LabelFor(m => m.Fecha)
+            @Html.TextBoxFor(m => m.Fecha, new { placeholder = "Fecha Actualizacion", @class = "form-control col-form-label" })
 
-                @Html.LabelFor(m => m.Incremento, new { style = "margin-left:15px" })
-                @Html.TextBoxFor(m => m.Incremento, new { maxlenght = "6", @class = "form-control mx-sm-2" })
+        </div>
+        <div>
+            @Html.LabelFor(m => m.Incremento)
+            @Html.TextBoxFor(m => m.Incremento, new { placeholder = "Incremento", @class = "form-control col-form-label" })
 
-            </div>
-        </form>
+        </div>
+
     </div>
     <div class="form-group">
         <div style="margin-top:10px;align">
             <button type="submit" class="btn btn-success">Guardar cambios</button>
         </div>
     </div>
-
 </div>
+   
 }
+
 
 

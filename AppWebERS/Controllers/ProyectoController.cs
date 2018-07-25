@@ -780,7 +780,7 @@ namespace AppWebERS.Controllers
             string idUsuario = this.ObtenerIdPorRut(rutUsuario);
 
             string consulta = "START TRANSACTION;"+
-                "INSERT INTO vinculo_usuario_proyecto VALUES('" + idUsuario + "','" + idProyecto + "','USUARIO');"+
+                "INSERT INTO vinculo_usuario_proyecto (ref_usuario, ref_proyecto, rol) VALUES('" + idUsuario + "','" + idProyecto + "','USUARIO');"+
                 "COMMIT;";
 
             this.Conector.RealizarConsultaNoQuery(consulta);
@@ -807,7 +807,7 @@ namespace AppWebERS.Controllers
             string Values = "'" + idProyecto + "','" + idUsuario + "'";
             string Consulta = "INSERT INTO solicitud_vinculacion_proyecto (ref_proyecto,ref_solicitante) VALUES (" + Values + ");";
 
-            if (this.Conector.RealizarConsultaNoQuery(Consulta))
+            if (this.Conector.RealizarConsultaNoQuery(Consulta) == true)
             {
                 this.Conector.CerrarConexion();
                 ViewBag.Message = "Solicitud enviada";
@@ -843,12 +843,15 @@ namespace AppWebERS.Controllers
         private string ObtenerIdPorRut(string rut)
         {
             string value = "";
-            string consulta = "SELECT users.id FROM users WHERE users.Rut = '" + rut + "'";
+            string consulta = "SELECT users.Id FROM users WHERE users.Rut = '" + rut + "'";
             MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
             if(reader!= null)
             {
-                reader.Read();
-                value = reader[0].ToString();
+                while(reader.Read())
+                {
+                    value = reader[0].ToString();
+                }
+                Conector.CerrarConexion();
             }
              return value;
         }

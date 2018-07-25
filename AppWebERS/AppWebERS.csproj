@@ -299,6 +299,7 @@
     <Content Include="Scripts\quilljs\quill.snow.css" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\Proyecto\Detalles_quill.min.js" />
     <Content Include="Scripts\Proyecto\Detalles_quill.js" />
     <Content Include="Scripts\umd\popper-utils.js" />
     <Content Include="Scripts\umd\popper-utils.min.js" />
@@ -346,7 +347,7 @@
     <Content Include="Views\Usuario\CasoDeUso.cshtml" />
     <Content Include="Views\SysAdmin\VistaSysAdmin.cshtml" />
     <Content Include="Views\SysAdmin\CrearProyecto.cshtml" />
-     <Content Include="Views\SysAdmin\AgregarUsuarioProyecto.cshtml" />
+    <Content Include="Views\SysAdmin\AgregarUsuarioProyecto.cshtml" />
     <Content Include="Views\JefeProyecto\VistaJP.cshtml" />
     <Content Include="Views\JefeProyecto\VistaAdministrarParticipantes.cshtml" />
     <Content Include="Views\Cuenta\ListarUsuarios.cshtml" />

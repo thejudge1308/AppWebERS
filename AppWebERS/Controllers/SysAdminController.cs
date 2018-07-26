@@ -14,6 +14,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using MySql.Data.MySqlClient;
+using System.Diagnostics;
 using AppWebERS.Utilidades;
 using System.Diagnostics;
 
@@ -21,6 +22,8 @@ namespace AppWebERS.Controllers
 {
     public class SysAdminController : Controller
     {
+
+        private int idProyecto;
         private ConectorBD conector = ConectorBD.Instance;
         // GET: SysAdmin
 
@@ -46,12 +49,15 @@ namespace AppWebERS.Controllers
 
         }
 
-        public ActionResult AgregarUsuarioProyecto(String idProyecto)
+        public ActionResult AgregarUsuarioProyecto(int idProyecto)
         {
-            List<Usuario> lista = this.listaDeUsuarios();
-            ViewData["proyecto"] = idProyecto;
-
-            return View(lista);
+            Proyecto proyecto = new Proyecto().ObtenerProyectoPorID(idProyecto);
+            this.idProyecto = idProyecto;
+            List<Usuario> usuarios = this.listaDeUsuarios(idProyecto);
+            ViewData["proyecto"] = proyecto;
+            ViewData["usuarios"] = usuarios;
+            Debug.WriteLine("iDpROY" + proyecto.IdProyecto);
+            return View();
         }
 
         /*
@@ -99,8 +105,9 @@ namespace AppWebERS.Controllers
         public string BuscaIdUsuarioPorRut(string rut)
         {
 
-            string consulta = "SELECT users.id FROM users WHERE users.Rut ='" + rut + "'";
+            string consulta = "SELECT users.Id FROM users WHERE users.Rut ='" + rut + "'";
             string idUsuario = null;
+
             MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
             if (reader == null)
             {
@@ -122,10 +129,12 @@ namespace AppWebERS.Controllers
             return idUsuario;
         }
 
-        public List<Usuario> listaDeUsuarios()
+        public List<Usuario> listaDeUsuarios(int idProyecto)
         {
             List<Usuario> listaUsuarios = new List<Usuario>();
-            string consulta = "SELECT UserName, Rut, Email, Tipo FROM users";
+            string consulta = "SELECT UserName, Rut, Email, Tipo FROM users WHERE Rut NOT IN (SELECT Rut FROM users, vinculo_usuario_proyecto, proyecto " +
+                "WHERE vinculo_usuario_proyecto.ref_proyecto = '" + idProyecto + "' AND vinculo_usuario_proyecto.ref_usuario = users.Id) " +
+                "AND NOT users.Tipo ='SYSADMIN' ";
             MySqlDataReader reader = this.conector.RealizarConsulta(consulta);
 
             if (reader == null)

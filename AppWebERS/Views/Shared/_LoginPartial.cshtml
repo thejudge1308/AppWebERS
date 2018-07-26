@@ -25,7 +25,7 @@
                     string usuario = Html.Action("RetornarTipoUsuarioAutentificado", "Cuenta").ToString();
                     if (usuario.Equals("USUARIO"))
                     {
-                        @Html.ActionLink("Invitaciones", "Solicitud", "SolicitudDeProyecto", new { rut = rutUsuario }, htmlAttributes: new { id = "cuentaLink", @class = "dropdown-item" })                    
+                        @Html.ActionLink("Solicitudes","ListadoSolicitudUsuario", "SolicitudDeUsuario", new { rut = rutUsuario }, htmlAttributes: new { id = "cuentaLink", @class = "dropdown-item" })                    
                     }
                 }
                 

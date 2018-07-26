@@ -19,11 +19,11 @@ namespace AppWebERS.Controllers
 {
     public class ProyectoController : Controller
     {
-        List<NombreProyecto> listaProyectosNombres = new List<NombreProyecto>();
-        List<NombreProyecto> listaTodosLosProyectosNombres = new List<NombreProyecto>();
+
         private int id_proyecto;
-        private ConectorBD conexion;
+
         private ConectorBD Conector = ConectorBD.Instance;
+        private ApplicationDbContext conexion = ApplicationDbContext.Create();
 
 
         // GET: Proyecto/Detalles/5
@@ -176,40 +176,30 @@ namespace AppWebERS.Controllers
         public ActionResult ListarProyectos()
         {
             String TipoUsuario = ObtenerTipoUsuarioActivo();
-            
-
-            if (TipoUsuario.Equals(Proyecto.SysAdmin_RolBD))
+            List<Proyecto> proyectosTodos = new List<Proyecto>(); 
+            List<Proyecto> proyectosAsociados = new List<Proyecto>(); 
+            List<Proyecto> proyectosNoAsociados = new List<Proyecto>(); 
+            Debug.WriteLine("Tipo Usuario " + TipoUsuario);
+            if (TipoUsuario.Equals("SYSADMIN"))
             {
-                var model = ListaDeTodosLosProyectos();
-                ViewData["usuario_actual"] = Proyecto.SysAdmin_RolBD;
-                return View(model);
+                proyectosTodos = ListaDeTodosLosProyectos();
             }
             else
             {
-                var model = ObtenerTodosLosProyectos();
-                return View(model);
+                proyectosAsociados = ListaDeProyectosAsociados(ObtenerIdUsuarioActivo());
+                proyectosNoAsociados = ListaDeProyectoNoAsociados(ObtenerIdUsuarioActivo());
+                
             }
-           
-            
+            ViewData["usuario_actual"] = TipoUsuario;
+            ViewData["proyectosTodos"] = proyectosTodos;
+            ViewData["proyectosAsociados"] = proyectosAsociados;
+            ViewData["proyectosNoAsociados"] = proyectosNoAsociados;
+
+            return View();
 
         }
 
 
-        /**
-      * <author>Fabian Oyarce</author>
-      * <summary>
-      * obtiene los proyectos asociados y no asociados y los une a una sola lista
-      * </summary>
-      * <returns>lista proyectos nombres </returns>
-      */
-        public List<NombreProyecto> ObtenerTodosLosProyectos()
-        {
-
-            ListaDeProyectosAsociados(ObtenerIdUsuarioActivo());
-            ListaDeProyectoNoAsociados(ObtenerIdUsuarioActivo());
-            return listaProyectosNombres;
-
-        }
 
         /*
     * Autor Fabian Oyarce
@@ -217,41 +207,39 @@ namespace AppWebERS.Controllers
     * <param String rut>
     * <returns> listaProyectosNombres 
     */
-        public List<NombreProyecto> ListaDeTodosLosProyectos()
+        public List<Proyecto> ListaDeTodosLosProyectos()
         {
-
-            string consulta = "SELECT proyecto.nombre, proyecto.id_proyecto, proyecto.estado " +
-                                "FROM proyecto";
-            int bandera = 0;
-            MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
-            if (reader == null)
+            List<Proyecto> proyectos = new List<Proyecto>();
+            string consulta = "SELECT * FROM proyecto";
+            MySqlDataReader data = this.conexion.RealizarConsulta(consulta);
+            if (data == null)
             {
-                this.Conector.CerrarConexion();
-                listaTodosLosProyectosNombres.Add(new NombreProyecto("mitad", "id","estado"));
-                return listaTodosLosProyectosNombres;
+                this.conexion.EnsureConnectionClosed();
+                return proyectos;
                 //return null;
             }
             else
             {
-                while (reader.Read())
+                while (data.Read())
                 {
+                    int id = Int32.Parse(data["id_proyecto"].ToString());
+                    string nombre = data["nombre"].ToString();
+                    string proposito = data["proposito"].ToString();
+                    string alcance = data["alcance"].ToString();
+                    string contexto = data["contexto"].ToString();
+                    string definiciones = data["definiciones"].ToString();
+                    string acronimos = data["acronimos"].ToString();
+                    string abreviaturas = data["abreviaturas"].ToString();
+                    string referencias = data["referencias"].ToString();
+                    string ambiente_operacional = data["ambiente_operacional"].ToString();
+                    string relacion_con_otros_proyectos = data["relacion_con_otros_proyectos"].ToString();
+                    string estado = data["estado"].ToString();
 
-                    if (bandera == 0)
-                    {
-                        listaTodosLosProyectosNombres.Add(new NombreProyecto("SYSADMIN", "-99","estado"));
-                        bandera = 1;
-
-                    }
-                    
-                    string Nombre = reader.GetString(0);
-                    string Id = reader.GetString(1);
-                    string Estado = reader.GetString(2);
-                    listaTodosLosProyectosNombres.Add(new NombreProyecto(Nombre, Id,Estado));
+                    proyectos.Add(new Proyecto(id, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambiente_operacional, relacion_con_otros_proyectos, estado));
                 }
 
-                this.Conector.CerrarConexion();
-                listaTodosLosProyectosNombres.Add(new NombreProyecto("mitad", "id","estado"));
-                return listaTodosLosProyectosNombres;
+                this.conexion.EnsureConnectionClosed();
+                return proyectos;
             }
         }
 
@@ -262,35 +250,43 @@ namespace AppWebERS.Controllers
         * <param String rut>
         * <returns> listaProyectosNombres 
         */
-        public List<NombreProyecto> ListaDeProyectosAsociados(string id)
+        public List<Proyecto> ListaDeProyectosAsociados(string id)
         {
-
+            List<Proyecto> proyectosAsociados = new List<Proyecto>();
             string estado = "HABILITADO";
-            string consulta = "SELECT proyecto.nombre, proyecto.id_proyecto, proyecto.estado FROM proyecto, users, vinculo_usuario_proyecto " +
+            string consulta = "SELECT proyecto.id_proyecto,proyecto.nombre, proyecto.proposito, proyecto.alcance, proyecto.contexto, proyecto.definiciones," +
+                "proyecto.acronimos, proyecto.abreviaturas, proyecto.referencias, proyecto.ambiente_operacional, proyecto.relacion_con_otros_proyectos, proyecto.estado FROM proyecto, users, vinculo_usuario_proyecto " +
                                "WHERE proyecto.estado =  '" + estado + "' AND users.id = '" + id + "' AND vinculo_usuario_proyecto.ref_proyecto = " +
                                "proyecto.id_proyecto AND vinculo_usuario_proyecto.ref_usuario = users.id";
-            MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
-            if (reader == null)
+            MySqlDataReader data = this.Conector.RealizarConsulta(consulta);
+            if (data == null)
             {
                 this.Conector.CerrarConexion();
-                listaProyectosNombres.Add(new NombreProyecto("mitad", "id","estado"));
-                return listaProyectosNombres;
+                return proyectosAsociados;
                 //return null;
             }
             else
             {
-                while (reader.Read())
+                while (data.Read())
                 {
+                    int idp = Int32.Parse(data["id_proyecto"].ToString());
+                    string nombre = data["nombre"].ToString();
+                    string proposito = data["proposito"].ToString();
+                    string alcance = data["alcance"].ToString();
+                    string contexto = data["contexto"].ToString();
+                    string definiciones = data["definiciones"].ToString();
+                    string acronimos = data["acronimos"].ToString();
+                    string abreviaturas = data["abreviaturas"].ToString();
+                    string referencias = data["referencias"].ToString();
+                    string ambiente_operacional = data["ambiente_operacional"].ToString();
+                    string relacion_con_otros_proyectos = data["relacion_con_otros_proyectos"].ToString();
+                    string estadop = data["estado"].ToString();
 
-                    string Nombre = reader.GetString(0);
-                    string Id = reader.GetString(1);
-                    string Estado = reader.GetString(2);
-                    listaProyectosNombres.Add(new NombreProyecto(Nombre, Id,Estado));
+                    proyectosAsociados.Add(new Proyecto(idp, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambiente_operacional, relacion_con_otros_proyectos, estadop));
                 }
 
                 this.Conector.CerrarConexion();
-                listaProyectosNombres.Add(new NombreProyecto("mitad", "id","estado"));
-                return listaProyectosNombres;
+                return proyectosAsociados;
             }
         }
 
@@ -300,33 +296,45 @@ namespace AppWebERS.Controllers
         * <param String rut>
         * <returns> listaProyectosNombres 
         */
-        public List<NombreProyecto> ListaDeProyectoNoAsociados(string id)
+        public List<Proyecto> ListaDeProyectoNoAsociados(string id)
         {
+            List<Proyecto>proyectosNoAsociados = new List<Proyecto>();
             string estado = "HABILITADO";
-            string consulta = "SELECT Proyecto.nombre ,proyecto.id_proyecto ,proyecto.estado FROM Proyecto where  proyecto.estado = '" + estado + "' AND " +
+            string consulta = "SELECT proyecto.id_proyecto,proyecto.nombre, proyecto.proposito, proyecto.alcance, proyecto.contexto, proyecto.definiciones," +
+                "proyecto.acronimos, proyecto.abreviaturas, proyecto.referencias, proyecto.ambiente_operacional, proyecto.relacion_con_otros_proyectos, proyecto.estado"+" FROM Proyecto where  proyecto.estado = '" + estado + "' AND " +
                               "Proyecto.nombre NOT IN" +
                               "(SELECT Proyecto.nombre FROM Proyecto, users, vinculo_usuario_proyecto " +
                               "WHERE users.id ='" + id + "'  AND Vinculo_usuario_proyecto.ref_proyecto = Proyecto.id_proyecto AND Vinculo_usuario_proyecto.ref_usuario = users.id)";
 
-            MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
-            if (reader == null)
+            MySqlDataReader data = this.Conector.RealizarConsulta(consulta);
+            if (data == null)
             {
                 this.Conector.CerrarConexion();
-                return null;
+                return proyectosNoAsociados;
+                //return null;
             }
             else
             {
-                while (reader.Read())
+                while (data.Read())
                 {
+                    int idp = Int32.Parse(data["id_proyecto"].ToString());
+                    string nombre = data["nombre"].ToString();
+                    string proposito = data["proposito"].ToString();
+                    string alcance = data["alcance"].ToString();
+                    string contexto = data["contexto"].ToString();
+                    string definiciones = data["definiciones"].ToString();
+                    string acronimos = data["acronimos"].ToString();
+                    string abreviaturas = data["abreviaturas"].ToString();
+                    string referencias = data["referencias"].ToString();
+                    string ambiente_operacional = data["ambiente_operacional"].ToString();
+                    string relacion_con_otros_proyectos = data["relacion_con_otros_proyectos"].ToString();
+                    string estadop = data["estado"].ToString();
 
-                    string Nombre = reader.GetString(0);
-                    string Id = reader.GetString(1);
-                    string Estado = reader.GetString(2);
-                    listaProyectosNombres.Add(new NombreProyecto(Nombre, Id,Estado));
+                    proyectosNoAsociados.Add(new Proyecto(idp, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambiente_operacional, relacion_con_otros_proyectos, estadop));
                 }
 
                 this.Conector.CerrarConexion();
-                return listaProyectosNombres;
+                return proyectosNoAsociados;
             }
         }
 
@@ -344,7 +352,15 @@ namespace AppWebERS.Controllers
         }
 
       
+        public ActionResult AgregarUsuarioProyecto(int id)
+        {
+            return RedirectToAction("AgregarUsuarioProyecto","SysAdmin", new { idProyecto = id});
+        }
 
+        public ActionResult InvitarUsuario(int id)
+        {
+            return RedirectToAction("InvitarUsuario", "JefeProyecto", new { idProyecto = id });
+        }
         /**
         * Autor: Patricio Quezada
         * <param name = "id" > Id del proyecto.</param>
@@ -568,7 +584,7 @@ namespace AppWebERS.Controllers
          * Parámetros: PosProyecto. Es la posición que tiene el proyecto en la lista de proyectos
          */
         [HttpGet]
-        public ActionResult AgregarUsuarioAProyecto(string proyecto1)
+        public ActionResult AgregarUsuarioAProyecto(int proyecto1)
         {
 
             //int PosProyecto = Int32.Parse(proyecto1);
@@ -594,14 +610,14 @@ namespace AppWebERS.Controllers
             return RedirectToAction("ListarProyectos", "Proyecto");
         }
 
-       
+
 
         /*
          * Autor: Nicolás Hervias
          * Crea una lista de ids de todos los proyectos
          * Parametros: N/A
          */
-         [HttpGet]
+        [HttpGet]
         public List<string> ListaProyectosIds()
         {
             List<String> ListaProyectos = new List<String>();
@@ -647,9 +663,10 @@ namespace AppWebERS.Controllers
         public ActionResult Requisito(int id)
         {
             ViewBag.IdProyecto = id;
-
-            return View();
+            Requisito requisito = new Requisito(null,null,null,null,null,null,null,null,null,null,null, DateTime.Now.ToString("yyyy-MM-dd"), null,null);
+            return View(requisito);
         }
+
         //ATENCION: FORMTATO FECHA: AAAA-MM-DD
         [HttpPost]
         public ActionResult IngresarRequisito(string idRequisito, string nombre, string descripcion, string prioridad, string fuente,
@@ -761,9 +778,72 @@ namespace AppWebERS.Controllers
         }
 
 
-       
+        /*
+        * Autor Fabian Oyarce
+         * Metodo encargado de vincular un usuario a un proyecto
+         * <param String id>
+        */
+        [HttpGet]
+        public ActionResult VincularUsuarioAProyecto(string rutUsuario,int idProyecto )
+        {
+            string idUsuario = this.ObtenerIdPorRut(rutUsuario);
 
- 
+
+            this.EliminarSolitudYaAceptada(idUsuario, idProyecto);
+
+            string consulta = "START TRANSACTION;"+
+                "INSERT INTO vinculo_usuario_proyecto (ref_usuario, ref_proyecto, rol) VALUES('" + idUsuario + "','" + idProyecto + "','USUARIO');"+
+                "COMMIT;";
+
+            this.Conector.RealizarConsultaNoQuery(consulta);
+            this.Conector.CerrarConexion();
+
+            return RedirectToAction("Detalles", "Proyecto", new { id = idProyecto });
+        }
+
+
+        public void EliminarSolitudYaAceptada(string idUsuario, int idProyecto)
+        {
+            string consulta = "START TRANSACTION;" +
+         "UPDATE solicitud_jefeproyecto_usuario SET estado = 2 WHERE(ref_proyecto = " + idProyecto + " AND ref_destinario = '" + idUsuario + "');"+
+                "COMMIT;";
+            this.Conector.RealizarConsultaNoQuery(consulta);
+            Debug.WriteLine(consulta);
+            this.Conector.CerrarConexion();
+        }
+
+
+
+
+        /*
+     * Autor Fabian Oyarce
+      * Metodo encargado de solicitar vincular un usuario a un proyecto
+      * <param String id>
+     */
+        [HttpGet]
+        public ActionResult SolicitarVincularUsuarioAProyecto(string rutUsuario, int idProyecto)
+        {
+
+            
+            string UsuarioSolicitanteRut = ObtenerIdUsuarioActivo();
+            string idUsuario = this.ObtenerIdPorRut(rutUsuario);
+            string Values = "'" + idProyecto + "','" + idUsuario + "'";
+            string Consulta = "INSERT INTO solicitud_jefeproyecto_usuario (ref_proyecto,ref_destinario,estado) VALUES (" + Values + ",0);";
+            Debug.WriteLine(Consulta);
+            if (this.Conector.RealizarConsultaNoQuery(Consulta) == true)
+            {
+                this.Conector.CerrarConexion();
+                ViewBag.Message = "Solicitud enviada";
+                TempData["alerta"] = new Alerta("Solicitud enviada", TipoAlerta.SUCCESS);
+            }
+            else
+            {
+                this.Conector.CerrarConexion();
+            }
+
+            return RedirectToAction("ListarProyectos", "Proyecto");
+        }
+
         public ActionResult SolicitudDeProyecto(int id)
         {
             string s;
@@ -783,6 +863,22 @@ namespace AppWebERS.Controllers
             return View("SolicitudDeProyecto", sol);
         }
 
-
+        private string ObtenerIdPorRut(string rut)
+        {
+            string value = "";
+            string consulta = "SELECT users.Id FROM users WHERE users.Rut = '" + rut + "'";
+            MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
+            if(reader!= null)
+            {
+                while(reader.Read())
+                {
+                    value = reader[0].ToString();
+                }
+                Conector.CerrarConexion();
+            }
+             return value;
+        }
     }
+
+   
 }

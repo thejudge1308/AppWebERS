@@ -40,9 +40,15 @@
         <div class="form-group">
             @{@Html.LabelFor(p => ProyectoActual.Nombre, new { @class = "col-md-12 control-label" })}
             <div class="col-12">
-                <div id="nombre-edit"></div>
+                @if (TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO) {
+                    <div id="nombre-edit"></div>
+                }
+                else {
+                    {@Html.TextBoxFor(p => ProyectoActual.Nombre, new { @class = "form-control font-weight-bold", disabled = "disabled" })}
+                }
+
             </div>
-            @if(TipoUsuario != Proyecto.AUTH_COMO_SYSADMIN) {
+            @if(TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO) {
                 <div class="mt-2 d-flex flex-row-reverse">
                     <div class="p-2">
                         <a id="nombre-button" class="btn btn-primary text-white">Guardar cambios</a>
@@ -173,6 +179,16 @@
                 </div>
             }
             </div>
+        <div class="form-group">
+            <div class="col-12">
+                @{ 
+                    if ( TipoUsuario == Proyecto.AUTH_COMO_USUARIO || TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO)
+                    {
+                         <a class="btn btn-primary" href="@Url.Action("Requisito","Proyecto",new { id = ProyectoActual.IdProyecto})">Nuevo Requisito</a>
+                    }
+                }
+            </div>
+        </div>
     </div>
 
 

@@ -98,7 +98,7 @@ namespace AppWebERS.Models{
          * <param name = "casosDeUso" > La lista de casos de uso asociados al proyecto.</param>
          * <param name = "actores" > La lista de actores asociados al proyecto.</param>
          **/
-        public Proyecto(int idProyecto, string nombre, string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string referencias, string ambienteOperacional, string relacionProyectos) {
+        public Proyecto(int idProyecto, string nombre, string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string referencias, string ambienteOperacional, string relacionProyectos, string estado) {
             IdProyecto = idProyecto;
             Nombre = nombre;
             Proposito = proposito;
@@ -110,7 +110,7 @@ namespace AppWebERS.Models{
             Referencias = referencias;
             AmbienteOperacional = ambienteOperacional;
             RelacionProyectos = relacionProyectos;
-            Estado = "HABILITADO";
+            Estado = estado;
         }
 
         /**
@@ -345,7 +345,7 @@ namespace AppWebERS.Models{
             {
                 if (this.ValidarNombre(nombre))
                 {
-                    proyectoNuevo = new Proyecto(idProyecto, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambienteOperacional, relacionProyectos);
+                    proyectoNuevo = new Proyecto(idProyecto, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambienteOperacional, relacionProyectos, "HABILITADO");
                     return proyectoNuevo;
                 }
             }
@@ -404,9 +404,10 @@ namespace AppWebERS.Models{
                 string referencias = data["referencias"].ToString();
                 string ambiente_operacional = data["ambiente_operacional"].ToString();
                 string relacion_con_otros_proyectos = data["relacion_con_otros_proyectos"].ToString();
+                string estado = data["estado"].ToString();
 
 
-                proyecto = new Proyecto(ID, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambiente_operacional, relacion_con_otros_proyectos);
+                proyecto = new Proyecto(ID, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambiente_operacional, relacion_con_otros_proyectos, estado);
                 //Debug.WriteLine(proyecto.Proposito);
                 this.conexion.EnsureConnectionClosed();
             }
@@ -686,8 +687,9 @@ namespace AppWebERS.Models{
             String referencias = proyecto.Referencias;
             String ambiente = proyecto.AmbienteOperacional;
             String relacion = proyecto.RelacionProyectos;
+            String estado = proyecto.Estado;
             String consulta = "INSERT INTO proyecto (nombre,proposito,alcance,contexto,definiciones,acronimos,abreviaturas,referencias,ambiente_operacional,relacion_con_otros_proyectos,estado)" +
-                " VALUES ('" + nombre + "', '" + proposito + "','" + alcance + "','" + contexto + "','" + definiciones + "','" + acronimos + "','" + abreviaturas + "','" + referencias + "','" + ambiente + "','" + relacion + "','HABILITADO')";
+                " VALUES ('" + nombre + "', '" + proposito + "','" + alcance + "','" + contexto + "','" + definiciones + "','" + acronimos + "','" + abreviaturas + "','" + referencias + "','" + ambiente + "','" + relacion + "','" + estado + "')";
             return this.conexion.RealizarConsultaNoQuery(consulta);
         }
         //Metodos para Asignar Jefes de Proyectos

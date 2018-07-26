@@ -98,7 +98,7 @@ namespace AppWebERS.Models{
          * <param name = "casosDeUso" > La lista de casos de uso asociados al proyecto.</param>
          * <param name = "actores" > La lista de actores asociados al proyecto.</param>
          **/
-        public Proyecto(int idProyecto, string nombre, string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string referencias, string ambienteOperacional, string relacionProyectos) {
+        public Proyecto(int idProyecto, string nombre, string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string referencias, string ambienteOperacional, string relacionProyectos, string estado) {
             IdProyecto = idProyecto;
             Nombre = nombre;
             Proposito = proposito;
@@ -110,7 +110,7 @@ namespace AppWebERS.Models{
             Referencias = referencias;
             AmbienteOperacional = ambienteOperacional;
             RelacionProyectos = relacionProyectos;
-            Estado = "HABILITADO";
+            Estado = estado;
         }
 
         /**
@@ -345,7 +345,7 @@ namespace AppWebERS.Models{
             {
                 if (this.ValidarNombre(nombre))
                 {
-                    proyectoNuevo = new Proyecto(idProyecto, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambienteOperacional, relacionProyectos);
+                    proyectoNuevo = new Proyecto(idProyecto, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambienteOperacional, relacionProyectos, "HABILITADO");
                     return proyectoNuevo;
                 }
             }
@@ -404,9 +404,10 @@ namespace AppWebERS.Models{
                 string referencias = data["referencias"].ToString();
                 string ambiente_operacional = data["ambiente_operacional"].ToString();
                 string relacion_con_otros_proyectos = data["relacion_con_otros_proyectos"].ToString();
+                string estado = data["estado"].ToString();
 
 
-                proyecto = new Proyecto(ID, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambiente_operacional, relacion_con_otros_proyectos);
+                proyecto = new Proyecto(ID, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambiente_operacional, relacion_con_otros_proyectos, estado);
                 //Debug.WriteLine(proyecto.Proposito);
                 this.conexion.EnsureConnectionClosed();
             }
@@ -554,21 +555,75 @@ namespace AppWebERS.Models{
          * Actualiza la base de datos de la tabla proyectos, con los nuevos datos.
          * </summary>
          * <param name = "idProyecto" > El identificador del proyecto.</param>
-         * <param name = "nombre" > El nombre del proyecto.</param>
-         * <param name = "proposito" > El proposito del proyecto.</param>
-         * <param name = "alcance" > El alcance del proyecto.</param>
-         * <param name = "contexto" > El contexto del proyecto.</param>
-         * <param name = "definiciones" > Las definiciones del proyecto.</param>
-         * <param name = "acronimos" > Los acronimos del proyecto.</param>
-         * <param name = "abreviaturas" > Las abreviaturas del proyecto.</param>
-         * <param name = "referencias" > Las referencias del proyecto.</param>
-         * <param name = "ambienteOperacional" > El ambiente operacional del proyecto.</param>
-         * <param name = "relacionProyectos" > La relacion con otros proyectos del proyecto.</param>
+         * <param name = "valor" > El nombre del JSON, el cual será un string compuesto por HTML y e valor de la base de datos del atributo al que hace referencia.</param>
+         * <param name = "atributo" > La etiqueta para reconocer a qué atributo se debe actualizar en la base de datos.</param>
          */
-        public void ActualizarDatosProyecto(int idProyecto, string nombre, string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string referencias, string ambienteOperacional, string relacionProyectos)
+        public void ActualizarDatosProyecto(int idProyecto, string valor, string atributo)
         {
-            string consulta = "UPDATE proyecto SET nombre='"+ nombre + "',proposito='" + proposito + "',alcance='" + alcance + "',contexto='" + contexto + "',definiciones='" + definiciones + "',acronimos='" + acronimos + "',abreviaturas='" + abreviaturas + "',referencias='" + referencias + "',ambiente_operacional='" + ambienteOperacional + "',relacion_con_otros_proyectos='" + relacionProyectos + "' WHERE id_proyecto=" + idProyecto;
-            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
+            string consulta;
+            MySqlDataReader reader;
+            switch (atributo)
+            {
+                case "nombre":
+                    consulta = "UPDATE proyecto SET nombre='" + valor + "' WHERE id_proyecto=" + idProyecto;
+                    reader = this.conexion.RealizarConsulta(consulta);
+                    this.conexion.EnsureConnectionClosed();
+                    break;
+
+                case "proposito":
+                    consulta = "UPDATE proyecto SET proposito='" + valor + "' WHERE id_proyecto=" + idProyecto;
+                    reader = this.conexion.RealizarConsulta(consulta);
+                    this.conexion.EnsureConnectionClosed();
+                    break;                    
+
+                case "alcance":
+                    consulta = "UPDATE proyecto SET alcance='" + valor + "' WHERE id_proyecto=" + idProyecto;
+                    reader = this.conexion.RealizarConsulta(consulta);
+                    this.conexion.EnsureConnectionClosed();
+                    break;
+
+                case "contexto":
+                    consulta = "UPDATE proyecto SET contexto='" + valor + "' WHERE id_proyecto=" + idProyecto;
+                    reader = this.conexion.RealizarConsulta(consulta);
+                    this.conexion.EnsureConnectionClosed();
+                    break;
+
+                case "definicion":
+                    consulta = "UPDATE proyecto SET definiciones='" + valor + "' WHERE id_proyecto=" + idProyecto;
+                    reader = this.conexion.RealizarConsulta(consulta);
+                    this.conexion.EnsureConnectionClosed();
+                    break;
+
+                case "acronimo":
+                    consulta = "UPDATE proyecto SET acronimos='" + valor + "' WHERE id_proyecto=" + idProyecto;
+                    reader = this.conexion.RealizarConsulta(consulta);
+                    this.conexion.EnsureConnectionClosed();
+                    break;
+
+                case "abreviatura":
+                    consulta = "UPDATE proyecto SET abreviaturas='" + valor + "' WHERE id_proyecto=" + idProyecto;
+                    reader = this.conexion.RealizarConsulta(consulta);
+                    this.conexion.EnsureConnectionClosed();
+                    break;
+
+                case "referencia":
+                    consulta = "UPDATE proyecto SET referencias='" + valor + "' WHERE id_proyecto=" + idProyecto;
+                    reader = this.conexion.RealizarConsulta(consulta);
+                    this.conexion.EnsureConnectionClosed();
+                    break;
+
+                case "ambiente":
+                    consulta = "UPDATE proyecto SET ambiente_operacional='" + valor + "' WHERE id_proyecto=" + idProyecto;
+                    reader = this.conexion.RealizarConsulta(consulta);
+                    this.conexion.EnsureConnectionClosed();
+                    break;
+
+                case "relacion":
+                    consulta = "UPDATE proyecto SET relacion_con_otros_proyectos='" + valor + "' WHERE id_proyecto=" + idProyecto;
+                    reader = this.conexion.RealizarConsulta(consulta);
+                    this.conexion.EnsureConnectionClosed();
+                    break;
+            }
             this.conexion.EnsureConnectionClosed();
         }
 
@@ -632,8 +687,9 @@ namespace AppWebERS.Models{
             String referencias = proyecto.Referencias;
             String ambiente = proyecto.AmbienteOperacional;
             String relacion = proyecto.RelacionProyectos;
+            String estado = proyecto.Estado;
             String consulta = "INSERT INTO proyecto (nombre,proposito,alcance,contexto,definiciones,acronimos,abreviaturas,referencias,ambiente_operacional,relacion_con_otros_proyectos,estado)" +
-                " VALUES ('" + nombre + "', '" + proposito + "','" + alcance + "','" + contexto + "','" + definiciones + "','" + acronimos + "','" + abreviaturas + "','" + referencias + "','" + ambiente + "','" + relacion + "','HABILITADO')";
+                " VALUES ('" + nombre + "', '" + proposito + "','" + alcance + "','" + contexto + "','" + definiciones + "','" + acronimos + "','" + abreviaturas + "','" + referencias + "','" + ambiente + "','" + relacion + "','" + estado + "')";
             return this.conexion.RealizarConsultaNoQuery(consulta);
         }
         //Metodos para Asignar Jefes de Proyectos

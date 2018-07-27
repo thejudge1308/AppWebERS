@@ -34,7 +34,7 @@ $(document).ready(function () {
         };
 
     //Inilizacion de los AreaText
-    var nombreQ = new Quill('#nombre-edit', config);
+    //var nombreQ = new Quill('#nombre-edit', config);
     var propositoQ = new Quill('#proposito-edit', config);
     var alcanceQ = new Quill('#alcance-edit', config);
     var contextoQ = new Quill('#contexto-edit', config);

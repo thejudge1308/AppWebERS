@@ -938,5 +938,51 @@ namespace AppWebERS.Models{
             String rut = subStrings[1].Trim(' ');
             return rut;
         }
+
+        public List<Actor> GetListaActores(int id)
+        {
+            List<Actor> listaActores = new List<Actor>();
+
+            string consulta = "SELECT * FROM actor WHERE actor.ref_proyecto= " + id + ";";
+            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
+            if (reader == null)
+            {
+                this.conexion.EnsureConnectionClosed();
+                return null;
+            }
+            else
+            {
+                while (reader.Read())
+                {
+                    int idActor = reader.GetInt32(0);
+                    string nombre = reader.GetString(1);
+                    string descripcion = reader.GetString(2);
+                    int numActual = reader.GetInt32(3);
+                    int numFuturo = reader.GetInt32(4);
+                    int numContactables = reader.GetInt32(5);
+                    
+                    listaActores.Add(new Actor(idActor,descripcion,numActual,numFuturo,numContactables,nombre));
+                }
+
+                this.conexion.EnsureConnectionClosed();
+                return listaActores;
+            }
+
+
+            //Proyecto proyecto = null;
+            //this.conexion = ConectorBD.Instance;
+            //string consulta = "SELECT users.Nombre, users.Rut, users.Email, users.Tipo FROM users, vinculo_usuario_proyecto, proyecto WHERE id_proyecto = " + id + " AND vinculo_usuario_proyecto.ref_proyecto = id_proyecto AND vinculo_usuario_proyecto.ref_usuario = users.Rut ;";
+            //MySqlDataReader data = this.conexion.RealizarConsulta(consulta);
+            //if (data != null) {
+            //    data.Read();
+            //    string nombre = data["nombre"].ToString();
+            //    string rut = data["rut"].ToString();
+            //    string correo_electronico = data["correo_electronico"].ToString();
+            //    string tipo = data["tipo"].ToString();
+            //    this.conexion.CerrarConexion();
+
+            //}
+            //return Usuario;
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AppWebERS.Models;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -19,10 +20,17 @@ namespace AppWebERS.Controllers{
 
 
         [HttpGet]
-        public ActionResult UploadFile()
+        public ActionResult UploadFile(int id)
         {
+            Proyecto proyecto = this.GetProyecto(id);
+            ViewData["proyecto"] = proyecto;
 
             return View();
+        }
+
+        private Proyecto GetProyecto(int id)
+        {
+            return new Proyecto().ObtenerProyectoPorID(id);
         }
 
 

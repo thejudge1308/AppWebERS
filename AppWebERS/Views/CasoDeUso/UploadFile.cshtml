@@ -1,9 +1,38 @@
-﻿@{
+﻿@using AppWebERS.Models;
+
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "UploadFile";
 }
 
+@{
+    var ProyectoActual = (Proyecto)ViewData["proyecto"];
+
+}
+
+
 <h2>Subir caso de uso</h2>
+
+<ul class="nav nav-tabs">
+
+    <li class="nav-item">
+        <a class="nav-link" href="@Url.Action("Detalles", "Proyecto", new { id = ProyectoActual.IdProyecto})">Detalles</a>
+    </li>
+
+
+    <li class="nav-item">
+        <a class="nav-link" href="@Url.Action("ListaUsuarios","Proyecto",new { id = ProyectoActual.IdProyecto})">Usuarios</a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link active" href="@Url.Action("UploadFile","CasoDeUso",new { id = ProyectoActual.IdProyecto})">Casos de uso</a>
+    </li>
+
+
+</ul>
+
+
+
 <br />
 
 @using (Html.BeginForm("UploadFile", "CasoDeUso", FormMethod.Post, new { enctype = "multipart/form-data" }))

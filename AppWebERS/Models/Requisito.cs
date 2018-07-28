@@ -25,7 +25,6 @@ namespace AppWebERS.Models {
         * <param name = "estado" > El estado del requisito.</param>
         * <param name = "tipo" > El tipo  del requisito.</param>
         * <param name = "actores" > Lista de actores que tienen algún tipo de participación en el requisito.</param>
-        * FALTAN UNOS
         **/
         public Requisito(string idRequisito, string nombre, string descripcion, string prioridad, string fuente, 
             string estabilidad, string estado, string tipoUsuario, string tipoRequisito, string medida, string escala, 
@@ -289,6 +288,32 @@ namespace AppWebERS.Models {
             return false;
         }
 
+        /**
+         * 
+         * <autor>Diego Iturriaga</autor>
+         * <summary>Metodo para registrar un requisito de software en la base de datos.</summary>
+         * <param name="idProyecto">Id del proyecto al que pertenece el proyecto.</param>
+         * <param name="idRequisitoSistema">Id del requisito de sistema que se desea agregar.</param>
+         * <param name="idRequisitoUsuario">Id del requisito de usuario al que se asocia el requisito de usuario.</param>
+         * <returns>True si se registra exitosamente, false si falla el registro.</returns>
+         */ 
+        public bool RegistrarRequisitoDeSoftwareMinimalista(int idProyecto, string idRequisitoUsuario, string idRequisitoSistema)
+        {
+            string consultaInsert = "INSERT INTO requisito(id_requisito, nombre, descripcion, fuente, tipo_usuario, categoria, " +
+                "prioridad, estabilidad, estado, medida, escala, incremento, fecha_actualizacion, ref_proyecto, tipo) " +
+                "VALUES ('" + this.IdRequisito + "','" + this.Nombre + "','" + this.Descripcion + "','" + this.Fuente + "','" + this.TipoUsuario + "','" +
+                 this.TipoRequisito + "','" + this.Prioridad + "','" + this.Estabilidad + "','" + this.Estado + "','" + this.Medida
+                 + "','" + this.Escala + "','" + this.Incremento + "','" + this.Fecha + "'," + idProyecto + ",'" + this.Tipo + "'); ";
+            if (this.conexion.RealizarConsultaNoQuery(consultaInsert))
+            {
+                string consultaInsert2 = "INSERT INTO asociacion(req_usuario, req_software) VALUES("+ idRequisitoUsuario + ","+ idRequisitoSistema + ");";
+                if (this.conexion.RealizarConsultaNoQuery(consultaInsert2))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
     }
 }

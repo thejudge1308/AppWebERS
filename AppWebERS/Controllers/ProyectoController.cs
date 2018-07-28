@@ -878,11 +878,6 @@ namespace AppWebERS.Controllers
             }
              return value;
         }
-
-        public ActionResult ListarRequisitosMinimalista ()
-        {
-            return View();
-        }
     }
 
    

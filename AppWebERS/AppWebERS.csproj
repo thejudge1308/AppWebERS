@@ -370,7 +370,6 @@
     <Content Include="Views\Proyecto\Requisito.cshtml" />
     <Content Include="Views\JefeProyecto\InvitarUsuario.cshtml" />
     <Content Include="Views\SysAdmin\AgregarUsuarioProyecto.cshtml" />
-    <Content Include="Views\Proyecto\ListarRequisitosMinimalista.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

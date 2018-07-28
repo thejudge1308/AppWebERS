@@ -268,6 +268,13 @@ namespace AppWebERS.Models {
 
         }
 
+        /**
+         *
+         *<author>Diego Iturriaga</author>
+         *<summary>Metodo para registrar un requisito con todos sus parametros en la base de datos</summary>
+         *<param name="idProyecto">Contiene un int con el id de un proyecto.</param>
+         *<returns>Retorna True si el requisito se registra en la base de datos. False en caso contrario.</returns>
+         */
         public bool RegistrarRequisito(int idProyecto)
         {
             string consultaInsert = "INSERT INTO requisito(id_requisito, nombre, descripcion, fuente, tipo_usuario, categoria, " +
@@ -281,5 +288,7 @@ namespace AppWebERS.Models {
             }
             return false;
         }
+
+
     }
 }

@@ -7,11 +7,6 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-
-
-using System.ComponentModel.DataAnnotations;
-using MySql.Data.MySqlClient;
-using System.Diagnostics;
 /**
 * Autor: Gerardo Estrada (Meister1412)
 **/

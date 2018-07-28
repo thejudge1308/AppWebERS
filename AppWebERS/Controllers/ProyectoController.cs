@@ -668,6 +668,14 @@ namespace AppWebERS.Controllers
         }
 
         //ATENCION: FORMTATO FECHA: AAAA-MM-DD
+        /**
+          * <author>Diego Iturriaga</author>
+          * <summary>
+          * Action POST que retorna una redireccion a Detalles despues de ejecutar al insertar un proyecto.
+          * </summary>
+          * <param>Todos los atributos de un requisito.</param>
+          * <returns> Redireccion a la ventana Detalles.</returns>
+          */
         [HttpPost]
         public ActionResult IngresarRequisito(string idRequisito, string nombre, string descripcion, string prioridad, string fuente,
             string estabilidad, string estado, string tipoUsuario, string tipoRequisito, string medida, string escala,
@@ -787,9 +795,7 @@ namespace AppWebERS.Controllers
         public ActionResult VincularUsuarioAProyecto(string rutUsuario,int idProyecto )
         {
             string idUsuario = this.ObtenerIdPorRut(rutUsuario);
-
-
-            this.EliminarSolitudYaAceptada(idUsuario, idProyecto);
+            this.EliminarSolicitudesPendientes(idProyecto, idUsuario);
 
             string consulta = "START TRANSACTION;"+
                 "INSERT INTO vinculo_usuario_proyecto (ref_usuario, ref_proyecto, rol) VALUES('" + idUsuario + "','" + idProyecto + "','USUARIO');"+
@@ -801,7 +807,7 @@ namespace AppWebERS.Controllers
             return RedirectToAction("Detalles", "Proyecto", new { id = idProyecto });
         }
 
-
+        /**
         public void EliminarSolitudYaAceptada(string idUsuario, int idProyecto)
         {
             string consulta = "START TRANSACTION;" +
@@ -810,11 +816,24 @@ namespace AppWebERS.Controllers
             this.Conector.RealizarConsultaNoQuery(consulta);
             Debug.WriteLine(consulta);
             this.Conector.CerrarConexion();
+        }*/
+        /**
+        * <author>Roberto Ureta-Ariel Cornejo-Diego Iturriaga</author>
+        * <summary>
+        * Elimina solicitudes de un usuario determinado en un proyecto determinado.
+        * </summary>
+        * <param name="idProyecto">Contiene un int con el id de un proyecto.</param>
+        * <param name="idUsuario">Contiene un string que tiene el id de un usuario.</param>
+        * <returns> true si se ejecuto la consulta, false en caso contrario.</returns>
+        */
+        public Boolean EliminarSolicitudesPendientes(int idProyecto, string idUsuario)
+        {
+            String consulta = "DELETE FROM solicitud_jefeproyecto_usuario WHERE ref_proyecto = " + idProyecto + " AND ref_destinario='" + idUsuario + "';" +
+                                " DELETE FROM solicitud_vinculacion_proyecto WHERE ref_proyecto = " + idProyecto + " AND ref_solicitante = '" + idUsuario + "';";
+            bool resultado = this.Conector.RealizarConsultaNoQuery(consulta);
+            return resultado;
         }
-
-
-
-
+        
         /*
      * Autor Fabian Oyarce
       * Metodo encargado de solicitar vincular un usuario a un proyecto

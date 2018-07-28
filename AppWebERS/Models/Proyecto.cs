@@ -878,6 +878,7 @@ namespace AppWebERS.Models{
                             "DELETE FROM vinculo_usuario_proyecto WHERE ref_usuario = '" + id + "' AND ref_proyecto = " + idProyecto + " AND rol = 'USUARIO'; ";
                         if (this.conexion.RealizarConsultaNoQuery(consulta2))
                         {
+                            this.EliminarSolicitudesPendientes(idProyecto,id);
                             this.conexion.EnsureConnectionClosed();
                             return true;
                         }
@@ -893,6 +894,21 @@ namespace AppWebERS.Models{
             }           
             return false;
 
+        }
+
+        /**
+        * <author>Roberto Ureta-Ariel Cornejo-Diego Iturriaga</author>
+        * <summary>
+        * Elimina solicitudes de un usuario determinado en un proyecto determinado.
+        * </summary>     
+        * <param name="idProyecto">Contiene un int con el id de un proyecto.</param>
+        * <param name="idUsuario">Contiene un string que tiene el id de un usuario.</param>  
+        * <returns> true si se ejecuto la consulta, false en caso contrario.</returns>
+        */
+        public bool EliminarSolicitudesPendientes(int idProyecto, string idUsuario) {
+            String consulta = "DELETE FROM solicitud_jefeproyecto_usuario WHERE ref_proyecto = '"+idProyecto+"' AND ref_destinario='"+idUsuario+"';"+
+                               "DELETE FROM solicitud_vinculacion_proyecto WHERE ref_proyecto = '"+idProyecto+"' AND ref_solicitante = '"+idUsuario+"';";
+            return this.conexion.RealizarConsultaNoQuery(consulta);
         }
 
         /**

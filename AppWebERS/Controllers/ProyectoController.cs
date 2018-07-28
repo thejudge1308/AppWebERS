@@ -895,6 +895,41 @@ namespace AppWebERS.Controllers
             }
              return value;
         }
+        /**
+         * <author>Ariel Cornejo</author>
+         * <summary>
+         * Metodo encargado de desplegar la interfaz de requisitos minimalista
+         * </summary>
+         * <param name="idProyecto"> ID del proyecto doonde se agregara el requisito</param>
+         * 
+         */ 
+        [HttpGet]
+        public ActionResult ListarRequisitosMinimalista(int idProyecto)
+        {
+            Proyecto proyecto = this.GetProyecto(idProyecto);
+            ViewData["proyecto"] = proyecto;
+            ViewData["permiso"] = this.TipoDePermiso(idProyecto);
+            Requisito requisito = new Requisito(null, null, null, null, null, null, null, null, null, null, null, DateTime.Now.ToString("yyyy-MM-dd"), null, null);
+            return View(requisito);
+        }
+        /**
+         * <author>Ariel Cornejo</author>
+         * <summary>
+         * Metodo encargado de guardar los requitos minalistas en la base de datos
+         * </summary>
+         * <param name="idRequisito"> ID que sera utilizado para el requisito</param>
+         * <param name="nombre"> Nombre del requisito a ageragar</param>
+         * <param name="idProyecto"> ID del proyecto donde sera agregado</param>
+         * 
+         */
+        [HttpPost]
+        public ActionResult GuardarRequisitoUsuarioMinimilista(String idRequisito, String nombre,int idProyecto)
+        {
+            Requisito requisito = new Requisito(idRequisito,nombre,String.Empty,String.Empty,String.Empty,String.Empty,String.Empty,String.Empty,String.Empty,String.Empty,String.Empty,DateTime.Now.ToString("yyyy-MM-dd"),String.Empty,"USUARIO");
+            requisito.RegistrarRequisito(idProyecto);
+            return RedirectToAction("ListarRequisitosMinimalista", "Proyecto", new { id = idProyecto });
+
+        }
     }
 
     /**

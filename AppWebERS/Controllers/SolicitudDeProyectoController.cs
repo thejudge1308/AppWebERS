@@ -41,6 +41,7 @@ namespace AppWebERS.Controllers
                 "COMMIT;";
                 conector.RealizarConsultaNoQuery(delete);
                 conector.EnsureConnectionClosed();
+                this.EliminarSolicitudesPendientes(idProyecto,idUsuario);
                 TempData["alerta"] = new Alerta("Se ha aceptado la solicitud", TipoAlerta.SUCCESS);
 
                 return RedirectToAction("ListaUsuarios", "Proyecto", new { id = idProyecto });
@@ -102,6 +103,22 @@ namespace AppWebERS.Controllers
                 conector.EnsureConnectionClosed();
                 return false;
             }
+        }
+        /**
+        * <author>Roberto Ureta-Ariel Cornejo-Diego Iturriaga</author>
+        * <summary>
+        * Elimina solicitudes de un usuario determinado en un proyecto determinado.
+        * </summary>
+        * <param name="idProyecto">Contiene un int con el id de un proyecto.</param>
+        * <param name="idUsuario">Contiene un string que tiene el id de un usuario.</param>
+        * <returns> true si se ejecuto la consulta, false en caso contrario.</returns>
+        */
+        public Boolean EliminarSolicitudesPendientes(string idProyecto, string idUsuario)
+        {
+            String consulta = "DELETE FROM solicitud_jefeproyecto_usuario WHERE ref_proyecto = " + idProyecto + " AND ref_destinario='" + idUsuario + "';" +
+                                " DELETE FROM solicitud_vinculacion_proyecto WHERE ref_proyecto = " + idProyecto + " AND ref_solicitante = '" + idUsuario + "';";
+            bool resultado = this.conector.RealizarConsultaNoQuery(consulta);
+            return resultado;
         }
     }
 }

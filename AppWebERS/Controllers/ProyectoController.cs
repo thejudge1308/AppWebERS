@@ -930,33 +930,34 @@ namespace AppWebERS.Controllers
             return RedirectToAction("ListarRequisitosMinimalista", "Proyecto", new { id = idProyecto });
 
         }
+        /**
+        * 
+        * <autor>Diego Iturriaga</autor>
+        * <summary>Metodo para registrar un requisito de software.</summary>
+        * <param name="idProyecto">Id del proyecto al que pertenece el proyecto.</param>
+        * <param name="idRequisitoSistema">Id del requisito de sistema que se desea agregar.</param>
+        * <param name="idRequisitoUsuario">Id del requisito de usuario al que se asocia el requisito de usuario.</param>
+        * <param name="nombre">Nombre del requisito que se desea agregar a un proyecto.</param>
+        * <returns>Redirrecion a la vista de Listar Requisitos Minimalistas.</returns>
+        */
+        [HttpPost]
+        public ActionResult AgregarRequisitoDeSoftwareMinimalista(int idProyecto, string idRequisitoUsuario, string idRequisitoSistema, string nombre)
+        {
+            Requisito nuevoRequisistoS = new Requisito(idRequisitoSistema, nombre, string.Empty, string.Empty, string.Empty,
+                string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, DateTime.Now.ToString("yyyy-MM-dd"),
+                string.Empty, "SISTEMA");
+            if (nuevoRequisistoS.RegistrarRequisitoDeSoftwareMinimalista(idProyecto, idRequisitoUsuario, idRequisitoSistema))
+            {
+                TempData["alerta"] = new Alerta("Exito al crear Requisito de Sistema", TipoAlerta.SUCCESS);
+            }
+            else
+            {
+                TempData["alerta"] = new Alerta("Error al crear Requisito de Sistema", TipoAlerta.ERROR);
+            }
+            return RedirectToAction("ListarRequisitosMinimalista", "Proyecto", new { id = idProyecto });
+        }
     }
 
-    /**
-    * 
-    * <autor>Diego Iturriaga</autor>
-    * <summary>Metodo para registrar un requisito de software.</summary>
-    * <param name="idProyecto">Id del proyecto al que pertenece el proyecto.</param>
-    * <param name="idRequisitoSistema">Id del requisito de sistema que se desea agregar.</param>
-    * <param name="idRequisitoUsuario">Id del requisito de usuario al que se asocia el requisito de usuario.</param>
-    * <param name="nombre">Nombre del requisito que se desea agregar a un proyecto.</param>
-    * <returns>Redirrecion a la vista de Listar Requisitos Minimalistas.</returns>
-    */
-    [HttpPost]
-    public ActionResult AgregarRequisitoDeSoftwareMinimalista(int idProyecto, string idRequisitoUsuario, string idRequisitoSistema, string nombre)
-    {
-        Requisito nuevoRequisistoS = new Requisito(idRequisitoSistema,nombre,string.Empty, string.Empty, string.Empty, 
-            string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, DateTime.Now.ToString("yyyy-MM-dd"), 
-            string.Empty, "SISTEMA");
-        if (nuevoRequisistoS.RegistrarRequisitoDeSoftwareMinimalista(idProyecto,idRequisitoUsuario,idRequisitoSistema))
-        {
-            TempData["alerta"] = new Alerta("Exito al crear Requisito de Sistema", TipoAlerta.SUCCESS);
-        }
-        else
-        {
-            TempData["alerta"] = new Alerta("Error al crear Requisito de Sistema", TipoAlerta.ERROR);
-        }
-        return RedirectToAction("ListarRequisitosMinimalista", "Proyecto", new { id = idProyecto });
-    }
+    
 
 }

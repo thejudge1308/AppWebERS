@@ -1,0 +1,28 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "UploadFile";
+}
+
+<h2>Subir caso de uso</h2>
+<br />
+
+@using (Html.BeginForm("UploadFile", "CasoDeUso", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="form-group">
+        <label for="formGroupExampleInput">Nombre:</label>
+        <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Nombre del caso de uso">
+    </div>
+
+    <div>
+        @Html.TextBox("file", "", new { type = "file" })
+        <br />
+        <br />
+
+        <input type="submit" class="btn btn-primary" value="Subir" />
+
+        @ViewBag.Message
+
+    </div>
+
+
+}  

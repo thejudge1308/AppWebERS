@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using MySql.Data.MySqlClient;
+using AppWebERS.Utilidades;
 
 namespace AppWebERS.Controllers{
     public class DiagramaController : Controller{
@@ -64,6 +65,7 @@ namespace AppWebERS.Controllers{
                         int largoStringNombre = nombre.Length;
                         if (largoStringNombre > 45)
                         {
+                            TempData["alerta"] = new Alerta("El nombre debe tener no más de 40 caracteres", TipoAlerta.ERROR);
                             ViewBag.Message = "El nombre debe tener no más de 40 caracteres";
 
                         }
@@ -75,10 +77,12 @@ namespace AppWebERS.Controllers{
                             {
                                 this.agregar(nombre, id, _path, tipoDeDiagrama);
                                 file.SaveAs(_path);
+                                TempData["alerta"] = new Alerta("Diagrama subido con éxito!!", TipoAlerta.SUCCESS);
                                 ViewBag.Message = "Diagrama subido con éxito!!";
                             }
                             else
                             {
+                                TempData["alerta"] = new Alerta("Ya existe un diagrama con este nombre", TipoAlerta.ERROR);
                                 ViewBag.Message = "Ya existe un diagrama con este nombre.";
                             }
                         }
@@ -86,6 +90,7 @@ namespace AppWebERS.Controllers{
                 }
                 else
                 {
+                    TempData["alerta"] = new Alerta("Tipo de archivo no soportado. Seleccione un archivo de imagen (.jpg, .jpeg, .png, .bmp o .gif)", TipoAlerta.ERROR);
                     ViewBag.Messagw = "Tipo de archivo no soportado. Seleccione un archivo de imagen (.jpg, .jpeg, .png, .bmp o .gif)";
                 }
                 return RedirectToAction("SubirDiagrama", "Diagrama", new { id = idProyecto });
@@ -93,6 +98,7 @@ namespace AppWebERS.Controllers{
             catch
             {
                 ViewBag.Message = "Falla en la subida del Diagrama!!";
+                TempData["alerta"] = new Alerta("Falla en la subida del Diagrama!!", TipoAlerta.ERROR);
                 return RedirectToAction("SubirDiagrama", "Diagrama", new { id = idProyecto });
             }
         }

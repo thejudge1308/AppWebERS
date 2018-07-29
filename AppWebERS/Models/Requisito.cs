@@ -307,7 +307,7 @@ namespace AppWebERS.Models {
                         Incremento = reader["incremento"].ToString(),
                         Tipo = reader["tipo"].ToString()
                     };
-                    diccionarioRequisitos.Add(RequisitoUsuario, ObtenerListaRequisitosSistema(id, RequisitoUsuario.IdRequisito));
+                    diccionarioRequisitos.Add(RequisitoUsuario, ObtenerListaRequisitosSistema(id,ObtenerNumRequisito(id, RequisitoUsuario.IdRequisito)));
                 }
             }
             this.conexion.EnsureConnectionClosed();
@@ -370,12 +370,12 @@ namespace AppWebERS.Models {
          * <param name="idRequisito">string que contiene el id de un requisito de usuario</param>
          * <returns> lista con los requisitos de sistema correspondientes a un requisito de usuario.</returns>
          */
-        public List<Requisito> ObtenerListaRequisitosSistema(int id, string idRequisito)
+        public List<Requisito> ObtenerListaRequisitosSistema(int id, int idRequisito)
         {
             List<Requisito> listaRequisitos = new List<Requisito>();
             ApplicationDbContext conexion1 = ApplicationDbContext.Create();
             string nombre = String.Empty;
-            string consulta = "SELECT requisito.* FROM requisito,asociacion WHERE asociacion.req_software = requisito.id_requisito AND asociacion.req_usuario = '"+idRequisito+"' AND requisito.ref_proyecto ="+id+";";
+            string consulta = "SELECT requisito.* FROM requisito,asociacion WHERE asociacion.req_software = requisito.num_requisito AND asociacion.req_usuario = "+idRequisito+" AND requisito.ref_proyecto ="+id+";";
             MySqlDataReader reader = conexion1.RealizarConsulta(consulta);
             if (reader != null)
             {

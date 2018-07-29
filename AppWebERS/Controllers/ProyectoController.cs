@@ -126,6 +126,7 @@ namespace AppWebERS.Controllers
             Proyecto proyecto = this.GetProyecto(id);
             return Json(proyecto, JsonRequestBehavior.AllowGet);
         }
+
         public FileResult ExportarPDF(int id) {
             Proyecto proyecto = this.GetProyecto(id);
 

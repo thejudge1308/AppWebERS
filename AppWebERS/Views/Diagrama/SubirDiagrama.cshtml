@@ -3,34 +3,15 @@
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "UploadFile";
+    ViewBag.Title = "SubirDiagrama";
 }
 
 <h2>Subir Diagrama</h2>
 
-<ul class="nav nav-tabs">
-
-    <li class="nav-item">
-        <a class="nav-link" href="@Url.Action("Detalles", "Proyecto", new { id = @ViewBag.IdProyecto})">Detalles</a>
-    </li>
-
-
-    <li class="nav-item">
-        <a class="nav-link" href="@Url.Action("ListaUsuarios","Proyecto",new { id = @ViewBag.IdProyecto})">Usuarios</a>
-    </li>
-
-    <li class="nav-item">
-        <a class="nav-link active" href="@Url.Action("UploadFile","CasoDeUso",new { id = @ViewBag.IdProyecto})">Diagramas</a>
-    </li>
-
-
-</ul>
-
-
 
 <br />
 
-@using (Html.BeginForm("UploadFile", "Diagrama", FormMethod.Post, new { enctype = "multipart/form-data" }))
+@using (Html.BeginForm("SubirDiagrama", "Diagrama", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
    
 
@@ -42,7 +23,7 @@
     <label for="formGroupExampleInput">Nombre:</label>
     <input type="text" class="form-control" name="nombre" placeholder="Nombre del diagrama" id="txtNombre" /><br />
 
-    <label for="formGroupExampleInput1">Tipo de arquitectura:</label>
+    <label for="formGroupExampleInput1">Tipo de diagrama:</label>
     <select class="form-control" id="idDiagramaValue"  name="diagramaValue">
         <option value="1">Caso de uso</option>
          <option value="2">Arquitectura física</option>

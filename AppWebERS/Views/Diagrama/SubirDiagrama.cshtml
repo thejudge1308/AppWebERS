@@ -1,0 +1,49 @@
+﻿@using AppWebERS.Models;
+@model Proyecto
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "SubirDiagrama";
+}
+
+<h2>Subir Diagrama</h2>
+
+
+<br />
+
+@using (Html.BeginForm("SubirDiagrama", "Diagrama", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+   
+
+<div class="form-group">
+
+    <label for="disabledTextInput">ID proyecto:</label>
+    <input type="text" id="disabledTextInput" name="id" class="form-control font-weight-bold" disabled="disabled" placeholder="@ViewBag.IdProyecto">
+
+    <label for="formGroupExampleInput">Nombre:</label>
+    <input type="text" class="form-control" name="nombre" placeholder="Nombre del diagrama" id="txtNombre" /><br />
+
+    <label for="formGroupExampleInput1">Tipo de diagrama:</label>
+    <select class="form-control" id="idDiagramaValue"  name="diagramaValue">
+        <option value="1">Caso de uso</option>
+         <option value="2">Arquitectura física</option>
+        <option value="3">Arquitectura lógica</option>
+    </select>
+</div>
+
+    <div>
+        @Html.TextBox("file", "", new { type = "file" })
+        <br />
+        <br />
+
+       
+
+        <input type="submit" class="btn btn-primary" value="Subir" />
+
+        @ViewBag.Message
+
+
+    </div>
+
+
+}  

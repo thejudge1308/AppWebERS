@@ -48,12 +48,12 @@ namespace AppWebERS.Models
 
         [Required(ErrorMessage = "El campo Rut es obligatorio.")]
         [RegularExpression("[0-9]*", ErrorMessage = "Rut no válido.")]
-        [StringLength(8, ErrorMessage = "El rut debe tener entre 7 a 8 caracteres (sin guión ni digito verif.)", MinimumLength = 7)]
+        [StringLength(8, ErrorMessage = "El rut debe tener entre 7 a 8 caracteres (sin guión ni dígito verificador.)", MinimumLength = 7)]
         [Display(Name = "Rut")]
         public string Rut { get; set; }
 
-        [Required(ErrorMessage = "El campo Correo electrónico es obligatorio")]
-        [RegularExpression(@"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,3})(\]?)$", ErrorMessage = "Por favor ingrese un correo válido")]
+        [Required(ErrorMessage = "El campo Correo electrónico es obligatorio.")]
+        [RegularExpression(@"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,3})(\]?)$", ErrorMessage = "Por favor ingrese un correo válido.")]
         [Display(Name = "Correo electrónico")]
         public string Email { get; set; }
 
@@ -65,20 +65,20 @@ namespace AppWebERS.Models
 
         [Required(ErrorMessage = "El campo Nombre es obligatorio.")]
         [StringLength(35, ErrorMessage = "El largo del nombre deber ser entre 2 a 35 caracteres.", MinimumLength = 2)]
-        [RegularExpression("[a-zA-ZñÑáéíóúÁÉÍÓÚ]*", ErrorMessage = "Nombre no valido.")]
+        [RegularExpression("[a-zA-ZñÑáéíóúÁÉÍÓÚ]*", ErrorMessage = "Nombre no válido.")]
         [Display(Name = "Nombre")]
         public string Nombre { get; set; }
 
         [Required(ErrorMessage = "El campo Apellido es obligatorio.")]
         [StringLength(35, ErrorMessage = "El largo del apellido deber ser entre 2 a 35 caracteres.", MinimumLength = 2)]
-        [RegularExpression("[a-zA-ZñÑáéíóúÁÉÍÓÚ]*", ErrorMessage = "Apellido no valido.")]
+        [RegularExpression("[a-zA-ZñÑáéíóúÁÉÍÓÚ]*", ErrorMessage = "Apellido no válido.")]
         [Display(Name = "Apellido")]
         public string Apellido { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
         [Display(Name = "Confirme contraseña")]
-        [Compare("Password", ErrorMessage = "La contraseña y la contraseña de confirmación no coinciden.")]
+        [Compare("Password", ErrorMessage = "Las contraseñas no coinciden.")]
         public string ConfirmPassword { get; set; }
 
         [Required(ErrorMessage = "El campo Nombre es obligatorio.")]
@@ -140,7 +140,7 @@ namespace AppWebERS.Models
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirmar contraseña")]
-        [Compare("Password", ErrorMessage = "La contraseña y la contraseña de confirmación no coinciden.")]
+        [Compare("Password", ErrorMessage = "Las contraseñas no coinciden.")]
         public string ConfirmPassword { get; set; }
 
         public string Code { get; set; }

@@ -6,7 +6,7 @@
     ViewBag.Title = "UploadFile";
 }
 
-<h2>Subir caso de uso</h2>
+<h2>Subir Diagrama</h2>
 
 <ul class="nav nav-tabs">
 
@@ -20,7 +20,7 @@
     </li>
 
     <li class="nav-item">
-        <a class="nav-link active" href="@Url.Action("UploadFile","CasoDeUso",new { id = @ViewBag.IdProyecto})">Casos de uso</a>
+        <a class="nav-link active" href="@Url.Action("UploadFile","CasoDeUso",new { id = @ViewBag.IdProyecto})">Diagramas</a>
     </li>
 
 
@@ -30,17 +30,24 @@
 
 <br />
 
-@using (Html.BeginForm("UploadFile", "CasoDeUso", FormMethod.Post, new { enctype = "multipart/form-data" }))
+@using (Html.BeginForm("UploadFile", "Diagrama", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
    
 
 <div class="form-group">
 
     <label for="disabledTextInput">ID proyecto:</label>
-    <input type="text" id="disabledTextInput" name="id" class="form-control" disabled = "disabled" placeholder="@ViewBag.IdProyecto">
+    <input type="text" id="disabledTextInput" name="id" class="form-control font-weight-bold" disabled="disabled" placeholder="@ViewBag.IdProyecto">
 
     <label for="formGroupExampleInput">Nombre:</label>
-    <input type="text" class="form-control" name="nombre" placeholder="Nombre del caso de uso" id="txtNombre" /><br />
+    <input type="text" class="form-control" name="nombre" placeholder="Nombre del diagrama" id="txtNombre" /><br />
+
+    <label for="formGroupExampleInput1">Tipo de arquitectura:</label>
+    <select class="form-control" id="idDiagramaValue"  name="diagramaValue">
+        <option value="1">Caso de uso</option>
+         <option value="2">Arquitectura física</option>
+        <option value="3">Arquitectura lógica</option>
+    </select>
 </div>
 
     <div>

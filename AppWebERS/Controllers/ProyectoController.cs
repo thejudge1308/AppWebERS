@@ -159,6 +159,60 @@ namespace AppWebERS.Controllers
             return View();
         }
 
+       
+        public ActionResult AgregarActor(int id) {
+            Console.WriteLine("id : " + id);
+            var UsuarioActual = User.Identity.GetUserId();
+            ViewData["actual"] = id;
+            ViewData["usuario"] = TipoDePermiso(id);
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize]
+        public ActionResult AgregarActor(FormCollection datos) {
+
+            MySqlDataReader reader;
+        
+            int idProyecto = int.Parse(datos["actual"].ToString());            
+            string nombre = datos["Nombre"];       
+            string descripcion = datos["Descripcion"];
+            string numActual = datos["NumActual"];
+            int actual = int.Parse(numActual.ToString());
+            string numFuturo = datos["NumFuturo"];
+            int futuro = int.Parse(numFuturo.ToString());
+            string numContac = datos["NumContactables"];
+            int contacto = int.Parse(numContac.ToString());
+
+            string consulta = "SELECT id_actor FROM actor ORDER BY id_actor desc LIMIT 1";
+            reader = this.conexion.RealizarConsulta(consulta);
+            reader.Read();
+            int id_actor=0;
+
+            if (reader["id_actor"] == null)
+            {
+                id_actor = 1;
+            }
+            else {
+               id_actor = int.Parse(reader["id_actor"].ToString());
+                id_actor = id_actor + 1;
+            }
+            this.conexion.EnsureConnectionClosed();
+
+            //Actor actor = new Actor(id_actor,descripcion,actual,futuro,contacto,nombre);
+            Proyecto proyecto = this.GetProyecto(idProyecto);
+
+            consulta = "insert into actor values ( " + id_actor + ", '" + nombre + "','" + descripcion + "','" + actual + "','" + futuro + "','" + contacto + "','" + idProyecto + "')" ;
+            
+            reader = this.conexion.RealizarConsulta(consulta);
+            this.conexion.EnsureConnectionClosed();
+           
+            ViewData["actual"] = idProyecto;
+            ViewData["usuario"] = TipoDePermiso(idProyecto);
+
+            return RedirectToAction("ListaActores", new { id = idProyecto });
+        }
+
         // GET: Proyecto/ListaActores/5
         public ActionResult ListaActores(int id)
         {

@@ -38,7 +38,7 @@
             @{
                 if (TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN)
                 {
-                    <a class="btn btn-primary" href="@Url.Action("AgregarActorProyecto", "Proyecto", new { id = ProyectoActual.IdProyecto })">Agregar actor</a>
+                    <a class="btn btn-primary mt-3" href="@Url.Action("AgregarActor", "Proyecto", new { id = ProyectoActual.IdProyecto })">Agregar actor</a>
                 }
 
             }

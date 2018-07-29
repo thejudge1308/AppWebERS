@@ -34,7 +34,7 @@ $(document).ready(function () {
         };
 
     //Inilizacion de los AreaText
-    var nombreQ = new Quill('#nombre-edit', config);
+    //var nombreQ = new Quill('#nombre-edit', config);
     var propositoQ = new Quill('#proposito-edit', config);
     var alcanceQ = new Quill('#alcance-edit', config);
     var contextoQ = new Quill('#contexto-edit', config);
@@ -168,13 +168,13 @@ $(document).ready(function () {
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (response) {
-                 mostrarAlerta("Modificado con exito");
+                 mostrarAlerta("Modificado con éxito.");
                 console.log(response);
                 if (response) {
-                    mostrarAlerta("Cambios guardados exitosamente");
+                    mostrarAlerta("Cambios guardados exitosamente.");
                 }
                 else {
-                    mostrarAlerta("No se ha podido guardar la modificación");
+                    mostrarAlerta("No se ha podido guardar la modificación.");
                 }
                 setTimeout(function () {
                     location.reload();

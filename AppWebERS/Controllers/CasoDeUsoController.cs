@@ -13,7 +13,7 @@ namespace AppWebERS.Controllers{
 
 
         int idProyectO=-1;
-        Proyecto proyecto;
+     
 
         public ActionResult Index()
         {
@@ -24,10 +24,9 @@ namespace AppWebERS.Controllers{
         [HttpGet]
         public ActionResult UploadFile(int id)
         {
-            Debug.Write(id);
-            proyecto = this.GetProyecto(id);
-            Debug.Write(proyecto.IdProyecto);
-            ViewData["proyecto"] = proyecto;
+            
+            Proyecto proyecto = this.GetProyecto(id);
+            ViewBag.IdProyecto = proyecto.IdProyecto;
             idProyectO = id;
 
             return View();
@@ -41,21 +40,21 @@ namespace AppWebERS.Controllers{
 
 
         [HttpPost]
-        public ActionResult UploadFile(HttpPostedFileBase file, FormCollection form)
+        public ActionResult UploadFile(HttpPostedFileBase file, string nombre, string id)
         {
-            ViewData["proyecto"] = proyecto;
+           
 
             try
             {
                 if (file.ContentLength > 0)
                 {
-                    var numero1 = form["txtNumero1"];
-                    Debug.Write(numero1);
+                    
+                   
                     string _FileName = Path.GetFileName(file.FileName);
                     string _path = Path.Combine(Server.MapPath("~/UploadedFiles"), _FileName);
-                    string nombre= "algo";
+                  
                     file.SaveAs(_path);
-                    this.agregar(nombre,idProyectO,_path);
+                    this.agregar(nombre,id,_path);
                 }
                 ViewBag.Message = "Caso de uso subido con éxito!!";
                 return View();
@@ -67,7 +66,7 @@ namespace AppWebERS.Controllers{
             }
         }
 
-        public void agregar(string nombre, int idProyecto, string url)
+        public void agregar(string nombre, string idProyecto, string url)
         {
             Debug.Write(nombre);
             Debug.Write(idProyecto);

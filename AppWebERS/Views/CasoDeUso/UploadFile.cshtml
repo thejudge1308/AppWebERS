@@ -1,31 +1,26 @@
 ﻿@using AppWebERS.Models;
+@model Proyecto
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "UploadFile";
 }
 
-@{
-    var ProyectoActual = (Proyecto)ViewData["proyecto"];
-
-}
-
-
 <h2>Subir caso de uso</h2>
 
 <ul class="nav nav-tabs">
 
     <li class="nav-item">
-        <a class="nav-link" href="@Url.Action("Detalles", "Proyecto", new { id = ProyectoActual.IdProyecto})">Detalles</a>
+        <a class="nav-link" href="@Url.Action("Detalles", "Proyecto", new { id = @ViewBag.IdProyecto})">Detalles</a>
     </li>
 
 
     <li class="nav-item">
-        <a class="nav-link" href="@Url.Action("ListaUsuarios","Proyecto",new { id = ProyectoActual.IdProyecto})">Usuarios</a>
+        <a class="nav-link" href="@Url.Action("ListaUsuarios","Proyecto",new { id = @ViewBag.IdProyecto})">Usuarios</a>
     </li>
 
     <li class="nav-item">
-        <a class="nav-link active" href="@Url.Action("UploadFile","CasoDeUso",new { id = ProyectoActual.IdProyecto})">Casos de uso</a>
+        <a class="nav-link active" href="@Url.Action("UploadFile","CasoDeUso",new { id = @ViewBag.IdProyecto})">Casos de uso</a>
     </li>
 
 
@@ -37,20 +32,28 @@
 
 @using (Html.BeginForm("UploadFile", "CasoDeUso", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
+   
 
-    <div class="form-group">
-        <label for="formGroupExampleInput">Nombre:</label>
-        <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Nombre del caso de uso">
-    </div>
+<div class="form-group">
+
+    <label for="disabledTextInput">ID proyecto:</label>
+    <input type="text" id="disabledTextInput" name="id" class="form-control" disabled = "disabled" placeholder="@ViewBag.IdProyecto">
+
+    <label for="formGroupExampleInput">Nombre:</label>
+    <input type="text" class="form-control" name="nombre" placeholder="Nombre del caso de uso" id="txtNombre" /><br />
+</div>
 
     <div>
         @Html.TextBox("file", "", new { type = "file" })
         <br />
         <br />
 
+       
+
         <input type="submit" class="btn btn-primary" value="Subir" />
 
         @ViewBag.Message
+
 
     </div>
 

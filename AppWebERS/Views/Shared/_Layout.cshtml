@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - AppWebERS</title>
 
-      <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
-
+    @Styles.Render("~/Scripts/jquery-ui/jquery-ui.min.css")
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 
@@ -58,6 +58,7 @@
     <!--Incluye la alerta en la ventana solo si hay un TempData[alert] pendiente-->
     @Html.Partial("_AlertaPartial")
     @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/Scripts/jquery-ui/jquery-ui.min.js")
     @Scripts.Render("~/bundles/popper")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("/Scripts/alertaPartialScript.js")

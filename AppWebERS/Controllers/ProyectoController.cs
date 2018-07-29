@@ -450,24 +450,24 @@ namespace AppWebERS.Controllers
                     {
                         if (proyecto.AsignarJefeProyecto(usuario, nombre))
                         {
-                            TempData["alerta"] = new Alerta("Exito al crear Proyecto", TipoAlerta.SUCCESS);
+                            TempData["alerta"] = new Alerta("Éxito al crear Proyecto.", TipoAlerta.SUCCESS);
                             return RedirectToAction("ListarProyectos", "Proyecto");
                         }
                         else {
-                            TempData["alerta"] = new Alerta("Error al crear Proyecto", TipoAlerta.ERROR);
+                            TempData["alerta"] = new Alerta("Error al crear Proyecto.", TipoAlerta.ERROR);
                         }
 
                     }
                     else
                     {
-                        TempData["alerta"] = new Alerta("Error al crear Proyecto", TipoAlerta.ERROR);
+                        TempData["alerta"] = new Alerta("Error al crear Proyecto.", TipoAlerta.ERROR);
                     }
                 }
                 else
-                   TempData["alerta"] = new Alerta("Este nombre ya esta asociado a un proyecto", TipoAlerta.ERROR);
+                   TempData["alerta"] = new Alerta("Este nombre ya está asociado a un proyecto.", TipoAlerta.ERROR);
             }
             else
-                TempData["alerta"] = new Alerta("Modelo no valido", TipoAlerta.ERROR);
+                TempData["alerta"] = new Alerta("Modelo no válido.", TipoAlerta.ERROR);
             return View();
         }
         /**
@@ -489,13 +489,13 @@ namespace AppWebERS.Controllers
             if (list.Count == 0)
             {
                 ViewBag.listaVacia = true;
-                ViewBag.MessageErrorProyectos = "No hay proyectos disponibles";
+                ViewBag.MessageErrorProyectos = "No hay proyectos disponibles.";
                 return View();
             }
             if (list2.Count == 0)
             {
                 ViewBag.listaVacia = true;
-                ViewBag.MessageErrorProyectos = "No hay usuarios disponibles";
+                ViewBag.MessageErrorProyectos = "No hay usuarios disponibles.";
                 return View();
             }
             ViewBag.listaVacia = false;
@@ -522,13 +522,13 @@ namespace AppWebERS.Controllers
             if (list.Count == 0)
             {
                 ViewBag.listaVacia = true;
-                ViewBag.MessageErrorProyectos = "No hay proyectos disponibles";
+                ViewBag.MessageErrorProyectos = "No hay proyectos disponibles.";
                 return View();
             }
             if (list2.Count == 0)
             {
                 ViewBag.listaVacia = true;
-                ViewBag.MessageErrorProyectos = "No hay usuarios disponibles";
+                ViewBag.MessageErrorProyectos = "No hay usuarios disponibles.";
                 return View();
             }
             ViewBag.listaVacia = false;
@@ -552,7 +552,7 @@ namespace AppWebERS.Controllers
             if (list.Count == 0)
             {
                 
-                ViewBag.MessageErrorProyectos = "No Hay Usuarios Disponibles";
+                ViewBag.MessageErrorProyectos = "No Hay Usuarios Disponibles.";
                 ViewBag.MiListadoUsuarios = list;
                 ViewBag.listaVacia = true;
                 return View();
@@ -590,7 +590,7 @@ namespace AppWebERS.Controllers
             //int PosProyecto = Int32.Parse(proyecto1);
             //List<string> ListaProyectos = ListaProyectosIds();
             //string IdProyectoAUnirse = ListaProyectos[PosProyecto];
-            TempData["alerta"] = new Alerta("Solicitud enviada", TipoAlerta.SUCCESS);
+            TempData["alerta"] = new Alerta("Solicitud enviada.", TipoAlerta.SUCCESS);
             string UsuarioSolicitanteRut = ObtenerIdUsuarioActivo();
            
             //proyecto1 = "1";
@@ -600,7 +600,7 @@ namespace AppWebERS.Controllers
             if (this.Conector.RealizarConsultaNoQuery(Consulta))
             {
                 this.Conector.CerrarConexion();
-                ViewBag.Message = "Solicitud enviada";
+                ViewBag.Message = "Solicitud enviada.";
             }
             else
             {
@@ -681,13 +681,13 @@ namespace AppWebERS.Controllers
             int id = Int32.Parse(idProyecto);
             if (requisito.RegistrarRequisito(id))
             {
-                TempData["alerta"] = new Alerta("Exito al crear Requisito", TipoAlerta.SUCCESS);
+                TempData["alerta"] = new Alerta("Éxito al crear Requisito.", TipoAlerta.SUCCESS);
                 return RedirectToAction("Detalles/" + id, "Proyecto");
                 
             }
             else
             {
-                TempData["alerta"] = new Alerta("ERROR al crear Requisito", TipoAlerta.ERROR);
+                TempData["alerta"] = new Alerta("ERROR al crear Requisito.", TipoAlerta.ERROR);
             }
             return RedirectToAction("Requisito/" + id, "Proyecto");
         }
@@ -702,7 +702,7 @@ namespace AppWebERS.Controllers
         public ActionResult DeshabilitarProyecto(string id)
         {
             //Popups estado modificado
-            TempData["alerta"] = new Alerta("Estado Modificado", TipoAlerta.SUCCESS);
+            TempData["alerta"] = new Alerta("Estado Modificado.", TipoAlerta.SUCCESS);
 
             string nuevoEstado = "DESHABILITADO";
             string consulta = "UPDATE proyecto SET estado = '" + nuevoEstado + "'" +
@@ -737,7 +737,7 @@ namespace AppWebERS.Controllers
         [HttpGet]
         public ActionResult HabilitarProyecto(string id)
         {
-            TempData["alerta"] = new Alerta("Estado Modificado", TipoAlerta.SUCCESS);
+            TempData["alerta"] = new Alerta("Estado Modificado.", TipoAlerta.SUCCESS);
             string nuevoEstado = "HABILITADO";
             string consulta = "UPDATE proyecto SET estado = '" + nuevoEstado + "'" +
                                "WHERE (id_proyecto ='" + id + "') ";
@@ -836,8 +836,8 @@ namespace AppWebERS.Controllers
             if (this.Conector.RealizarConsultaNoQuery(Consulta) == true)
             {
                 this.Conector.CerrarConexion();
-                ViewBag.Message = "Solicitud enviada";
-                TempData["alerta"] = new Alerta("Solicitud enviada", TipoAlerta.SUCCESS);
+                ViewBag.Message = "Solicitud enviada.";
+                TempData["alerta"] = new Alerta("Solicitud enviada.", TipoAlerta.SUCCESS);
             }
             else
             {

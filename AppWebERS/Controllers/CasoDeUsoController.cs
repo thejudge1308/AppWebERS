@@ -12,30 +12,35 @@ namespace AppWebERS.Controllers{
         // GET: CasoDeUso
 
 
+        int idProyectO=-1;
+     
 
         public ActionResult Index()
         {
             return View();
         }
 
-
+        [Authorize]
         [HttpGet]
         public ActionResult UploadFile(int id)
         {
+            
             Proyecto proyecto = this.GetProyecto(id);
-            ViewData["proyecto"] = proyecto;
+            ViewBag.IdProyecto = proyecto.IdProyecto;
+            idProyectO = id;
 
             return View();
         }
 
         private Proyecto GetProyecto(int id)
         {
+
             return new Proyecto().ObtenerProyectoPorID(id);
         }
 
 
         [HttpPost]
-        public ActionResult UploadFile(HttpPostedFileBase file)
+        public ActionResult UploadFile(HttpPostedFileBase file, string nombre, string id)
         {
            
 
@@ -43,13 +48,13 @@ namespace AppWebERS.Controllers{
             {
                 if (file.ContentLength > 0)
                 {
+                    
+                   
                     string _FileName = Path.GetFileName(file.FileName);
                     string _path = Path.Combine(Server.MapPath("~/UploadedFiles"), _FileName);
-                    string nombre= "algo";
-                    string idProyecto = "algo";
-                   
+                  
                     file.SaveAs(_path);
-                    this.agregar(nombre,idProyecto,_path);
+                    this.agregar(nombre,id,_path);
                 }
                 ViewBag.Message = "Caso de uso subido con éxito!!";
                 return View();
@@ -63,6 +68,9 @@ namespace AppWebERS.Controllers{
 
         public void agregar(string nombre, string idProyecto, string url)
         {
+            Debug.Write(nombre);
+            Debug.Write(idProyecto);
+            Debug.Write(url);
 
 
         }

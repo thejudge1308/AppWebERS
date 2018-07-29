@@ -22,7 +22,7 @@ namespace AppWebERS.Controllers{
 
         [Authorize]
         [HttpGet]
-        public ActionResult UploadFile(int id)
+        public ActionResult SubirDiagrama(int id)
         {
             
             Proyecto proyecto = this.GetProyecto(id);
@@ -40,7 +40,7 @@ namespace AppWebERS.Controllers{
 
 
         [HttpPost]
-        public ActionResult UploadFile(HttpPostedFileBase file, string nombre, string id, int diagramaValue)
+        public ActionResult SubirDiagrama(HttpPostedFileBase file, string nombre, string id, int diagramaValue)
         {
            
             int idProyecto = Int32.Parse(id);
@@ -59,12 +59,12 @@ namespace AppWebERS.Controllers{
                     file.SaveAs(_path);
                 }
                 ViewBag.Message = "Diagrama subido con éxito!!";
-                return RedirectToAction("UploadFile", "Diagrama", new { id = idProyecto });
+                return RedirectToAction("SubirDiagrama", "Diagrama", new { id = idProyecto });
             }
             catch
             {
                 ViewBag.Message = "Falla en la subida del Diagrama!!";
-                return RedirectToAction("UploadFile", "Diagrama", new { id = idProyecto });
+                return RedirectToAction("SubirDiagrama", "Diagrama", new { id = idProyecto });
             }
         }
 

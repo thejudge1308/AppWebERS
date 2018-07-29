@@ -121,7 +121,7 @@ namespace AppWebERS.Models{
          * 
          **/
         [Display(Name = "Id del Proyecto")]
-        [StringLength(128, ErrorMessage = "Este campo debe tener maximo 128 caracteres.", MinimumLength = 1)]
+        [StringLength(128, ErrorMessage = "Este campo debe tener máximo 128 caracteres.", MinimumLength = 1)]
         public int IdProyecto {get; set;}
 
         /**
@@ -133,7 +133,7 @@ namespace AppWebERS.Models{
          **/
         [Required]
         [Display(Name = "Nombre")]
-        [StringLength(255, ErrorMessage = "Es requerido", MinimumLength = 1)]
+        [StringLength(255, ErrorMessage = "El nombre es requerido.", MinimumLength = 1)]
         public string Nombre { get; set;}
 
         /**
@@ -144,8 +144,8 @@ namespace AppWebERS.Models{
          * 
          **/
         [Required]
-        [Display(Name = "Proposito")]
-        [StringLength(255, ErrorMessage = "Es requerido", MinimumLength = 1)]
+        [Display(Name = "Propósito")]
+        [StringLength(255, ErrorMessage = "El propósito es requerido.", MinimumLength = 1)]
         public string Proposito {get; set;}
         /**
          * Setter y Getter del alcance del proyecto
@@ -156,7 +156,7 @@ namespace AppWebERS.Models{
          **/
         [Required]
         [Display(Name = "Alcance")]
-        [StringLength(255, ErrorMessage = "Es requerido", MinimumLength = 1)]
+        [StringLength(255, ErrorMessage = "El alcance es requerido.", MinimumLength = 1)]
         public string Alcance {get; set;}
 
         /**
@@ -168,7 +168,7 @@ namespace AppWebERS.Models{
          **/
         [Required]
         [Display(Name = "Contexto")]
-        [StringLength(255, ErrorMessage = "Es requerido", MinimumLength = 1)]
+        [StringLength(255, ErrorMessage = "El contexto es requerido.", MinimumLength = 1)]
         public string Contexto {get; set;}
 
         /**
@@ -188,7 +188,7 @@ namespace AppWebERS.Models{
          * <returns>Retorna el valor string de los acronimos.</returns>
          * 
          **/
-        [Display(Name = "Acronimos")]
+        [Display(Name = "Acrónimos")]
         public string Acronimos {get; set;}
 
         /**
@@ -223,7 +223,7 @@ namespace AppWebERS.Models{
 
         [Required]
         [Display(Name = "Ambiente operacional")]
-        [StringLength(255, ErrorMessage = "Es requerido", MinimumLength = 1)]
+        [StringLength(255, ErrorMessage = "El ambiente operacional es requerido.", MinimumLength = 1)]
         public string AmbienteOperacional {get; set;}
 
 
@@ -234,7 +234,7 @@ namespace AppWebERS.Models{
         * <returns>Retorna el valor string de la relacion con otros proyectos del proyecto.</returns>
         * 
         **/
-        [Display(Name = "Relacion con otros proyectos")]
+        [Display(Name = "Relación con otros proyectos")]
         public string RelacionProyectos {get; set;}
 
         /**

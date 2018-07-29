@@ -141,9 +141,7 @@ namespace AppWebERS.Controllers
 
             return File(ms, "application/pdf"); ;
         }
-
         
-
 
         // GET: Proyecto/ListaUsuarios/5
         public ActionResult ListaUsuarios(int id) {
@@ -668,6 +666,14 @@ namespace AppWebERS.Controllers
         }
 
         //ATENCION: FORMTATO FECHA: AAAA-MM-DD
+        /**
+          * <author>Diego Iturriaga</author>
+          * <summary>
+          * Action POST que retorna una redireccion a Detalles despues de ejecutar al insertar un proyecto.
+          * </summary>
+          * <param>Todos los atributos de un requisito.</param>
+          * <returns> Redireccion a la ventana Detalles.</returns>
+          */
         [HttpPost]
         public ActionResult IngresarRequisito(string idRequisito, string nombre, string descripcion, string prioridad, string fuente,
             string estabilidad, string estado, string tipoUsuario, string tipoRequisito, string medida, string escala,
@@ -787,9 +793,7 @@ namespace AppWebERS.Controllers
         public ActionResult VincularUsuarioAProyecto(string rutUsuario,int idProyecto )
         {
             string idUsuario = this.ObtenerIdPorRut(rutUsuario);
-
-
-            this.EliminarSolitudYaAceptada(idUsuario, idProyecto);
+            this.EliminarSolicitudesPendientes(idProyecto, idUsuario);
 
             string consulta = "START TRANSACTION;"+
                 "INSERT INTO vinculo_usuario_proyecto (ref_usuario, ref_proyecto, rol) VALUES('" + idUsuario + "','" + idProyecto + "','USUARIO');"+
@@ -801,7 +805,7 @@ namespace AppWebERS.Controllers
             return RedirectToAction("Detalles", "Proyecto", new { id = idProyecto });
         }
 
-
+        /**
         public void EliminarSolitudYaAceptada(string idUsuario, int idProyecto)
         {
             string consulta = "START TRANSACTION;" +
@@ -810,11 +814,24 @@ namespace AppWebERS.Controllers
             this.Conector.RealizarConsultaNoQuery(consulta);
             Debug.WriteLine(consulta);
             this.Conector.CerrarConexion();
+        }*/
+        /**
+        * <author>Roberto Ureta-Ariel Cornejo-Diego Iturriaga</author>
+        * <summary>
+        * Elimina solicitudes de un usuario determinado en un proyecto determinado.
+        * </summary>
+        * <param name="idProyecto">Contiene un int con el id de un proyecto.</param>
+        * <param name="idUsuario">Contiene un string que tiene el id de un usuario.</param>
+        * <returns> true si se ejecuto la consulta, false en caso contrario.</returns>
+        */
+        public Boolean EliminarSolicitudesPendientes(int idProyecto, string idUsuario)
+        {
+            String consulta = "DELETE FROM solicitud_jefeproyecto_usuario WHERE ref_proyecto = " + idProyecto + " AND ref_destinario='" + idUsuario + "';" +
+                                " DELETE FROM solicitud_vinculacion_proyecto WHERE ref_proyecto = " + idProyecto + " AND ref_solicitante = '" + idUsuario + "';";
+            bool resultado = this.Conector.RealizarConsultaNoQuery(consulta);
+            return resultado;
         }
-
-
-
-
+        
         /*
      * Autor Fabian Oyarce
       * Metodo encargado de solicitar vincular un usuario a un proyecto
@@ -878,7 +895,69 @@ namespace AppWebERS.Controllers
             }
              return value;
         }
+        /**
+         * <author>Ariel Cornejo</author>
+         * <summary>
+         * Metodo encargado de desplegar la interfaz de requisitos minimalista
+         * </summary>
+         * <param name="idProyecto"> ID del proyecto doonde se agregara el requisito</param>
+         * 
+         */ 
+        [HttpGet]
+        public ActionResult ListarRequisitosMinimalista(int idProyecto)
+        {
+            Proyecto proyecto = this.GetProyecto(idProyecto);
+            ViewData["proyecto"] = proyecto;
+            ViewData["permiso"] = this.TipoDePermiso(idProyecto);
+            Requisito requisito = new Requisito(null, null, null, null, null, null, null, null, null, null, null, DateTime.Now.ToString("yyyy-MM-dd"), null, null);
+            return View(requisito);
+        }
+        /**
+         * <author>Ariel Cornejo</author>
+         * <summary>
+         * Metodo encargado de guardar los requitos minalistas en la base de datos
+         * </summary>
+         * <param name="idRequisito"> ID que sera utilizado para el requisito</param>
+         * <param name="nombre"> Nombre del requisito a ageragar</param>
+         * <param name="idProyecto"> ID del proyecto donde sera agregado</param>
+         * 
+         */
+        [HttpPost]
+        public ActionResult GuardarRequisitoUsuarioMinimilista(String idRequisito, String nombre,int idProyecto)
+        {
+            Requisito requisito = new Requisito(idRequisito,nombre,String.Empty,String.Empty,String.Empty,String.Empty,String.Empty,String.Empty,String.Empty,String.Empty,String.Empty,DateTime.Now.ToString("yyyy-MM-dd"),String.Empty,"USUARIO");
+            requisito.RegistrarRequisito(idProyecto);
+            return RedirectToAction("ListarRequisitosMinimalista", "Proyecto", new { id = idProyecto });
+
+        }
+        /**
+        * 
+        * <autor>Diego Iturriaga</autor>
+        * <summary>Metodo para registrar un requisito de software.</summary>
+        * <param name="idProyecto">Id del proyecto al que pertenece el proyecto.</param>
+        * <param name="idRequisitoSistema">Id del requisito de sistema que se desea agregar.</param>
+        * <param name="idRequisitoUsuario">Id del requisito de usuario al que se asocia el requisito de usuario.</param>
+        * <param name="nombre">Nombre del requisito que se desea agregar a un proyecto.</param>
+        * <returns>Redirrecion a la vista de Listar Requisitos Minimalistas.</returns>
+        */
+        [HttpPost]
+        public ActionResult AgregarRequisitoDeSoftwareMinimalista(int idProyecto, string idRequisitoUsuario, string idRequisitoSistema, string nombre)
+        {
+            Requisito nuevoRequisistoS = new Requisito(idRequisitoSistema, nombre, string.Empty, string.Empty, string.Empty,
+                string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, DateTime.Now.ToString("yyyy-MM-dd"),
+                string.Empty, "SISTEMA");
+            if (nuevoRequisistoS.RegistrarRequisitoDeSoftwareMinimalista(idProyecto, idRequisitoUsuario, idRequisitoSistema))
+            {
+                TempData["alerta"] = new Alerta("Exito al crear Requisito de Sistema", TipoAlerta.SUCCESS);
+            }
+            else
+            {
+                TempData["alerta"] = new Alerta("Error al crear Requisito de Sistema", TipoAlerta.ERROR);
+            }
+            return RedirectToAction("ListarRequisitosMinimalista", "Proyecto", new { id = idProyecto });
+        }
     }
 
-   
+    
+
 }

@@ -13,8 +13,8 @@ namespace AppWebERS.Controllers{
 
 
         int idProyectO=-1;
-     
 
+        private ConectorBD Conector = ConectorBD.Instance;
         public ActionResult Index()
         {
             return View();
@@ -66,11 +66,15 @@ namespace AppWebERS.Controllers{
             }
         }
 
-        public void agregar(string nombre, string idProyecto, string url)
+        public void agregar(string nombre, string idProyecto1, string url)
         {
-            Debug.Write(nombre);
-            Debug.Write(idProyecto);
-            Debug.Write(url);
+            int idProyecto =  Int32.Parse(idProyecto1);
+            string consulta = "START TRANSACTION;" +
+            "INSERT INTO caso_de_uso(ref_proyecto, ruta_imagen, nombre) VALUES ( " + idProyecto + " ,'" + url + "','" + nombre + "');" +
+              "COMMIT;";
+            this.Conector.RealizarConsultaNoQuery(consulta);
+            Debug.WriteLine(consulta);
+            this.Conector.CerrarConexion();
 
 
         }

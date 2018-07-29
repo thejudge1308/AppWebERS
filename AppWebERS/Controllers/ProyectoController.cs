@@ -663,6 +663,9 @@ namespace AppWebERS.Controllers
         public ActionResult Requisito(int id)
         {
             ViewBag.IdProyecto = id;
+            List<String> lista = obtenerActores(id);
+            ViewBag.listaActores = lista;
+            
             Requisito requisito = new Requisito(null,null,null,null,null,null,null,null,null,null,null, DateTime.Now.ToString("yyyy-MM-dd"), null,null);
             return View(requisito);
         }
@@ -877,6 +880,23 @@ namespace AppWebERS.Controllers
                 Conector.CerrarConexion();
             }
              return value;
+        }
+
+        private List<String> obtenerActores(int id) {
+            List<String> listaActores = new List<string>();
+            //ARREGLAR LA CONSULTA
+            string consulta = "SELECT actor.nombre FROM actor WHERE actor.ref_proyecto = '" + id + "'";
+
+            MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
+            if (reader != null)
+            {
+                while (reader.Read())
+                {
+                    listaActores.Add(reader[0].ToString());
+                }
+                Conector.CerrarConexion();
+            }
+            return listaActores;
         }
     }
 

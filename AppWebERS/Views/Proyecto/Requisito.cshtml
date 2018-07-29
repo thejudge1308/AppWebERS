@@ -29,7 +29,7 @@
     idProyecto = @ViewBag.IdProyecto
 }, FormMethod.Post))
 {
-   
+
 <div class="card">
     @Html.AntiForgeryToken()
     <div class="card-header">
@@ -64,11 +64,7 @@
             @Html.TextBoxFor(m => m.Fuente, new { placeholder = "", style = "min-width:100%;margin-bottom:10px", @class = "form-control" })
             @Html.ValidationMessageFor(m => m.Fuente, "", new { @style = "color:rgb(209,52,56); font-size:12px" })
         </div>
-        <div>
-            @Html.LabelFor(m => m.TipoUsuario)
-            @Html.TextBoxFor(m => m.TipoUsuario, new { placeholder = "", @class = "form-control", style = "min-width:100%;margin-bottom:10px" })
-            @Html.ValidationMessageFor(m => m.TipoUsuario, "", new { @style = "color:rgb(209,52,56); font-size:12px" })
-        </div>
+
 
         <div class="form-group row" style="margin-bottom:10px">
             @Html.LabelFor(m => m.TipoRequisito, new { @class = "col-form-label", style = "margin-left:15px" })
@@ -112,13 +108,13 @@
             </div>
 
         </div>
-            <div class="form-group row" style="margin-bottom:10px">
-                @Html.LabelFor(m => m.Medida, new { @class = "col-sm-2 col-form-label" })
-                <div >
-                    @Html.TextBoxFor(m => m.Medida, new { placeholder = "Ingrese la medida", @class = "form-control mx-sm-2" })
-                    @Html.ValidationMessageFor(m => m.Medida, "", new { @style = "color:rgb(209,52,56); font-size:12px" })
-                </div>
+        <div class="form-group row" style="margin-bottom:10px">
+            @Html.LabelFor(m => m.Medida, new { @class = "col-form-label", style = "margin-left:15px;margin-right:45px" })
+            <div class="col-sm-3">
+                @Html.TextBoxFor(m => m.Medida, new { placeholder = "Ingrese la medida", @class = "form-control mx-sm-2" })
+                @Html.ValidationMessageFor(m => m.Medida, "", new { @style = "color:rgb(209,52,56); font-size:12px" })
             </div>
+        </div>
         <div>
             @Html.LabelFor(m => m.Escala)
             @Html.TextBoxFor(m => m.Escala, new { placeholder = "Escala", @class = "form-control col-form-label" })
@@ -126,13 +122,13 @@
 
         </div>
         @*<form class="form-inline">
-                <div class="form-group row" style="margin-bottom:10px">
-                    @Html.LabelFor(m => m.Fecha, new { @class = "col-sm-3 col-form-label" })
-                    <div class="col-sm-8">
-                        @Html.TextBoxFor(m => m.Fecha, new { placeholder = "Fecha Actualización", @class = "form-control mx-sm-2" })
-                    </div>
+            <div class="form-group row" style="margin-bottom:10px">
+                @Html.LabelFor(m => m.Fecha, new { @class = "col-sm-3 col-form-label" })
+                <div class="col-sm-8">
+                    @Html.TextBoxFor(m => m.Fecha, new { placeholder = "Fecha Actualización", @class = "form-control mx-sm-2" })
                 </div>
-            </form>*@
+            </div>
+        </form>*@
         <div>
             @Html.LabelFor(m => m.Fecha)
             @Html.TextBoxFor(m => m.Fecha, new { placeholder = "Fecha Actualizacion", @class = "form-control col-form-label" })
@@ -143,8 +139,25 @@
             @Html.TextBoxFor(m => m.Incremento, new { placeholder = "Incremento", @class = "form-control col-form-label" })
             @Html.ValidationMessageFor(m => m.Incremento, "", new { @style = "color:rgb(209,52,56); font-size:14px" })
         </div>
-
+        @if (ViewBag.listaActores.Count != 0)
+        {
+           <label>Actores</label>
+            <div class="form-group " style="margin-bottom:10px">
+                <div style="padding-left:15px">
+                    @foreach (string actor in ViewBag.listaActores)
+                    {
+                        <div class="form-group d-inline-block">
+                            <div class="form-check-inline col-sm-1">
+                                @Html.Label(actor, new { @class = "form-check-label", style = "margin-right:5px" })
+                                @Html.CheckBox(actor, new { @class = "form-check-input" })
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
     </div>
+   
     <div class="form-group">
         <div style="margin-top:10px;align">
             <button type="submit" class="btn btn-success">Guardar cambios</button>

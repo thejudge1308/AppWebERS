@@ -19,7 +19,6 @@
     fuente = Model.Fuente,
     estabilidad = Model.Estabilidad,
     estado = Model.Estado,
-    tipoUsuario = Model.TipoUsuario,
     tipoRequisito = Model.TipoRequisito,
     medida = Model.Medida,
     escala = Model.Escala,
@@ -63,11 +62,6 @@
             @Html.LabelFor(m => m.Fuente)
             @Html.TextBoxFor(m => m.Fuente, new { placeholder = "", style = "min-width:100%;margin-bottom:10px", @class = "form-control" })
             @Html.ValidationMessageFor(m => m.Fuente, "", new { @style = "color:rgb(209,52,56); font-size:12px" })
-        </div>
-        <div>
-            @Html.LabelFor(m => m.TipoUsuario)
-            @Html.TextBoxFor(m => m.TipoUsuario, new { placeholder = "", @class = "form-control", style = "min-width:100%;margin-bottom:10px" })
-            @Html.ValidationMessageFor(m => m.TipoUsuario, "", new { @style = "color:rgb(209,52,56); font-size:12px" })
         </div>
 
         <div class="form-group row" style="margin-bottom:10px">

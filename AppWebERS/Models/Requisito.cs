@@ -28,7 +28,7 @@ namespace AppWebERS.Models {
         * <param name = "actores" > Lista de actores que tienen algún tipo de participación en el requisito.</param>
         **/
         public Requisito(string idRequisito, string nombre, string descripcion, string prioridad, string fuente, 
-            string estabilidad, string estado, string tipoUsuario, string tipoRequisito, string medida, string escala, 
+            string estabilidad, string estado, string tipoRequisito, string medida, string escala, 
             string fecha, string incremento, string tipo)
         {
             IdRequisito = idRequisito;
@@ -38,7 +38,6 @@ namespace AppWebERS.Models {
             Fuente = fuente;
             Estabilidad = estabilidad;
             Estado = estado;
-            TipoUsuario = tipoUsuario;
             TipoRequisito = tipoRequisito; //Categoria en la BD
             Medida = medida;
             Escala = escala;
@@ -59,7 +58,6 @@ namespace AppWebERS.Models {
             this.Fuente = "";
             this.Estabilidad = "";
             this.Estado = "";
-            this.TipoUsuario = "";
             this.TipoRequisito = "";
             this.Medida = "";
             this.Escala = "";
@@ -146,18 +144,6 @@ namespace AppWebERS.Models {
          **/
         [Display(Name = "Estado")]
         public string Estado {get; set;}
-
-        /**
-         * Setter y Getter del tipo del requisito.
-         * 
-         * <param name = "tipo" > El tipo de usuario.</param>
-         * <returns>Retorna el valor string del tipo.</returns>
-         * 
-         **/
-        [Required(ErrorMessage = "El campo Tipo Usuario es obligatorio.")]
-        [StringLength(20, ErrorMessage = "El tipo de usuario debe tener menos de 20 caracteres ", MinimumLength = 1)]
-        [Display(Name = "Tipo Usuario")]
-        public string TipoUsuario {get; set;}
 
         /**
          * Setter y Getter del tipo del requisito.
@@ -277,9 +263,9 @@ namespace AppWebERS.Models {
          */
         public bool RegistrarRequisito(int idProyecto)
         {
-            string consultaInsert = "INSERT INTO requisito(id_requisito, nombre, descripcion, fuente, tipo_usuario, categoria, " +
+            string consultaInsert = "INSERT INTO requisito(id_requisito, nombre, descripcion, fuente, categoria, " +
                 "prioridad, estabilidad, estado, medida, escala, incremento, fecha_actualizacion, ref_proyecto, tipo) " +
-                "VALUES ('"+this.IdRequisito+ "','" +this.Nombre + "','" +this.Descripcion + "','" +this.Fuente + "','" +this.TipoUsuario + "','" +
+                "VALUES ('"+this.IdRequisito+ "','" +this.Nombre + "','" +this.Descripcion + "','" +this.Fuente + "','" +
                  this.TipoRequisito+"','" +this.Prioridad + "','" +this.Estabilidad + "','" +this.Estado + "','" +this.Medida
                  + "','" +this.Escala + "','" +this.Incremento + "','" +this.Fecha + "'," +idProyecto+ ",'"+this.Tipo+ "'); ";
             if (this.conexion.RealizarConsultaNoQuery(consultaInsert))
@@ -299,7 +285,7 @@ namespace AppWebERS.Models {
          */
         public Dictionary<Requisito, List<Requisito>> ObtenerDiccionarioRequisitos(int id) {
             Dictionary<Requisito, List<Requisito>> diccionarioRequisitos = new Dictionary<Requisito, List<Requisito>>();
-            string consulta = "SELECT ALL FROM requisito WHERE requisito.tipo='USUARIO' AND requisito.ref_proyecto ="+id+";";
+            string consulta = "SELECT requisito.* FROM requisito WHERE requisito.tipo='USUARIO' AND requisito.ref_proyecto ="+id+";";
             MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
             if (reader != null)
             {
@@ -314,7 +300,6 @@ namespace AppWebERS.Models {
                         Fuente = reader["fuente"].ToString(),
                         Estabilidad = reader["estabilidad"].ToString(),
                         Estado = reader["estado"].ToString(),
-                        TipoUsuario = reader["tipo_usuario"].ToString(),
                         TipoRequisito = reader["categoria"].ToString(),
                         Medida = reader["medida"].ToString(),
                         Escala = reader["escala"].ToString(),
@@ -339,9 +324,9 @@ namespace AppWebERS.Models {
          */ 
         public bool RegistrarRequisitoDeSoftwareMinimalista(int idProyecto, string idRequisitoUsuario, string idRequisitoSistema)
         {
-            string consultaInsert = "INSERT INTO requisito(id_requisito, nombre, descripcion, fuente, tipo_usuario, categoria, " +
+            string consultaInsert = "INSERT INTO requisito(id_requisito, nombre, descripcion, fuente, categoria, " +
                 "prioridad, estabilidad, estado, medida, escala, incremento, fecha_actualizacion, ref_proyecto, tipo) " +
-                "VALUES ('" + this.IdRequisito + "','" + this.Nombre + "','" + this.Descripcion + "','" + this.Fuente + "','" + this.TipoUsuario + "','" +
+                "VALUES ('" + this.IdRequisito + "','" + this.Nombre + "','" + this.Descripcion + "','" + this.Fuente + "','" +
                  this.TipoRequisito + "','" + this.Prioridad + "','" + this.Estabilidad + "','" + this.Estado + "','" + this.Medida
                  + "','" + this.Escala + "','" + this.Incremento + "','" + this.Fecha + "'," + idProyecto + ",'" + this.Tipo + "'); ";
             if (this.conexion.RealizarConsultaNoQuery(consultaInsert))
@@ -384,7 +369,6 @@ namespace AppWebERS.Models {
                         Fuente = reader["fuente"].ToString(),
                         Estabilidad = reader["estabilidad"].ToString(),
                         Estado = reader["estado"].ToString(),
-                        TipoUsuario = reader["tipo_usuario"].ToString(),
                         TipoRequisito = reader["categoria"].ToString(),
                         Medida = reader["medida"].ToString(),
                         Escala = reader["escala"].ToString(),

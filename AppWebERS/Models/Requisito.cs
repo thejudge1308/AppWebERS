@@ -331,13 +331,34 @@ namespace AppWebERS.Models {
                  + "','" + this.Escala + "','" + this.Incremento + "','" + this.Fecha + "'," + idProyecto + ",'" + this.Tipo + "'); ";
             if (this.conexion.RealizarConsultaNoQuery(consultaInsert))
             {
-                string consultaInsert2 = "INSERT INTO asociacion(req_usuario, req_software) VALUES("+ idRequisitoUsuario + ","+ idRequisitoSistema + ");";
-                if (this.conexion.RealizarConsultaNoQuery(consultaInsert2))
+                int num_requisitoUsuario = this.ObtenerNumRequisito(idProyecto, idRequisitoUsuario);
+                int num_requisitoSistema = this.ObtenerNumRequisito(idProyecto, idRequisitoSistema);
+                if (num_requisitoSistema!=-1 && num_requisitoUsuario!=-1)
                 {
-                    return true;
+                    string consultaInsert2 = "INSERT INTO asociacion(req_usuario, req_software) VALUES(" + num_requisitoUsuario + "," + num_requisitoSistema + ");";
+                    if (this.conexion.RealizarConsultaNoQuery(consultaInsert2))
+                    {
+                        return true;
+                    }
                 }
+                
             }
             return false;
+        }
+
+        public int ObtenerNumRequisito(int idProyecto, string idRequisito)
+        {
+            ApplicationDbContext conexionPrivada = ApplicationDbContext.Create();
+            string consulta = "SELECT requisito.num_requisito FROM requisito WHERE ref_proyecto="+idProyecto+" AND id_requisito='"+idRequisito+"';";
+            MySqlDataReader reader = conexionPrivada.RealizarConsulta(consulta);
+            if (reader != null)
+            {
+                reader.Read();
+                int num_requisito = Int32.Parse(reader["num_requisito"].ToString());
+                conexionPrivada.EnsureConnectionClosed();
+                return num_requisito;
+            }
+            return -1;
         }
 
         /**

@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using MySql.Data.MySqlClient;
 
 namespace AppWebERS.Controllers{
     public class DiagramaController : Controller{
@@ -49,16 +50,44 @@ namespace AppWebERS.Controllers{
 
             try
             {
-                if (file.ContentLength > 0)
+                // Este if comprueba que la extensión del archivo sea jpg, jpeg, png, bmp o gif
+                if ((string.Equals(Path.GetExtension(file.FileName), ".jpg",StringComparison.OrdinalIgnoreCase))
+                    || (string.Equals(Path.GetExtension(file.FileName), ".jpeg", StringComparison.OrdinalIgnoreCase))
+                    || (string.Equals(Path.GetExtension(file.FileName), ".png", StringComparison.OrdinalIgnoreCase))
+                    || (string.Equals(Path.GetExtension(file.FileName), ".bmp", StringComparison.OrdinalIgnoreCase))
+                    || (string.Equals(Path.GetExtension(file.FileName), ".gif", StringComparison.OrdinalIgnoreCase)))
                 {
-                    
-                   
-                    string _FileName = Path.GetFileName(file.FileName);
-                    string _path = Path.Combine(Server.MapPath("~/UploadedFiles"), _FileName);
-                    this.agregar(nombre,id,_path,tipoDeDiagrama);
-                    file.SaveAs(_path);
+                    if (file.ContentLength > 0)
+                    {
+                        string _FileName = Path.GetFileName(file.FileName);
+                        string _path = Path.Combine(Server.MapPath("~/UploadedFiles"), _FileName);
+                        int largoStringNombre = nombre.Length;
+                        if (largoStringNombre > 45)
+                        {
+                            ViewBag.Message = "El nombre debe tener no más de 40 caracteres";
+
+                        }
+                        else
+                        {
+                            string Consulta = "SELECT nombre FROM diagrama WHERE nombre = '" + nombre + "';";
+                            MySqlDataReader reader = this.Conector.RealizarConsulta(Consulta);
+                            if (reader == null)
+                            {
+                                this.agregar(nombre, id, _path, tipoDeDiagrama);
+                                file.SaveAs(_path);
+                                ViewBag.Message = "Diagrama subido con éxito!!";
+                            }
+                            else
+                            {
+                                ViewBag.Message = "Ya existe un diagrama con este nombre.";
+                            }
+                        }
+                    }
                 }
-                ViewBag.Message = "Diagrama subido con éxito!!";
+                else
+                {
+                    ViewBag.Messagw = "Tipo de archivo no soportado. Seleccione un archivo de imagen (.jpg, .jpeg, .png, .bmp o .gif)";
+                }
                 return RedirectToAction("SubirDiagrama", "Diagrama", new { id = idProyecto });
             }
             catch

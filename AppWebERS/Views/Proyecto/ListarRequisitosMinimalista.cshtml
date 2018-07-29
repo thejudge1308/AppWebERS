@@ -27,7 +27,20 @@
         <li class="nav-item">
             <a class="nav-link" href="@Url.Action("ListaUsuarios", "Proyecto", new { id = ProyectoActual.IdProyecto })">Usuarios</a>
         </li>
-        </ul>
+    </ul>
+    @{
+    <div>
+        @using (Html.BeginForm("GuardarRequisitoUsuarioMinimilista", "Proyecto", new
+        {
+
+            idRequisito = Model.IdRequisito,
+            nombre = Model.Nombre,
+            idProyecto = ProyectoActual.IdProyecto
+        }, FormMethod.Post))
+        {
+            <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                Agregar Requisito
+            </a>
 
             <div class="collapse" id="collapseExample">
                 <div class="card card-body w-50">
@@ -35,31 +48,11 @@
                     @Html.EditorFor(m => m.IdRequisito, new { htmlAttributes = new { @class = "form-control mx-auto my-3", placeholder = "Ingrese Id del Requisito" } })
                     @Html.ValidationMessageFor(m => m.IdRequisito, "", new { @class = "text-danger" })
 
-            @using (Html.BeginForm("GuardarRequisitoUsuarioMinimilista", "Proyecto",new {
+                    @Html.Display(" Nombre del Requisito")
+                    @Html.EditorFor(m => m.Nombre, new { htmlAttributes = new { @class = "form-control mx-auto m-3", placeholder = "Ingrese Nombre del requisito" } })
+                    @Html.ValidationMessageFor(m => m.Nombre, "", new { @class = "text-danger" })
 
-                idRequisito = Model.IdRequisito,
-                nombre = Model.Nombre,
-                idProyecto = ProyectoActual.IdProyecto
-            }, FormMethod.Post))
-            {
-
-                <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                    Agregar Requisito
-                </a>
-
-                <div class="collapse" id="collapseExample">
-                    <div class="card card-body w-50">
-                        @Html.Display("Id Requisito")
-                        @Html.EditorFor(m => m.IdRequisito, new { htmlAttributes = new { @class = "form-control mx-auto my-3", placeholder = "Ingrese Id del Requisito" } })
-                        @Html.ValidationMessageFor(m => m.IdRequisito, "", new { @class = "text-danger" })
-                        @Html.Display(" Nombre del Requisito")
-                        @Html.EditorFor(m => m.Nombre, new { htmlAttributes = new { @class = "form-control mx-auto m-3", placeholder = "Ingrese Nombre del requisito" } })
-                        @Html.ValidationMessageFor(m => m.Nombre, "", new { @class = "text-danger" })
-
-
-
-                        <button class="btn btn-primary w-50 mx-auto" type="submit">Guardar Cambios</button>
-                    </div>
+                    <button class="btn btn-primary w-50 mx-auto" type="submit">Guardar Cambios</button>
                 </div>
             </div>
         }
@@ -74,14 +67,21 @@
                                     @r.Key.IdRequisito - @r.Key.Nombre
                                 </a>
                             </h5>
-                            
+
                         </div>
                         <div class="d-flex justify-content-end mt-3">
                             <a class="btn btn-primary" data-toggle="collapse" href="#collapse1" aria-expanded="false" aria-controls="collapseExample">
                                 Agregar
                             </a>
                         </div>
-                        
+                        @using (Html.BeginForm("AgregarRequisitoDeSoftwareMinimalista", "Proyecto", new
+                        {
+                            idRequisitoUsuario = @r.Key.Nombre,
+                            idRequisitoSistema = Model.IdRequisito,
+                            nombre = Model.Nombre,
+                            idProyecto = ProyectoActual.IdProyecto
+                        }, FormMethod.Post))
+                        {
                             <div class="collapse" id="collapse1">
                                 <div class="card card-body w-100">
                                     <div class="form-inline w-100 d-flex flex-wrap justify-content-center">
@@ -99,18 +99,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="d-flex justify-content-end mt-3">
-                                <a class="btn btn-primary" data-toggle="collapse" href="#collapse1" aria-expanded="false" aria-controls="collapseExample">
-                                    Agregar
-                                </a>
-                            </div>
-                            @using (Html.BeginForm("AgregarRequisitoDeSoftwareMinimalista", "Proyecto",new
-                            {
-                                idRequisitoSistema = Model.IdRequisito,
-                                nombre = Model.Nombre,
-                                idProyecto = ProyectoActual.IdProyecto
-                            }, FormMethod.Post))
-                            {
+                        }
                         @foreach (Requisito req in r.Value)
                         {
                             <div id="collapseOne" class="collapse show" role="tabpanel" aria-labelledby="headingOne">
@@ -126,12 +115,12 @@
                                     </div>
                                 </div>
                             </div>
-                        }}
+                        }
                     </div>
                 </div>
             </div>
         }
-     </div>
+    </div>
      }
 
 

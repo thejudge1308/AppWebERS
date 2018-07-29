@@ -197,20 +197,48 @@ namespace AppWebERS.Controllers
                id_actor = int.Parse(reader["id_actor"].ToString());
                 id_actor = id_actor + 1;
             }
+
             this.conexion.EnsureConnectionClosed();
 
-            //Actor actor = new Actor(id_actor,descripcion,actual,futuro,contacto,nombre);
+            Actor actor = new Actor(id_actor,descripcion,actual,futuro,contacto,nombre);
             Proyecto proyecto = this.GetProyecto(idProyecto);
 
             consulta = "insert into actor values ( " + id_actor + ", '" + nombre + "','" + descripcion + "','" + actual + "','" + futuro + "','" + contacto + "','" + idProyecto + "')" ;
-            
-            reader = this.conexion.RealizarConsulta(consulta);
-            this.conexion.EnsureConnectionClosed();
-           
-            ViewData["actual"] = idProyecto;
-            ViewData["usuario"] = TipoDePermiso(idProyecto);
 
-            return RedirectToAction("ListaActores", new { id = idProyecto });
+            if (this.VerificarNombreRepetido(idProyecto, nombre))
+            {
+                TempData["alerta"] = new Alerta("El nombre del actor ya existe", TipoAlerta.ERROR);
+                ViewData["actual"] = idProyecto;
+                ViewData["usuario"] = TipoDePermiso(idProyecto);
+                
+                return View(actor);
+            }
+            else {
+                consulta = "insert into actor values ( " + id_actor + ", '" + nombre + "','" + descripcion + "','" + actual + "','" + futuro + "','" + contacto + "','" + idProyecto + "')";
+                reader = this.conexion.RealizarConsulta(consulta);
+                this.conexion.EnsureConnectionClosed();
+                ViewData["actual"] = idProyecto;
+                ViewData["usuario"] = TipoDePermiso(idProyecto);
+                return RedirectToAction("ListaActores", new { id = idProyecto });
+            }
+           
+            
+        }
+
+        public Boolean VerificarNombreRepetido(int idp, string nombre) {
+            MySqlDataReader reader;
+            string consulta = "SELECT actor.nombre FROM actor,proyecto WHERE actor.ref_proyecto = " + idp;
+            reader = this.conexion.RealizarConsulta(consulta);
+            if (reader != null) { 
+                while (reader.Read()) {
+                    if (reader["nombre"].ToString() == nombre) {
+                        this.conexion.EnsureConnectionClosed();
+                        return true;
+                    }   
+            }
+            }
+            this.conexion.EnsureConnectionClosed();
+            return false;
         }
 
         // GET: Proyecto/ListaActores/5

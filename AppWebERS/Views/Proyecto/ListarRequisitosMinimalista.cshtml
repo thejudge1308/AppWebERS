@@ -27,10 +27,16 @@
         <li class="nav-item">
             <a class="nav-link" href="@Url.Action("ListaUsuarios", "Proyecto", new { id = ProyectoActual.IdProyecto })">Usuarios</a>
         </li>
-    </ul>S
+    </ul>
     @{
     <div>
-        @using (Html.BeginForm(null, null, FormMethod.Post))
+        @using (Html.BeginForm("GuardarRequisitoUsuarioMinimilista", "Proyecto", new
+        {
+
+            idRequisito = Model.IdRequisito,
+            nombre = Model.Nombre,
+            idProyecto = ProyectoActual.IdProyecto
+        }, FormMethod.Post))
         {
             <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                 Agregar Requisito
@@ -61,14 +67,20 @@
                                     @r.Key.IdRequisito - @r.Key.Nombre
                                 </a>
                             </h5>
-                            
+
                         </div>
                         <div class="d-flex justify-content-end mt-3">
                             <a class="btn btn-primary" data-toggle="collapse" href="#collapse1" aria-expanded="false" aria-controls="collapseExample">
                                 Agregar
                             </a>
                         </div>
-                        @using (Html.BeginForm(null, null, FormMethod.Post))
+                        @using (Html.BeginForm("AgregarRequisitoDeSoftwareMinimalista", "Proyecto", new
+                        {
+                            idRequisitoUsuario = @r.Key.Nombre,
+                            idRequisitoSistema = Model.IdRequisito,
+                            nombre = Model.Nombre,
+                            idProyecto = ProyectoActual.IdProyecto
+                        }, FormMethod.Post))
                         {
                             <div class="collapse" id="collapse1">
                                 <div class="card card-body w-100">
@@ -108,7 +120,7 @@
                 </div>
             </div>
         }
-     </div>
+    </div>
      }
 
 

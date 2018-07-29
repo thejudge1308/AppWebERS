@@ -159,9 +159,40 @@ namespace AppWebERS.Controllers
             return View();
         }
 
+        // GET: Proyecto/ListaActores/5
+        public ActionResult ListaActores(int id)
+        {
+            Proyecto proyecto = this.GetProyecto(id);
+            List<Usuario> usuarios = new Proyecto().GetListaUsuarios(id);
+            List<SolicitudDeProyecto> solicitudes = new Proyecto().GetSolicitudesProyecto(id);
+            List<Actor> actores = this.GetActores(id);
+            //Debug.WriteLine("Permiso: " + TipoDePermiso());
+            ViewData["proyecto"] = proyecto;
+            ViewData["usuarios"] = usuarios;
+            ViewData["actores"] = actores;
+            ViewData["solicitudes"] = solicitudes;
+            Debug.WriteLine("Lista de usuarios" + usuarios);
+            ViewData["permiso"] = TipoDePermiso(id);
+            return View();
+        }
+
+        private List<Actor> GetActores(int id)
+        {
+            return new Proyecto().GetListaActores(id);
+
+        }
+
         // POST: Proyecto/ListaUsuarios/5
         [HttpPost]
         public ActionResult ListaUsuarios(FormCollection datos) {
+
+            return View();
+        }
+
+        // POST: Proyecto/ListaActores/5
+        [HttpPost]
+        public ActionResult ListaActores(FormCollection datos)
+        {
 
             return View();
         }

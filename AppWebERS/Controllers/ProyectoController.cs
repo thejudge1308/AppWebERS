@@ -661,7 +661,7 @@ namespace AppWebERS.Controllers
         public ActionResult Requisito(int id)
         {
             ViewBag.IdProyecto = id;
-            Requisito requisito = new Requisito(null,null,null,null,null,null,null,null,null,null,null, DateTime.Now.ToString("yyyy-MM-dd"), null,null);
+            Requisito requisito = new Requisito(null,null,null,null,null,null,null,null,null,null, DateTime.Now.ToString("yyyy-MM-dd"), null,null);
             return View(requisito);
         }
 
@@ -676,22 +676,31 @@ namespace AppWebERS.Controllers
           */
         [HttpPost]
         public ActionResult IngresarRequisito(string idRequisito, string nombre, string descripcion, string prioridad, string fuente,
-            string estabilidad, string estado, string tipoUsuario, string tipoRequisito, string medida, string escala,
+            string estabilidad, string estado, string tipoRequisito, string medida, string escala,
             string fecha, string incremento, string tipo, string idProyecto)
         {
-            Requisito requisito = new Requisito(idRequisito, nombre, descripcion, prioridad, fuente, estabilidad, estado,
-                tipoUsuario, tipoRequisito, medida, escala, fecha, incremento, tipo);
+            
+            Requisito requisito = new Requisito(idRequisito, nombre, descripcion, prioridad, fuente, estabilidad, estado, 
+                tipoRequisito, medida, escala, fecha, incremento, tipo);
             int id = Int32.Parse(idProyecto);
-            if (requisito.RegistrarRequisito(id))
+            if (requisito.VerificarIdRequisito(id,idRequisito))
             {
-                TempData["alerta"] = new Alerta("Exito al crear Requisito", TipoAlerta.SUCCESS);
-                return RedirectToAction("Detalles/" + id, "Proyecto");
-                
+                if (requisito.RegistrarRequisito(id))
+                {
+                    TempData["alerta"] = new Alerta("Exito al crear Requisito", TipoAlerta.SUCCESS);
+                    return RedirectToAction("Detalles/" + id, "Proyecto");
+
+                }
+                else
+                {
+                    TempData["alerta"] = new Alerta("ERROR al crear Requisito", TipoAlerta.ERROR);
+                }
             }
             else
             {
-                TempData["alerta"] = new Alerta("ERROR al crear Requisito", TipoAlerta.ERROR);
+                TempData["alerta"] = new Alerta("El Id del Requisito ingresado ya existe dentro del Proyecto", TipoAlerta.ERROR);
             }
+            
             return RedirectToAction("Requisito/" + id, "Proyecto");
         }
 
@@ -904,12 +913,13 @@ namespace AppWebERS.Controllers
          * 
          */ 
         [HttpGet]
-        public ActionResult ListarRequisitosMinimalista(int idProyecto)
+        public ActionResult ListarRequisitosMinimalista(int id)
         {
-            Proyecto proyecto = this.GetProyecto(idProyecto);
+            Proyecto proyecto = this.GetProyecto(id);
             ViewData["proyecto"] = proyecto;
-            ViewData["permiso"] = this.TipoDePermiso(idProyecto);
-            Requisito requisito = new Requisito(null, null, null, null, null, null, null, null, null, null, null, DateTime.Now.ToString("yyyy-MM-dd"), null, null);
+            ViewData["permiso"] = this.TipoDePermiso(id);
+            Requisito requisito = new Requisito(null, null, null, null, null, null, null, null, null, null, DateTime.Now.ToString("yyyy-MM-dd"), null, null);
+            ViewData["diccionarioRequisitos"] = requisito.ObtenerDiccionarioRequisitos(id);
             return View(requisito);
         }
         /**
@@ -923,11 +933,26 @@ namespace AppWebERS.Controllers
          * 
          */
         [HttpPost]
-        public ActionResult GuardarRequisitoUsuarioMinimilista(String idRequisito, String nombre,int idProyecto)
+        public ActionResult GuardarRequisitoUsuarioMinimilista(String idRequisito, String nombre,String idProyecto)
         {
-            Requisito requisito = new Requisito(idRequisito,nombre,String.Empty,String.Empty,String.Empty,String.Empty,String.Empty,String.Empty,String.Empty,String.Empty,String.Empty,DateTime.Now.ToString("yyyy-MM-dd"),String.Empty,"USUARIO");
-            requisito.RegistrarRequisito(idProyecto);
-            return RedirectToAction("ListarRequisitosMinimalista", "Proyecto", new { id = idProyecto });
+            Requisito requisito = new Requisito(idRequisito,nombre,String.Empty,String.Empty,String.Empty,String.Empty,String.Empty,String.Empty,String.Empty,String.Empty,DateTime.Now.ToString("yyyy-MM-dd"),String.Empty,"USUARIO");
+            int id = Int32.Parse(idProyecto);
+            if (requisito.VerificarIdRequisito(id, idRequisito))
+            {
+                if (requisito.RegistrarRequisito(Int32.Parse(idProyecto)))
+                {
+                    TempData["alerta"] = new Alerta("Exito al crear Requisito de Sistema", TipoAlerta.SUCCESS);
+                }
+                else
+                {
+                    TempData["alerta"] = new Alerta("Error al crear Requisito de Sistema", TipoAlerta.ERROR);
+                }
+            }
+            else
+            {
+                TempData["alerta"] = new Alerta("El Id del Requisito ingresado ya existe dentro del Proyecto", TipoAlerta.ERROR);
+            }
+            return RedirectToAction("ListarRequisitosMinimalista", "Proyecto", new { id = Int32.Parse(idProyecto) });
 
         }
         /**
@@ -941,18 +966,26 @@ namespace AppWebERS.Controllers
         * <returns>Redirrecion a la vista de Listar Requisitos Minimalistas.</returns>
         */
         [HttpPost]
-        public ActionResult AgregarRequisitoDeSoftwareMinimalista(int idProyecto, string idRequisitoUsuario, string idRequisitoSistema, string nombre)
+        public ActionResult AgregarRequisitoDeSoftwareMinimalista( string idRequisitoUsuario, string idRequisitoSistema, string nombre, String idProyecto)
         {
             Requisito nuevoRequisistoS = new Requisito(idRequisitoSistema, nombre, string.Empty, string.Empty, string.Empty,
-                string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, DateTime.Now.ToString("yyyy-MM-dd"),
+                string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, DateTime.Now.ToString("yyyy-MM-dd"),
                 string.Empty, "SISTEMA");
-            if (nuevoRequisistoS.RegistrarRequisitoDeSoftwareMinimalista(idProyecto, idRequisitoUsuario, idRequisitoSistema))
+            int id = Int32.Parse(idProyecto);
+            if (nuevoRequisistoS.VerificarIdRequisito(id, idRequisitoSistema))
             {
-                TempData["alerta"] = new Alerta("Exito al crear Requisito de Sistema", TipoAlerta.SUCCESS);
+                if (nuevoRequisistoS.RegistrarRequisitoDeSoftwareMinimalista(Int32.Parse(idProyecto), idRequisitoUsuario, idRequisitoSistema))
+                {
+                    TempData["alerta"] = new Alerta("Exito al crear Requisito de Sistema", TipoAlerta.SUCCESS);
+                }
+                else
+                {
+                    TempData["alerta"] = new Alerta("Error al crear Requisito de Sistema", TipoAlerta.ERROR);
+                }
             }
             else
             {
-                TempData["alerta"] = new Alerta("Error al crear Requisito de Sistema", TipoAlerta.ERROR);
+                TempData["alerta"] = new Alerta("El Id del Requisito ingresado ya existe dentro del Proyecto", TipoAlerta.ERROR);
             }
             return RedirectToAction("ListarRequisitosMinimalista", "Proyecto", new { id = idProyecto });
         }

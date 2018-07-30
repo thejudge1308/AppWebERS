@@ -1,12 +1,36 @@
-﻿$("#ejemplo_m").click(function () {
-    init_option();
-    $("#referencia_modal").modal();
+﻿$(document).ready(function () {
+    
+    var elementos = 0;
+    if (elementos == 0) {
+        $('#referencia_table').find('tbody:last').append(filaVacia());
+    }
 });
+
+$("#ejemplo_m").click(function () {
+    //init_option();
+    //$("#referencia_modal").modal();
+    $('#referencia_table').find('tbody:last').append(agregarFila());
+});
+
+
+$('#addref').on('click', function () {
+    $("#referencia_table").find("tbody:last .not-found").remove();
+    $('#referencia_table').find('tbody:last').append(agregarFila());
+});
+
 
 $("#referencia_modal .modal-body").on("click", "#book-button", function () {
     book_option();
 });
 
+//Remove row actual
+$('#referencia_table').on('click', '#boton_fila', function () {
+    console.log($('#referencia_table tr').length);
+    $(this).closest('tr').remove();
+    if ($('#referencia_table tr').length == 1) {
+        $('#referencia_table').find('tbody:last').append(filaVacia());
+    }
+});
 
 //Opciones
 function init_option() {
@@ -72,6 +96,23 @@ function book_modal() {
         '</div>'+
         '</div>'+
         '</div >';
+    return html;
+}
+
+function agregarFila() {
+    html =
+        '<tr>' +
+        '<td>Ejemplo</td>' +
+        '<td class="text-right"><a class="btn btn-danger text-white" id="boton_fila" >Eliminar</a></td>' +
+        '</tr>';
+    return html;
+}
+
+function filaVacia() {
+    html = '<tr class="table-info not-found">' +
+        '<td ><br>No hay referencias.<br></td>' +
+        '<td></td>' +
+        '</tr>';
     return html;
 }
 

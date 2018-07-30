@@ -1,0 +1,83 @@
+﻿@model AppWebERS.Models.Actor
+
+@{
+    ViewBag.Title = "Agregar Actor";
+}
+
+@{
+    var ProyectoActual = (int)ViewData["actual"];
+    var TipoUsuario = (int)ViewData["usuario"];
+}
+
+<h2>Agregar Actor</h2>
+
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <input type="hidden" name="actual" value="@ProyectoActual" />
+
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" ,@type = "text" , @MaxLength = "30" } })
+            @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Descripcion, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Descripcion, new { htmlAttributes = new { @class = "form-control" , @type = "text", @MaxLength = "50" } })
+            @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.NumActual, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.NumActual, new { htmlAttributes = new { @class = "form-control" , @type = "text"} })
+            @Html.ValidationMessageFor(model => model.NumActual, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.NumFuturo, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.NumFuturo, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+            @Html.ValidationMessageFor(model => model.NumFuturo, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.NumContactables, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.NumContactables, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+            @Html.ValidationMessageFor(model => model.NumContactables, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+
+
+    <div class="form-group">
+        <div class="col-auto d-inline">
+            <input type="submit" value="Guardar Cambios" class="btn btn-primary" />
+            @Html.ActionLink("Atras", "ListaActores", "Proyecto", new { id = ProyectoActual }, new { boton = "valor", @class = "btn btn-primary" })
+
+        </div>
+    </div>
+
+
+</div>
+}
+
+    
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

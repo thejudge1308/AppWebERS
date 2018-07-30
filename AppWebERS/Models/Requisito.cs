@@ -263,6 +263,10 @@ namespace AppWebERS.Models {
          */
         public bool RegistrarRequisito(int idProyecto)
         {
+            if (string.IsNullOrEmpty(this.IdRequisito) || string.IsNullOrEmpty(this.Nombre))
+            {
+                return false;
+            }
             string consultaInsert = "INSERT INTO requisito(id_requisito, nombre, descripcion, fuente, categoria, " +
                 "prioridad, estabilidad, estado, medida, escala, incremento, fecha_actualizacion, ref_proyecto, tipo) " +
                 "VALUES ('"+this.IdRequisito+ "','" +this.Nombre + "','" +this.Descripcion + "','" +this.Fuente + "','" +
@@ -273,6 +277,24 @@ namespace AppWebERS.Models {
                 return true;
             }
             return false;
+        }
+
+        public bool VerificarIdRequisito(int idProyecto, string idRequisito)
+        {
+            string consulta = "SELECT requisito.id_requisito FROM requisito WHERE ref_proyecto = "+ idProyecto + ";";
+            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
+            if (reader != null)
+            {
+                while (reader.Read())
+                {
+                    string idReqBD = reader["id_requisito"].ToString();
+                    if (idReqBD==idRequisito)
+                    {
+                        return false; //Ya existe Requisito con el codigo ingresado.
+                    }
+                }
+            }
+            return true;//No existe Requisito con el codigo ingresado. Codigo valido.
         }
 
         /**
@@ -307,7 +329,7 @@ namespace AppWebERS.Models {
                         Incremento = reader["incremento"].ToString(),
                         Tipo = reader["tipo"].ToString()
                     };
-                    diccionarioRequisitos.Add(RequisitoUsuario, ObtenerListaRequisitosSistema(id, RequisitoUsuario.IdRequisito));
+                    diccionarioRequisitos.Add(RequisitoUsuario, ObtenerListaRequisitosSistema(id,ObtenerNumRequisito(id, RequisitoUsuario.IdRequisito)));
                 }
             }
             this.conexion.EnsureConnectionClosed();
@@ -324,20 +346,45 @@ namespace AppWebERS.Models {
          */ 
         public bool RegistrarRequisitoDeSoftwareMinimalista(int idProyecto, string idRequisitoUsuario, string idRequisitoSistema)
         {
-            string consultaInsert = "INSERT INTO requisito(id_requisito, nombre, descripcion, fuente, categoria, " +
-                "prioridad, estabilidad, estado, medida, escala, incremento, fecha_actualizacion, ref_proyecto, tipo) " +
-                "VALUES ('" + this.IdRequisito + "','" + this.Nombre + "','" + this.Descripcion + "','" + this.Fuente + "','" +
-                 this.TipoRequisito + "','" + this.Prioridad + "','" + this.Estabilidad + "','" + this.Estado + "','" + this.Medida
-                 + "','" + this.Escala + "','" + this.Incremento + "','" + this.Fecha + "'," + idProyecto + ",'" + this.Tipo + "'); ";
-            if (this.conexion.RealizarConsultaNoQuery(consultaInsert))
+            if (!string.IsNullOrEmpty(idRequisitoUsuario) && !string.IsNullOrEmpty(idRequisitoSistema))
             {
-                string consultaInsert2 = "INSERT INTO asociacion(req_usuario, req_software) VALUES("+ idRequisitoUsuario + ","+ idRequisitoSistema + ");";
-                if (this.conexion.RealizarConsultaNoQuery(consultaInsert2))
+
+                string consultaInsert = "INSERT INTO requisito(id_requisito, nombre, descripcion, fuente, categoria, " +
+                    "prioridad, estabilidad, estado, medida, escala, incremento, fecha_actualizacion, ref_proyecto, tipo) " +
+                    "VALUES ('" + this.IdRequisito + "','" + this.Nombre + "','" + this.Descripcion + "','" + this.Fuente + "','" +
+                     this.TipoRequisito + "','" + this.Prioridad + "','" + this.Estabilidad + "','" + this.Estado + "','" + this.Medida
+                     + "','" + this.Escala + "','" + this.Incremento + "','" + this.Fecha + "'," + idProyecto + ",'" + this.Tipo + "'); ";
+                if (this.conexion.RealizarConsultaNoQuery(consultaInsert))
                 {
-                    return true;
+                    int num_requisitoUsuario = this.ObtenerNumRequisito(idProyecto, idRequisitoUsuario);
+                    int num_requisitoSistema = this.ObtenerNumRequisito(idProyecto, idRequisitoSistema);
+                    if (num_requisitoSistema != -1 && num_requisitoUsuario != -1)
+                    {
+                        string consultaInsert2 = "INSERT INTO asociacion(req_usuario, req_software) VALUES(" + num_requisitoUsuario + "," + num_requisitoSistema + ");";
+                        if (this.conexion.RealizarConsultaNoQuery(consultaInsert2))
+                        {
+                            return true;
+                        }
+                    }
+
                 }
             }
             return false;
+        }
+
+        public int ObtenerNumRequisito(int idProyecto, string idRequisito)
+        {
+            ApplicationDbContext conexionPrivada = ApplicationDbContext.Create();
+            string consulta = "SELECT requisito.num_requisito FROM requisito WHERE ref_proyecto="+idProyecto+" AND id_requisito='"+idRequisito+"';";
+            MySqlDataReader reader = conexionPrivada.RealizarConsulta(consulta);
+            if (reader != null)
+            {
+                reader.Read();
+                int num_requisito = Int32.Parse(reader["num_requisito"].ToString());
+                conexionPrivada.EnsureConnectionClosed();
+                return num_requisito;
+            }
+            return -1;
         }
 
         /**
@@ -349,12 +396,12 @@ namespace AppWebERS.Models {
          * <param name="idRequisito">string que contiene el id de un requisito de usuario</param>
          * <returns> lista con los requisitos de sistema correspondientes a un requisito de usuario.</returns>
          */
-        public List<Requisito> ObtenerListaRequisitosSistema(int id, string idRequisito)
+        public List<Requisito> ObtenerListaRequisitosSistema(int id, int idRequisito)
         {
             List<Requisito> listaRequisitos = new List<Requisito>();
             ApplicationDbContext conexion1 = ApplicationDbContext.Create();
             string nombre = String.Empty;
-            string consulta = "SELECT requisito.* FROM requisito,asociacion WHERE asociacion.req_software = requisito.id_requisito AND asociacion.req_usuario = '"+idRequisito+"' AND requisito.ref_proyecto ="+id+";";
+            string consulta = "SELECT requisito.* FROM requisito,asociacion WHERE asociacion.req_software = requisito.num_requisito AND asociacion.req_usuario = "+idRequisito+" AND requisito.ref_proyecto ="+id+";";
             MySqlDataReader reader = conexion1.RealizarConsulta(consulta);
             if (reader != null)
             {

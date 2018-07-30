@@ -62,9 +62,10 @@ namespace AppWebERS.Controllers{
                     {
                         string _FileName = Path.GetFileName(file.FileName);
                         string _path = Path.Combine(Server.MapPath("~/UploadedFiles"), _FileName);
-                        string ConsultaPath = "SELECT path from Diagrama WHERE path = '" + _path + "';";
-                        MySqlDataReader r = this.Conector.RealizarConsulta(ConsultaPath);
-                        if (r == null)
+                        string ConsultaPath = "SELECT ruta FROM Diagrama WHERE ruta = '" + _path + "';";
+                        bool r = this.Conector.RealizarConsultaNoQuery(ConsultaPath);
+                        // Este if-else comprueba que el path no exista en la base de datos (filename repetido)
+                        if (!r)
                         {
                             Conector.CerrarConexion();
                             int largoStringNombre = nombre.Length;

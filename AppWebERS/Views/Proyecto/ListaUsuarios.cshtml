@@ -26,28 +26,34 @@
             <a class="nav-link" href="@Url.Action("Detalles", "Proyecto", new { id = ProyectoActual.IdProyecto })">Detalles</a>
         </li>
         <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("ListarRequisitosMinimalista", "Proyecto", new { id = ProyectoActual.IdProyecto})">Requisitos</a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link active" href="@Url.Action("ListaUsuarios", "Proyecto", new { id = ProyectoActual.IdProyecto })">Usuarios</a>
         </li>
+
+
+
         @{
             <!--
-            if(TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO || TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN) {
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Agregar usuario</a>
-                </li>
-            }
+        if(TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO || TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN) {
+            <li class="nav-item">
+                <a class="nav-link" href="#">Agregar usuario</a>
+            </li>
+        }
 
-            if(TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO) {
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Notificaciones</a>
-                </li>
-            }
+        if(TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO) {
+            <li class="nav-item">
+                <a class="nav-link" href="#">Notificaciones</a>
+            </li>
+        }
 
-            if(TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN) {
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Cambiar jefe de proyecto</a>
-                </li>
-            }
-            -->
+        if(TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN) {
+            <li class="nav-item">
+                <a class="nav-link" href="#">Cambiar jefe de proyecto</a>
+            </li>
+        }
+        -->
         }
     </ul>
     <div class="form-group">

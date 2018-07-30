@@ -281,8 +281,9 @@ namespace AppWebERS.Models {
 
         public bool VerificarIdRequisito(int idProyecto, string idRequisito)
         {
+            ApplicationDbContext conexionLocal = ApplicationDbContext.Create();
             string consulta = "SELECT requisito.id_requisito FROM requisito WHERE ref_proyecto = "+ idProyecto + ";";
-            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
+            MySqlDataReader reader = conexionLocal.RealizarConsulta(consulta);
             if (reader != null)
             {
                 while (reader.Read())
@@ -290,10 +291,12 @@ namespace AppWebERS.Models {
                     string idReqBD = reader["id_requisito"].ToString();
                     if (idReqBD==idRequisito)
                     {
+                        conexionLocal.EnsureConnectionClosed();
                         return false; //Ya existe Requisito con el codigo ingresado.
                     }
                 }
             }
+            conexionLocal.EnsureConnectionClosed();
             return true;//No existe Requisito con el codigo ingresado. Codigo valido.
         }
 
@@ -348,20 +351,20 @@ namespace AppWebERS.Models {
         {
             if (!string.IsNullOrEmpty(idRequisitoUsuario) && !string.IsNullOrEmpty(idRequisitoSistema))
             {
-
+                ApplicationDbContext conexionLocal = ApplicationDbContext.Create();
                 string consultaInsert = "INSERT INTO requisito(id_requisito, nombre, descripcion, fuente, categoria, " +
                     "prioridad, estabilidad, estado, medida, escala, incremento, fecha_actualizacion, ref_proyecto, tipo) " +
                     "VALUES ('" + this.IdRequisito + "','" + this.Nombre + "','" + this.Descripcion + "','" + this.Fuente + "','" +
                      this.TipoRequisito + "','" + this.Prioridad + "','" + this.Estabilidad + "','" + this.Estado + "','" + this.Medida
                      + "','" + this.Escala + "','" + this.Incremento + "','" + this.Fecha + "'," + idProyecto + ",'" + this.Tipo + "'); ";
-                if (this.conexion.RealizarConsultaNoQuery(consultaInsert))
+                if (conexionLocal.RealizarConsultaNoQuery(consultaInsert))
                 {
                     int num_requisitoUsuario = this.ObtenerNumRequisito(idProyecto, idRequisitoUsuario);
                     int num_requisitoSistema = this.ObtenerNumRequisito(idProyecto, idRequisitoSistema);
                     if (num_requisitoSistema != -1 && num_requisitoUsuario != -1)
                     {
                         string consultaInsert2 = "INSERT INTO asociacion(req_usuario, req_software) VALUES(" + num_requisitoUsuario + "," + num_requisitoSistema + ");";
-                        if (this.conexion.RealizarConsultaNoQuery(consultaInsert2))
+                        if (conexionLocal.RealizarConsultaNoQuery(consultaInsert2))
                         {
                             return true;
                         }
@@ -385,6 +388,27 @@ namespace AppWebERS.Models {
                 return num_requisito;
             }
             return -1;
+        }
+
+        public bool ValidarNombreRequisito(int idProyecto, string nombreRequisito)
+        {
+            ApplicationDbContext conexionLocal = ApplicationDbContext.Create();
+            string consulta = "SELECT requisito.nombre FROM requisito WHERE ref_proyecto ="+idProyecto+" ;";
+            MySqlDataReader reader = conexionLocal.RealizarConsulta(consulta);
+            if (reader != null)
+            {
+                while (reader.Read())
+                {
+                    string nombreReqBD = reader["nombre"].ToString();
+                    if (nombreReqBD == nombreRequisito)
+                    {
+                        conexionLocal.EnsureConnectionClosed();
+                        return false; //Ya existe Requisito con el nombre ingresado.
+                    }
+                }
+            }
+            conexionLocal.EnsureConnectionClosed();
+            return true;
         }
 
         /**

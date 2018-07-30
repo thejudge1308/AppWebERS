@@ -157,9 +157,133 @@ namespace AppWebERS.Controllers
             return View();
         }
 
+       
+        public ActionResult AgregarActor(int id) {
+            Console.WriteLine("id : " + id);
+            var UsuarioActual = User.Identity.GetUserId();
+            ViewData["actual"] = id;
+            ViewData["usuario"] = TipoDePermiso(id);
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize]
+        public ActionResult AgregarActor(FormCollection datos) {
+
+            MySqlDataReader reader;
+        
+            int idProyecto = int.Parse(datos["actual"].ToString());            
+            string nombre = datos["Nombre"];       
+            string descripcion = datos["Descripcion"];
+            string numActual = datos["NumActual"];
+            int actual = int.Parse(numActual.ToString());
+            string numFuturo = datos["NumFuturo"];
+            int futuro = int.Parse(numFuturo.ToString());
+            string numContac = datos["NumContactables"];
+            int contacto = int.Parse(numContac.ToString());
+
+
+            string consulta = "SELECT id_actor FROM actor ORDER BY id_actor desc LIMIT 1";
+            reader = this.conexion.RealizarConsulta(consulta);
+            int id_actor=0;
+
+            if (reader == null)
+            {
+                id_actor = 1;
+            }
+            else {
+                reader.Read();
+                id_actor = int.Parse(reader["id_actor"].ToString());
+                id_actor = id_actor + 1;
+            }
+
+            this.conexion.EnsureConnectionClosed();
+
+            Actor actor = new Actor(id_actor,descripcion,actual,futuro,contacto,nombre);
+            Proyecto proyecto = this.GetProyecto(idProyecto);
+
+            consulta = "insert into actor values ( " + id_actor + ", '" + nombre + "','" + descripcion + "','" + actual + "','" + futuro + "','" + contacto + "','" + idProyecto + "')" ;
+
+            if (contacto < 0 || futuro < 0 || actual < 0)
+            {
+                TempData["alerta"] = new Alerta("Los valores numericos no pueden ser menores a 0", TipoAlerta.ERROR);
+                ViewData["actual"] = idProyecto;
+                ViewData["usuario"] = TipoDePermiso(idProyecto);
+
+                return View(actor);
+            }
+
+
+            if (this.VerificarNombreRepetido(idProyecto, nombre))
+            {
+                TempData["alerta"] = new Alerta("El nombre del actor ya existe", TipoAlerta.ERROR);
+                ViewData["actual"] = idProyecto;
+                ViewData["usuario"] = TipoDePermiso(idProyecto);
+                
+                return View(actor);
+            }
+            else {
+                consulta = "insert into actor values ( " + id_actor + ", '" + nombre + "','" + descripcion + "','" + actual + "','" + futuro + "','" + contacto + "','" + idProyecto + "')";
+                reader = this.conexion.RealizarConsulta(consulta);
+                this.conexion.EnsureConnectionClosed();
+                ViewData["actual"] = idProyecto;
+                ViewData["usuario"] = TipoDePermiso(idProyecto);
+                return RedirectToAction("ListaActores", new { id = idProyecto });
+            }
+           
+            
+        }
+
+        public Boolean VerificarNombreRepetido(int idp, string nombre) {
+            MySqlDataReader reader;
+            string consulta = "SELECT actor.nombre FROM actor,proyecto WHERE actor.ref_proyecto = " + idp;
+            reader = this.conexion.RealizarConsulta(consulta);
+            if (reader != null) { 
+                while (reader.Read()) {
+                    if (reader["nombre"].ToString() == nombre) {
+                        this.conexion.EnsureConnectionClosed();
+                        return true;
+                    }   
+            }
+            }
+            this.conexion.EnsureConnectionClosed();
+            return false;
+        }
+
+        // GET: Proyecto/ListaActores/5
+        public ActionResult ListaActores(int id)
+        {
+            Proyecto proyecto = this.GetProyecto(id);
+            List<Usuario> usuarios = new Proyecto().GetListaUsuarios(id);
+            List<SolicitudDeProyecto> solicitudes = new Proyecto().GetSolicitudesProyecto(id);
+            List<Actor> actores = this.GetActores(id);
+            //Debug.WriteLine("Permiso: " + TipoDePermiso());
+            ViewData["proyecto"] = proyecto;
+            ViewData["usuarios"] = usuarios;
+            ViewData["actores"] = actores;
+            ViewData["solicitudes"] = solicitudes;
+            Debug.WriteLine("Lista de usuarios" + usuarios);
+            ViewData["permiso"] = TipoDePermiso(id);
+            return View();
+        }
+
+        private List<Actor> GetActores(int id)
+        {
+            return new Proyecto().GetListaActores(id);
+
+        }
+
         // POST: Proyecto/ListaUsuarios/5
         [HttpPost]
         public ActionResult ListaUsuarios(FormCollection datos) {
+
+            return View();
+        }
+
+        // POST: Proyecto/ListaActores/5
+        [HttpPost]
+        public ActionResult ListaActores(FormCollection datos)
+        {
 
             return View();
         }

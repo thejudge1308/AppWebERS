@@ -960,21 +960,21 @@ namespace AppWebERS.Controllers
         * <autor>Diego Iturriaga</autor>
         * <summary>Metodo para registrar un requisito de software.</summary>
         * <param name="idProyecto">Id del proyecto al que pertenece el proyecto.</param>
-        * <param name="idRequisitoSistema">Id del requisito de sistema que se desea agregar.</param>
+        * <param name="idRequisito">Id del requisito de sistema que se desea agregar.</param>
         * <param name="idRequisitoUsuario">Id del requisito de usuario al que se asocia el requisito de usuario.</param>
         * <param name="nombre">Nombre del requisito que se desea agregar a un proyecto.</param>
         * <returns>Redirrecion a la vista de Listar Requisitos Minimalistas.</returns>
         */
         [HttpPost]
-        public ActionResult AgregarRequisitoDeSoftwareMinimalista( string idRequisitoUsuario, string idRequisitoSistema, string nombre, String idProyecto)
+        public ActionResult AgregarRequisitoDeSoftwareMinimalista( string idRequisitoUsuario, string idRequisito, string nombre, String idProyecto)
         {
-            Requisito nuevoRequisistoS = new Requisito(idRequisitoSistema, nombre, string.Empty, string.Empty, string.Empty,
+            Requisito nuevoRequisistoS = new Requisito(idRequisito, nombre, string.Empty, string.Empty, string.Empty,
                 string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, DateTime.Now.ToString("yyyy-MM-dd"),
                 string.Empty, "SISTEMA");
             int id = Int32.Parse(idProyecto);
-            if (nuevoRequisistoS.VerificarIdRequisito(id, idRequisitoSistema))
+            if (nuevoRequisistoS.VerificarIdRequisito(id, idRequisito))
             {
-                if (nuevoRequisistoS.RegistrarRequisitoDeSoftwareMinimalista(Int32.Parse(idProyecto), idRequisitoUsuario, idRequisitoSistema))
+                if (nuevoRequisistoS.RegistrarRequisitoDeSoftwareMinimalista(Int32.Parse(idProyecto), idRequisitoUsuario, idRequisito))
                 {
                     TempData["alerta"] = new Alerta("Exito al crear Requisito de Sistema", TipoAlerta.SUCCESS);
                 }

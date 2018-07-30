@@ -1,4 +1,5 @@
 ﻿using AppWebERS.Models;
+using AppWebERS.Utilidades;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -42,7 +43,8 @@ namespace AppWebERS.Controllers{
         [HttpPost]
         public ActionResult SubirDiagrama(HttpPostedFileBase file, string nombre, string id, int diagramaValue)
         {
-           
+            
+            
             int idProyecto = Int32.Parse(id);
             string tipoDeDiagrama = tipoDiagrama(diagramaValue);
             Debug.Write(tipoDeDiagrama);
@@ -58,12 +60,14 @@ namespace AppWebERS.Controllers{
                     this.agregar(nombre,id,_path,tipoDeDiagrama);
                     file.SaveAs(_path);
                 }
-                ViewBag.Message = "Diagrama subido con éxito!!";
+                TempData["alerta"] = new Alerta("Diagrama subido exitosamente", TipoAlerta.SUCCESS);
+                //ViewBag.Message = "Diagrama subido con éxito!!";
                 return RedirectToAction("SubirDiagrama", "Diagrama", new { id = idProyecto });
             }
             catch
             {
-                ViewBag.Message = "Falla en la subida del Diagrama!!";
+                TempData["alerta"] = new Alerta("Diagrama no se pudo subir", TipoAlerta.ERROR);
+                //ViewBag.Message = "Falla en la subida del Diagrama!!";
                 return RedirectToAction("SubirDiagrama", "Diagrama", new { id = idProyecto });
             }
         }

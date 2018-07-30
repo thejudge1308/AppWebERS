@@ -184,17 +184,18 @@ namespace AppWebERS.Controllers
             string numContac = datos["NumContactables"];
             int contacto = int.Parse(numContac.ToString());
 
+
             string consulta = "SELECT id_actor FROM actor ORDER BY id_actor desc LIMIT 1";
             reader = this.conexion.RealizarConsulta(consulta);
-            reader.Read();
             int id_actor=0;
 
-            if (reader["id_actor"] == null)
+            if (reader == null)
             {
                 id_actor = 1;
             }
             else {
-               id_actor = int.Parse(reader["id_actor"].ToString());
+                reader.Read();
+                id_actor = int.Parse(reader["id_actor"].ToString());
                 id_actor = id_actor + 1;
             }
 
@@ -204,6 +205,16 @@ namespace AppWebERS.Controllers
             Proyecto proyecto = this.GetProyecto(idProyecto);
 
             consulta = "insert into actor values ( " + id_actor + ", '" + nombre + "','" + descripcion + "','" + actual + "','" + futuro + "','" + contacto + "','" + idProyecto + "')" ;
+
+            if (contacto < 0 || futuro < 0 || actual < 0)
+            {
+                TempData["alerta"] = new Alerta("Los valores numericos no pueden ser menores a 0", TipoAlerta.ERROR);
+                ViewData["actual"] = idProyecto;
+                ViewData["usuario"] = TipoDePermiso(idProyecto);
+
+                return View(actor);
+            }
+
 
             if (this.VerificarNombreRepetido(idProyecto, nombre))
             {

@@ -130,7 +130,7 @@ namespace AppWebERS.Controllers
                 if (!VerificarSiResgistroValido(model))
                 {
                     var user = new ApplicationUser { UserName = model.UserName, Rut = model.Rut, Email = model.Email, Nombre = model.Nombre,
-                        Apellido = model.Apellido, Tipo = "USUARIO" };
+                        Apellido = model.Apellido, Tipo = "USUARIO"};
                     var result = await UserManager.CreateAsync(user, model.Password);
                     if (result.Succeeded)
                     {
@@ -314,6 +314,29 @@ namespace AppWebERS.Controllers
         }
 
         /*
+         * Creador: Maximo Hernandez
+         * Accion: Cambia la disponibilidad de vinculacion de un usuario, correspondiente al rut entregado.
+         * Retorno: ActionResult
+         */
+        [HttpGet]
+        public async Task<ActionResult> CambiarDisponibilidadVinculacionUsuario(string rut)
+        {
+            ViewBag.Title = "CambiarDisponibilidadVinculacionUsuario";
+            if (!String.IsNullOrEmpty(rut))
+            {
+                ApplicationUser usuario = await UserManager.FindByRutAsync(rut);
+                if (usuario != null)
+                {
+                    await UserManager.setDisponibilidadVinculacionAsync(usuario.Id, !usuario.DisponibilidadVinculacion);
+                    TempData["alerta"] = new Alerta("El usuario ha sido modificado exitosamente", TipoAlerta.SUCCESS);
+                    return RedirectToAction("ModificarCuenta", "Cuenta", rut);
+                }
+                TempData["alerta"] = new Alerta("Hubo un error al obtener al usuario", TipoAlerta.ERROR);
+            }
+            return RedirectToAction("Index", "Home");
+        }
+
+        /*
          * Juan Abello
          * llama a la funcion de modificar la cuenta de un usuario en el modelo de este
          * usuario
@@ -333,6 +356,7 @@ namespace AppWebERS.Controllers
                     usuario.Email = String.IsNullOrEmpty(usuarioViewModel.Email) ? usuario.Email : usuarioViewModel.Email;
                     usuario.UserName = String.IsNullOrEmpty(usuarioViewModel.Nombre) ? usuario.UserName : usuarioViewModel.Nombre;
                     usuario.Estado = usuarioViewModel.Estado ? !usuario.Estado : usuario.Estado;
+                    usuario.DisponibilidadVinculacion = usuarioViewModel.DisponibilidadVinculacion ? !usuario.DisponibilidadVinculacion : usuario.DisponibilidadVinculacion;
                     await UserManager.UpdateAsync(usuario);
                     if (!String.IsNullOrEmpty(usuarioViewModel.Password))
                     {
@@ -419,8 +443,15 @@ namespace AppWebERS.Controllers
          */
         public string RetornarTipoUsuarioAutentificado()
         {
+            try
+            {
                 Task<string> tipo = UserManager.getTipoAsync((User.Identity.GetUserId()));
                 return tipo.Result;
+            }
+            catch
+            {
+                return "INVITADO";
+            }
         }
 
         public string RetornarRutUsuarioAutentificado()

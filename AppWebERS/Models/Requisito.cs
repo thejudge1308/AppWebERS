@@ -263,6 +263,10 @@ namespace AppWebERS.Models {
          */
         public bool RegistrarRequisito(int idProyecto)
         {
+            if (string.IsNullOrEmpty(this.IdRequisito) || string.IsNullOrEmpty(this.Nombre))
+            {
+                return false;
+            }
             string consultaInsert = "INSERT INTO requisito(id_requisito, nombre, descripcion, fuente, categoria, " +
                 "prioridad, estabilidad, estado, medida, escala, incremento, fecha_actualizacion, ref_proyecto, tipo) " +
                 "VALUES ('"+this.IdRequisito+ "','" +this.Nombre + "','" +this.Descripcion + "','" +this.Fuente + "','" +
@@ -273,6 +277,24 @@ namespace AppWebERS.Models {
                 return true;
             }
             return false;
+        }
+
+        public bool VerificarIdRequisito(int idProyecto, string idRequisito)
+        {
+            string consulta = "SELECT requisito.id_requisito FROM requisito WHERE ref_proyecto = "+ idProyecto + ";";
+            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
+            if (reader != null)
+            {
+                while (reader.Read())
+                {
+                    string idReqBD = reader["id_requisito"].ToString();
+                    if (idReqBD==idRequisito)
+                    {
+                        return false; //Ya existe Requisito con el codigo ingresado.
+                    }
+                }
+            }
+            return true;//No existe Requisito con el codigo ingresado. Codigo valido.
         }
 
         /**
@@ -324,24 +346,28 @@ namespace AppWebERS.Models {
          */ 
         public bool RegistrarRequisitoDeSoftwareMinimalista(int idProyecto, string idRequisitoUsuario, string idRequisitoSistema)
         {
-            string consultaInsert = "INSERT INTO requisito(id_requisito, nombre, descripcion, fuente, categoria, " +
-                "prioridad, estabilidad, estado, medida, escala, incremento, fecha_actualizacion, ref_proyecto, tipo) " +
-                "VALUES ('" + this.IdRequisito + "','" + this.Nombre + "','" + this.Descripcion + "','" + this.Fuente + "','" +
-                 this.TipoRequisito + "','" + this.Prioridad + "','" + this.Estabilidad + "','" + this.Estado + "','" + this.Medida
-                 + "','" + this.Escala + "','" + this.Incremento + "','" + this.Fecha + "'," + idProyecto + ",'" + this.Tipo + "'); ";
-            if (this.conexion.RealizarConsultaNoQuery(consultaInsert))
+            if (!string.IsNullOrEmpty(idRequisitoUsuario) && !string.IsNullOrEmpty(idRequisitoSistema))
             {
-                int num_requisitoUsuario = this.ObtenerNumRequisito(idProyecto, idRequisitoUsuario);
-                int num_requisitoSistema = this.ObtenerNumRequisito(idProyecto, idRequisitoSistema);
-                if (num_requisitoSistema!=-1 && num_requisitoUsuario!=-1)
+
+                string consultaInsert = "INSERT INTO requisito(id_requisito, nombre, descripcion, fuente, categoria, " +
+                    "prioridad, estabilidad, estado, medida, escala, incremento, fecha_actualizacion, ref_proyecto, tipo) " +
+                    "VALUES ('" + this.IdRequisito + "','" + this.Nombre + "','" + this.Descripcion + "','" + this.Fuente + "','" +
+                     this.TipoRequisito + "','" + this.Prioridad + "','" + this.Estabilidad + "','" + this.Estado + "','" + this.Medida
+                     + "','" + this.Escala + "','" + this.Incremento + "','" + this.Fecha + "'," + idProyecto + ",'" + this.Tipo + "'); ";
+                if (this.conexion.RealizarConsultaNoQuery(consultaInsert))
                 {
-                    string consultaInsert2 = "INSERT INTO asociacion(req_usuario, req_software) VALUES(" + num_requisitoUsuario + "," + num_requisitoSistema + ");";
-                    if (this.conexion.RealizarConsultaNoQuery(consultaInsert2))
+                    int num_requisitoUsuario = this.ObtenerNumRequisito(idProyecto, idRequisitoUsuario);
+                    int num_requisitoSistema = this.ObtenerNumRequisito(idProyecto, idRequisitoSistema);
+                    if (num_requisitoSistema != -1 && num_requisitoUsuario != -1)
                     {
-                        return true;
+                        string consultaInsert2 = "INSERT INTO asociacion(req_usuario, req_software) VALUES(" + num_requisitoUsuario + "," + num_requisitoSistema + ");";
+                        if (this.conexion.RealizarConsultaNoQuery(consultaInsert2))
+                        {
+                            return true;
+                        }
                     }
+
                 }
-                
             }
             return false;
         }

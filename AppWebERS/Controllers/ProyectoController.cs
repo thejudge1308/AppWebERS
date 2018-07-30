@@ -78,10 +78,21 @@ namespace AppWebERS.Controllers
         }
         
         [HttpPost]
-        public ActionResult AgregarReferenciaPaper(string id, string fecha, string titulo, string revista, string volumen, string pag)
+        public ActionResult AgregarReferenciaPaper(string id, string autores,string fecha, string titulo, string revista, string volumen, string pag)
         {
-            return RedirectToAction("Detalles", "Proyecto", new { id = id });
-        }
+
+            string referencia = this.ParsearReferenciaPaper(autores, fecha, titulo, revista, volumen, pag);
+            string consulta = "INSERT INTO Referencia(ref_proyecto,referencia) VALUES('" + id + "','" + referencia + "');";
+            if (this.conexion.RealizarConsultaNoQuery(consulta))
+            {
+                return Json(true, JsonRequestBehavior.AllowGet);
+
+            }
+            else
+            {
+                return Json(false, JsonRequestBehavior.AllowGet);
+
+            }
         /**
         * <author>Matías Parra</author>
         * <summary>
@@ -89,7 +100,7 @@ namespace AppWebERS.Controllers
         * </summary>
         * <returns> la vista de éxito. </returns>
         */
-        // POST: Proyecto/Detalles/5
+            // POST: Proyecto/Detalles/5
         public class ProyectoJsonRespuesta {
             public string id { set; get; }
             public string atributo { set; get; }
@@ -947,10 +958,17 @@ namespace AppWebERS.Controllers
         private string ParsearReferenciaLibro(string autores, string anio, string titulo, string lugar, string editorial)
         {
             string referencia;
-            referencia = autores + ", (" + anio + ")," + titulo + ", " + lugar + ":" + editorial;
+            referencia = autores + ", (" + anio + ")," + titulo + ", " + lugar + ":" + editorial + ".";
             return referencia;
         }
 
+        private string ParsearReferenciaPaper(string autores,string fecha, string titulo, string revista, string volumen, string pag)
+        {
+            string referencia;
+            referencia = autores + ",("+ fecha + "),"+ titulo + ", " + revista + "," + volumen + "," + pag + ".";
+            return referencia;
+
+        }
     }
 
 

@@ -71,20 +71,21 @@ namespace AppWebERS.Controllers{
                         }
                         else
                         {
+                            if (largoStringNombre == 0) { nombre = "null"; }
                             string Consulta = "SELECT nombre FROM Diagrama WHERE nombre = '" + nombre + "';";
                             MySqlDataReader reader = this.Conector.RealizarConsulta(Consulta);
                             // Este if-else comprueba que el nombre del diagrama no exista ya en la base de datos
-                            if (reader != null)
-                            {
-                                TempData["alerta"] = new Alerta("Ya existe un diagrama con este nombre", TipoAlerta.ERROR);
-                                ViewBag.Message = "Ya existe un diagrama con este nombre.";
-                            }
-                            else
+                            if (reader == null || nombre.Equals("null"))
                             {
                                 this.agregar(nombre, id, _path, tipoDeDiagrama);
                                 file.SaveAs(_path);
                                 TempData["alerta"] = new Alerta("Diagrama subido con éxito!!", TipoAlerta.SUCCESS);
                                 ViewBag.Message = "Diagrama subido con éxito!!";
+                            }
+                            else
+                            {
+                                TempData["alerta"] = new Alerta("Ya existe un diagrama con este nombre", TipoAlerta.ERROR);
+                                ViewBag.Message = "Ya existe un diagrama con este nombre.";
                             }
                         }
                     }
@@ -107,17 +108,9 @@ namespace AppWebERS.Controllers{
         public void agregar(string nombre, string idProyecto1, string url,string tipo)
         {
             int idProyecto =  Int32.Parse(idProyecto1);
-            string nombree;
-            if (nombre.Length == 0)
-            {
-                nombree = "null";
-            }
-            else
-            {
-                nombree = nombre;
-            }
+            
             string consulta = "START TRANSACTION;" +
-            "INSERT INTO diagrama(nombre, ruta, tipo,ref_proyecto) VALUES ( '" + nombree + "','" + url + "','" + tipo + "'," + idProyecto + " );" +
+            "INSERT INTO diagrama(nombre, ruta, tipo,ref_proyecto) VALUES ( '" + nombre + "','" + url + "','" + tipo + "'," + idProyecto + " );" +
               "COMMIT;";
             this.Conector.RealizarConsultaNoQuery(consulta);
             Debug.WriteLine(consulta);

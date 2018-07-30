@@ -1063,13 +1063,20 @@ namespace AppWebERS.Controllers
             int id = Int32.Parse(idProyecto);
             if (requisito.VerificarIdRequisito(id, idRequisito))
             {
-                if (requisito.RegistrarRequisito(Int32.Parse(idProyecto)))
-                {
-                    TempData["alerta"] = new Alerta("Exito al crear Requisito de Sistema", TipoAlerta.SUCCESS);
+                if (requisito.ValidarNombreRequisito(id,nombre)) {
+
+                    if (requisito.RegistrarRequisito(Int32.Parse(idProyecto)))
+                    {
+                        TempData["alerta"] = new Alerta("Exito al crear Requisito de Usuario", TipoAlerta.SUCCESS);
+                    }
+                    else
+                    {
+                        TempData["alerta"] = new Alerta("Error al crear Requisito de Usuario", TipoAlerta.ERROR);
+                    }
                 }
                 else
                 {
-                    TempData["alerta"] = new Alerta("Error al crear Requisito de Sistema", TipoAlerta.ERROR);
+                    TempData["alerta"] = new Alerta("El Nombre del Requisito ingresado ya existe dentro del Proyecto", TipoAlerta.ERROR);
                 }
             }
             else
@@ -1097,14 +1104,21 @@ namespace AppWebERS.Controllers
                 string.Empty, "SISTEMA");
             int id = Int32.Parse(idProyecto);
             if (nuevoRequisistoS.VerificarIdRequisito(id, idRequisito))
-            {
-                if (nuevoRequisistoS.RegistrarRequisitoDeSoftwareMinimalista(Int32.Parse(idProyecto), idRequisitoUsuario, idRequisito))
+            { 
+                if (nuevoRequisistoS.ValidarNombreRequisito(id, nombre))
                 {
-                    TempData["alerta"] = new Alerta("Exito al crear Requisito de Sistema", TipoAlerta.SUCCESS);
+                    if (nuevoRequisistoS.RegistrarRequisitoDeSoftwareMinimalista(Int32.Parse(idProyecto), idRequisitoUsuario, idRequisito))
+                    {
+                        TempData["alerta"] = new Alerta("Exito al crear Requisito de Sistema", TipoAlerta.SUCCESS);
+                    }
+                    else
+                    {
+                        TempData["alerta"] = new Alerta("Error al crear Requisito de Sistema", TipoAlerta.ERROR);
+                    }
                 }
                 else
                 {
-                    TempData["alerta"] = new Alerta("Error al crear Requisito de Sistema", TipoAlerta.ERROR);
+                    TempData["alerta"] = new Alerta("El Nombre del Requisito ingresado ya existe dentro del Proyecto", TipoAlerta.ERROR);
                 }
             }
             else

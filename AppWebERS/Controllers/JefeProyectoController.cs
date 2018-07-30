@@ -100,7 +100,7 @@ namespace AppWebERS.Controllers{
             List<Usuario> listaUsuarios = new List<Usuario>();
             string consulta = "SELECT UserName, Rut, Email, Tipo FROM users WHERE Rut NOT IN (SELECT Rut FROM users, vinculo_usuario_proyecto, proyecto " +
                 "WHERE vinculo_usuario_proyecto.ref_proyecto = '"+idProyecto+"' AND vinculo_usuario_proyecto.ref_usuario = users.Id) " +
-                "AND NOT users.Tipo ='SYSADMIN' AND NOT users.Disponibilidad_Validacion = 0 ";
+                "AND NOT users.Tipo ='SYSADMIN' AND NOT users.Disponibilidad_Vinculacion = 0 ";
 
             MySqlDataReader reader = this.conector.RealizarConsulta(consulta);
 

@@ -62,31 +62,44 @@ namespace AppWebERS.Controllers{
                     {
                         string _FileName = Path.GetFileName(file.FileName);
                         string _path = Path.Combine(Server.MapPath("~/UploadedFiles"), _FileName);
-                        int largoStringNombre = nombre.Length;
-                        // Este if-else comprueba que el largo del nombre del diagrama sea menor a 45 caracteres
-                        if (largoStringNombre > 45)
+                        string ConsultaPath = "SELECT path from Diagrama WHERE path = '" + _path + "';";
+                        MySqlDataReader r = this.Conector.RealizarConsulta(ConsultaPath);
+                        if (r == null)
                         {
-                            TempData["alerta"] = new Alerta("El nombre debe tener no más de 45 caracteres", TipoAlerta.ERROR);
-                            ViewBag.Message = "El nombre debe tener no más de 45 caracteres";
-                        }
-                        else
-                        {
-                            if (largoStringNombre == 0) { nombre = "null"; }
-                            string Consulta = "SELECT nombre FROM Diagrama WHERE nombre = '" + nombre + "';";
-                            MySqlDataReader reader = this.Conector.RealizarConsulta(Consulta);
-                            // Este if-else comprueba que el nombre del diagrama no exista ya en la base de datos
-                            if (reader == null || nombre.Equals("null"))
+                            Conector.CerrarConexion();
+                            int largoStringNombre = nombre.Length;
+                            // Este if-else comprueba que el largo del nombre del diagrama sea menor a 45 caracteres
+                            if (largoStringNombre > 45)
                             {
-                                this.agregar(nombre, id, _path, tipoDeDiagrama);
-                                file.SaveAs(_path);
-                                TempData["alerta"] = new Alerta("Diagrama subido con éxito!!", TipoAlerta.SUCCESS);
-                                ViewBag.Message = "Diagrama subido con éxito!!";
+                                TempData["alerta"] = new Alerta("El nombre debe tener no más de 45 caracteres", TipoAlerta.ERROR);
+                                ViewBag.Message = "El nombre debe tener no más de 45 caracteres";
                             }
                             else
                             {
-                                TempData["alerta"] = new Alerta("Ya existe un diagrama con este nombre", TipoAlerta.ERROR);
-                                ViewBag.Message = "Ya existe un diagrama con este nombre.";
+                                if (largoStringNombre == 0) { nombre = "null"; }
+                                string ConsultaNombre = "SELECT nombre FROM Diagrama WHERE nombre = '" + nombre + "';";
+                                MySqlDataReader reader = this.Conector.RealizarConsulta(ConsultaNombre);
+                                // Este if-else comprueba que el nombre del diagrama no exista ya en la base de datos
+                                if (reader == null || nombre.Equals("null"))
+                                {
+                                    this.agregar(nombre, id, _path, tipoDeDiagrama);
+                                    file.SaveAs(_path);
+                                    TempData["alerta"] = new Alerta("Diagrama subido con éxito!!", TipoAlerta.SUCCESS);
+                                    ViewBag.Message = "Diagrama subido con éxito!!";
+                                }
+                                else
+                                {
+                                    TempData["alerta"] = new Alerta("Ya existe un diagrama con este nombre", TipoAlerta.ERROR);
+                                    ViewBag.Message = "Ya existe un diagrama con este nombre.";
+                                }
+                                Conector.CerrarConexion();
                             }
+                        }
+                        else
+                        {
+                            Conector.CerrarConexion();
+                            TempData["alerta"] = new Alerta("Ya existe un archivo con este nombre", TipoAlerta.ERROR);
+                            ViewBag.Message = "Ya existe un archivo con este nombre.";
                         }
                     }
                 }

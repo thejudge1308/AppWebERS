@@ -55,12 +55,33 @@ namespace AppWebERS.Controllers
         {
             List<Referencia> referencias = this.ObtenerReferencias(id);
 
-            var jsonSerialiser = new JavaScriptSerializer();
-            var json = jsonSerialiser.Serialize(referencias);
             return Json(referencias,JsonRequestBehavior.AllowGet);
         }
 
-     
+        [HttpPost]
+        public ActionResult AgregarReferenciaLibro(string id, string autores, string anio, string titulo, string lugar, string editorial)
+        {
+            string referencia = this.ParsearReferenciaLibro(autores,anio,titulo,lugar,editorial);
+
+            string consulta = "INSERT INTO Referencia(ref_proyecto,referencia) VALUES('" + id + "','" + referencia + "');";
+
+            if (this.conexion.RealizarConsultaNoQuery(consulta))
+            {
+                return Json(true, JsonRequestBehavior.AllowGet);
+
+            }
+            else
+            {
+                return Json(false, JsonRequestBehavior.AllowGet);
+
+            }
+        }
+        
+        [HttpPost]
+        public ActionResult AgregarReferenciaPaper(string id, string fecha, string titulo, string revista, string volumen, string pag)
+        {
+            return RedirectToAction("Detalles", "Proyecto", new { id = id });
+        }
         /**
         * <author>Matías Parra</author>
         * <summary>
@@ -921,6 +942,13 @@ namespace AppWebERS.Controllers
             }
 
 
+        }
+
+        private string ParsearReferenciaLibro(string autores, string anio, string titulo, string lugar, string editorial)
+        {
+            string referencia;
+            referencia = autores + ", (" + anio + ")," + titulo + ", " + lugar + ":" + editorial;
+            return referencia;
         }
 
     }

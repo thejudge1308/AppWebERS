@@ -76,9 +76,9 @@ namespace AppWebERS.Controllers
 
             }
         }
-        
+
         [HttpPost]
-        public ActionResult AgregarReferenciaPaper(string id, string autores,string fecha, string titulo, string revista, string volumen, string pag)
+        public ActionResult AgregarReferenciaPaper(string id, string autores, string fecha, string titulo, string revista, string volumen, string pag)
         {
 
             string referencia = this.ParsearReferenciaPaper(autores, fecha, titulo, revista, volumen, pag);
@@ -93,6 +93,7 @@ namespace AppWebERS.Controllers
                 return Json(false, JsonRequestBehavior.AllowGet);
 
             }
+        }
         /**
         * <author>Matías Parra</author>
         * <summary>

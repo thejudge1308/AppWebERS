@@ -443,8 +443,15 @@ namespace AppWebERS.Controllers
          */
         public string RetornarTipoUsuarioAutentificado()
         {
+            try
+            {
                 Task<string> tipo = UserManager.getTipoAsync((User.Identity.GetUserId()));
                 return tipo.Result;
+            }
+            catch
+            {
+                return "INVITADO";
+            }
         }
 
         public string RetornarRutUsuarioAutentificado()

@@ -12,6 +12,7 @@ using Microsoft.AspNet.Identity;
 using AspNet.Identity.MySQL;
 using Microsoft.AspNet.Identity.Owin;
 using AppWebERS.Utilidades;
+using System.Web.Script.Serialization;
 using System.IO;
 
 
@@ -43,14 +44,30 @@ namespace AppWebERS.Controllers
         }
 
 
+        public class Referencia
+        {
+            public string id { set; get; }
+            public string valor { set; get; }
+        }
 
+        [HttpGet]
+        public ActionResult MostrarReferencia(int id)
+        {
+            List<Referencia> referencias = this.ObtenerReferencias(id);
+
+            var jsonSerialiser = new JavaScriptSerializer();
+            var json = jsonSerialiser.Serialize(referencias);
+            return Json(referencias,JsonRequestBehavior.AllowGet);
+        }
+
+     
         /**
-         * <author>Matías Parra</author>
-         * <summary>
-         * Action POST que retorna una vista después se precionar el botón de guardar cambios en un proyecto.
-         * </summary>
-         * <returns> la vista de éxito. </returns>
-         */
+        * <author>Matías Parra</author>
+        * <summary>
+        * Action POST que retorna una vista después se precionar el botón de guardar cambios en un proyecto.
+        * </summary>
+        * <returns> la vista de éxito. </returns>
+        */
         // POST: Proyecto/Detalles/5
         public class ProyectoJsonRespuesta {
             public string id { set; get; }
@@ -878,7 +895,36 @@ namespace AppWebERS.Controllers
             }
              return value;
         }
+
+        private List<Referencia> ObtenerReferencias(int id)
+        {
+            List<Referencia> lista = new List<Referencia>();
+
+            string consulta = "SELECT * FROM  referencia WHERE referencia.ref_proyecto = '" + id + "'";
+            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
+
+            if (reader != null)
+            {
+                while (reader.Read())
+                {
+                    Referencia referencia = new Referencia();
+                    referencia.id = reader[0].ToString();
+                    referencia.valor = reader[1].ToString();
+                    lista.Add(referencia);
+                }
+
+                return lista;
+            }
+            else
+            {
+                return null;
+            }
+
+
+        }
+
     }
 
-   
+
+
 }

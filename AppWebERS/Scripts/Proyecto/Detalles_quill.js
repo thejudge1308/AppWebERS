@@ -9,7 +9,6 @@ $(document).ready(function () {
         [{ 'header': 1 }, { 'header': 2 }],// custom button values
         [{ 'header': [1, 2, 3, 4, 5, 6, false] }], //Header size
 
-        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
         [{ 'script': 'sub' }, { 'script': 'super' }],      // superscript/subscript
         [{ 'indent': '-1' }, { 'indent': '+1' }],          // outdent/indent
 
@@ -24,6 +23,29 @@ $(document).ready(function () {
         ['clean']                                         // remove formatting button
     ];
 
+    //Autor: Gerardo Estrada
+    //Configuracion de la barra de herramientas para Definición, Acrómino y Abreviatura (Permitir ingreso como lista con bullets)
+    var opcionesTolbar2 = [
+        ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+
+        [{ 'header': 1 }, { 'header': 2 }],// custom button values
+        [{ 'header': [1, 2, 3, 4, 5, 6, false] }], //Header size
+
+        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+        [{ 'script': 'sub' }, { 'script': 'super' }],      // superscript/subscript
+        [{ 'indent': '-1' }, { 'indent': '+1' }],          // outdent/indent
+
+        [{ 'font': [] }],                                 // Front 
+        [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+
+
+        [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+
+        [{ 'align': [] }],
+
+        ['clean']                                         // remove formatting button
+    ];
+
     //Configuracion de Quilljs
      var config = {
          theme: 'snow',
@@ -31,16 +53,24 @@ $(document).ready(function () {
          modules: {
              toolbar: opcionesTolbar
          },
-        };
+    };
+
+    var config2 = {
+        theme: 'snow',
+        placeholder: 'Escribe algo aquí..',
+        modules: {
+            toolbar: opcionesTolbar2
+        },
+    };
 
     //Inilizacion de los AreaText
     //var nombreQ = new Quill('#nombre-edit', config);
     var propositoQ = new Quill('#proposito-edit', config);
     var alcanceQ = new Quill('#alcance-edit', config);
     var contextoQ = new Quill('#contexto-edit', config);
-    var definicionQ = new Quill('#definicion-edit', config);
-    var acronimoQ = new Quill('#acronimo-edit', config); 
-    var abreviaturaQ = new Quill('#abreviatura-edit', config); 
+    var definicionQ = new Quill('#definicion-edit', config2);
+    var acronimoQ = new Quill('#acronimo-edit', config2); 
+    var abreviaturaQ = new Quill('#abreviatura-edit', config2); 
     var referenciaQ = new Quill('#referencia-edit', config); 
     var ambienteQ = new Quill('#ambiente-edit', config); 
     var relacionQ = new Quill('#relacion-edit', config); 

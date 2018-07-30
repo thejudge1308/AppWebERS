@@ -51,7 +51,7 @@ namespace AppWebERS.Controllers{
 
             try
             {
-                // Este if comprueba que la extensión del archivo sea jpg, jpeg, png, bmp o gif
+                // Este if-else comprueba que la extensión del archivo sea jpg, jpeg, png, bmp o gif
                 if ((string.Equals(Path.GetExtension(file.FileName), ".jpg",StringComparison.OrdinalIgnoreCase))
                     || (string.Equals(Path.GetExtension(file.FileName), ".jpeg", StringComparison.OrdinalIgnoreCase))
                     || (string.Equals(Path.GetExtension(file.FileName), ".png", StringComparison.OrdinalIgnoreCase))
@@ -63,27 +63,28 @@ namespace AppWebERS.Controllers{
                         string _FileName = Path.GetFileName(file.FileName);
                         string _path = Path.Combine(Server.MapPath("~/UploadedFiles"), _FileName);
                         int largoStringNombre = nombre.Length;
+                        // Este if-else comprueba que el largo del nombre del diagrama sea menor a 45 caracteres
                         if (largoStringNombre > 45)
                         {
-                            TempData["alerta"] = new Alerta("El nombre debe tener no más de 40 caracteres", TipoAlerta.ERROR);
-                            ViewBag.Message = "El nombre debe tener no más de 40 caracteres";
-
+                            TempData["alerta"] = new Alerta("El nombre debe tener no más de 45 caracteres", TipoAlerta.ERROR);
+                            ViewBag.Message = "El nombre debe tener no más de 45 caracteres";
                         }
                         else
                         {
-                            string Consulta = "SELECT nombre FROM diagrama WHERE nombre = '" + nombre + "';";
+                            string Consulta = "SELECT nombre FROM Diagrama WHERE nombre = '" + nombre + "';";
                             MySqlDataReader reader = this.Conector.RealizarConsulta(Consulta);
-                            if (reader == null)
+                            // Este if-else comprueba que el nombre del diagrama no exista ya en la base de datos
+                            if (reader != null)
+                            {
+                                TempData["alerta"] = new Alerta("Ya existe un diagrama con este nombre", TipoAlerta.ERROR);
+                                ViewBag.Message = "Ya existe un diagrama con este nombre.";
+                            }
+                            else
                             {
                                 this.agregar(nombre, id, _path, tipoDeDiagrama);
                                 file.SaveAs(_path);
                                 TempData["alerta"] = new Alerta("Diagrama subido con éxito!!", TipoAlerta.SUCCESS);
                                 ViewBag.Message = "Diagrama subido con éxito!!";
-                            }
-                            else
-                            {
-                                TempData["alerta"] = new Alerta("Ya existe un diagrama con este nombre", TipoAlerta.ERROR);
-                                ViewBag.Message = "Ya existe un diagrama con este nombre.";
                             }
                         }
                     }

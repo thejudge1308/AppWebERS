@@ -78,6 +78,7 @@ namespace AppWebERS.Models{
         }
         
 
+
         private ApplicationDbContext conexion = ApplicationDbContext.Create();
 
         /**
@@ -112,6 +113,23 @@ namespace AppWebERS.Models{
             RelacionProyectos = relacionProyectos;
             Estado = estado;
         }
+
+        public Proyecto(int idProyecto, string nombre, string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string ambienteOperacional, string relacionProyectos, string estado) {
+            IdProyecto = idProyecto;
+            Nombre = nombre;
+            Proposito = proposito;
+            Alcance = alcance;
+            Contexto = contexto;
+            Definiciones = definiciones;
+            Acronimos = acronimos;
+            Abreviaturas = abreviaturas;
+            AmbienteOperacional = ambienteOperacional;
+            RelacionProyectos = relacionProyectos;
+            Estado = estado;
+        }
+
+
+
 
         /**
          * Setter y Getter de ID del proyecto
@@ -401,13 +419,13 @@ namespace AppWebERS.Models{
                 string definiciones = data["definiciones"].ToString();
                 string acronimos = data["acronimos"].ToString();
                 string abreviaturas = data["abreviaturas"].ToString();
-                string referencias = data["referencias"].ToString();
+                //string referencias = data["referencias"].ToString();
                 string ambiente_operacional = data["ambiente_operacional"].ToString();
                 string relacion_con_otros_proyectos = data["relacion_con_otros_proyectos"].ToString();
                 string estado = data["estado"].ToString();
 
 
-                proyecto = new Proyecto(ID, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambiente_operacional, relacion_con_otros_proyectos, estado);
+                proyecto = new Proyecto(ID, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, ambiente_operacional, relacion_con_otros_proyectos, estado);
                 //Debug.WriteLine(proyecto.Proposito);
                 this.conexion.EnsureConnectionClosed();
             }

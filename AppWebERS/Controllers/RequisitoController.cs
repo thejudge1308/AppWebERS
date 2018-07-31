@@ -27,6 +27,13 @@ namespace AppWebERS.Controllers
 
         }
 
+        //Creador: Patricio Quezada
+        //Retorna la fecha del servidor para el datePicker
+        [HttpGet]
+        public ActionResult FechaActual() {
+            return Json(DateTime.Now.ToString("yyyy/MM/dd"), JsonRequestBehavior.AllowGet);  
+        }
+
         [HttpGet]
         public ActionResult Requisito(int id)
         {

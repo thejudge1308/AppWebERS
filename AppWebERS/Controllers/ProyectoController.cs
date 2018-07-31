@@ -1186,8 +1186,8 @@ namespace AppWebERS.Controllers
             if (requisito.VerificarIdRequisito(id, idRequisito))
             {
                 if (requisito.ValidarNombreRequisito(id,nombre)) {
-
-                    if (requisito.RegistrarRequisito(Int32.Parse(idProyecto)))
+                    string idRequisitoNuevo = requisito.RegistrarRequisito(Int32.Parse(idProyecto));
+                    if (idRequisitoNuevo!=null)
                     {
                         TempData["alerta"] = new Alerta("Exito al crear Requisito de Usuario", TipoAlerta.SUCCESS);
                     }

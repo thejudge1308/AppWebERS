@@ -11,6 +11,8 @@ using System.Data;
 using Microsoft.AspNet.Identity;
 using AspNet.Identity.MySQL;
 using Microsoft.AspNet.Identity.Owin;
+using AppWebERS.Utilidades;
+using System.Web.Script.Serialization;
 using System.IO;
 using static AppWebERS.Models.Requisito;
 
@@ -42,15 +44,64 @@ namespace AppWebERS.Controllers
         }
 
 
+        public class Referencia
+        {
+            public string id { set; get; }
+            public string valor { set; get; }
+        }
 
+        [HttpGet]
+        public ActionResult MostrarReferencia(int id)
+        {
+            List<Referencia> referencias = this.ObtenerReferencias(id);
+
+            return Json(referencias,JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult AgregarReferenciaLibro(string id, string autores, string anio, string titulo, string lugar, string editorial)
+        {
+            string referencia = this.ParsearReferenciaLibro(autores,anio,titulo,lugar,editorial);
+
+            string consulta = "INSERT INTO Referencia(ref_proyecto,referencia) VALUES('" + id + "','" + referencia + "');";
+
+            if (this.conexion.RealizarConsultaNoQuery(consulta))
+            {
+                return Json(true, JsonRequestBehavior.AllowGet);
+
+            }
+            else
+            {
+                return Json(false, JsonRequestBehavior.AllowGet);
+
+            }
+        }
+
+        [HttpPost]
+        public ActionResult AgregarReferenciaPaper(string id, string autores, string fecha, string titulo, string revista, string volumen, string pag)
+        {
+
+            string referencia = this.ParsearReferenciaPaper(autores, fecha, titulo, revista, volumen, pag);
+            string consulta = "INSERT INTO Referencia(ref_proyecto,referencia) VALUES('" + id + "','" + referencia + "');";
+            if (this.conexion.RealizarConsultaNoQuery(consulta))
+            {
+                return Json(true, JsonRequestBehavior.AllowGet);
+
+            }
+            else
+            {
+                return Json(false, JsonRequestBehavior.AllowGet);
+
+            }
+        }
         /**
-         * <author>Matías Parra</author>
-         * <summary>
-         * Action POST que retorna una vista después se precionar el botón de guardar cambios en un proyecto.
-         * </summary>
-         * <returns> la vista de éxito. </returns>
-         */
-        // POST: Proyecto/Detalles/5
+        * <author>Matías Parra</author>
+        * <summary>
+        * Action POST que retorna una vista después se precionar el botón de guardar cambios en un proyecto.
+        * </summary>
+        * <returns> la vista de éxito. </returns>
+        */
+            // POST: Proyecto/Detalles/5
         public class ProyectoJsonRespuesta {
             public string id { set; get; }
             public string atributo { set; get; }
@@ -913,7 +964,50 @@ namespace AppWebERS.Controllers
             }
             return l;
         }
+
+        private List<Referencia> ObtenerReferencias(int id)
+        {
+            List<Referencia> lista = new List<Referencia>();
+
+            string consulta = "SELECT * FROM  referencia WHERE referencia.ref_proyecto = '" + id + "'";
+            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
+
+            if (reader != null)
+            {
+                while (reader.Read())
+                {
+                    Referencia referencia = new Referencia();
+                    referencia.id = reader[0].ToString();
+                    referencia.valor = reader[1].ToString();
+                    lista.Add(referencia);
+                }
+
+                return lista;
+            }
+            else
+            {
+                return null;
+            }
+
+
+        }
+
+        private string ParsearReferenciaLibro(string autores, string anio, string titulo, string lugar, string editorial)
+        {
+            string referencia;
+            referencia = autores + ", (" + anio + ")," + titulo + ", " + lugar + ":" + editorial + ".";
+            return referencia;
+        }
+
+        private string ParsearReferenciaPaper(string autores,string fecha, string titulo, string revista, string volumen, string pag)
+        {
+            string referencia;
+            referencia = autores + ",("+ fecha + "),"+ titulo + ", " + revista + "," + volumen + "," + pag + ".";
+            return referencia;
+
+        }
     }
 
-   
+
+
 }

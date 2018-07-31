@@ -211,14 +211,29 @@ namespace AppWebERS.Controllers{
 
         public void agregar(string nombre, string idProyecto1, string url,string tipo)
         {
+
             int idProyecto =  Int32.Parse(idProyecto1);
-            
-            string consulta = "START TRANSACTION;" +
-            "INSERT INTO diagrama(nombre, ruta, tipo,ref_proyecto) VALUES ( '" + nombre + "','" + url + "','" + tipo + "'," + idProyecto + " );" +
-              "COMMIT;";
-            this.Conector.RealizarConsultaNoQuery(consulta);
-            Debug.WriteLine(consulta);
-            this.Conector.CerrarConexion();
+
+            Debug.Write(nombre);
+            if (nombre == "null")
+            {
+                Debug.Write("ES NULLLLL  ");
+                string consulta = "use appers; " +
+                          "INSERT INTO diagrama( ruta, tipo,ref_proyecto) VALUES ('" + url + "','" + tipo + "'," + idProyecto + " );";
+                Debug.Write(consulta);
+                this.Conector.RealizarConsulta(consulta);
+                this.Conector.CerrarConexion();
+            }
+            else
+            {
+                string consulta = "use appers; " +
+                          "INSERT INTO diagrama(nombre, ruta, tipo,ref_proyecto) VALUES ( '" + nombre + "','" + url + "','" + tipo + "'," + idProyecto + " );";
+               
+                this.Conector.RealizarConsulta(consulta);
+                this.Conector.CerrarConexion();
+            }
+      
+
 
 
         }

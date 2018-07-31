@@ -12,8 +12,9 @@ using Microsoft.AspNet.Identity;
 using AspNet.Identity.MySQL;
 using Microsoft.AspNet.Identity.Owin;
 using AppWebERS.Utilidades;
+using System.Web.Script.Serialization;
 using System.IO;
-
+using static AppWebERS.Models.Requisito;
 
 namespace AppWebERS.Controllers
 {
@@ -43,15 +44,64 @@ namespace AppWebERS.Controllers
         }
 
 
+        public class Referencia
+        {
+            public string id { set; get; }
+            public string valor { set; get; }
+        }
 
+        [HttpGet]
+        public ActionResult MostrarReferencia(int id)
+        {
+            List<Referencia> referencias = this.ObtenerReferencias(id);
+
+            return Json(referencias,JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult AgregarReferenciaLibro(string id, string autores, string anio, string titulo, string lugar, string editorial)
+        {
+            string referencia = this.ParsearReferenciaLibro(autores,anio,titulo,lugar,editorial);
+
+            string consulta = "INSERT INTO Referencia(ref_proyecto,referencia) VALUES('" + id + "','" + referencia + "');";
+
+            if (this.conexion.RealizarConsultaNoQuery(consulta))
+            {
+                return Json(true, JsonRequestBehavior.AllowGet);
+
+            }
+            else
+            {
+                return Json(false, JsonRequestBehavior.AllowGet);
+
+            }
+        }
+
+        [HttpPost]
+        public ActionResult AgregarReferenciaPaper(string id, string autores, string fecha, string titulo, string revista, string volumen, string pag)
+        {
+
+            string referencia = this.ParsearReferenciaPaper(autores, fecha, titulo, revista, volumen, pag);
+            string consulta = "INSERT INTO Referencia(ref_proyecto,referencia) VALUES('" + id + "','" + referencia + "');";
+            if (this.conexion.RealizarConsultaNoQuery(consulta))
+            {
+                return Json(true, JsonRequestBehavior.AllowGet);
+
+            }
+            else
+            {
+                return Json(false, JsonRequestBehavior.AllowGet);
+
+            }
+        }
         /**
-         * <author>Matías Parra</author>
-         * <summary>
-         * Action POST que retorna una vista después se precionar el botón de guardar cambios en un proyecto.
-         * </summary>
-         * <returns> la vista de éxito. </returns>
-         */
-        // POST: Proyecto/Detalles/5
+        * <author>Matías Parra</author>
+        * <summary>
+        * Action POST que retorna una vista después se precionar el botón de guardar cambios en un proyecto.
+        * </summary>
+        * <returns> la vista de éxito. </returns>
+        */
+            // POST: Proyecto/Detalles/5
         public class ProyectoJsonRespuesta {
             public string id { set; get; }
             public string atributo { set; get; }
@@ -657,27 +707,46 @@ namespace AppWebERS.Controllers
                 return UsuarioSolicitanteRut;
             }
         }
-        
+
        
+
         [HttpGet]
         public ActionResult Requisito(int id)
         {
             ViewBag.IdProyecto = id;
-            Requisito requisito = new Requisito(null,null,null,null,null,null,null,null,null,null,null, DateTime.Now.ToString("yyyy-MM-dd"), null,null);
+            List<CheckBox> list =  obtenerActores(id);
+            Requisito requisito = new Requisito(null,null,null,null,null,null,null,null,null,null, DateTime.Now.ToString("yyyy-MM-dd"), null,null);
+            requisito.Actores = list;
             return View(requisito);
         }
 
         //ATENCION: FORMTATO FECHA: AAAA-MM-DD
         [HttpPost]
-        public ActionResult IngresarRequisito(string idRequisito, string nombre, string descripcion, string prioridad, string fuente,
-            string estabilidad, string estado, string tipoUsuario, string tipoRequisito, string medida, string escala,
-            string fecha, string incremento, string tipo, string idProyecto)
+        public ActionResult IngresarRequisito(Requisito r,string idProyecto)
         {
-            Requisito requisito = new Requisito(idRequisito, nombre, descripcion, prioridad, fuente, estabilidad, estado,
-                tipoUsuario, tipoRequisito, medida, escala, fecha, incremento, tipo);
-            int id = Int32.Parse(idProyecto);
-            if (requisito.RegistrarRequisito(id))
+            Requisito requisito = new Requisito(r.IdRequisito, r.Nombre, r.Descripcion, r.Prioridad, r.Fuente, r.Estabilidad, r.Estado
+               , r.TipoRequisito, r.Medida, r.Escala, r.Fecha, r.Incremento, r.Tipo);
+            List<String> listaa = new List<string>();
+            if (r.Actores != null)
             {
+                for (int i = 0; i < r.Actores.Count; i++)
+                {
+                    if (r.Actores[i].isChecked)
+                    {
+                        listaa.Add(r.Actores[i].id);
+                    }
+                }
+            }
+            int id = Int32.Parse(idProyecto);
+            string idVerdadero = requisito.RegistrarRequisito(id);
+            if (!idVerdadero.Equals(""))
+            {
+                
+                foreach (var actor in listaa) {
+                    if (!r.registrarActor(actor,idVerdadero)) {
+                        TempData["alerta"] = new Alerta("!!!!!", TipoAlerta.SUCCESS);
+                    }
+                }
                 TempData["alerta"] = new Alerta("Éxito al crear Requisito.", TipoAlerta.SUCCESS);
                 return RedirectToAction("Detalles/" + id, "Proyecto");
                 
@@ -878,7 +947,67 @@ namespace AppWebERS.Controllers
             }
              return value;
         }
+
+        private List<CheckBox> obtenerActores(int id) {
+            List<CheckBox> l = new List<CheckBox>();
+            //ARREGLAR LA CONSULTA
+            string consulta = "SELECT actor.nombre, actor.id_actor FROM actor WHERE actor.ref_proyecto = '" + id + "'";
+
+            MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
+            if (reader != null)
+            {
+                while (reader.Read())
+                {
+                    l.Add(new CheckBox() { nombre = reader[0].ToString(), id= reader[1].ToString(),isChecked = false });
+                }
+                Conector.CerrarConexion();
+            }
+            return l;
+        }
+
+        private List<Referencia> ObtenerReferencias(int id)
+        {
+            List<Referencia> lista = new List<Referencia>();
+
+            string consulta = "SELECT * FROM  referencia WHERE referencia.ref_proyecto = '" + id + "'";
+            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
+
+            if (reader != null)
+            {
+                while (reader.Read())
+                {
+                    Referencia referencia = new Referencia();
+                    referencia.id = reader[0].ToString();
+                    referencia.valor = reader[1].ToString();
+                    lista.Add(referencia);
+                }
+
+                return lista;
+            }
+            else
+            {
+                return null;
+            }
+
+
+        }
+
+        private string ParsearReferenciaLibro(string autores, string anio, string titulo, string lugar, string editorial)
+        {
+            string referencia;
+            referencia = autores + ", (" + anio + ")," + titulo + ", " + lugar + ":" + editorial + ".";
+            return referencia;
+        }
+
+        private string ParsearReferenciaPaper(string autores,string fecha, string titulo, string revista, string volumen, string pag)
+        {
+            string referencia;
+            referencia = autores + ",("+ fecha + "),"+ titulo + ", " + revista + "," + volumen + "," + pag + ".";
+            return referencia;
+
+        }
     }
 
-   
+
+
 }

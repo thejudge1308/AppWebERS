@@ -44,11 +44,11 @@
             @{@Html.LabelFor(p => ProyectoActual.Nombre, new { @class = "col-md-12 control-label" })}
             <div class="col-12">
                 @if(TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO) {
-                    <div id="nombre-edit"></div>
-                } else {
-                    {@Html.TextBoxFor(p => ProyectoActual.Nombre, new { @class = "form-control font-weight-bold", disabled = "disabled" })}
-            }
+                 {@Html.TextBoxFor(p => ProyectoActual.Nombre, new { @class = "form-control font-weight-bold"})}
 
+            } else {
+                {@Html.TextBoxFor(p => ProyectoActual.Nombre, new { @class = "form-control font-weight-bold", disabled = "disabled" })}
+            }
             </div>
             @if(TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO) {
                 <div class="mt-2 d-flex flex-row-reverse">
@@ -208,10 +208,6 @@
         </div>
 
     </div>
-
-    <button type="button" class="btn btn-primary" id="ejemplo_m">
-        Ejemplo de referencia
-    </button>
 
     @*Modal referencias*@
     <div class="modal fade" id="referencia_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

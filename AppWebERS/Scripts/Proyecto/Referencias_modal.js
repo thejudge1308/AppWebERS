@@ -36,14 +36,24 @@ $("#referencia_modal .modal-body").on("click", "#paper-button", function () {
  * */
 //Libro
 $('#referencia_modal .modal-footer').on('click', '#guardar_libro', function () {
-    //console.log("asdas");
-    console.log($("#autores-box").val());
+
+    $("#mensaje").text("");
+    if ($.trim($("#autores-box").val()) == "" || $.trim($("#anio-box").val()) == "" || $.trim($("#titulo-box").val()) == "" || $.trim($("#lugar-box").val()) == "" || $.trim($("#editorial-box").val())=="") {
+        $("#mensaje").text("Ingrese todos los datos.");
+    } else {
+        
+    }
+    
 });
 
 //Paper
 $('#referencia_modal .modal-footer').on('click', '#guardar_paper', function () {
-    //console.log("asdas");
-    //mostrarAlerta("asdasd");
+    $("#mensaje").text("");
+    if ($.trim($("#autores-box").val()) == "" || $.trim($("#anio-box").val()) == "" || $.trim($("#titulo-box").val()) == "" || $.trim($("#nombre-box").val()) == "" || $.trim($("#vol-box").val()) == "" || $.trim($("#pag-box").val()) == "") {
+        $("#mensaje").text("Ingrese todos los datos.");
+    } else {
+
+    }
 });
 
 
@@ -108,15 +118,15 @@ function book_modal() {
         '<div class="row">'+
         '<div class="col-md-12 col-sm-12 col-xs-12">' +
             '<div class="form-group">'+
-                        '<label class="control-label" for="name"> Autores. </label>'+
+                        '<label class="control-label"> Autores. </label>'+
                         '<input class="form-control" style="max-width: 100%;" id="autores-box" type="text" />'+
             '</div>'+
             '<div class="form-group">' +
-                '<label class="control-label" for="name"> Año de publicación. </label>' +
+                '<label class="control-label"> Año de publicación. </label>' +
                 '<input class="form-control" style="max-width: 100%;" id="anio-box" type="text" />' +
             '</div>' +
             '<div class="form-group">' +
-                '<label class="control-label " for="name"> Título del libro. </label>' +
+                '<label class="control-label"> Título del libro. </label>' +
                 '<input class="form-control" style="max-width: 100%;" id="titulo-box" type="text" />' +
             '</div>' +
             '<div class="form-group">' +
@@ -126,6 +136,9 @@ function book_modal() {
             '<div class="form-group">' +
                 '<label class="control-label " for="name"> Editorial. </label>' +
                 '<input class="form-control" style="max-width: 100%;" id="editorial-box" type="text" />' +
+            '</div>' +
+            '<div class="form-group">' +
+                '<label id="mensaje" class="control-label text-danger"></label>' +
             '</div>' +
         '</div>'+
         '</div>'+
@@ -139,27 +152,30 @@ function paper_modal() {
         '<div class="col-md-12 col-sm-12 col-xs-12">' +
         '<div class="form-group">' +
         '<label class="control-label" for="name"> Autores. </label>' +
-        '<input class="form-control" style="max-width: 100%;" id="name" name="name" type="text" />' +
+        '<input class="form-control" style="max-width: 100%;" id="autores-box" type="text" />' +
         '</div>' +
         '<div class="form-group">' +
         '<label class="control-label" for="name"> Año de publicación. </label>' +
-        '<input class="form-control" style="max-width: 100%;" id="name" name="name" type="text" />' +
+        '<input class="form-control" style="max-width: 100%;" id="anio-box" type="text" />' +
         '</div>' +
         '<div class="form-group">' +
         '<label class="control-label " for="name"> Título del libro. </label>' +
-        '<input class="form-control" style="max-width: 100%;" id="name" name="name" type="text" />' +
+        '<input class="form-control" style="max-width: 100%;" id="titulo-box" type="text" />' +
         '</div>' +
         '<div class="form-group">' +
         '<label class="control-label " for="name"> Nombre de la revista. </label>' +
-        '<input class="form-control" style="max-width: 100%;" id="name" name="name" type="text" />' +
+        '<input class="form-control" style="max-width: 100%;" id="nombre-box" type="text" />' +
         '</div>' +
         '<div class="form-group">' +
         '<label class="control-label " for="name"> Volumen. </label>' +
-        '<input class="form-control" style="max-width: 100%;" id="name" name="name" type="text" />' +
+        '<input class="form-control" style="max-width: 100%;" id="vol-box" type="text" />' +
         '</div>' +
         '<div class="form-group">' +
         '<label class="control-label " for="name"> Páginas. </label>' +
-        '<input class="form-control" style="max-width: 100%;" id="name" name="name" type="text" />' +
+        '<input class="form-control" style="max-width: 100%;" id="pag-box" type="text" />' +
+        '</div>' +
+        '<div class="form-group">' +
+        '<label id="mensaje" class="control-label text-danger"></label>' +
         '</div>' +
         '</div>' +
         '</div>' +
@@ -184,3 +200,19 @@ function filaVacia() {
     return html;
 }
 
+/*
+ * GET AND POST
+ */
+//Get
+function getReferencias() {
+
+}
+
+//Post
+function guardarLibro() {
+
+}
+
+function guardarRevista() {
+
+}

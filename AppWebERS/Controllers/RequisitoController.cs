@@ -46,7 +46,7 @@ namespace AppWebERS.Controllers
             string fecha, string incremento, string tipo)
         {
             Requisito requisito = new Requisito(idRequisito, nombre, descripcion, prioridad, fuente, estabilidad, estado,
-                tipoUsuario, tipoRequisito, medida, escala, fecha, incremento, tipo);
+                tipoRequisito, medida, escala, fecha, incremento, tipo);
             return View();
         }
     }

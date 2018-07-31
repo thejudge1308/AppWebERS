@@ -18,7 +18,6 @@
     fuente = Model.Fuente,
     estabilidad = Model.Estabilidad,
     estado = Model.Estado,
-    tipoUsuario = Model.TipoUsuario,
     tipoRequisito = Model.TipoRequisito,
     medida = Model.Medida,
     escala = Model.Escala,
@@ -28,127 +27,153 @@
     idProyecto = @ViewBag.IdProyecto
 }, FormMethod.Post)) {
 
-    <div class="card">
-        @Html.AntiForgeryToken()
-        <div class="card-header">
-            <div class="form-group row">
+<div class="card">
+    @Html.AntiForgeryToken()
+    <div class="card-header">
+        <div class="form-group row">
 
-                @Html.LabelFor(m => m.IdRequisito, new { @class = "col-form-label", style = "margin-left:15px" })
-                <div class="col-sm-3">
-                    @Html.TextBoxFor(m => m.IdRequisito, new { @class = "form-control mx-sm-2", placeholder = "RU1234", maxlenght = "6" })
-
-                </div>
-
-                @Html.LabelFor(m => m.Nombre, new { @class = "col-form-label", style = "margin-left:10px;margin-right:5px" })
-                @Html.TextBoxFor(m => m.Nombre, new { placeholder = "Ingrese Nombre del Requisito", @class = "form-control col-sm-6 " })
+            @Html.LabelFor(m => m.IdRequisito, new { @class = "col-form-label", style = "margin-left:15px" })
+            <div class="col-sm-3">
+                @Html.TextBoxFor(m => m.IdRequisito, new { @class = "form-control mx-sm-2", placeholder = "RU1234", maxlenght = "6" })
 
             </div>
-            <div>
-                @Html.ValidationMessageFor(m => m.IdRequisito, "", new { @style = "color:rgb(209,52,56); font-size:12px" })
-            </div>
-            <div>
-                @Html.ValidationMessageFor(m => m.Nombre, "", new { @style = "color:rgb(209,52,56); font-size:12px" })
-            </div>
-        </div>
-        <div class="card-body">
-            <div>
-                @Html.LabelFor(m => m.Descripcion)
-                @Html.TextAreaFor(m => m.Descripcion, new { placeholder = "Ingrese la descripción del requisito", @class = "form-control", style = "min-width:100%;margin-bottom:10px", rows = "5" })
-                @Html.ValidationMessageFor(m => m.Descripcion, "", new { @style = "color:rgb(209,52,56); font-size:12px" })
-            </div>
 
-            <div>
-                @Html.LabelFor(m => m.Fuente)
-                @Html.TextBoxFor(m => m.Fuente, new { placeholder = "", style = "min-width:100%;margin-bottom:10px", @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.Fuente, "", new { @style = "color:rgb(209,52,56); font-size:12px" })
-            </div>
-            <div>
-                @Html.LabelFor(m => m.TipoUsuario)
-                @Html.TextBoxFor(m => m.TipoUsuario, new { placeholder = "", @class = "form-control", style = "min-width:100%;margin-bottom:10px" })
-                @Html.ValidationMessageFor(m => m.TipoUsuario, "", new { @style = "color:rgb(209,52,56); font-size:12px" })
-            </div>
-
-            <div class="form-group row" style="margin-bottom:10px">
-                @Html.LabelFor(m => m.TipoRequisito, new { @class = "col-form-label", style = "margin-left:15px" })
-                <div class="col-sm-3">
-                    <select id="TipoRequisito" name="TipoRequisito" class="form-control mx-sm-2">
-                        <option>Funcional</option>
-                        <option>No Funcional</option>
-                    </select>
-                </div>
-
-                @Html.LabelFor(m => m.Estado, new { @class = "col-form-label", style = "margin-right:30px" })
-                <div class="col-sm-3">
-                    <select id="Estado" name="Estado" class="form-control mx-sm-2">
-                        <option>No Cumple</option>
-                        <option>Cumple</option>
-                    </select>
-                </div>
-                @Html.LabelFor(m => m.Tipo, new { @class = "col-form-label" })
-                <div class="col-sm-3">
-                    <select id="Tipo" name="Tipo" class="form-control mx-sm-2">
-                        <option>Usuario</option>
-                        <option>Sistema</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="form-group row" style="margin-bottom:10px">
-                @Html.LabelFor(m => m.Prioridad, new { @class = "col-form-label", style = "margin-left:15px;margin-right:35px" })
-                <div class="col-sm-3">
-                    <select id="Prioridad" name="Prioridad" class="form-control mx-sm-2">
-                        <option>Crítica</option>
-                        <option>No Crítica</option>
-                    </select>
-                </div>
-                @Html.LabelFor(m => m.Estabilidad, new { @class = "col-form-label" })
-                <div class="col-sm-3">
-                    <select id="Estabilidad" name="Estabilidad" class="form-control mx-sm-2">
-                        <option>Transable</option>
-                        <option>Intransable</option>
-                    </select>
-                </div>
-
-            </div>
-            <div class="form-group row" style="margin-bottom:10px">
-                @Html.LabelFor(m => m.Medida, new { @class = "col-sm-2 col-form-label" })
-                <div>
-                    @Html.TextBoxFor(m => m.Medida, new { placeholder = "Ingrese la medida", @class = "form-control mx-sm-2" })
-                    @Html.ValidationMessageFor(m => m.Medida, "", new { @style = "color:rgb(209,52,56); font-size:12px" })
-                </div>
-            </div>
-            <div>
-                @Html.LabelFor(m => m.Escala)
-                @Html.TextBoxFor(m => m.Escala, new { placeholder = "Escala", @class = "form-control col-form-label" })
-                @Html.ValidationMessageFor(m => m.Escala, "", new { @style = "color:rgb(209,52,56); font-size:12px" })
-
-            </div>
-            @*<form class="form-inline">
-                    <div class="form-group row" style="margin-bottom:10px">
-                        @Html.LabelFor(m => m.Fecha, new { @class = "col-sm-3 col-form-label" })
-                        <div class="col-sm-8">
-                            @Html.TextBoxFor(m => m.Fecha, new { placeholder = "Fecha Actualización", @class = "form-control mx-sm-2" })
-                        </div>
-                    </div>
-                </form>*@
-            <div>
-                @Html.LabelFor(m => m.Fecha)
-                @Html.TextBoxFor(m => m.Fecha, new { placeholder = "Fecha Actualizacion", @class = "form-control col-form-label", oncopy = "return false", onpaste = "return false"})
-                @Html.ValidationMessageFor(m => m.Fecha, "", new { @style = "color:rgb(209,52,56); font-size:12px" })
-            </div>
-            <div>
-                @Html.LabelFor(m => m.Incremento)
-                @Html.TextBoxFor(m => m.Incremento, new { placeholder = "Incremento", @class = "form-control col-form-label" })
-                @Html.ValidationMessageFor(m => m.Incremento, "", new { @style = "color:rgb(209,52,56); font-size:14px" })
-            </div>
+            @Html.LabelFor(m => m.Nombre, new { @class = "col-form-label", style = "margin-left:10px;margin-right:5px" })
+            @Html.TextBoxFor(m => m.Nombre, new { placeholder = "Ingrese Nombre del Requisito", @class = "form-control col-sm-6 " })
 
         </div>
-        <div class="form-group">
-            <div style="margin-top:10px;align">
-                <button type="submit" class="btn btn-success">Guardar cambios</button>
-            </div>
+        <div>
+            @Html.ValidationMessageFor(m => m.IdRequisito, "", new { @style = "color:rgb(209,52,56); font-size:12px" })
+        </div>
+        <div>
+            @Html.ValidationMessageFor(m => m.Nombre, "", new { @style = "color:rgb(209,52,56); font-size:12px" })
         </div>
     </div>
+    <div class="card-body">
+        <div>
+            @Html.LabelFor(m => m.Descripcion)
+            @Html.TextAreaFor(m => m.Descripcion, new { placeholder = "Ingrese la descripción del requisito", @class = "form-control", style = "min-width:100%;margin-bottom:10px", rows = "5" })
+            @Html.ValidationMessageFor(m => m.Descripcion, "", new { @style = "color:rgb(209,52,56); font-size:12px" })
+        </div>
+
+        <div>
+            @Html.LabelFor(m => m.Fuente)
+            @Html.TextBoxFor(m => m.Fuente, new { placeholder = "", style = "min-width:100%;margin-bottom:10px", @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Fuente, "", new { @style = "color:rgb(209,52,56); font-size:12px" })
+        </div>
+
+        <div class="form-group row" style="margin-bottom:10px">
+            @Html.LabelFor(m => m.TipoRequisito, new { @class = "col-form-label", style = "margin-left:15px" })
+            <div class="col-sm-3">
+                <select id="TipoRequisito" name="TipoRequisito" class="form-control mx-sm-2">
+                    <option>Funcional</option>
+                    <option>No Funcional</option>
+                </select>
+            </div>
+
+            @Html.LabelFor(m => m.Estado, new { @class = "col-form-label", style = "margin-right:30px" })
+            <div class="col-sm-3">
+                <select id="Estado" name="Estado" class="form-control mx-sm-2">
+                    <option>No Cumple</option>
+                    <option>Cumple</option>
+                </select>
+            </div>
+            @Html.LabelFor(m => m.Tipo, new { @class = "col-form-label" })
+            <div class="col-sm-3">
+                <select id="Tipo" name="Tipo" class="form-control mx-sm-2">
+                    <option>Usuario</option>
+                    <option>Sistema</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group row" style="margin-bottom:10px">
+            @Html.LabelFor(m => m.Prioridad, new { @class = "col-form-label", style = "margin-left:15px;margin-right:35px" })
+            <div class="col-sm-3">
+                <select id="Prioridad" name="Prioridad" class="form-control mx-sm-2">
+                    <option>Crítica</option>
+                    <option>No Crítica</option>
+                </select>
+            </div>
+            @Html.LabelFor(m => m.Estabilidad, new { @class = "col-form-label" })
+            <div class="col-sm-3">
+                <select id="Estabilidad" name="Estabilidad" class="form-control mx-sm-2">
+                    <option>Transable</option>
+                    <option>Intransable</option>
+                </select>
+            </div>
+
+        </div>
+        <div class="form-group row" style="margin-bottom:10px">
+            @Html.LabelFor(m => m.Medida, new { @class = "col-form-label", style = "margin-left:15px;margin-right:45px" })
+            <div class="col-sm-3">
+                @Html.TextBoxFor(m => m.Medida, new { placeholder = "Ingrese la medida", @class = "form-control mx-sm-2" })
+                @Html.ValidationMessageFor(m => m.Medida, "", new { @style = "color:rgb(209,52,56); font-size:12px" })
+            </div>
+        </div>
+        <div>
+            @Html.LabelFor(m => m.Escala)
+            @Html.TextBoxFor(m => m.Escala, new { placeholder = "Escala", @class = "form-control col-form-label" })
+            @Html.ValidationMessageFor(m => m.Escala, "", new { @style = "color:rgb(209,52,56); font-size:12px" })
+
+        </div>
+        @*<form class="form-inline">
+            <div class="form-group row" style="margin-bottom:10px">
+                @Html.LabelFor(m => m.Fecha, new { @class = "col-sm-3 col-form-label" })
+                <div class="col-sm-8">
+                    @Html.TextBoxFor(m => m.Fecha, new { placeholder = "Fecha Actualización", @class = "form-control mx-sm-2" })
+                </div>
+            </div>
+        </form>*@
+        <div>
+            @Html.LabelFor(m => m.Fecha)
+            @Html.TextBoxFor(m => m.Fecha, new { placeholder = "Fecha Actualizacion", @class = "form-control col-form-label", oncopy = "return false", onpaste = "return false" })
+            @Html.ValidationMessageFor(m => m.Fecha, "", new { @style = "color:rgb(209,52,56); font-size:12px" })
+        </div>
+        <div>
+            @Html.LabelFor(m => m.Incremento)
+            @Html.TextBoxFor(m => m.Incremento, new { placeholder = "Incremento", @class = "form-control col-form-label" })
+            @Html.ValidationMessageFor(m => m.Incremento, "", new { @style = "color:rgb(209,52,56); font-size:14px" })
+        </div>
+
+
+        @if (Model.Actores.Count != 0)
+        {
+            <label>Actores</label>
+            <div class="form-group " style="margin-bottom:10px">
+                <div style="padding-left:15px">
+                    @for(int i=0; i< Model.Actores.Count;i++){
+                        <div class="form-group d-inline-block">
+                            <div class="form-check-inline col-sm-1">
+
+                                @Html.HiddenFor(m => m.Actores[i].id)
+                                @Html.CheckBoxFor(m => m.Actores[i].isChecked,new { style ="margin-right:8px"})
+                                @Html.LabelFor(m => Model.Actores[i].isChecked, Model.Actores[i].nombre, new { @class = "form-check-label", style = "margin-right:5px" })
+
+                            </div>
+                        </div>
+                    }
+                    @**
+                    @foreach (var actor in Model.Actores)
+                    {
+                        <div class="form-group d-inline-block">
+                            <div class="form-check-inline col-sm-1">
+                                @Html.Label(actor.nombre, new { @class = "form-check-label", style = "margin-right:5px" })
+                                @Html.CheckBox(actor.nombre,false, new { value = actor.seleccionado ,@class = "form-check-input" })
+                            </div>
+                        </div>
+                    }*@
+                </div>
+            </div>
+        }
+    </div>
+    <div class="form-group">
+        <div style="margin-top:10px;align">
+            <button type="submit" class="btn btn-success">Guardar cambios</button>
+        </div>
+    </div>
+
+</div>
 
 
 }

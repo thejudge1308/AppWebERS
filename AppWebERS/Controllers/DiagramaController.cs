@@ -50,41 +50,37 @@ namespace AppWebERS.Controllers{
             int idProyecto = Int32.Parse(id);
             string tipoDeDiagrama = tipoDiagrama(diagramaValue);
             Debug.Write(tipoDeDiagrama);
+            string _FileName = Path.GetFileName(file.FileName);
+            string _path = Path.Combine(Server.MapPath("~/UploadedFiles"), _FileName);
 
             try
             {
-                // Este if-else comprueba que la extensión del archivo sea jpg, jpeg, png, bmp o gif
-                if ((string.Equals(Path.GetExtension(file.FileName), ".jpg",StringComparison.OrdinalIgnoreCase))
-                    || (string.Equals(Path.GetExtension(file.FileName), ".jpeg", StringComparison.OrdinalIgnoreCase))
-                    || (string.Equals(Path.GetExtension(file.FileName), ".png", StringComparison.OrdinalIgnoreCase))
-                    || (string.Equals(Path.GetExtension(file.FileName), ".bmp", StringComparison.OrdinalIgnoreCase))
-                    || (string.Equals(Path.GetExtension(file.FileName), ".gif", StringComparison.OrdinalIgnoreCase)))
+                if (this.ValidarExtencion(file))
                 {
+                    Debug.Write("extencion valida ");
                     if (file.ContentLength > 0)
                     {
-                        string _FileName = Path.GetFileName(file.FileName);
-                        string _path = Path.Combine(Server.MapPath("~/UploadedFiles"), _FileName);
-                        string ConsultaPath = "SELECT ruta FROM Diagrama WHERE ruta = '" + _path + "';";
-                        bool r = this.Conector.RealizarConsultaNoQuery(ConsultaPath);
-                        // Este if-else comprueba que el path no exista en la base de datos (filename repetido)
-                        if (!r)
+                        Debug.Write("largo valido ");
+                        if (this.ValidarURLNoRepetida(file)==true)
                         {
-                            Conector.CerrarConexion();
-                            int largoStringNombre = nombre.Length;
-                            // Este if-else comprueba que el largo del nombre del diagrama sea menor a 45 caracteres
-                            if (largoStringNombre > 45)
+                            Debug.Write("url no repetida ");
+                            if (this.ValidarLargoNombre(nombre)==false)
                             {
+                                Debug.Write("largo mas del maximo ");
                                 TempData["alerta"] = new Alerta("El nombre debe tener no más de 45 caracteres", TipoAlerta.ERROR);
                                 ViewBag.Message = "El nombre debe tener no más de 45 caracteres";
                             }
                             else
                             {
-                                if (largoStringNombre == 0) { nombre = "null"; }
-                                string ConsultaNombre = "SELECT nombre FROM Diagrama WHERE nombre = '" + nombre + "';";
-                                MySqlDataReader reader = this.Conector.RealizarConsulta(ConsultaNombre);
-                                // Este if-else comprueba que el nombre del diagrama no exista ya en la base de datos
-                                if (reader == null || nombre.Equals("null"))
+                                Debug.Write("BUEN LARGO");
+                                if (nombre.Length == 0)
                                 {
+                                    nombre = "null";
+                                }
+
+                                if (this.ValidarNombreNoRepetido(nombre)==true)
+                                {
+                                    Debug.Write("nombre no repedito");
                                     this.agregar(nombre, id, _path, tipoDeDiagrama);
                                     file.SaveAs(_path);
                                     TempData["alerta"] = new Alerta("Diagrama subido con éxito!!", TipoAlerta.SUCCESS);
@@ -92,6 +88,7 @@ namespace AppWebERS.Controllers{
                                 }
                                 else
                                 {
+                                    Debug.Write("Largo repetido");
                                     TempData["alerta"] = new Alerta("Ya existe un diagrama con este nombre", TipoAlerta.ERROR);
                                     ViewBag.Message = "Ya existe un diagrama con este nombre.";
                                 }
@@ -118,6 +115,92 @@ namespace AppWebERS.Controllers{
                 ViewBag.Message = "Falla en la subida del Diagrama!!";
                 TempData["alerta"] = new Alerta("Falla en la subida del Diagrama!!", TipoAlerta.ERROR);
                 return RedirectToAction("SubirDiagrama", "Diagrama", new { id = idProyecto });
+            }
+        }
+
+        public bool ValidarLargoNombre(string nombre)
+        {
+            if (nombre.Length > 45)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public bool ValidarNombreNoRepetido(string nombre)
+        {
+            try
+            {
+                string ConsultaNombre = "SELECT nombre FROM Diagrama WHERE nombre = '" + nombre + "';";
+                MySqlDataReader reader = this.Conector.RealizarConsulta(ConsultaNombre);
+                if (reader == null)
+                {
+                    this.Conector.CerrarConexion();
+                    return true;
+                }
+                else
+                {
+                    while (reader.Read())
+                    {
+                        return false;
+                    }
+                  
+                    this.Conector.CerrarConexion();
+                    return false;
+                   
+                }
+            }
+            catch
+            {
+                return true;
+            }
+        }
+
+        public bool ValidarURLNoRepetida(HttpPostedFileBase file)
+        {
+            try
+            {
+                string _FileName = Path.GetFileName(file.FileName);
+                string _path = Path.Combine(Server.MapPath("~/UploadedFiles"), _FileName);
+                string ConsultaPath = "SELECT ruta FROM Diagrama WHERE ruta = '" + _path + "';";
+                MySqlDataReader reader = this.Conector.RealizarConsulta(ConsultaPath);
+                if (reader == null)
+                {
+                    this.Conector.CerrarConexion();
+                    return true;
+                }
+                else
+                {
+                    while (reader.Read())
+                    {
+                        return false;
+                    }
+
+                    this.Conector.CerrarConexion();
+                    return false;
+
+                }
+            }
+            catch
+            {
+                return true;
+            }
+        }
+
+        public bool ValidarExtencion(HttpPostedFileBase file)
+        {
+            if ((string.Equals(Path.GetExtension(file.FileName), ".jpg", StringComparison.OrdinalIgnoreCase))
+           
+                   || (string.Equals(Path.GetExtension(file.FileName), ".jpeg", StringComparison.OrdinalIgnoreCase))
+                   || (string.Equals(Path.GetExtension(file.FileName), ".png", StringComparison.OrdinalIgnoreCase))
+                   || (string.Equals(Path.GetExtension(file.FileName), ".bmp", StringComparison.OrdinalIgnoreCase))
+                   || (string.Equals(Path.GetExtension(file.FileName), ".gif", StringComparison.OrdinalIgnoreCase)))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 

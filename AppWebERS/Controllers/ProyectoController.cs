@@ -1,18 +1,13 @@
 ﻿using AppWebERS.Models;
+using AppWebERS.Utilidades;
+using AspNet.Identity.MySQL;
+using Microsoft.AspNet.Identity;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using AppWebERS.Utilidades;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Data;
-using Microsoft.AspNet.Identity;
-using AspNet.Identity.MySQL;
-using Microsoft.AspNet.Identity.Owin;
-using AppWebERS.Utilidades;
 using System.IO;
+using System.Web.Mvc;
 
 
 namespace AppWebERS.Controllers
@@ -1126,6 +1121,11 @@ namespace AppWebERS.Controllers
                 TempData["alerta"] = new Alerta("El Id del Requisito ingresado ya existe dentro del Proyecto", TipoAlerta.ERROR);
             }
             return RedirectToAction("ListarRequisitosMinimalista", "Proyecto", new { id = idProyecto });
+        }
+
+        public ActionResult ListarDiagramas()
+        {
+            return View();
         }
     }
 

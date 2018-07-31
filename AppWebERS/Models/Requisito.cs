@@ -279,6 +279,14 @@ namespace AppWebERS.Models {
             return false;
         }
 
+        /**
+         * 
+         * <autor>Diego Iturriaga</autor>
+         * <summary>Metodo para verificar el id de un requisito en especifico dentro de un proyecto.</summary>
+         * <param name="idProyecto">Id del proyecto al que se asocia el requisito.</param>
+         * <param name="idRequisito">Id del requisito que se desea comprobar si esta en uso (Ej: RU001)</param>
+         * <returns>True si el Id es valido / False si el Id no es valido para agregar el Requisito.</returns>
+         */
         public bool VerificarIdRequisito(int idProyecto, string idRequisito)
         {
             ApplicationDbContext conexionLocal = ApplicationDbContext.Create();
@@ -375,6 +383,14 @@ namespace AppWebERS.Models {
             return false;
         }
 
+        /**
+         * 
+         * <autor>Diego Iturriaga</autor>
+         * <summary>Metodo para obtener el numero de un requisito en especifico.</summary>
+         * <param name="idProyecto">Id del proyecto al que se asocia el requisito.</param>
+         * <param name="idRequisito">Id del requisito que se desea obtener su numero.</param>
+         * <returns>El numero del requisto (Se refiere a la variable autoincremental - PK).</returns>
+         */
         public int ObtenerNumRequisito(int idProyecto, string idRequisito)
         {
             ApplicationDbContext conexionPrivada = ApplicationDbContext.Create();
@@ -390,6 +406,14 @@ namespace AppWebERS.Models {
             return -1;
         }
 
+        /**
+         * 
+         * <autor>Diego Iturriaga</autor>
+         * <summary>Metodo para validar si el nombre de un requisito esta en uso dentro de un proyecto.</summary>
+         * <param name="idProyecto">Id del proyecto al que se asocia el requisito.</param>
+         * <param name="nombreRequisito">Nombre del requisito que se desea comprobar si esta en uso.</param>
+         * <returns>True si el nombre es valido / False si el nombre no es valido para agregar el Requisito.</returns>
+         */
         public bool ValidarNombreRequisito(int idProyecto, string nombreRequisito)
         {
             ApplicationDbContext conexionLocal = ApplicationDbContext.Create();

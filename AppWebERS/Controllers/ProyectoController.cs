@@ -145,16 +145,34 @@ namespace AppWebERS.Controllers
 
         // GET: Proyecto/ListaUsuarios/5
         public ActionResult ListaUsuarios(int id) {
+            String idUsuario;
+            using (var db = ApplicationDbContext.Create())
+            {
+                var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
+                string s = User.Identity.GetUserId();
+                ApplicationUser user = userManager.FindByIdAsync(s).Result;
+                idUsuario = user.Id;
+
+            }
+            
             Proyecto proyecto = this.GetProyecto(id);
-            List<Usuario> usuarios = new Proyecto().GetListaUsuarios(id);
-            List<SolicitudDeProyecto> solicitudes = new Proyecto().GetSolicitudesProyecto(id);
-            //Debug.WriteLine("Permiso: " + TipoDePermiso());
-            ViewData["proyecto"] = proyecto;
-            ViewData["usuarios"] = usuarios;
-            ViewData["solicitudes"] = solicitudes;
-            Debug.WriteLine("Lista de usuarios" + usuarios);
-            ViewData["permiso"] = TipoDePermiso(id);
-            return View();
+            int permiso = proyecto.ObtenerRolDelUsuario(idUsuario,id);
+            if (permiso==1 || permiso==2 ||  permiso==0)
+            {
+                List<Usuario> usuarios = new Proyecto().GetListaUsuarios(id);
+                List<SolicitudDeProyecto> solicitudes = new Proyecto().GetSolicitudesProyecto(id);
+                //Debug.WriteLine("Permiso: " + TipoDePermiso());
+                ViewData["proyecto"] = proyecto;
+                ViewData["usuarios"] = usuarios;
+                ViewData["solicitudes"] = solicitudes;
+                Debug.WriteLine("Lista de usuarios" + usuarios);
+                ViewData["permiso"] = TipoDePermiso(id);
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
        
@@ -244,7 +262,7 @@ namespace AppWebERS.Controllers
                         this.conexion.EnsureConnectionClosed();
                         return true;
                     }   
-            }
+                }
             }
             this.conexion.EnsureConnectionClosed();
             return false;
@@ -779,24 +797,51 @@ namespace AppWebERS.Controllers
                 return UsuarioSolicitanteRut;
             }
         }
-        
-       
+        /**
+          * <author>Diego Iturriaga</author>
+          * <summary>
+          * Action GET que retorna la vista Requiito para ingresar un requisito segun los campos de un volere
+          * si el usuario cumple con los permisos de accesso.
+          * </summary>
+          * <param name="id">id correspondiente al Proyecto Actual.</param>
+          * <returns> Redireccion a la ventana Requisito si el usuario Cumple con los permisos.
+          * Redirreciona al index si el usuario no tiene los permisos para entrar a la vista.</returns>
+          */
+
         [HttpGet]
         public ActionResult Requisito(int id)
         {
-            ViewBag.IdProyecto = id;
-            Requisito requisito = new Requisito(null,null,null,null,null,null,null,null,null,null, DateTime.Now.ToString("yyyy-MM-dd"), null,null);
-            return View(requisito);
+            String idUsuario;
+            using (var db = ApplicationDbContext.Create())
+            {
+                var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
+                string s = User.Identity.GetUserId();
+                ApplicationUser user = userManager.FindByIdAsync(s).Result;
+                idUsuario = user.Id;
+
+            }
+            Proyecto proyecto = this.GetProyecto(id);
+            int permiso = proyecto.ObtenerRolDelUsuario(idUsuario, id);
+            if (permiso==0 || permiso == 2)
+            {
+                ViewBag.IdProyecto = id;
+                Requisito requisito = new Requisito(null, null, null, null, null, null, null, null, null, null, DateTime.Now.ToString("yyyy-MM-dd"), null, null);
+                return View(requisito);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         //ATENCION: FORMTATO FECHA: AAAA-MM-DD
         /**
           * <author>Diego Iturriaga</author>
           * <summary>
-          * Action POST que retorna una redireccion a Detalles despues de ejecutar al insertar un proyecto.
+          * Action POST que retorna una redireccion a Detalles despues de ejecutar la insercion de un requisito.
           * </summary>
           * <param>Todos los atributos de un requisito.</param>
-          * <returns> Redireccion a la ventana Detalles.</returns>
+          * <returns> Redireccion a la ventana Detalles si se registra el Requisisto.</returns>
           */
         [HttpPost]
         public ActionResult IngresarRequisito(string idRequisito, string nombre, string descripcion, string prioridad, string fuente,
@@ -809,15 +854,22 @@ namespace AppWebERS.Controllers
             int id = Int32.Parse(idProyecto);
             if (requisito.VerificarIdRequisito(id,idRequisito))
             {
-                if (requisito.RegistrarRequisito(id))
+                if (requisito.ValidarNombreRequisito(id, nombre))
                 {
-                    TempData["alerta"] = new Alerta("Exito al crear Requisito", TipoAlerta.SUCCESS);
-                    return RedirectToAction("Detalles/" + id, "Proyecto");
+                    if (requisito.RegistrarRequisito(id))
+                    {
+                        TempData["alerta"] = new Alerta("Exito al crear Requisito", TipoAlerta.SUCCESS);
+                        return RedirectToAction("Detalles/" + id, "Proyecto");
 
+                    }
+                    else
+                    {
+                        TempData["alerta"] = new Alerta("ERROR al crear Requisito", TipoAlerta.ERROR);
+                    }
                 }
                 else
                 {
-                    TempData["alerta"] = new Alerta("ERROR al crear Requisito", TipoAlerta.ERROR);
+                    TempData["alerta"] = new Alerta("El Nombre del Requisito ingresado ya existe dentro del Proyecto", TipoAlerta.ERROR);
                 }
             }
             else
@@ -996,6 +1048,7 @@ namespace AppWebERS.Controllers
 
         public ActionResult SolicitudDeProyecto(int id)
         {
+
             string s;
             using (var db = ApplicationDbContext.Create())
             {

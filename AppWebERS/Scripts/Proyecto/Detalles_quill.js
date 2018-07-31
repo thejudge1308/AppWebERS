@@ -84,38 +84,38 @@ $(document).ready(function () {
            //console.log(data);
             var emptydata = "<p></br></p>";
             //obtener valores
-            var nombre = data.Nombre === "" ? emptydata : data.Nombre;
+            //var nombre = data.Nombre === "" ? emptydata : data.Nombre;
             var proposito = data.Proposito === "" ? emptydata : data.Proposito;
             var alcance = data.Alcance === "" ? emptydata : data.Alcance;
             var contexto = data.Contexto === "" ? emptydata : data.Contexto;
             var definicion = data.Definiciones === "" ? emptydata : data.Definiciones;
             var acronimo = data.Acronimos === "" ? emptydata : data.Acronimos;
             var abreviatura = data.Abreviaturas === "" ? emptydata : data.Abreviaturas;
-            var referencia = data.Referencias === "" ? emptydata : data.Referencias;
+            //var referencia = data.Referencias === "" ? emptydata : data.Referencias;
             var ambiente = data.AmbienteOperacional === "" ? emptydata : data.AmbienteOperacional;
             var relacion = data.RelacionProyectos === "" ? emptydata : data.RelacionProyectos;
 
             //Set space
-            $('#nombre-edit .ql-editor').empty();
+            //$('#nombre-edit .ql-editor').empty();
             $('#proposito-edit .ql-editor').empty();
             $('#alcance-edit .ql-editor').empty();
             $('#contexto-edit .ql-editor').empty();
             $('#definicion-edit .ql-editor').empty();
             $('#acronimo-edit .ql-editor').empty();
             $('#abreviatura-edit .ql-editor').empty();
-            $('#referencia-edit .ql-editor').empty();
+            //$('#referencia-edit .ql-editor').empty();
             $('#ambiente-edit .ql-editor').empty();
             $('#relacion-edit .ql-editor').empty();
 
             //cargar la informacion 
-            $('#nombre-edit .ql-editor').append(nombre);
+            //$('#nombre-edit .ql-editor').append(nombre);
             $('#proposito-edit .ql-editor').append(proposito);
             $('#alcance-edit .ql-editor').append(alcance);
             $('#contexto-edit .ql-editor').append(contexto);
             $('#definicion-edit .ql-editor').append(definicion);
             $('#acronimo-edit .ql-editor').append(acronimo);
             $('#abreviatura-edit .ql-editor').append(abreviatura);
-            $('#referencia-edit .ql-editor').append(referencia);
+            //$('#referencia-edit .ql-editor').append(referencia);
             $('#ambiente-edit .ql-editor').append(ambiente);
             $('#relacion-edit .ql-editor').append(relacion);
 

@@ -107,6 +107,7 @@ namespace AppWebERS.Models
         public string Password { get; set; }
 
         public bool Estado { get; set; }
+        public bool DisponibilidadVinculacion { get; set; }
 
         public string Rut { get; set;}
         public string AntiguoNombre {get; set;}
@@ -122,6 +123,7 @@ namespace AppWebERS.Models
             this.AntiguoNombre = usuario.UserName;
             this.AntiguoEmail = usuario.Email;
             this.AntiguoEstado = usuario.Estado;
+            this.DisponibilidadVinculacion = usuario.DisponibilidadVinculacion;
         }
     }
 

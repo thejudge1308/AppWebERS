@@ -6,6 +6,7 @@ using System.Data;
 using MySql.Data.MySqlClient;
 using System.Linq;
 using System.Web;
+using MySql.Data.MySqlClient;
 
 /**
  * Autor: Gerardo Estrada (Meister1412)
@@ -27,7 +28,6 @@ namespace AppWebERS.Models {
         * <param name = "estado" > El estado del requisito.</param>
         * <param name = "tipo" > El tipo  del requisito.</param>
         * <param name = "actores" > Lista de actores que tienen algún tipo de participación en el requisito.</param>
-        * FALTAN UNOS
         **/
         public Requisito(string idRequisito, string nombre, string descripcion, string prioridad, string fuente,
             string estabilidad, string estado, string tipoRequisito, string medida, string escala,
@@ -307,6 +307,181 @@ namespace AppWebERS.Models {
                 return true;
             }
             return false;
+        }
+
+        public bool VerificarIdRequisito(int idProyecto, string idRequisito)
+        {
+            ApplicationDbContext conexionLocal = ApplicationDbContext.Create();
+            string consulta = "SELECT requisito.id_requisito FROM requisito WHERE ref_proyecto = "+ idProyecto + ";";
+            MySqlDataReader reader = conexionLocal.RealizarConsulta(consulta);
+            if (reader != null)
+            {
+                while (reader.Read())
+                {
+                    string idReqBD = reader["id_requisito"].ToString();
+                    if (idReqBD==idRequisito)
+                    {
+                        conexionLocal.EnsureConnectionClosed();
+                        return false; //Ya existe Requisito con el codigo ingresado.
+                    }
+                }
+            }
+            conexionLocal.EnsureConnectionClosed();
+            return true;//No existe Requisito con el codigo ingresado. Codigo valido.
+        }
+
+        /**
+         * <author>Roberto Ureta</author>
+         * <summary>
+         * Obtiene un diccionario de acuerdo a un proyecto donde la clave es el requisito de usuario y el valor es una lista de requisitos de sistema.
+         * </summary>
+         * <param name="id">entero que contiene el id de un proyecto</param>
+         * <returns> diccionario con el requisito de usuario como clave y como valor una lista de requisitos de sistema</returns>
+         */
+        public Dictionary<Requisito, List<Requisito>> ObtenerDiccionarioRequisitos(int id) {
+            Dictionary<Requisito, List<Requisito>> diccionarioRequisitos = new Dictionary<Requisito, List<Requisito>>();
+            string consulta = "SELECT requisito.* FROM requisito WHERE requisito.tipo='USUARIO' AND requisito.ref_proyecto ="+id+";";
+            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
+            if (reader != null)
+            {
+                while (reader.Read())
+                {
+                    Requisito RequisitoUsuario = new Requisito()
+                    {
+                        IdRequisito = reader["id_requisito"].ToString(),
+                        Nombre = reader["nombre"].ToString(),
+                        Descripcion = reader["descripcion"].ToString(),
+                        Prioridad = reader["prioridad"].ToString(),
+                        Fuente = reader["fuente"].ToString(),
+                        Estabilidad = reader["estabilidad"].ToString(),
+                        Estado = reader["estado"].ToString(),
+                        TipoRequisito = reader["categoria"].ToString(),
+                        Medida = reader["medida"].ToString(),
+                        Escala = reader["escala"].ToString(),
+                        Fecha = reader["fecha_actualizacion"].ToString(),
+                        Incremento = reader["incremento"].ToString(),
+                        Tipo = reader["tipo"].ToString()
+                    };
+                    diccionarioRequisitos.Add(RequisitoUsuario, ObtenerListaRequisitosSistema(id,ObtenerNumRequisito(id, RequisitoUsuario.IdRequisito)));
+                }
+            }
+            this.conexion.EnsureConnectionClosed();
+            return diccionarioRequisitos;
+        }
+        /**
+         * 
+         * <autor>Diego Iturriaga</autor>
+         * <summary>Metodo para registrar un requisito de software en la base de datos.</summary>
+         * <param name="idProyecto">Id del proyecto al que pertenece el proyecto.</param>
+         * <param name="idRequisitoSistema">Id del requisito de sistema que se desea agregar.</param>
+         * <param name="idRequisitoUsuario">Id del requisito de usuario al que se asocia el requisito de usuario.</param>
+         * <returns>True si se registra exitosamente, false si falla el registro.</returns>
+         */ 
+        public bool RegistrarRequisitoDeSoftwareMinimalista(int idProyecto, string idRequisitoUsuario, string idRequisitoSistema)
+        {
+            if (!string.IsNullOrEmpty(idRequisitoUsuario) && !string.IsNullOrEmpty(idRequisitoSistema))
+            {
+                ApplicationDbContext conexionLocal = ApplicationDbContext.Create();
+                string consultaInsert = "INSERT INTO requisito(id_requisito, nombre, descripcion, fuente, categoria, " +
+                    "prioridad, estabilidad, estado, medida, escala, incremento, fecha_actualizacion, ref_proyecto, tipo) " +
+                    "VALUES ('" + this.IdRequisito + "','" + this.Nombre + "','" + this.Descripcion + "','" + this.Fuente + "','" +
+                     this.TipoRequisito + "','" + this.Prioridad + "','" + this.Estabilidad + "','" + this.Estado + "','" + this.Medida
+                     + "','" + this.Escala + "','" + this.Incremento + "','" + this.Fecha + "'," + idProyecto + ",'" + this.Tipo + "'); ";
+                if (conexionLocal.RealizarConsultaNoQuery(consultaInsert))
+                {
+                    int num_requisitoUsuario = this.ObtenerNumRequisito(idProyecto, idRequisitoUsuario);
+                    int num_requisitoSistema = this.ObtenerNumRequisito(idProyecto, idRequisitoSistema);
+                    if (num_requisitoSistema != -1 && num_requisitoUsuario != -1)
+                    {
+                        string consultaInsert2 = "INSERT INTO asociacion(req_usuario, req_software) VALUES(" + num_requisitoUsuario + "," + num_requisitoSistema + ");";
+                        if (conexionLocal.RealizarConsultaNoQuery(consultaInsert2))
+                        {
+                            return true;
+                        }
+                    }
+
+                }
+            }
+            return false;
+        }
+
+        public int ObtenerNumRequisito(int idProyecto, string idRequisito)
+        {
+            ApplicationDbContext conexionPrivada = ApplicationDbContext.Create();
+            string consulta = "SELECT requisito.num_requisito FROM requisito WHERE ref_proyecto="+idProyecto+" AND id_requisito='"+idRequisito+"';";
+            MySqlDataReader reader = conexionPrivada.RealizarConsulta(consulta);
+            if (reader != null)
+            {
+                reader.Read();
+                int num_requisito = Int32.Parse(reader["num_requisito"].ToString());
+                conexionPrivada.EnsureConnectionClosed();
+                return num_requisito;
+            }
+            return -1;
+        }
+
+        public bool ValidarNombreRequisito(int idProyecto, string nombreRequisito)
+        {
+            ApplicationDbContext conexionLocal = ApplicationDbContext.Create();
+            string consulta = "SELECT requisito.nombre FROM requisito WHERE ref_proyecto ="+idProyecto+" ;";
+            MySqlDataReader reader = conexionLocal.RealizarConsulta(consulta);
+            if (reader != null)
+            {
+                while (reader.Read())
+                {
+                    string nombreReqBD = reader["nombre"].ToString();
+                    if (nombreReqBD == nombreRequisito)
+                    {
+                        conexionLocal.EnsureConnectionClosed();
+                        return false; //Ya existe Requisito con el nombre ingresado.
+                    }
+                }
+            }
+            conexionLocal.EnsureConnectionClosed();
+            return true;
+        }
+
+        /**
+         * <author>Roberto Ureta</author>
+         * <summary>
+         * Obtiene una lista de requisitos de sistema que le corresponden a un requisito de usuario especifico.
+         * </summary>
+         * <param name="id">entero que contiene el id de un proyecto</param>
+         * <param name="idRequisito">string que contiene el id de un requisito de usuario</param>
+         * <returns> lista con los requisitos de sistema correspondientes a un requisito de usuario.</returns>
+         */
+        public List<Requisito> ObtenerListaRequisitosSistema(int id, int idRequisito)
+        {
+            List<Requisito> listaRequisitos = new List<Requisito>();
+            ApplicationDbContext conexion1 = ApplicationDbContext.Create();
+            string nombre = String.Empty;
+            string consulta = "SELECT requisito.* FROM requisito,asociacion WHERE asociacion.req_software = requisito.num_requisito AND asociacion.req_usuario = "+idRequisito+" AND requisito.ref_proyecto ="+id+";";
+            MySqlDataReader reader = conexion1.RealizarConsulta(consulta);
+            if (reader != null)
+            {
+                while (reader.Read())
+                {
+                    Requisito requisitoSistema = new Requisito()
+                    {
+                        IdRequisito = reader["id_requisito"].ToString(),
+                        Nombre = reader["nombre"].ToString(),
+                        Descripcion = reader["descripcion"].ToString(),
+                        Prioridad = reader["prioridad"].ToString(),
+                        Fuente = reader["fuente"].ToString(),
+                        Estabilidad = reader["estabilidad"].ToString(),
+                        Estado = reader["estado"].ToString(),
+                        TipoRequisito = reader["categoria"].ToString(),
+                        Medida = reader["medida"].ToString(),
+                        Escala = reader["escala"].ToString(),
+                        Fecha = reader["fecha_actualizacion"].ToString(),
+                        Incremento = reader["incremento"].ToString(),
+                        Tipo = reader["tipo"].ToString()
+                    };
+                    listaRequisitos.Add(requisitoSistema);
+                }
+            }            
+            conexion1.EnsureConnectionClosed();
+            return listaRequisitos.OrderBy(requisito => requisito.IdRequisito).ToList();
         }
     }
 }

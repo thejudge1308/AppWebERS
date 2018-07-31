@@ -29,49 +29,50 @@
         </li>
     </ul>
     @{
-    <div>
-        @using (Html.BeginForm("GuardarRequisitoUsuarioMinimilista", "Proyecto", new
-        {
-            idProyecto = ProyectoActual.IdProyecto
-        }, FormMethod.Post))
-        {
-            <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                Agregar Requisito
-            </a>
+        <div class="dropdown-divider"></div>
+        <div>
+            @using (Html.BeginForm("GuardarRequisitoUsuarioMinimilista", "Proyecto", new
+            {
+                idProyecto = ProyectoActual.IdProyecto
+            }, FormMethod.Post))
+            {
+                <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                    Agregar Requisito
+                </a>
 
-            <div class="collapse" id="collapseExample">
-                <div class="card card-body w-50">
-                    @Html.Display("Id Requisito")
-                    @Html.EditorFor(m => m.IdRequisito, new { htmlAttributes = new { @class = "form-control mx-auto my-3", placeholder = "Ingrese Id del Requisito" } })
-                    @Html.ValidationMessageFor(m => m.IdRequisito, "", new { @class = "text-danger" })
+                <div class="collapse" id="collapseExample">
+                    <div class="card card-body w-50">
+                        @Html.Display("Id Requisito")
+                        @Html.EditorFor(m => m.IdRequisito, new { htmlAttributes = new { @class = "form-control mx-auto my-3", placeholder = "Ingrese Id del Requisito" } })
+                        @Html.ValidationMessageFor(m => m.IdRequisito, "", new { @class = "text-danger" })
 
-                    @Html.Display(" Nombre del Requisito")
-                    @Html.EditorFor(m => m.Nombre, new { htmlAttributes = new { @class = "form-control mx-auto m-3", placeholder = "Ingrese Nombre del requisito" } })
-                    @Html.ValidationMessageFor(m => m.Nombre, "", new { @class = "text-danger" })
+                        @Html.Display(" Nombre del Requisito")
+                        @Html.EditorFor(m => m.Nombre, new { htmlAttributes = new { @class = "form-control mx-auto m-3", placeholder = "Ingrese Nombre del requisito" } })
+                        @Html.ValidationMessageFor(m => m.Nombre, "", new { @class = "text-danger" })
 
-                    <button class="btn btn-primary w-50 mx-auto" type="submit">Guardar Cambios</button>
+                        <button class="btn btn-primary w-50 mx-auto" type="submit">Guardar Cambios</button>
+                    </div>
                 </div>
-            </div>
-        }
-        @foreach (KeyValuePair<Requisito, List<Requisito>> r in diccionarioRequisitos)
-        {
-            <div>
-                <div id="accordion" role="tablist" class="mt-1">
-                    <div class="card">
-                        <div class="card-header" role="tab" id="headingOne">
-                            <h5 class="mb-0">
-                                <a data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                    @r.Key.IdRequisito - @r.Key.Nombre
-                                </a>
-                            </h5>
-							
-                        </div>
-                        <div id="collapseOne" class="collapse" role="tabpanel" aria-labelledby="headingOne">
+            }
+            @foreach (KeyValuePair<Requisito, List<Requisito>> r in diccionarioRequisitos)
+            {
+                <div>
+                    <div id="accordion" role="tablist" class="mt-1">
+                        <div class="card">
+                            <div class="card-header" role="tab" id="headingOne">
+                                <h5 class="mb-0">
+                                    <a data-toggle="collapse" href="#@r.Key.IdRequisito" aria-expanded="true" aria-controls=@r.Key.IdRequisito>
+                                        @r.Key.IdRequisito - @r.Key.Nombre
+                                    </a>
+                                </h5>
 
-                            @foreach (Requisito req in r.Value)
-                            {
-                                    <div class="card-body inline">
-                                        <div class="card w-100 mx-2">
+                            </div>
+                            <div id=@r.Key.IdRequisito class="collapse" role="tabpanel" aria-labelledby="headingOne">
+
+                                @foreach (Requisito req in r.Value)
+                                {
+                                    <div class="card-body py-1">
+                                        <div class="card w-100 mb-1">
                                             <div class="card-header" role="tab" id="headingOne">
                                                 <h5 class="mb-0">
                                                     @req.IdRequisito - @req.Nombre
@@ -79,46 +80,46 @@
                                             </div>
                                         </div>
                                     </div>
-                            }
+                                }
 
-                            <div class="d-flex justify-content-end mt-3">
-                                <a class="btn btn-primary" data-toggle="collapse" href="#collapse1" aria-expanded="false" aria-controls="collapseExample">
-                                    Agregar
-                                </a>
-                            </div>
+                                <div class="d-flex justify-content-end mb-1 mr-2">
+                                    <a class="btn btn-primary" data-toggle="collapse" href="#@r.GetHashCode()" aria-expanded="false" aria-controls=@r.GetHashCode()>
+                                        Agregar
+                                    </a>
+                                </div>
 
-                            @using (Html.BeginForm("AgregarRequisitoDeSoftwareMinimalista", "Proyecto", new
-                            {
-                                idRequisitoUsuario = @r.Key.IdRequisito,
-                                idProyecto = ProyectoActual.IdProyecto
-                            }, FormMethod.Post))
-                            {
+                                @using (Html.BeginForm("AgregarRequisitoDeSoftwareMinimalista", "Proyecto", new
+                                {
+                                    idRequisitoUsuario = @r.Key.IdRequisito,
+                                    idProyecto = ProyectoActual.IdProyecto
+                                }, FormMethod.Post))
+                                {
 
-                                <div class="collapse" id="collapse1">
-                                    <div class="card card-body w-100">
-                                        <div class="form-inline w-100 d-flex flex-wrap justify-content-center">
-                                            <div class="col-3">
-                                                @Html.Display("Id Requisito")
-                                                @Html.EditorFor(m => m.IdRequisito, new { htmlAttributes = new { @class = "form-control  my-3 w-100", placeholder = "Ingrese Id del Requisito", style = "max-width:100%" } })
-                                            </div> -
-                                            <div class="col-8">
-                                                @Html.Display(" Nombre del Requisito")
-                                                @Html.EditorFor(m => m.Nombre, new { htmlAttributes = new { @class = "form-control my-3 w-100", placeholder = "Ingrese Nombre del requisito", style = "max-width:100%" } })
+                                    <div class="collapse" id=@r.GetHashCode()>
+                                        <div class="card card-body w-100">
+                                            <div class="form-inline w-100 d-flex flex-wrap justify-content-center">
+                                                <div class="col-3">
+                                                    @Html.Display("Id Requisito")
+                                                    @Html.EditorFor(m => m.IdRequisito, new { htmlAttributes = new { @class = "form-control  my-3 w-100", placeholder = "Ingrese Id del Requisito", style = "max-width:100%" } })
+                                                </div> -
+                                                <div class="col-8">
+                                                    @Html.Display(" Nombre del Requisito")
+                                                    @Html.EditorFor(m => m.Nombre, new { htmlAttributes = new { @class = "form-control my-3 w-100", placeholder = "Ingrese Nombre del requisito", style = "max-width:100%" } })
+                                                </div>
+                                            </div>
+                                            <div class="d-flex justify-content-end">
+                                                <button class="btn btn-primary" type="submit">Guardar Cambios</button>
                                             </div>
                                         </div>
-                                        <div class="d-flex justify-content-end">
-                                            <button class="btn btn-primary" type="submit">Guardar Cambios</button>
-                                        </div>
                                     </div>
-                                </div>
-                            }
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        }
-    </div>
-     }
+            }
+        </div>
+    }
 
 
 

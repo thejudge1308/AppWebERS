@@ -105,7 +105,7 @@ namespace AppWebERS.Controllers
                     return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
                 case SignInStatus.Failure:
                 default:
-                    TempData["alerta"] = new Alerta("Intento de inicio de sesion no valido.", TipoAlerta.ERROR);
+                    TempData["alerta"] = new Alerta("Intento de inicio de sesión no válido.", TipoAlerta.ERROR);
                     return View(model);
             }
         }
@@ -141,7 +141,7 @@ namespace AppWebERS.Controllers
                         // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                         // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                         // await UserManager.SendEmailAsync(user.Id, "Confirmar cuenta", "Para confirmar la cuenta, haga clic <a href=\"" + callbackUrl + "\">aquí</a>");
-                        TempData["alerta"] = new Alerta("El usuario ha sido registrado exitosamente", TipoAlerta.SUCCESS);
+                        TempData["alerta"] = new Alerta("El usuario ha sido registrado exitosamente.", TipoAlerta.SUCCESS);
                         return RedirectToAction("Index", "Home");
                     }
                     AddErrors(result);
@@ -290,7 +290,7 @@ namespace AppWebERS.Controllers
                     ModificarViewModel model = new ModificarViewModel(usuario);
                     return View(model);
                 }
-                TempData["alerta"] = new Alerta("Hubo un error al obtener al usuario", TipoAlerta.ERROR);
+                TempData["alerta"] = new Alerta("Hubo un error al obtener al usuario.", TipoAlerta.ERROR);
             }
             return RedirectToAction("Index","Home");
         }
@@ -305,10 +305,10 @@ namespace AppWebERS.Controllers
                 if (usuario != null)
                 {
                     await UserManager.setEstadoAsync(usuario.Id, !usuario.Estado);
-                    TempData["alerta"] = new Alerta("El usuario ha sido modificado exitosamente", TipoAlerta.SUCCESS);
+                    TempData["alerta"] = new Alerta("El usuario ha sido modificado exitosamente.", TipoAlerta.SUCCESS);
                     return RedirectToAction("ListarUsuarios","Cuenta");
                 }
-                TempData["alerta"] = new Alerta("Hubo un error al obtener al usuario", TipoAlerta.ERROR);
+                TempData["alerta"] = new Alerta("Hubo un error al obtener al usuario.", TipoAlerta.ERROR);
             }
             return RedirectToAction("Index", "Home");
         }
@@ -362,7 +362,7 @@ namespace AppWebERS.Controllers
                     {
                         await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), usuarioViewModel.Password);
                     }
-                    TempData["alerta"] = new Alerta("El usuario se modifico exitosamente", TipoAlerta.SUCCESS);
+                    TempData["alerta"] = new Alerta("El usuario se modificó exitosamente.", TipoAlerta.SUCCESS);
 
                     return RedirectToAction("ListarUsuarios", new {rut = usuarioViewModel.Rut});
                 }
@@ -380,15 +380,15 @@ namespace AppWebERS.Controllers
             bool resultado = false;
             string mensaje = "";
             if (UserManager.VerificarSiExisteEmail(usuarioViewModels.Email).Result) {
-                mensaje += "Correo de usuario en uso </br>";
+                mensaje += "Correo de usuario en uso. </br>";
                 resultado |= true;  
             }
             if (UserManager.VerificarSiExisteNombre(usuarioViewModels.Nombre).Result) {
-                mensaje += "Nombre de usuario en uso <br/>";
+                mensaje += "Nombre de usuario en uso. <br/>";
                 resultado |= true;
             }
             if (UserManager.VerificarSiExisteContrasenia(usuarioViewModels.Rut, usuarioViewModels.Password).Result) {
-                mensaje += "La contraseña debe ser distinta de la que tiene actualmente <br/>";
+                mensaje += "La contraseña debe ser distinta de la que tiene actualmente. <br/>";
                 resultado |= true;
             }
             if (resultado) {
@@ -415,17 +415,17 @@ namespace AppWebERS.Controllers
             string mensaje = "";
             if (UserManager.VerificarSiExisteEmail(usuarioViewModels.Email).Result)
             {
-                mensaje += "Correo de usuario en uso </br>";
+                mensaje += "Correo de usuario en uso. </br>";
                 resultado |= true;
             }
             if (UserManager.VerificarSiExisteNombre(usuarioViewModels.UserName).Result)
             {
-                mensaje += "Nombre de usuario en uso <br/>";
+                mensaje += "Nombre de usuario en uso. <br/>";
                 resultado |= true;
             }
             if(UserManager.VerificarSiExisteRut(usuarioViewModels.Rut).Result)
             {
-                mensaje += "Rut en uso<br/>";
+                mensaje += "Rut en uso.<br/>";
                 resultado |= true;
             }
             if (resultado)

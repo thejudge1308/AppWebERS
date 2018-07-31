@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 using System.Data;
+using MySql.Data.MySqlClient;
 using System.Linq;
 using System.Web;
 using MySql.Data.MySqlClient;
@@ -12,7 +13,8 @@ using MySql.Data.MySqlClient;
  **/
 
 namespace AppWebERS.Models {
-    public class Requisito {
+    public class Requisito
+    {
 
         /**
         * Constructor de la clase Requisito
@@ -27,8 +29,8 @@ namespace AppWebERS.Models {
         * <param name = "tipo" > El tipo  del requisito.</param>
         * <param name = "actores" > Lista de actores que tienen algún tipo de participación en el requisito.</param>
         **/
-        public Requisito(string idRequisito, string nombre, string descripcion, string prioridad, string fuente, 
-            string estabilidad, string estado, string tipoRequisito, string medida, string escala, 
+        public Requisito(string idRequisito, string nombre, string descripcion, string prioridad, string fuente,
+            string estabilidad, string estado, string tipoRequisito, string medida, string escala,
             string fecha, string incremento, string tipo)
         {
             IdRequisito = idRequisito;
@@ -44,9 +46,8 @@ namespace AppWebERS.Models {
             Fecha = fecha; //AAAA-MM-DD
             Incremento = incremento;
             Tipo = tipo;
+            Actores = new List<CheckBox>();
 
-            //LOS ACTORES NO SE SI SON LAS FUENTES?
-            this.Actores = new List<Actor>();
         }
 
         public Requisito()
@@ -66,8 +67,14 @@ namespace AppWebERS.Models {
             this.Tipo = "";
         }
 
+        public class CheckBox
+        {
+            public string nombre { set; get; }
+            public string id { set; get; }
+            public bool isChecked { set; get; }
+        }
         private ApplicationDbContext conexion = ApplicationDbContext.Create();
-
+        private string idVerdadero = "";
         /**
          * Setter y Getter de ID del requisito
          * 
@@ -77,9 +84,9 @@ namespace AppWebERS.Models {
          **/
         [Required(ErrorMessage = "El campo Código es obligatorio.")]
         //[RegularExpression("[0-9]*", ErrorMessage = ".")]
-        [StringLength(20, ErrorMessage = "El código debe tener entre 3 a 20 caracteres ", MinimumLength = 3)]
+        [StringLength(20, ErrorMessage = "El código debe tener entre 3 a 20 caracteres.", MinimumLength = 3)]
         [Display(Name = "Código")]
-        public string IdRequisito {get; set;}
+        public string IdRequisito { get; set; }
 
         /**
          * Setter y Getter del nombre del requisito.
@@ -90,7 +97,7 @@ namespace AppWebERS.Models {
          **/
         [Required(ErrorMessage = "El campo Nombre es obligatorio.")]
         [Display(Name = "Nombre")]
-        public string Nombre {get; set;}
+        public string Nombre { get; set; }
 
         /**
          * Setter y Getter de la descripcion del requisito.
@@ -101,7 +108,7 @@ namespace AppWebERS.Models {
          **/
         [Required(ErrorMessage = "El campo Descripción es obligatorio.")]
         [Display(Name = "Descripción")]
-        public string Descripcion {get; set;}
+        public string Descripcion { get; set; }
 
         /**
          * Setter y Getter de la prioridad del requisito.
@@ -111,7 +118,7 @@ namespace AppWebERS.Models {
          * 
          **/
         [Display(Name = "Prioridad")]
-        public string Prioridad {get; set;}
+        public string Prioridad { get; set; }
 
         /**
          * Setter y Getter de la fuente del requisito.
@@ -121,9 +128,9 @@ namespace AppWebERS.Models {
          * 
          **/
         [Required(ErrorMessage = "El campo Fuente es obligatorio.")]
-        [StringLength(20, ErrorMessage = "La fuente debe tener menos de 20 caracteres ", MinimumLength = 1)]
+        [StringLength(20, ErrorMessage = "La fuente debe tener menos de 20 caracteres.", MinimumLength = 1)]
         [Display(Name = "Fuente")]
-        public string Fuente {get; set;}
+        public string Fuente { get; set; }
 
         /**
          * Setter y Getter de la estabilidad del requisito.
@@ -133,7 +140,7 @@ namespace AppWebERS.Models {
          * 
          **/
         [Display(Name = "Estabilidad")]
-        public string Estabilidad {get; set;}
+        public string Estabilidad { get; set; }
 
         /**
          * Setter y Getter del estado del requisito.
@@ -143,7 +150,8 @@ namespace AppWebERS.Models {
          * 
          **/
         [Display(Name = "Estado")]
-        public string Estado {get; set;}
+        public string Estado { get; set; }
+
 
         /**
          * Setter y Getter del tipo del requisito.
@@ -163,7 +171,7 @@ namespace AppWebERS.Models {
          * 
          **/
         [Required(ErrorMessage = "El campo Medida es obligatorio.")]
-        [StringLength(20, ErrorMessage = "La medida debe tener a lo más 20 caracteres ", MinimumLength = 1)]
+        [StringLength(20, ErrorMessage = "La medida debe tener a lo más 20 caracteres.", MinimumLength = 1)]
         [Display(Name = "Medida")]
         public string Medida { get; set; }
 
@@ -175,7 +183,7 @@ namespace AppWebERS.Models {
          * 
          **/
         [Required(ErrorMessage = "El campo Escala es obligatorio.")]
-        [StringLength(20, ErrorMessage = "La Escala debe tener a lo más 20 caracteres ", MinimumLength = 1)]
+        [StringLength(20, ErrorMessage = "La Escala debe tener a lo más 20 caracteres.", MinimumLength = 1)]
         [Display(Name = "Escala")]
         public string Escala { get; set; }
 
@@ -187,7 +195,7 @@ namespace AppWebERS.Models {
          * 
          **/
         [Required(ErrorMessage = "El campo Fecha es obligatorio.")]
-        [RegularExpression("^[0-9]{4}-[0-9]{2}-[0-9]{2}", ErrorMessage = "La fecha debe seguir el formato AAAA-MM-DD")]
+        [RegularExpression("^[0-9]{4}-[0-9]{2}-[0-9]{2}", ErrorMessage = "La fecha debe seguir el formato AAAA-MM-DD.")]
         [Display(Name = "Fecha Actualización")]
         public string Fecha { get; set; }
 
@@ -200,7 +208,7 @@ namespace AppWebERS.Models {
          **/
         [Display(Name = "Incremento")]
         [Required(ErrorMessage = "El campo Incremento es obligatorio.")]
-        [StringLength(20, ErrorMessage = "El Incremento debe tener a lo más 20 caracteres", MinimumLength = 1)]
+        [StringLength(20, ErrorMessage = "El Incremento debe tener a lo más 20 caracteres.", MinimumLength = 1)]
         public string Incremento { get; set; }
         /**
          * Setter y Getter del incremento.
@@ -219,13 +227,14 @@ namespace AppWebERS.Models {
          * 
          **/
         [Display(Name = "Actores")]
-        public List<Actor> Actores {get; set;}
+        public List<CheckBox> Actores { get; set; }
 
         /**
          * Método para Crear un Requisito
          * <returns>Retorna un boolean que indica el correcto registro del requisito.</returns>
          **/
-        public bool Crear() {
+        public bool Crear()
+        {
             return true;
         }
 
@@ -234,45 +243,66 @@ namespace AppWebERS.Models {
          * <returns>Retorna un registro específico.</returns>
          **/
 
-        public void ListarEspecifico(Proyecto proyecto) {
-            
+        public void ListarEspecifico(Proyecto proyecto)
+        {
+
         }
 
         /**
          * Método para seleccionar un requisito 
          **/
 
-        public void Seleccionar(int id) {
+        public void Seleccionar(int id)
+        {
 
+        }
+
+        public void agregarActor(string nombre)
+        {
+            Actores.Add(new CheckBox() { nombre = nombre, isChecked = false });
         }
 
         /**
          * Método para cargar datos
          **/
 
-        public void CargarDatos(DataRow dr ) {
+        public void CargarDatos(DataRow dr)
+        {
 
         }
 
-        /**
-         *
-         *<author>Diego Iturriaga</author>
-         *<summary>Metodo para registrar un requisito con todos sus parametros en la base de datos</summary>
-         *<param name="idProyecto">Contiene un int con el id de un proyecto.</param>
-         *<returns>Retorna True si el requisito se registra en la base de datos. False en caso contrario.</returns>
-         */
-        public bool RegistrarRequisito(int idProyecto)
+        public string RegistrarRequisito(int idProyecto)
         {
-            if (string.IsNullOrEmpty(this.IdRequisito) || string.IsNullOrEmpty(this.Nombre))
-            {
-                return false;
-            }
-            string consultaInsert = "INSERT INTO requisito(id_requisito, nombre, descripcion, fuente, categoria, " +
+            string value = "";
+            string consultaInsert = "START TRANSACTION;" +
+                "INSERT INTO requisito(id_requisito, nombre, descripcion, fuente, categoria, " +
                 "prioridad, estabilidad, estado, medida, escala, incremento, fecha_actualizacion, ref_proyecto, tipo) " +
-                "VALUES ('"+this.IdRequisito+ "','" +this.Nombre + "','" +this.Descripcion + "','" +this.Fuente + "','" +
-                 this.TipoRequisito+"','" +this.Prioridad + "','" +this.Estabilidad + "','" +this.Estado + "','" +this.Medida
-                 + "','" +this.Escala + "','" +this.Incremento + "','" +this.Fecha + "'," +idProyecto+ ",'"+this.Tipo+ "'); ";
-            if (this.conexion.RealizarConsultaNoQuery(consultaInsert))
+                "VALUES ('" + this.IdRequisito + "','" + this.Nombre + "','" + this.Descripcion + "','" + this.Fuente + "','" +
+                 this.TipoRequisito + "','" + this.Prioridad + "','" + this.Estabilidad + "','" + this.Estado + "','" + this.Medida
+                 + "','" + this.Escala + "','" + this.Incremento + "','" + this.Fecha + "'," + idProyecto + ",'" + this.Tipo + "'); " +
+                 "SELECT LAST_INSERT_ID() AS T1;" +
+                 "COMMIT;";
+            ConectorBD Conector = ConectorBD.Instance;
+            MySqlDataReader reader = Conector.RealizarConsulta(consultaInsert);
+            if (reader != null)
+            {
+                while (reader.Read())
+                {
+                    value = reader[0].ToString();
+                }
+                Conector.CerrarConexion();
+            }
+            return value;
+
+            
+        }
+
+
+        public bool registrarActor(string actor, string id)
+        {
+            string n = this.idVerdadero;
+            string consultaInsertar = "INSERT INTO vinculo_actor_requisito(ref_actor,ref_req) VALUES('" + actor + "','" + id + "');";
+            if (this.conexion.RealizarConsultaNoQuery(consultaInsertar))
             {
                 return true;
             }

@@ -16,6 +16,7 @@ namespace AspNet.Identity.MySQL
         {
             Id = Guid.NewGuid().ToString();
             Estado = true;
+            DisponibilidadVinculacion = true;
         }
 
         /// <summary>
@@ -107,5 +108,9 @@ namespace AspNet.Identity.MySQL
          * Creador: Maximo Hernandez
          */
         public virtual string Apellido { get; set; }
+        /*
+         * Creador: Maximo Hernandez
+         */
+        public virtual bool DisponibilidadVinculacion { get; set; }
     }
 }

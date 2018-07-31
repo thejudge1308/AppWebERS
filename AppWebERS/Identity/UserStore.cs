@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using AppWebERS.Models;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -348,6 +349,13 @@ namespace AspNet.Identity.MySQL
             }
 
             return Task.FromResult<IList<string>>(null);
+        }
+
+        public Task SetDisponibilidadVinculacionAsync(ApplicationUser usuario, bool disponibilidad)
+        {
+            usuario.DisponibilidadVinculacion = disponibilidad;
+
+            return Task.FromResult<Object>(null);
         }
 
         /// <summary>

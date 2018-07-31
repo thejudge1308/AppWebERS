@@ -29,23 +29,32 @@ namespace AppWebERS.Controllers
         {
             SolicitudDeUsuario solicitud = new SolicitudDeUsuario();
             String id;
+            String tipo;
             using (var db = ApplicationDbContext.Create())
             {
                 var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
                 string s = User.Identity.GetUserId();
                 ApplicationUser user = userManager.FindByIdAsync(s).Result;
                 id = user.Id;
+                tipo = user.Tipo;
 
             }
-            var list = solicitud.ObtenerSolicitudesDeUsuario(id);
-            ViewBag.MiListadoSolicitudes = list;
-            if (list.Count == 0)
+            if (tipo == "USUARIO")
             {
-                ViewBag.vacio = true;
+                var list = solicitud.ObtenerSolicitudesDeUsuario(id);
+                ViewBag.MiListadoSolicitudes = list;
+                if (list.Count == 0)
+                {
+                    ViewBag.vacio = true;
+                    return View();
+                }
+                ViewBag.vacio = false;
                 return View();
             }
-            ViewBag.vacio = false;
-            return View();
+
+            return RedirectToAction("Index", "Home");
+
+
         }
 
         /**

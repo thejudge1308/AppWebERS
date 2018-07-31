@@ -373,6 +373,7 @@
     <Content Include="Views\SysAdmin\AgregarUsuarioProyecto.cshtml" />
     <Content Include="Views\Diagrama\SubirDiagrama.cshtml" />
     <Content Include="Views\Proyecto\ListarRequisitosMinimalista.cshtml" />
+    <Content Include="Views\Proyecto\ListarDiagramas.cshtml" />
     <Content Include="Views\CasoDeUso\UploadFile.cshtml" />
     <Content Include="Views\Proyecto\ListaActores.cshtml" />
     <Content Include="Views\Proyecto\AgregarActor.cshtml" />

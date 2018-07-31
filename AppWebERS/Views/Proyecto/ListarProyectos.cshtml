@@ -17,128 +17,153 @@
 
 <h2>@ViewBag.Title</h2>
 
-
+<head>
+    <meta charset="utf-8">
+    <title>tabs demo</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+</head>
 <!-- Bootstrap CSS -->
 <!-- jQuery first, then Bootstrap JS. -->
 <!-- Nav tabs -->
 
 
-        @if (usuarioActual.Equals("SYSADMIN"))
-        {
-            <div class="row">
-                <div class="col-4 mb-2 mt-2">
-                    <a class="btn btn-primary" href="@Url.Action("CrearProyecto","Proyecto")">Crear nuevo proyecto</a>
-                </div>
+@if (usuarioActual.Equals("SYSADMIN"))
+{
+    <div class="row">
+        <div class="col-4 mb-2 mt-2">
+            <a class="btn btn-primary" href="@Url.Action("CrearProyecto", "Proyecto")">Crear nuevo proyecto</a>
+        </div>
+    </div>
+
+}
+
+
+<body>
+
+    <div class="container mt-3">
+        <br>
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs">
+            @{
+                if (usuarioActual.Equals("SYSADMIN"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#todos">Todos</a>
+                    </li>
+
+                }
+                else
+                {
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#asociados">Asociados</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#no-asociados">No asociados</a>
+                    </li>
+
+
+                }
+
+
+
+            }
+
+
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div id="asociados" class="container tab-pane active">
+                <br>
+
+                @foreach (Proyecto item in (List<Proyecto>)proyectosAsociados)
+                {
+
+                    <div class="card">
+                        <div class="card-header">
+
+                            @item.Nombre
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title"></h5>
+                            <p class="card-text"></p>
+                            <a href="Detalles/@item.IdProyecto" class="btn btn-primary">Ver detalle</a>
+                        </div>
+                    </div>
+                    <br><br>
+
+                }
+
+
             </div>
+            <div id="no-asociados" class="container tab-pane fade">
+                <br>
+                @foreach (Proyecto item in (List<Proyecto>)proyectosNoAsociados)
+                {
+                    <div class="card">
+                        <div class="card-header">
 
-        }
-            <nav>
-                <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                    @{
-                        if (usuarioActual.Equals("SYSADMIN"))
-                        {
-                            <a class="nav-item nav-link active" id="nav-todos-tab" data-toggle="tab" href="#nav-todos" role="tab" aria-controls="nav-todos" aria-selected="false">Todos</a>
+                            @item.Nombre
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title"></h5>
+                            <p class="card-text"></p>
+                            <!--<a href="#" class="btn btn-primary">Unirse</a>-->
+                            <a href="#" class="btn btn-primary" onclick="location.href='@Url.Action("AgregarUsuarioAProyecto", "Proyecto", new {proyecto1=item.IdProyecto })'">Unirse</a>
+                        </div>
+                    </div>
+                    <br><br>
+                }
+            </div>
+            <div id="todos" class="container tab-pane active">
+                <br>
 
-                        }
-                        else
-                        {
+                @foreach (Proyecto item in (List<Proyecto>)proyectosTodos)
+                {
+                    <div class="card">
+                        <div class="card-header">
 
-                            <a class="nav-item nav-link active" id="nav-asociados-tab" data-toggle="tab" href="#nav-asociados" role="tab" aria-controls="nav-asociados" aria-selected="false">Asociados</a>
-                            <a class="nav-item nav-link" id="nav-noasociados-tab" data-toggle="tab" href="#nav-noasociados" role="tab" aria-controls="nav-noasociados" aria-selected="false">No asociados</a>
+                            @item.Nombre
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title"></h5>
+                            <p class="card-text"></p>
+                            <a href="Detalles/@item.IdProyecto" class="btn btn-primary">Ver detalle</a>
+                            @{
+                                if (item.Estado == "HABILITADO")
+                                {
+                                    <a href="#" class="btn btn-primary" onclick="location.href='@Url.Action("DeshabilitarProyecto", "Proyecto", new {id=item.IdProyecto })'">Deshabilitar</a>
 
-
-                        }
-                    }
-
-                </div>
-            </nav>
-
-<!-- Tab panes -->
-            <div class="tab-content mb-2 mt-2" id="nav-tabContent">
-
-                <div class="tab-pane fade show active" id="nav-todos" role="tabpanel" aria-labelledby="nav-todos-tab">
-
-
-                    @foreach (Proyecto item in (List<Proyecto>)proyectosTodos)
-                    {
-                        <div class="card">
-                            <div class="card-header">
-
-                                @item.Nombre
-                            </div>
-                            <div class="card-body">
-                                <h5 class="card-title"></h5>
-                                <p class="card-text"></p>
-                                <a href="Detalles/@item.IdProyecto" class="btn btn-primary">Ver detalle</a>
-                                @{
-                                    if (item.Estado == "HABILITADO")
-                                    {
-                                        <a href="#" class="btn btn-primary" onclick="location.href='@Url.Action("DeshabilitarProyecto", "Proyecto", new {id=item.IdProyecto })'">Deshabilitar</a>
-
-                                    }
-                                    else
-                                    {
-                                        <a href="#" class="btn btn-primary" onclick="location.href='@Url.Action("HabilitarProyecto", "Proyecto", new {id=item.IdProyecto })'">Habilitar</a>
-
-                                    }
                                 }
-                            </div>
+                                else
+                                {
+                                    <a href="#" class="btn btn-primary" onclick="location.href='@Url.Action("HabilitarProyecto", "Proyecto", new {id=item.IdProyecto })'">Habilitar</a>
+
+                                }
+                            }
+
                         </div>
-                        <br><br>
+
+                    </div>
+
+                    <br>
+                    <br>
 
 
-                    }
-
-                </div>
-
-                <div class="tab-pane fade" id="nav-asociados" role="tabpanel" aria-labelledby="nav-asociados-tab">
-
-                    @foreach (Proyecto item in (List<Proyecto>)proyectosAsociados)
-                    {
-
-                        <div class="card">
-                            <div class="card-header">
-
-                                @item.Nombre
-                            </div>
-                            <div class="card-body">
-                                <h5 class="card-title"></h5>
-                                <p class="card-text"></p>
-                                <a href="Detalles/@item.IdProyecto" class="btn btn-primary">Ver detalle</a>
-                            </div>
-                        </div>
-                        <br><br>
-
-                    }
-
-                </div>
-
-
-                <div class="tab-pane fade" id="nav-noasociados" role="tabpanel" aria-labelledby="nav-noasociados-tab">
-                    @foreach (Proyecto item in (List<Proyecto>)proyectosNoAsociados)
-                    {
-                        <div class="card">
-                            <div class="card-header">
-
-                                @item.Nombre
-                            </div>
-                            <div class="card-body">
-                                <h5 class="card-title"></h5>
-                                <p class="card-text"></p>
-                                <!--<a href="#" class="btn btn-primary">Unirse</a>--> 
-                                <a href="#" class="btn btn-primary" onclick="location.href='@Url.Action("AgregarUsuarioAProyecto", "Proyecto", new {proyecto1=item.IdProyecto })'">Unirse</a> 
-                            </div>
-                        </div>
-                        <br><br>
-                    }
-                </div>
-
-
-
-
-
+                }
             </div>
+        </div>
+    </div>
 
+    <script>
+        $(document).ready(function () {
+            $(".nav-tabs a").click(function () {
+                $(this).tab('show');
+            });
+        });
+    </script>
 
-
-
+</body>
+</html>

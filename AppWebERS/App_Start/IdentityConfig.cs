@@ -263,6 +263,18 @@ namespace AppWebERS
             }
             return false;
         }
+
+        public async Task setDisponibilidadVinculacionAsync(string UserId, bool IsEnabled)
+        {
+            using (var db = ApplicationDbContext.Create())
+            {
+                var store = new UserStore<ApplicationUser>(db);
+                var usuarioTask = store.FindByIdAsync(UserId);
+                ApplicationUser usuario = await usuarioTask;
+                await store.SetDisponibilidadVinculacionAsync(usuario, IsEnabled);
+                store.UpdateAsync(usuario);
+            }
+        }
     }
 
     // Configure the application sign-in manager which is used in this application.

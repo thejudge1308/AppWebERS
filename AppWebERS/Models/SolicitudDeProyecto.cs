@@ -22,9 +22,7 @@ namespace AppWebERS.Models
 
         }
 
-        //privatw conector solo para testing.
-        private ConectorBD conector = ConectorBD.Instance;
-
+        private ApplicationDbContext conexion = ApplicationDbContext.Create();
 
         public SolicitudDeProyecto(String NombreUsuario, String idUsuario, String NombreProyecto, int idProyecto){
             this.usuario = NombreUsuario;
@@ -32,8 +30,6 @@ namespace AppWebERS.Models
             this.proyecto = NombreProyecto;
             this.idProyecto = idProyecto;
             this.listaSolicitudes = new List<SolicitudDeProyecto>();
-
-
         }
 
         public List<SolicitudDeProyecto> listaSolicitudes { get; set; }
@@ -65,7 +61,6 @@ namespace AppWebERS.Models
 
             return true;
         }
-
     }
 
 }

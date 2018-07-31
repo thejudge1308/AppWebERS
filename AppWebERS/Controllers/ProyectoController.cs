@@ -603,25 +603,41 @@ namespace AppWebERS.Controllers
         [HttpGet]
         public ActionResult AsignarJefeProyecto()
         {
-            Proyecto proyecto = new Proyecto();
-            var list = proyecto.ObtenerProyectosSinJefe();
-            var list2 = proyecto.ObtenerUsuarios();
-            ViewBag.MiListadoProyectos = list;
-            ViewBag.MiListadoUsuarios = list2;
-            if (list.Count == 0)
+            String tipo;
+            using (var db = ApplicationDbContext.Create())
             {
-                ViewBag.listaVacia = true;
-                ViewBag.MessageErrorProyectos = "No hay proyectos disponibles";
+                var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
+                string s = User.Identity.GetUserId();
+                ApplicationUser user = userManager.FindByIdAsync(s).Result;
+                tipo = user.Tipo;
+
+            }
+            if (tipo == "SYSADMIN")
+            {
+                Proyecto proyecto = new Proyecto();
+                var list = proyecto.ObtenerProyectosSinJefe();
+                var list2 = proyecto.ObtenerUsuarios();
+                ViewBag.MiListadoProyectos = list;
+                ViewBag.MiListadoUsuarios = list2;
+                if (list.Count == 0)
+                {
+                    ViewBag.listaVacia = true;
+                    ViewBag.MessageErrorProyectos = "No hay proyectos disponibles";
+                    return View();
+                }
+                if (list2.Count == 0)
+                {
+                    ViewBag.listaVacia = true;
+                    ViewBag.MessageErrorProyectos = "No hay usuarios disponibles";
+                    return View();
+                }
+                ViewBag.listaVacia = false;
                 return View();
             }
-            if (list2.Count == 0)
+            else
             {
-                ViewBag.listaVacia = true;
-                ViewBag.MessageErrorProyectos = "No hay usuarios disponibles";
-                return View();
+                return RedirectToAction("Index", "Home");
             }
-            ViewBag.listaVacia = false;
-            return View();
         }
         /**
          * <author>Ariel Cornejo</author>
@@ -667,21 +683,38 @@ namespace AppWebERS.Controllers
         [HttpGet]
         public ActionResult ModificarJefeProyecto(int id)
         {
-            Proyecto proyecto = new Proyecto();
-            this.id_proyecto = id;
-            ViewBag.idProyecto = id;
-            var list = proyecto.ObtenerUsuarios2(id);
-            if (list.Count == 0)
+            String tipo;
+            using (var db = ApplicationDbContext.Create())
             {
-                
-                ViewBag.MessageErrorProyectos = "No Hay Usuarios Disponibles";
+                var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
+                string s = User.Identity.GetUserId();
+                ApplicationUser user = userManager.FindByIdAsync(s).Result;
+                tipo = user.Tipo;
+
+            }
+            if (tipo == "SYSADMIN")
+            {
+                Proyecto proyecto = new Proyecto();
+                this.id_proyecto = id;
+                ViewBag.idProyecto = id;
+                var list = proyecto.ObtenerUsuarios2(id);
+                if (list.Count == 0)
+                {
+
+                    ViewBag.MessageErrorProyectos = "No Hay Usuarios Disponibles";
+                    ViewBag.MiListadoUsuarios = list;
+                    ViewBag.listaVacia = true;
+                    return View();
+                }
                 ViewBag.MiListadoUsuarios = list;
-                ViewBag.listaVacia = true;
+                ViewBag.listaVacia = false;
                 return View();
             }
-            ViewBag.MiListadoUsuarios = list;
-            ViewBag.listaVacia = false;
-            return View();
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
 
         }
         /**
@@ -708,28 +741,44 @@ namespace AppWebERS.Controllers
         [HttpGet]
         public ActionResult AgregarUsuarioAProyecto(int proyecto1)
         {
-
-            //int PosProyecto = Int32.Parse(proyecto1);
-            //List<string> ListaProyectos = ListaProyectosIds();
-            //string IdProyectoAUnirse = ListaProyectos[PosProyecto];
-            TempData["alerta"] = new Alerta("Solicitud enviada", TipoAlerta.SUCCESS);
-            string UsuarioSolicitanteRut = ObtenerIdUsuarioActivo();
-           
-            //proyecto1 = "1";
-            string Values = "'" +proyecto1 + "','" + UsuarioSolicitanteRut + "'";
-            string Consulta = "INSERT INTO solicitud_vinculacion_proyecto (ref_proyecto,ref_solicitante) VALUES (" + Values + ");";
-            
-            if (this.Conector.RealizarConsultaNoQuery(Consulta))
+            String tipo;
+            using (var db = ApplicationDbContext.Create())
             {
-                this.Conector.CerrarConexion();
-                ViewBag.Message = "Solicitud enviada";
+                var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
+                string s = User.Identity.GetUserId();
+                ApplicationUser user = userManager.FindByIdAsync(s).Result;
+                tipo = user.Tipo;
+
+            }
+            if (tipo == "SYSADMIN")
+            {
+                //int PosProyecto = Int32.Parse(proyecto1);
+                //List<string> ListaProyectos = ListaProyectosIds();
+                //string IdProyectoAUnirse = ListaProyectos[PosProyecto];
+                TempData["alerta"] = new Alerta("Solicitud enviada", TipoAlerta.SUCCESS);
+                string UsuarioSolicitanteRut = ObtenerIdUsuarioActivo();
+
+                //proyecto1 = "1";
+                string Values = "'" + proyecto1 + "','" + UsuarioSolicitanteRut + "'";
+                string Consulta = "INSERT INTO solicitud_vinculacion_proyecto (ref_proyecto,ref_solicitante) VALUES (" + Values + ");";
+
+                if (this.Conector.RealizarConsultaNoQuery(Consulta))
+                {
+                    this.Conector.CerrarConexion();
+                    ViewBag.Message = "Solicitud enviada";
+                }
+                else
+                {
+                    this.Conector.CerrarConexion();
+                }
+
+                return RedirectToAction("ListarProyectos", "Proyecto");
             }
             else
             {
-                this.Conector.CerrarConexion();
+                return RedirectToAction("Index", "Home");
             }
 
-            return RedirectToAction("ListarProyectos", "Proyecto");
         }
 
 

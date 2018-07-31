@@ -50,7 +50,7 @@ namespace AppWebERS.Controllers{
             int idProyecto = Int32.Parse(id);
             string tipoDeDiagrama = tipoDiagrama(diagramaValue);
             Debug.Write(tipoDeDiagrama);
-            string _FileName = Path.GetFileName(file.FileName);
+            string _FileName = id + Path.GetFileName(file.FileName);
             string _path = Path.Combine(Server.MapPath("~/UploadedFiles"), _FileName);
 
             try
@@ -61,7 +61,7 @@ namespace AppWebERS.Controllers{
                     if (file.ContentLength > 0)
                     {
                         Debug.Write("largo valido ");
-                        if (this.ValidarURLNoRepetida(file)==true)
+                        if (this.ValidarURLNoRepetida(file,id)==true)
                         {
                             Debug.Write("url no repetida ");
                             if (this.ValidarLargoNombre(nombre)==false)
@@ -142,9 +142,14 @@ namespace AppWebERS.Controllers{
                 {
                     while (reader.Read())
                     {
+                        if (reader["nombre"].ToString()== "null")
+                        {
+                            return true;
+                        }
+                        Debug.Write(reader["nombre"].ToString());
                         return false;
                     }
-                  
+                    
                     this.Conector.CerrarConexion();
                     return false;
                    
@@ -156,11 +161,11 @@ namespace AppWebERS.Controllers{
             }
         }
 
-        public bool ValidarURLNoRepetida(HttpPostedFileBase file)
+        public bool ValidarURLNoRepetida(HttpPostedFileBase file, string id)
         {
             try
             {
-                string _FileName = Path.GetFileName(file.FileName);
+                string _FileName = id + Path.GetFileName(file.FileName);
                 string _path = Path.Combine(Server.MapPath("~/UploadedFiles"), _FileName);
                 string ConsultaPath = "SELECT ruta FROM Diagrama WHERE ruta = '" + _path + "';";
                 MySqlDataReader reader = this.Conector.RealizarConsulta(ConsultaPath);

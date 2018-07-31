@@ -6,10 +6,10 @@ $(document).ready(function () {
     var opcionesTolbar = [
         ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
 
-        [{ 'header': 1 }, { 'header': 2 }],// custom button values
-        [{ 'header': [1, 2, 3, 4, 5, 6, false] }], //Header size
+        //[{ 'header': 1 }, { 'header': 2 }],// custom button values
+        //[{ 'header': [1, 2, 3, 4, 5, 6, false] }], //Header size
 
-        [{ 'script': 'sub' }, { 'script': 'super' }],      // superscript/subscript
+       // [{ 'script': 'sub' }, { 'script': 'super' }],      // superscript/subscript
         [{ 'indent': '-1' }, { 'indent': '+1' }],          // outdent/indent
 
         [{ 'font': [] }],                                 // Front 
@@ -28,11 +28,11 @@ $(document).ready(function () {
     var opcionesTolbar2 = [
         ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
 
-        [{ 'header': 1 }, { 'header': 2 }],// custom button values
-        [{ 'header': [1, 2, 3, 4, 5, 6, false] }], //Header size
+        //[{ 'header': 1 }, { 'header': 2 }],// custom button values
+        //[{ 'header': [1, 2, 3, 4, 5, 6, false] }], //Header size
 
         [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-        [{ 'script': 'sub' }, { 'script': 'super' }],      // superscript/subscript
+        //[{ 'script': 'sub' }, { 'script': 'super' }],      // superscript/subscript
         [{ 'indent': '-1' }, { 'indent': '+1' }],          // outdent/indent
 
         [{ 'font': [] }],                                 // Front 
@@ -71,7 +71,7 @@ $(document).ready(function () {
     var definicionQ = new Quill('#definicion-edit', config2);
     var acronimoQ = new Quill('#acronimo-edit', config2); 
     var abreviaturaQ = new Quill('#abreviatura-edit', config2); 
-    var referenciaQ = new Quill('#referencia-edit', config); 
+    //var referenciaQ = new Quill('#referencia-edit', config); 
     var ambienteQ = new Quill('#ambiente-edit', config); 
     var relacionQ = new Quill('#relacion-edit', config); 
 
@@ -128,43 +128,40 @@ $(document).ready(function () {
         });
 
     $('#nombre-button').on('click', function () {
-        console.log(nombreQ.root.innerHTML);
-        info_post($("#ProyectoActual_IdProyecto").val(), "nombre", nombreQ.root.innerHTML);
+        if ($.trim($("#ProyectoActual_Nombre").val()) == "") {
+            mostrarAlerta("El campo proyecto no debe estar vacío.");
+        } else if ($.trim($("#ProyectoActual_Nombre").val()).length > 255) {
+            mostrarAlerta("El campo no debe exceder de los 255 caracteres.");
+        } else {
+            info_post($("#ProyectoActual_IdProyecto").val(), "nombre", $.trim($("#ProyectoActual_Nombre").val()));
+        }
     });
+
     $('#proposito-button').on('click', function () {
-        console.log(propositoQ.root.innerHTML);
         info_post($("#ProyectoActual_IdProyecto").val(), "proposito", propositoQ.root.innerHTML);
     });
     $('#alcance-button').on('click', function () {
-        console.log(alcanceQ.root.innerHTML);
         info_post($("#ProyectoActual_IdProyecto").val(), "alcance", alcanceQ.root.innerHTML);
     });
     $('#contexto-button').on('click', function () {
-        console.log(contextoQ.root.innerHTML);
         info_post($("#ProyectoActual_IdProyecto").val(), "contexto", contextoQ.root.innerHTML);
     });
     $('#definicion-button').on('click', function () {
-        console.log(definicionQ.root.innerHTML);
         info_post($("#ProyectoActual_IdProyecto").val(), "definicion", definicionQ.root.innerHTML);
     });
     $('#acronimo-button').on('click', function () {
-        console.log(acronimoQ.root.innerHTML);
         info_post($("#ProyectoActual_IdProyecto").val(), "acronimo", acronimoQ.root.innerHTML);
     });
     $('#abreviatura-button').on('click', function () {
-        console.log(abreviaturaQ.root.innerHTML);
         info_post($("#ProyectoActual_IdProyecto").val(), "abreviatura", abreviaturaQ.root.innerHTML);
     });
     $('#referencia-button').on('click', function () {
-        console.log(referenciaQ.root.innerHTML);
         info_post($("#ProyectoActual_IdProyecto").val(), "referencia", referenciaQ.root.innerHTML);
     });
     $('#ambiente-button').on('click', function () {
-        console.log(ambienteQ.root.innerHTML);
         info_post($("#ProyectoActual_IdProyecto").val(), "ambiente", ambienteQ.root.innerHTML);
     });
     $('#relacion-button').on('click', function () {
-        console.log(relacionQ.root.innerHTML);
         info_post($("#ProyectoActual_IdProyecto").val(), "relacion", relacionQ.root.innerHTML);
     });
 

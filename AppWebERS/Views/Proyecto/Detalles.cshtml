@@ -31,165 +31,192 @@
 
 
 
-    <div class="container-fluid">
+    <div class="container-fluid my-2">
+
 
         <div class="form-group border">
-            @{@Html.LabelFor(p => p.IdProyecto, new { @class = "col-md-12 control-label" })}
-            <div class="col-12">
-                @{@Html.TextBoxFor(p => ProyectoActual.IdProyecto, new { @class = "form-control font-weight-bold", disabled = "disabled" })}
+            <div class="my-2">
+                @{@Html.LabelFor(p => p.IdProyecto, new { @class = "col-md-12 control-label" })}
+                <div class="col-12">
+                    @{@Html.TextBoxFor(p => ProyectoActual.IdProyecto, new { @class = "form-control font-weight-bold", disabled = "disabled" })}
+                </div>
             </div>
+           
         </div>
 
         <div class="form-group border">
-            @{@Html.LabelFor(p => ProyectoActual.Nombre, new { @class = "col-md-12 control-label" })}
-            <div class="col-12">
+            <div class="my-2">
+                @{@Html.LabelFor(p => ProyectoActual.Nombre, new { @class = "col-md-12 control-label" })}
+                <div class="col-12">
+                    @if(TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO) {
+                        {@Html.TextBoxFor(p => ProyectoActual.Nombre, new { @class = "form-control font-weight-bold", Style = "max-width:100%;" })}
+
+                } else {
+                    {@Html.TextBoxFor(p => ProyectoActual.Nombre, new { @class = "form-control font-weight-bold", disabled = "disabled", Style = "max-width:100%;" })}
+            }
+                </div>
                 @if(TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO) {
-                 {@Html.TextBoxFor(p => ProyectoActual.Nombre, new { @class = "form-control font-weight-bold"})}
-
-            } else {
-                {@Html.TextBoxFor(p => ProyectoActual.Nombre, new { @class = "form-control font-weight-bold", disabled = "disabled" })}
-            }
-            </div>
-            @if(TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO) {
-                <div class="mt-2 d-flex flex-row-reverse">
-                    <div class="p-2">
-                        <a id="nombre-button" class="btn btn-primary text-white">Guardar cambios</a>
+                    <div class="mt-2 d-flex flex-row-reverse">
+                        <div class="p-2">
+                            <a id="nombre-button" class="btn btn-primary text-white">Guardar cambios</a>
+                        </div>
                     </div>
-                </div>
-            }
+                }
+            </div>
+            
         </div>
 
         <div class="form-group border">
-            @{@Html.LabelFor(p => ProyectoActual.Proposito, new { @class = "col-md-12 control-label" })}
-            <div class="col-12">
-                <div id="proposito-edit"></div>
-            </div>
-            @if(TipoUsuario != Proyecto.AUTH_COMO_SYSADMIN) {
-                <div class="mt-2 d-flex flex-row-reverse">
-                    <div class="p-2">
-                        <a id="proposito-button" class="btn btn-primary text-white">Guardar cambios</a>
-                    </div>
+            <div class="my-2">
+                @{@Html.LabelFor(p => ProyectoActual.Proposito, new { @class = "col-md-12 control-label" })}
+                <div class="col-12">
+                    <div id="proposito-edit"></div>
                 </div>
-            }
+                @if(TipoUsuario != Proyecto.AUTH_COMO_SYSADMIN) {
+                    <div class="mt-2 d-flex flex-row-reverse">
+                        <div class="p-2">
+                            <a id="proposito-button" class="btn btn-primary text-white">Guardar cambios</a>
+                        </div>
+                    </div>
+                }
+            </div>
         </div>
 
         <div class="form-group border">
-            @{@Html.LabelFor(p => ProyectoActual.Alcance, new { @class = "col-md-12 control-label" })}
-            <div class="col-12">
-                <div id="alcance-edit"></div>
-            </div>
-            @if(TipoUsuario != Proyecto.AUTH_COMO_SYSADMIN) {
-                <div class="mt-2 d-flex flex-row-reverse">
-                    <div class="p-2">
-                        <a id="alcance-button" class="btn btn-primary text-white">Guardar cambios</a>
-                    </div>
+            <div class="my-2">
+                @{@Html.LabelFor(p => ProyectoActual.Alcance, new { @class = "col-md-12 control-label" })}
+                <div class="col-12">
+                    <div id="alcance-edit"></div>
                 </div>
-            }
+                @if(TipoUsuario != Proyecto.AUTH_COMO_SYSADMIN) {
+                    <div class="mt-2 d-flex flex-row-reverse">
+                        <div class="p-2">
+                            <a id="alcance-button" class="btn btn-primary text-white">Guardar cambios</a>
+                        </div>
+                    </div>
+                }
+            </div> 
         </div>
 
         <div class="form-group border">
-            @{@Html.LabelFor(p => ProyectoActual.Contexto, new { @class = "col-md-12 control-label" })}
-            <div class="col-12">
-                <div id="contexto-edit"></div>
-            </div>
-            @if(TipoUsuario != Proyecto.AUTH_COMO_SYSADMIN) {
-                <div class="mt-2 d-flex flex-row-reverse">
-                    <div class="p-2">
-                        <a id="contexto-button" class="btn btn-primary text-white">Guardar cambios</a>
-                    </div>
+            <div class="my-2">
+                @{@Html.LabelFor(p => ProyectoActual.Contexto, new { @class = "col-md-12 control-label" })}
+                <div class="col-12">
+                    <div id="contexto-edit"></div>
                 </div>
-            }
-        </div>
-        <div class="form-group border">
-            @{@Html.LabelFor(p => ProyectoActual.Definiciones, new { @class = "col-md-12 control-label" })}
-            <div class="col-12">
-                <div id="definicion-edit"></div>
-            </div>
-            @if(TipoUsuario != Proyecto.AUTH_COMO_SYSADMIN) {
-                <div class="mt-2 d-flex flex-row-reverse">
-                    <div class="p-2">
-                        <a id="definicion-button" class="btn btn-primary text-white">Guardar cambios</a>
+                @if(TipoUsuario != Proyecto.AUTH_COMO_SYSADMIN) {
+                    <div class="mt-2 d-flex flex-row-reverse">
+                        <div class="p-2">
+                            <a id="contexto-button" class="btn btn-primary text-white">Guardar cambios</a>
+                        </div>
                     </div>
-                </div>
-            }
+                }
+            </div>
         </div>
 
         <div class="form-group border">
-            @{@Html.LabelFor(p => ProyectoActual.Acronimos, new { @class = "col-md-12 control-label" })}
-            <div class="col-12">
-                <div id="acronimo-edit"></div>
-            </div>
-            @if(TipoUsuario != Proyecto.AUTH_COMO_SYSADMIN) {
-                <div class="mt-2 d-flex flex-row-reverse">
-                    <div class="p-2">
-                        <a id="acronimo-button" class="btn btn-primary text-white">Guardar cambios</a>
-                    </div>
+            <div class="my-2">
+                @{@Html.LabelFor(p => ProyectoActual.Definiciones, new { @class = "col-md-12 control-label" })}
+                <div class="col-12">
+                    <div id="definicion-edit"></div>
                 </div>
-            }
+                @if(TipoUsuario != Proyecto.AUTH_COMO_SYSADMIN) {
+                    <div class="mt-2 d-flex flex-row-reverse">
+                        <div class="p-2">
+                            <a id="definicion-button" class="btn btn-primary text-white">Guardar cambios</a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="form-group border">
+            <div class="my-2">
+                @{@Html.LabelFor(p => ProyectoActual.Acronimos, new { @class = "col-md-12 control-label" })}
+                <div class="col-12">
+                    <div id="acronimo-edit"></div>
+                </div>
+                @if(TipoUsuario != Proyecto.AUTH_COMO_SYSADMIN) {
+                    <div class="mt-2 d-flex flex-row-reverse">
+                        <div class="p-2">
+                            <a id="acronimo-button" class="btn btn-primary text-white">Guardar cambios</a>
+                        </div>
+                    </div>
+                }
+            </div>     
         </div>
         <div class="form-group border">
-            @{@Html.LabelFor(p => ProyectoActual.Abreviaturas, new { @class = "col-md-12 control-label" })}
-            <div class="col-12">
-                <div id="abreviatura-edit"></div>
-            </div>
-            @if(TipoUsuario != Proyecto.AUTH_COMO_SYSADMIN) {
-                <div class="mt-2 d-flex flex-row-reverse">
-                    <div class="p-2">
-                        <a id="abreviatura-button" class="btn btn-primary text-white">Guardar cambios</a>
-                    </div>
+            <div class="my-2">
+                @{@Html.LabelFor(p => ProyectoActual.Abreviaturas, new { @class = "col-md-12 control-label" })}
+                <div class="col-12">
+                    <div id="abreviatura-edit"></div>
                 </div>
-            }
+                @if(TipoUsuario != Proyecto.AUTH_COMO_SYSADMIN) {
+                    <div class="mt-2 d-flex flex-row-reverse">
+                        <div class="p-2">
+                            <a id="abreviatura-button" class="btn btn-primary text-white">Guardar cambios</a>
+                        </div>
+                    </div>
+                }
+            </div>     
         </div>
 
 
         <div class="form-group border">
-            @{@Html.LabelFor(p => ProyectoActual.AmbienteOperacional, new { @class = "col-md-12 control-label" })}
-            <div class="col-12">
-                <div id="ambiente-edit"></div>
-            </div>
-            @if(TipoUsuario != Proyecto.AUTH_COMO_SYSADMIN) {
-                <div class="mt-2 d-flex flex-row-reverse">
-                    <div class="p-2">
-                        <a id="ambiente-button" class="btn btn-primary text-white">Guardar cambios</a>
-                    </div>
+            <div class="my-2">
+                @{@Html.LabelFor(p => ProyectoActual.AmbienteOperacional, new { @class = "col-md-12 control-label" })}
+                <div class="col-12">
+                    <div id="ambiente-edit"></div>
                 </div>
-            }
-        </div>
-        <div class="form-group border">
-            @{@Html.LabelFor(p => ProyectoActual.RelacionProyectos, new { @class = "col-md-12 control-label" })}
-            <div class="col-12">
-                <div id="relacion-edit"></div>
-            </div>
-            @if(TipoUsuario != Proyecto.AUTH_COMO_SYSADMIN) {
-                <div class="mt-2 d-flex flex-row-reverse">
-                    <div class="p-2">
-                        <a id="relacion-button" class="btn btn-primary text-white">Guardar cambios</a>
+                @if(TipoUsuario != Proyecto.AUTH_COMO_SYSADMIN) {
+                    <div class="mt-2 d-flex flex-row-reverse">
+                        <div class="p-2">
+                            <a id="ambiente-button" class="btn btn-primary text-white">Guardar cambios</a>
+                        </div>
                     </div>
-                </div>
-            }
+                }
+            </div>  
         </div>
 
         <div class="form-group border">
-            @* @{@Html.LabelFor(p => ProyectoActual.Referencias, new { @class = "col-md-12 control-label" })}*@
-            <div class="col-12 table-wrapper-scroll-y">
-                @*@<div id="referencia-edit"></div>*@
-                <table id="referencia_table" class="table">
-                    <thead class="table-light">
-                        <tr>
-                            <th scope="col">Referencias.</th>
-                            <th scope="col"></th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-            @if(TipoUsuario != Proyecto.AUTH_COMO_SYSADMIN) {
-                <div class="mt-2 d-flex flex-row-reverse">
-                    <div class="p-2">
-                        <a class="btn btn-primary text-white" id="addref">Agregar Referencia</a>
-                    </div>
+            <div class="my-2">
+                @{@Html.LabelFor(p => ProyectoActual.RelacionProyectos, new { @class = "col-md-12 control-label" })}
+                <div class="col-12">
+                    <div id="relacion-edit"></div>
                 </div>
-            }
+                @if(TipoUsuario != Proyecto.AUTH_COMO_SYSADMIN) {
+                    <div class="mt-2 d-flex flex-row-reverse">
+                        <div class="p-2">
+                            <a id="relacion-button" class="btn btn-primary text-white">Guardar cambios</a>
+                        </div>
+                    </div>
+                }
+            </div> 
+        </div>
+
+        <div class="form-group border">
+            <div class="my-2">
+                @{@Html.LabelFor(p => ProyectoActual.Referencias, new { @class = "col-md-12 control-label" })}
+                <div class="col-12 table-wrapper-scroll-y">
+                    @*@<div id="referencia-edit"></div>*@
+                    <table id="referencia_table" class="table">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col"></th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                @if(TipoUsuario != Proyecto.AUTH_COMO_SYSADMIN) {
+                    <div class="mt-2 d-flex flex-row-reverse">
+                        <div class="p-2">
+                            <a class="btn btn-primary text-white" id="addref">Agregar Referencia</a>
+                        </div>
+                    </div>
+                }
+            </div>  
         </div>
 
         <div class="form-group">

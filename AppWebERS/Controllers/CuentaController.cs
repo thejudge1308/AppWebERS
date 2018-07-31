@@ -11,6 +11,8 @@ using Microsoft.Owin.Security;
 using AppWebERS.Models;
 using System.Data.Entity;
 using AppWebERS.Utilidades;
+using AspNet.Identity.MySQL;
+
 namespace AppWebERS.Controllers
 {
     [Authorize]
@@ -115,7 +117,20 @@ namespace AppWebERS.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-            return View();
+            String tipo;
+            using (var db = ApplicationDbContext.Create())
+            {
+                var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
+                string s = User.Identity.GetUserId();
+                ApplicationUser user = userManager.FindByIdAsync(s).Result;
+                tipo = user.Tipo;
+
+            }
+            if (tipo == "SYSADMIN")
+            {
+                return View();
+            }
+            return RedirectToAction("Index", "Home");
         }
 
         //
@@ -274,9 +289,22 @@ namespace AppWebERS.Controllers
         [HttpGet]
         public async Task<ActionResult> ListarUsuarios()
         {
-            ViewBag.Title = "ListarUsuarios";
-            var lista = await UserManager.GetAllUsersAsync();
-            return View(lista);
+            String tipo;
+            using (var db = ApplicationDbContext.Create())
+            {
+                var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
+                string s = User.Identity.GetUserId();
+                ApplicationUser user = userManager.FindByIdAsync(s).Result;
+                tipo = user.Tipo;
+
+            }
+            if (tipo == "SYSADMIN")
+            {
+                ViewBag.Title = "ListarUsuarios";
+                var lista = await UserManager.GetAllUsersAsync();
+                return View(lista);
+            }
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]

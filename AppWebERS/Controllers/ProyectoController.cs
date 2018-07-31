@@ -1142,11 +1142,27 @@ namespace AppWebERS.Controllers
         public ActionResult ListarRequisitosMinimalista(int id)
         {
             Proyecto proyecto = this.GetProyecto(id);
-            ViewData["proyecto"] = proyecto;
-            ViewData["permiso"] = this.TipoDePermiso(id);
-            Requisito requisito = new Requisito(null, null, null, null, null, null, null, null, null, null, DateTime.Now.ToString("yyyy-MM-dd"), null, null);
-            ViewData["diccionarioRequisitos"] = requisito.ObtenerDiccionarioRequisitos(id);
-            return View(requisito);
+            String tipo;
+            String idUser;
+            using (var db = ApplicationDbContext.Create())
+            {
+                var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
+                string s = User.Identity.GetUserId();
+                ApplicationUser user = userManager.FindByIdAsync(s).Result;
+                tipo = user.Tipo;
+                idUser = user.Id;
+            }
+            int rol = proyecto.ObtenerRolDelUsuario(idUser,id);
+            if (tipo== "USUARIO" && rol != 3 )
+            {
+                ViewData["proyecto"] = proyecto;
+                ViewData["permiso"] = this.TipoDePermiso(id);
+                Requisito requisito = new Requisito(null, null, null, null, null, null, null, null, null, null, DateTime.Now.ToString("yyyy-MM-dd"), null, null);
+                ViewData["diccionarioRequisitos"] = requisito.ObtenerDiccionarioRequisitos(id);
+                return View(requisito);
+            }
+            return RedirectToAction("Index", "Home");
+
         }
         /**
          * <author>Ariel Cornejo</author>

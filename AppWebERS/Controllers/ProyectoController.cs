@@ -11,9 +11,8 @@ using System.Data;
 using Microsoft.AspNet.Identity;
 using AspNet.Identity.MySQL;
 using Microsoft.AspNet.Identity.Owin;
-using AppWebERS.Utilidades;
 using System.IO;
-
+using static AppWebERS.Models.Requisito;
 
 namespace AppWebERS.Controllers
 {
@@ -657,30 +656,46 @@ namespace AppWebERS.Controllers
                 return UsuarioSolicitanteRut;
             }
         }
-        
+
        
+
         [HttpGet]
         public ActionResult Requisito(int id)
         {
             ViewBag.IdProyecto = id;
-            List<String> lista = obtenerActores(id);
-            ViewBag.listaActores = lista;
-            
-            Requisito requisito = new Requisito(null,null,null,null,null,null,null,null,null,null,null, DateTime.Now.ToString("yyyy-MM-dd"), null,null);
+            List<CheckBox> list =  obtenerActores(id);
+            Requisito requisito = new Requisito(null,null,null,null,null,null,null,null,null,null, DateTime.Now.ToString("yyyy-MM-dd"), null,null);
+            requisito.Actores = list;
             return View(requisito);
         }
 
         //ATENCION: FORMTATO FECHA: AAAA-MM-DD
         [HttpPost]
-        public ActionResult IngresarRequisito(string idRequisito, string nombre, string descripcion, string prioridad, string fuente,
-            string estabilidad, string estado, string tipoUsuario, string tipoRequisito, string medida, string escala,
-            string fecha, string incremento, string tipo, string idProyecto)
+        public ActionResult IngresarRequisito(Requisito r,string idProyecto)
         {
-            Requisito requisito = new Requisito(idRequisito, nombre, descripcion, prioridad, fuente, estabilidad, estado,
-                tipoUsuario, tipoRequisito, medida, escala, fecha, incremento, tipo);
-            int id = Int32.Parse(idProyecto);
-            if (requisito.RegistrarRequisito(id))
+            Requisito requisito = new Requisito(r.IdRequisito, r.Nombre, r.Descripcion, r.Prioridad, r.Fuente, r.Estabilidad, r.Estado
+               , r.TipoRequisito, r.Medida, r.Escala, r.Fecha, r.Incremento, r.Tipo);
+            List<String> listaa = new List<string>();
+            if (r.Actores != null)
             {
+                for (int i = 0; i < r.Actores.Count; i++)
+                {
+                    if (r.Actores[i].isChecked)
+                    {
+                        listaa.Add(r.Actores[i].id);
+                    }
+                }
+            }
+            int id = Int32.Parse(idProyecto);
+            string idVerdadero = requisito.RegistrarRequisito(id);
+            if (!idVerdadero.Equals(""))
+            {
+                
+                foreach (var actor in listaa) {
+                    if (!r.registrarActor(actor,idVerdadero)) {
+                        TempData["alerta"] = new Alerta("!!!!!", TipoAlerta.SUCCESS);
+                    }
+                }
                 TempData["alerta"] = new Alerta("Éxito al crear Requisito.", TipoAlerta.SUCCESS);
                 return RedirectToAction("Detalles/" + id, "Proyecto");
                 
@@ -882,21 +897,21 @@ namespace AppWebERS.Controllers
              return value;
         }
 
-        private List<String> obtenerActores(int id) {
-            List<String> listaActores = new List<string>();
+        private List<CheckBox> obtenerActores(int id) {
+            List<CheckBox> l = new List<CheckBox>();
             //ARREGLAR LA CONSULTA
-            string consulta = "SELECT actor.nombre FROM actor WHERE actor.ref_proyecto = '" + id + "'";
+            string consulta = "SELECT actor.nombre, actor.id_actor FROM actor WHERE actor.ref_proyecto = '" + id + "'";
 
             MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
             if (reader != null)
             {
                 while (reader.Read())
                 {
-                    listaActores.Add(reader[0].ToString());
+                    l.Add(new CheckBox() { nombre = reader[0].ToString(), id= reader[1].ToString(),isChecked = false });
                 }
                 Conector.CerrarConexion();
             }
-            return listaActores;
+            return l;
         }
     }
 

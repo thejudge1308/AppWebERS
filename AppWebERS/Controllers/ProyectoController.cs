@@ -1395,10 +1395,17 @@ namespace AppWebERS.Controllers
             return RedirectToAction("ListarRequisitosMinimalista", "Proyecto", new { id = idProyecto });
         }
 
-        public ActionResult ListarDiagramas()
+        public ActionResult ListarDiagramas(int id)
         {
+            Proyecto proyecto = this.GetProyecto(id);
+            var UsuarioActual = User.Identity.GetUserId();
+            ViewData["proyecto"] = proyecto;
+            ViewData["permiso"] = TipoDePermiso(id);
+
             return View();
         }
+
+
     }
 
    

@@ -183,9 +183,9 @@ namespace AppWebERS.Models {
          **/
 
         [Required(ErrorMessage = "El campo Escala es obligatorio.")]
-        [StringLength(20, ErrorMessage = "La Escala debe tener a lo más 20 caracteres.", MinimumLength = 1)]
+        [StringLength(100, ErrorMessage = "La Escala debe tener a lo más 100 caracteres, sin espacios.", MinimumLength = 1)]
         [Display(Name = "Escala")]
-        [RegularExpression("(^[0-9]*-[0-9]*)|(^[0-9]*|^[a-zA-Z]*)$", ErrorMessage = "La escala ingresada no es válida")]
+        [RegularExpression("[\x00-\x7F]+(^[a-zA-Z]*-[a-zA-Z]*(-[a-zA-Z]*)*)|(^[0-9]*-[0-9]*)|(^[0-9]*|^[a-zA-Z]*)$", ErrorMessage = "La escala ingresada no es válida")]
         public string Escala { get; set; }
 
 

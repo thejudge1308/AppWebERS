@@ -83,7 +83,7 @@ namespace AppWebERS.Controllers
             }
             else
             {
-                TempData["alerta"] = new Alerta("Usuario vinculado", TipoAlerta.SUCCESS);
+                TempData["alerta"] = new Alerta("Usuario vinculado.", TipoAlerta.SUCCESS);
                 while (reader.Read())
                 {
 

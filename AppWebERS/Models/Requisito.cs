@@ -280,17 +280,19 @@ namespace AppWebERS.Models {
                 "VALUES ('" + this.IdRequisito + "','" + this.Nombre + "','" + this.Descripcion + "','" + this.Fuente + "','" +
                  this.TipoRequisito + "','" + this.Prioridad + "','" + this.Estabilidad + "','" + this.Estado + "','" + this.Medida
                  + "','" + this.Escala + "','" + this.Incremento + "','" + this.Fecha + "'," + idProyecto + ",'" + this.Tipo + "'); " +
-                 "SELECT LAST_INSERT_ID() AS T1;" +
                  "COMMIT;";
-            ConectorBD Conector = ConectorBD.Instance;
-            MySqlDataReader reader = Conector.RealizarConsulta(consultaInsert);
-            if (reader != null)
+            ApplicationDbContext con = ApplicationDbContext.Create();
+            if (con.RealizarConsultaNoQuery(consultaInsert))
             {
-                while (reader.Read())
-                {
-                    value = reader[0].ToString();
+                MySqlDataReader reader = con.RealizarConsulta("SELECT LAST_INSERT_ID() AS T1 FROM requisito LIMIT 1;");
+                if (reader != null) {
+                    while (reader.Read())
+                    {
+                        value = reader[0].ToString();
+                    }
                 }
-                Conector.CerrarConexion();
+                
+                con.EnsureConnectionClosed();
             }
             return value;
 

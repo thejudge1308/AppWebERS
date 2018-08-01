@@ -24,14 +24,32 @@ namespace AppWebERS.Controllers{
 
         // GET: JefeProyecto/InvitarUsuario
         public ActionResult InvitarUsuario(int idProyecto){
+            String tipo;
+            String id;
+            using (var db = ApplicationDbContext.Create())
+            {
+                var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
+                string s = User.Identity.GetUserId();
+                ApplicationUser user = userManager.FindByIdAsync(s).Result;
+                tipo = user.Tipo;
+                id = user.Id;
 
-            Proyecto proyecto = new Proyecto().ObtenerProyectoPorID(idProyecto);
-            this.idProyecto = idProyecto;
-            List<Usuario> usuarios = this.listaDeUsuarios(idProyecto);
-            ViewData["proyecto"] = proyecto;
-            ViewData["usuarios"] = usuarios;
-            Debug.WriteLine("iDpROY" + proyecto.IdProyecto);
-            return View();
+            }
+            bool jefe = new Proyecto().VerificarRolEnProyecto(id, idProyecto);
+            if (tipo == "USUARIO" && jefe==true)
+            {
+                Proyecto proyecto = new Proyecto().ObtenerProyectoPorID(idProyecto);
+                this.idProyecto = idProyecto;
+                List<Usuario> usuarios = this.listaDeUsuarios(idProyecto);
+                ViewData["proyecto"] = proyecto;
+                ViewData["usuarios"] = usuarios;
+                Debug.WriteLine("iDpROY" + proyecto.IdProyecto);
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }  
         }
 
         //Get: JefeProyecto/EnviarSolicitud
@@ -100,7 +118,7 @@ namespace AppWebERS.Controllers{
             List<Usuario> listaUsuarios = new List<Usuario>();
             string consulta = "SELECT UserName, Rut, Email, Tipo FROM users WHERE Rut NOT IN (SELECT Rut FROM users, vinculo_usuario_proyecto, proyecto " +
                 "WHERE vinculo_usuario_proyecto.ref_proyecto = '"+idProyecto+"' AND vinculo_usuario_proyecto.ref_usuario = users.Id) " +
-                "AND NOT users.Tipo ='SYSADMIN' ";
+                "AND NOT users.Tipo ='SYSADMIN' AND NOT users.Disponibilidad_Vinculacion = 0 ";
 
             MySqlDataReader reader = this.conector.RealizarConsulta(consulta);
 

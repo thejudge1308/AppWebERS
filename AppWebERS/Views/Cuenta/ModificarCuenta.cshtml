@@ -22,7 +22,7 @@
                         Editar
                     </button>
                     <div class="collapse colapsable" id="collapseExample">
-                        @Html.EditorFor(m => m.Nombre, new { htmlAttributes = new { @class = "form-control", placeholder = "Nuevo nombre de usuario"  } })
+                        @Html.EditorFor(m => m.Nombre, new { htmlAttributes = new { @class = "form-control", placeholder = "Nuevo nombre de usuario" } })
                         @Html.ValidationMessageFor(m => m.Nombre, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -51,7 +51,7 @@
 
         <div class="card mt-4">
             <div class="card-header">
-                Constraseña
+                Contraseña
             </div>
             <div class="card-body">
                 <div class="card-text">
@@ -73,7 +73,28 @@
         @Html.HiddenFor(m => m.AntiguoNombre);
         @Html.HiddenFor(m => m.AntiguoEmail);
         <div class="row justify-content-end mx-0 my-3">
+            @{
+                string tipo = Html.Action("RetornarTipoUsuarioAutentificado", "Cuenta").ToString();
+                if(!tipo.Equals("SYSADMIN")){
+                    string texto = "";
+                    string clase = "";
+                    System.Diagnostics.Debug.WriteLine(Model.DisponibilidadVinculacion.ToString());
+                    System.Diagnostics.Debug.WriteLine(Model.Estado.ToString());
+                    if (Model.DisponibilidadVinculacion)
+                    {
+                        texto = "Disponible para vinculacion";
+                        clase = "btn btn-success mr-3";
+                    }
+                    else
+                    {
+                        texto = "No disponible para vinculacion";
+                        clase = "btn btn-danger mr-3";
+                    }
+                    @Html.ActionLink(texto, "CambiarDisponibilidadVinculacionUsuario", "Cuenta", new { rut = Model.Rut }, new { @class = clase, type = "button", d = "btnDisponabilidad" });
+                }
+            }
             <button type="submit" class="btn btn-primary">Guardar cambios</button>
+
         </div>
     }
 </div>

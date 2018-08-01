@@ -185,7 +185,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\CuentaController.cs" />
     <Compile Include="Controllers\ActorController.cs" />
-    <Compile Include="Controllers\CasoDeUsoController.cs" />
+    <Compile Include="Controllers\DiagramaController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\JefeProyectoController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
@@ -212,6 +212,7 @@
     <Compile Include="Models\Actor.cs" />
     <Compile Include="Models\CasoDeUso.cs" />
     <Compile Include="Models\ConectorBD.cs" />
+    <Compile Include="Models\DiagramaModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\CuentasViewModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -240,6 +241,7 @@
     <Content Include="Content\bootstrap-reboot.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Proyecto\Detalles.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -278,7 +280,27 @@
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
+    <Content Include="Scripts\jquery-ui\Idioma\datee-picker-es.js" />
+    <Content Include="Scripts\jquery-ui\package.json" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery-ui\AUTHORS.txt" />
+    <Content Include="Scripts\jquery-ui\external\jquery\jquery.js" />
+    <Content Include="Scripts\jquery-ui\images\ui-icons_444444_256x240.png" />
+    <Content Include="Scripts\jquery-ui\images\ui-icons_555555_256x240.png" />
+    <Content Include="Scripts\jquery-ui\images\ui-icons_777620_256x240.png" />
+    <Content Include="Scripts\jquery-ui\images\ui-icons_777777_256x240.png" />
+    <Content Include="Scripts\jquery-ui\images\ui-icons_cc0000_256x240.png" />
+    <Content Include="Scripts\jquery-ui\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Scripts\jquery-ui\index.html" />
+    <Content Include="Scripts\jquery-ui\jquery-ui.css" />
+    <Content Include="Scripts\jquery-ui\jquery-ui.js" />
+    <Content Include="Scripts\jquery-ui\jquery-ui.min.css" />
+    <Content Include="Scripts\jquery-ui\jquery-ui.min.js" />
+    <Content Include="Scripts\jquery-ui\jquery-ui.structure.css" />
+    <Content Include="Scripts\jquery-ui\jquery-ui.structure.min.css" />
+    <Content Include="Scripts\jquery-ui\jquery-ui.theme.css" />
+    <Content Include="Scripts\jquery-ui\jquery-ui.theme.min.css" />
+    <Content Include="Scripts\jquery-ui\LICENSE.txt" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -292,12 +314,16 @@
     <Content Include="Scripts\popper.min.js" />
     <Content Include="Scripts\Proyecto\Detalles_sysadmin_quill.min.js" />
     <Content Include="Scripts\Proyecto\Detalles_sysadmin_quill.js" />
+    <Content Include="Scripts\Proyecto\Referencias_modal.js" />
+    <Content Include="Scripts\Proyecto\Referencias_modal.min.js" />
+    <Content Include="Scripts\Proyecto\Sysadminconf.js" />
     <Content Include="Scripts\quilljs\quill.bubble.css" />
     <Content Include="Scripts\quilljs\quill.core.css" />
     <Content Include="Scripts\quilljs\quill.core.js" />
     <Content Include="Scripts\quilljs\quill.js" />
     <Content Include="Scripts\quilljs\quill.min.js" />
     <Content Include="Scripts\quilljs\quill.snow.css" />
+    <Content Include="Scripts\Requisito\DatePicker.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\Proyecto\Detalles_quill.min.js" />
@@ -370,9 +396,16 @@
     <Content Include="Views\Proyecto\Requisito.cshtml" />
     <Content Include="Views\JefeProyecto\InvitarUsuario.cshtml" />
     <Content Include="Views\SysAdmin\AgregarUsuarioProyecto.cshtml" />
+    <Content Include="Views\Diagrama\SubirDiagrama.cshtml" />
+    <Content Include="Views\Proyecto\ListarRequisitosMinimalista.cshtml" />
+    <Content Include="Views\Proyecto\ListarDiagramas.cshtml" />
+    <Content Include="Views\CasoDeUso\UploadFile.cshtml" />
+    <Content Include="Views\Proyecto\ListaActores.cshtml" />
+    <Content Include="Views\Proyecto\AgregarActor.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="UploadedFiles\" />
     <Folder Include="Views\SolicitudDeProyecto\" />
   </ItemGroup>
   <ItemGroup>

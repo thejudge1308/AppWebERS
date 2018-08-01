@@ -2,7 +2,7 @@
 @{
     ViewBag.Title = "Diagramas";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    // var ProyectoActual = (Proyecto)ViewData["proyecto"];
+    var ProyectoActual = (Proyecto)ViewData["proyecto"];
     //var TipoUsuario = (int)ViewData["permiso"];
 }
 
@@ -26,7 +26,9 @@
 
 <h2>Diagramas</h2>
 <div class="dropdown-divider"></div>
-@Html.ActionLink("Agregar diagrama", null, null, new { @class = "btn btn-primary w-auto" })
+
+<a href="../../Diagrama/SubirDiagrama/@ProyectoActual.IdProyecto" class="btn btn-primary w-auto">Agregar diagrama</a>
+
 <div class="row mt-1">
     <div clsss="col-4">
         <div class="card mx-2 my-2">

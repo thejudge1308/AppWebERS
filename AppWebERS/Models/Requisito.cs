@@ -15,7 +15,6 @@ using MySql.Data.MySqlClient;
 namespace AppWebERS.Models {
     public class Requisito
     {
-
         /**
         * Constructor de la clase Requisito
         * 
@@ -182,10 +181,13 @@ namespace AppWebERS.Models {
          * <returns>Retorna el valor string de la escala.</returns>
          * 
          **/
+
         [Required(ErrorMessage = "El campo Escala es obligatorio.")]
         [StringLength(20, ErrorMessage = "La Escala debe tener a lo más 20 caracteres.", MinimumLength = 1)]
         [Display(Name = "Escala")]
+        [RegularExpression("(^[0-9]*-[0-9]*)|(^[0-9]*|^[a-zA-Z]*)$", ErrorMessage = "La escala ingresada no es válida")]
         public string Escala { get; set; }
+
 
         /**
          * Setter y Getter de la fecha actualizacion.

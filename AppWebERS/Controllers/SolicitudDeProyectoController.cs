@@ -46,7 +46,7 @@ namespace AppWebERS.Controllers
 
                 return RedirectToAction("ListaUsuarios", "Proyecto", new { id = idProyecto });
              }catch(Exception e){
-                TempData["alerta"] = new Alerta("ERROR: No se ha podido aceptar la solicitud", TipoAlerta.ERROR);
+                TempData["alerta"] = new Alerta("ERROR: No se ha podido aceptar la solicitud.", TipoAlerta.ERROR);
                 return RedirectToAction("ListaUsuarios", "Proyecto", new { id = idProyecto });
             }
            
@@ -68,11 +68,11 @@ namespace AppWebERS.Controllers
                     + "COMMIT;";
                 conector.RealizarConsultaNoQuery(consulta);
                 conector.EnsureConnectionClosed();
-                TempData["alerta"] = new Alerta("Se ha rechazado la solicitud", TipoAlerta.SUCCESS);
+                TempData["alerta"] = new Alerta("Se ha rechazado la solicitud.", TipoAlerta.SUCCESS);
                 return RedirectToAction("ListaUsuarios", "Proyecto", new { id = idProyecto }); 
             }
             catch (Exception e) {
-                TempData["alerta"] = new Alerta("ERROR: No se ha podido rechazar la solicitud", TipoAlerta.ERROR);
+                TempData["alerta"] = new Alerta("ERROR: No se ha podido rechazar la solicitud.", TipoAlerta.ERROR);
                 return RedirectToAction("ListaUsuarios", "Proyecto", new { id = idProyecto });
             }
         }

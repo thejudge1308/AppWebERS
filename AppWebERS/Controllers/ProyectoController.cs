@@ -16,6 +16,7 @@ using AppWebERS.Utilidades;
 using System.Web.Script.Serialization;
 using System.IO;
 using static AppWebERS.Models.Requisito;
+using Newtonsoft.Json;
 
 namespace AppWebERS.Controllers
 {
@@ -55,16 +56,28 @@ namespace AppWebERS.Controllers
         public ActionResult MostrarReferencia(int id)
         {
             List<Referencia> referencias = this.ObtenerReferencias(id);
-
-            return Json(referencias,JsonRequestBehavior.AllowGet);
+            if(referencias != null) {
+                return Json(referencias , JsonRequestBehavior.AllowGet);
+            } else {
+                return Json("null", JsonRequestBehavior.AllowGet);
+            }
+            
         }
 
+        public class JsonReferenciaLibro {
+            public string id { set; get; }
+            public string autores { set; get; }
+            public string anio { set; get; }
+            public string titulo { set; get; }
+            public string lugar { set; get; }
+            public string editorial { set; get; }
+        }
         [HttpPost]
-        public ActionResult AgregarReferenciaLibro(string id, string autores, string anio, string titulo, string lugar, string editorial)
+        public ActionResult AgregarReferenciaLibro(JsonReferenciaLibro libro)
         {
-            string referencia = this.ParsearReferenciaLibro(autores,anio,titulo,lugar,editorial);
+            string referencia = this.ParsearReferenciaLibro(libro.autores, libro.anio, libro.titulo, libro.lugar, libro.editorial);
 
-            string consulta = "INSERT INTO Referencia(ref_proyecto,referencia) VALUES('" + id + "','" + referencia + "');";
+            string consulta = "INSERT INTO Referencia(ref_proyecto,referencia) VALUES('" + libro.id + "','" + referencia + "');";
 
             if (this.conexion.RealizarConsultaNoQuery(consulta))
             {
@@ -78,12 +91,21 @@ namespace AppWebERS.Controllers
             }
         }
 
+        public class JsonReferenciaPaper {
+            public string id { set; get; }
+            public string autores { set; get; }
+            public string fecha { set; get; }
+            public string titulo { set; get; }
+            public string revista { set; get; }
+            public string volumen { set; get; }
+            public string pag { set; get; }
+        }
         [HttpPost]
-        public ActionResult AgregarReferenciaPaper(string id, string autores, string fecha, string titulo, string revista, string volumen, string pag)
+        public ActionResult AgregarReferenciaPaper(JsonReferenciaPaper paper)
         {
 
-            string referencia = this.ParsearReferenciaPaper(autores, fecha, titulo, revista, volumen, pag);
-            string consulta = "INSERT INTO Referencia(ref_proyecto,referencia) VALUES('" + id + "','" + referencia + "');";
+            string referencia = this.ParsearReferenciaPaper(paper.autores, paper.fecha, paper.titulo, paper.revista, paper.volumen, paper.pag);
+            string consulta = "INSERT INTO Referencia(ref_proyecto,referencia) VALUES('" + paper.id + "','" + referencia + "');";
             if (this.conexion.RealizarConsultaNoQuery(consulta))
             {
                 return Json(true, JsonRequestBehavior.AllowGet);
@@ -95,6 +117,21 @@ namespace AppWebERS.Controllers
 
             }
         }
+
+        [HttpPost]
+        public ActionResult RemoverReferenciaPaper(Referencia r) {
+
+            string consulta = "DELETE FROM referencia WHERE referencia.ref_proyecto ="+r.id+"  and referencia.referencia = '"+r.valor+"';";
+            if(this.conexion.RealizarConsultaNoQuery(consulta)) {
+                return Json(true, JsonRequestBehavior.AllowGet);
+
+            } else {
+                return Json(false, JsonRequestBehavior.AllowGet);
+
+            }
+        }
+
+
         /**
         * <author>Matías Parra</author>
         * <summary>
@@ -102,7 +139,7 @@ namespace AppWebERS.Controllers
         * </summary>
         * <returns> la vista de éxito. </returns>
         */
-            // POST: Proyecto/Detalles/5
+        // POST: Proyecto/Detalles/5
         public class ProyectoJsonRespuesta {
             public string id { set; get; }
             public string atributo { set; get; }

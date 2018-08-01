@@ -1302,7 +1302,7 @@ namespace AppWebERS.Controllers
                 idUser = user.Id;
             }
             int rol = proyecto.ObtenerRolDelUsuario(idUser,id);
-            if (tipo== "USUARIO" && rol != 3 )
+            if (rol != 3 )
             {
                 ViewData["proyecto"] = proyecto;
                 ViewData["permiso"] = this.TipoDePermiso(id);

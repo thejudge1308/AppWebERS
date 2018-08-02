@@ -45,16 +45,18 @@ namespace AppWebERS.Controllers{
         [HttpPost]
         public ActionResult SubirDiagrama(HttpPostedFileBase file, string nombre, string id, int diagramaValue)
         {
-            
-            
+
             int idProyecto = Int32.Parse(id);
-            string tipoDeDiagrama = tipoDiagrama(diagramaValue);
-            Debug.Write(tipoDeDiagrama);
-            string _FileName = id + Path.GetFileName(file.FileName);
-            string _path = Path.Combine(Server.MapPath("~/UploadedFiles"), _FileName);
+
 
             try
             {
+               
+                string tipoDeDiagrama = tipoDiagrama(diagramaValue);
+                Debug.Write(tipoDeDiagrama);
+                string _FileName = id + Path.GetFileName(file.FileName);
+                string _path = Path.Combine(Server.MapPath("~/UploadedFiles"), _FileName);
+
                 if (this.ValidarExtencion(file))
                 {
                     Debug.Write("extencion valida ");
@@ -211,29 +213,45 @@ namespace AppWebERS.Controllers{
 
         public void agregar(string nombre, string idProyecto1, string url,string tipo)
         {
-
-            int idProyecto =  Int32.Parse(idProyecto1);
-
-            Debug.Write(nombre);
-            if (nombre == "null")
+            try
             {
-                Debug.Write("ES NULLLLL  ");
-                string consulta = "use appers; " +
-                          "INSERT INTO diagrama( ruta, tipo,ref_proyecto) VALUES ('" + url + "','" + tipo + "'," + idProyecto + " );";
-                Debug.Write(consulta);
-                this.Conector.RealizarConsulta(consulta);
-                this.Conector.CerrarConexion();
-            }
-            else
-            {
-                string consulta = "use appers; " +
-                          "INSERT INTO diagrama(nombre, ruta, tipo,ref_proyecto) VALUES ( '" + nombre + "','" + url + "','" + tipo + "'," + idProyecto + " );";
-               
-                this.Conector.RealizarConsulta(consulta);
-                this.Conector.CerrarConexion();
-            }
-      
+                if (url.Length == 0)
+                {
+                    TempData["alerta"] = new Alerta("Debe ingresar una imagen", TipoAlerta.ERROR);
 
+                }
+                else
+                {
+                    int idProyecto = Int32.Parse(idProyecto1);
+
+                    Debug.Write(nombre);
+                    if (nombre == "null")
+                    {
+                        Debug.Write("ES NULLLLL  ");
+                        string consulta = "use appers; " +
+                                  "INSERT INTO diagrama( ruta, tipo,ref_proyecto) VALUES ('" + url + "','" + tipo + "'," + idProyecto + " );";
+                        Debug.Write(consulta);
+                        this.Conector.RealizarConsulta(consulta);
+                        this.Conector.CerrarConexion();
+                    }
+                    else
+                    {
+                        string consulta = "use appers; " +
+                                  "INSERT INTO diagrama(nombre, ruta, tipo,ref_proyecto) VALUES ( '" + nombre + "','" + url + "','" + tipo + "'," + idProyecto + " );";
+
+                        this.Conector.RealizarConsulta(consulta);
+                        this.Conector.CerrarConexion();
+                    }
+
+                }
+
+
+            }
+            catch
+            {
+                TempData["alerta"] = new Alerta("Falla en la subida del Diagrama!!", TipoAlerta.ERROR);
+            }
+            
 
 
         }

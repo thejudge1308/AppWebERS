@@ -29,23 +29,32 @@ namespace AppWebERS.Controllers
         {
             SolicitudDeUsuario solicitud = new SolicitudDeUsuario();
             String id;
+            String tipo;
             using (var db = ApplicationDbContext.Create())
             {
                 var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
                 string s = User.Identity.GetUserId();
                 ApplicationUser user = userManager.FindByIdAsync(s).Result;
                 id = user.Id;
+                tipo = user.Tipo;
 
             }
-            var list = solicitud.ObtenerSolicitudesDeUsuario(id);
-            ViewBag.MiListadoSolicitudes = list;
-            if (list.Count == 0)
+            if (tipo == "USUARIO")
             {
-                ViewBag.vacio = true;
+                var list = solicitud.ObtenerSolicitudesDeUsuario(id);
+                ViewBag.MiListadoSolicitudes = list;
+                if (list.Count == 0)
+                {
+                    ViewBag.vacio = true;
+                    return View();
+                }
+                ViewBag.vacio = false;
                 return View();
             }
-            ViewBag.vacio = false;
-            return View();
+
+            return RedirectToAction("Index", "Home");
+
+
         }
 
         /**
@@ -73,11 +82,11 @@ namespace AppWebERS.Controllers
             }
             if (solicitud.AceptarSolicitud(idProyecto,id))
             {
-                TempData["alerta"] = new Alerta("Solicitud Aceptada Exitosamente", TipoAlerta.SUCCESS);
+                TempData["alerta"] = new Alerta("Solicitud Aceptada Exitosamente.", TipoAlerta.SUCCESS);
             }
             else
             {
-                TempData["alerta"] = new Alerta("ERROR al Aceptar Solicitud", TipoAlerta.ERROR);
+                TempData["alerta"] = new Alerta("ERROR al Aceptar Solicitud.", TipoAlerta.ERROR);
                 
             }
             return RedirectToAction("ListadoSolicitudUsuario", "SolicitudDeUsuario");
@@ -108,11 +117,11 @@ namespace AppWebERS.Controllers
             }
             if (solicitud.RechazarSolicitud(idProyecto, id))
             {
-                TempData["alerta"] = new Alerta("Solicitud Rechazada Exitosamente", TipoAlerta.SUCCESS);
+                TempData["alerta"] = new Alerta("Solicitud Rechazada Exitosamente.", TipoAlerta.SUCCESS);
             }
             else
             {
-                TempData["alerta"] = new Alerta("ERROR al Rechazar Solicitud", TipoAlerta.ERROR);
+                TempData["alerta"] = new Alerta("ERROR al Rechazar Solicitud.", TipoAlerta.ERROR);
             }
             return RedirectToAction("ListadoSolicitudUsuario", "SolicitudDeUsuario");
         }

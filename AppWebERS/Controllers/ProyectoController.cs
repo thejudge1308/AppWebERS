@@ -8,7 +8,15 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Web.Mvc;
-
+using System.Data;
+using Microsoft.AspNet.Identity;
+using AspNet.Identity.MySQL;
+using Microsoft.AspNet.Identity.Owin;
+using AppWebERS.Utilidades;
+using System.Web.Script.Serialization;
+using System.IO;
+using static AppWebERS.Models.Requisito;
+using Newtonsoft.Json;
 
 namespace AppWebERS.Controllers
 {
@@ -38,14 +46,99 @@ namespace AppWebERS.Controllers
         }
 
 
+        public class Referencia
+        {
+            public string id { set; get; }
+            public string valor { set; get; }
+        }
+
+        [HttpGet]
+        public ActionResult MostrarReferencia(int id)
+        {
+            List<Referencia> referencias = this.ObtenerReferencias(id);
+            if(referencias != null) {
+                return Json(referencias , JsonRequestBehavior.AllowGet);
+            } else {
+                return Json("null", JsonRequestBehavior.AllowGet);
+            }
+            
+        }
+
+        public class JsonReferenciaLibro {
+            public string id { set; get; }
+            public string autores { set; get; }
+            public string anio { set; get; }
+            public string titulo { set; get; }
+            public string lugar { set; get; }
+            public string editorial { set; get; }
+        }
+        [HttpPost]
+        public ActionResult AgregarReferenciaLibro(JsonReferenciaLibro libro)
+        {
+            string referencia = this.ParsearReferenciaLibro(libro.autores, libro.anio, libro.titulo, libro.lugar, libro.editorial);
+
+            string consulta = "INSERT INTO Referencia(ref_proyecto,referencia) VALUES('" + libro.id + "','" + referencia + "');";
+
+            if (this.conexion.RealizarConsultaNoQuery(consulta))
+            {
+                return Json(true, JsonRequestBehavior.AllowGet);
+
+            }
+            else
+            {
+                return Json(false, JsonRequestBehavior.AllowGet);
+
+            }
+        }
+
+        public class JsonReferenciaPaper {
+            public string id { set; get; }
+            public string autores { set; get; }
+            public string fecha { set; get; }
+            public string titulo { set; get; }
+            public string revista { set; get; }
+            public string volumen { set; get; }
+            public string pag { set; get; }
+        }
+        [HttpPost]
+        public ActionResult AgregarReferenciaPaper(JsonReferenciaPaper paper)
+        {
+
+            string referencia = this.ParsearReferenciaPaper(paper.autores, paper.fecha, paper.titulo, paper.revista, paper.volumen, paper.pag);
+            string consulta = "INSERT INTO Referencia(ref_proyecto,referencia) VALUES('" + paper.id + "','" + referencia + "');";
+            if (this.conexion.RealizarConsultaNoQuery(consulta))
+            {
+                return Json(true, JsonRequestBehavior.AllowGet);
+
+            }
+            else
+            {
+                return Json(false, JsonRequestBehavior.AllowGet);
+
+            }
+        }
+
+        [HttpPost]
+        public ActionResult RemoverReferenciaPaper(Referencia r) {
+
+            string consulta = "DELETE FROM referencia WHERE referencia.ref_proyecto ="+r.id+"  and referencia.referencia = '"+r.valor+"';";
+            if(this.conexion.RealizarConsultaNoQuery(consulta)) {
+                return Json(true, JsonRequestBehavior.AllowGet);
+
+            } else {
+                return Json(false, JsonRequestBehavior.AllowGet);
+
+            }
+        }
+
 
         /**
-         * <author>Matías Parra</author>
-         * <summary>
-         * Action POST que retorna una vista después se precionar el botón de guardar cambios en un proyecto.
-         * </summary>
-         * <returns> la vista de éxito. </returns>
-         */
+        * <author>Matías Parra</author>
+        * <summary>
+        * Action POST que retorna una vista después se precionar el botón de guardar cambios en un proyecto.
+        * </summary>
+        * <returns> la vista de éxito. </returns>
+        */
         // POST: Proyecto/Detalles/5
         public class ProyectoJsonRespuesta {
             public string id { set; get; }
@@ -121,6 +214,7 @@ namespace AppWebERS.Controllers
             Proyecto proyecto = this.GetProyecto(id);
             return Json(proyecto, JsonRequestBehavior.AllowGet);
         }
+
         public FileResult ExportarPDF(int id) {
             Proyecto proyecto = this.GetProyecto(id);
 
@@ -140,16 +234,34 @@ namespace AppWebERS.Controllers
 
         // GET: Proyecto/ListaUsuarios/5
         public ActionResult ListaUsuarios(int id) {
+            String idUsuario;
+            using (var db = ApplicationDbContext.Create())
+            {
+                var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
+                string s = User.Identity.GetUserId();
+                ApplicationUser user = userManager.FindByIdAsync(s).Result;
+                idUsuario = user.Id;
+
+            }
+            
             Proyecto proyecto = this.GetProyecto(id);
-            List<Usuario> usuarios = new Proyecto().GetListaUsuarios(id);
-            List<SolicitudDeProyecto> solicitudes = new Proyecto().GetSolicitudesProyecto(id);
-            //Debug.WriteLine("Permiso: " + TipoDePermiso());
-            ViewData["proyecto"] = proyecto;
-            ViewData["usuarios"] = usuarios;
-            ViewData["solicitudes"] = solicitudes;
-            Debug.WriteLine("Lista de usuarios" + usuarios);
-            ViewData["permiso"] = TipoDePermiso(id);
-            return View();
+            int permiso = proyecto.ObtenerRolDelUsuario(idUsuario,id);
+            if (permiso==1 || permiso==2 ||  permiso==0)
+            {
+                List<Usuario> usuarios = new Proyecto().GetListaUsuarios(id);
+                List<SolicitudDeProyecto> solicitudes = new Proyecto().GetSolicitudesProyecto(id);
+                //Debug.WriteLine("Permiso: " + TipoDePermiso());
+                ViewData["proyecto"] = proyecto;
+                ViewData["usuarios"] = usuarios;
+                ViewData["solicitudes"] = solicitudes;
+                Debug.WriteLine("Lista de usuarios" + usuarios);
+                ViewData["permiso"] = TipoDePermiso(id);
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
        
@@ -239,7 +351,7 @@ namespace AppWebERS.Controllers
                         this.conexion.EnsureConnectionClosed();
                         return true;
                     }   
-            }
+                }
             }
             this.conexion.EnsureConnectionClosed();
             return false;
@@ -567,24 +679,24 @@ namespace AppWebERS.Controllers
                     {
                         if (proyecto.AsignarJefeProyecto(usuario, nombre))
                         {
-                            TempData["alerta"] = new Alerta("Exito al crear Proyecto", TipoAlerta.SUCCESS);
+                            TempData["alerta"] = new Alerta("Éxito al crear Proyecto.", TipoAlerta.SUCCESS);
                             return RedirectToAction("ListarProyectos", "Proyecto");
                         }
                         else {
-                            TempData["alerta"] = new Alerta("Error al crear Proyecto", TipoAlerta.ERROR);
+                            TempData["alerta"] = new Alerta("Error al crear Proyecto.", TipoAlerta.ERROR);
                         }
 
                     }
                     else
                     {
-                        TempData["alerta"] = new Alerta("Error al crear Proyecto", TipoAlerta.ERROR);
+                        TempData["alerta"] = new Alerta("Error al crear Proyecto.", TipoAlerta.ERROR);
                     }
                 }
                 else
-                   TempData["alerta"] = new Alerta("Este nombre ya esta asociado a un proyecto", TipoAlerta.ERROR);
+                   TempData["alerta"] = new Alerta("Este nombre ya está asociado a un proyecto.", TipoAlerta.ERROR);
             }
             else
-                TempData["alerta"] = new Alerta("Modelo no valido", TipoAlerta.ERROR);
+                TempData["alerta"] = new Alerta("Modelo no válido.", TipoAlerta.ERROR);
             return View();
         }
         /**
@@ -598,25 +710,41 @@ namespace AppWebERS.Controllers
         [HttpGet]
         public ActionResult AsignarJefeProyecto()
         {
-            Proyecto proyecto = new Proyecto();
-            var list = proyecto.ObtenerProyectosSinJefe();
-            var list2 = proyecto.ObtenerUsuarios();
-            ViewBag.MiListadoProyectos = list;
-            ViewBag.MiListadoUsuarios = list2;
-            if (list.Count == 0)
+            String tipo;
+            using (var db = ApplicationDbContext.Create())
             {
-                ViewBag.listaVacia = true;
-                ViewBag.MessageErrorProyectos = "No hay proyectos disponibles";
+                var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
+                string s = User.Identity.GetUserId();
+                ApplicationUser user = userManager.FindByIdAsync(s).Result;
+                tipo = user.Tipo;
+
+            }
+            if (tipo == "SYSADMIN")
+            {
+                Proyecto proyecto = new Proyecto();
+                var list = proyecto.ObtenerProyectosSinJefe();
+                var list2 = proyecto.ObtenerUsuarios();
+                ViewBag.MiListadoProyectos = list;
+                ViewBag.MiListadoUsuarios = list2;
+                if (list.Count == 0)
+                {
+                    ViewBag.listaVacia = true;
+                    ViewBag.MessageErrorProyectos = "No hay proyectos disponibles";
+                    return View();
+                }
+                if (list2.Count == 0)
+                {
+                    ViewBag.listaVacia = true;
+                    ViewBag.MessageErrorProyectos = "No hay usuarios disponibles";
+                    return View();
+                }
+                ViewBag.listaVacia = false;
                 return View();
             }
-            if (list2.Count == 0)
+            else
             {
-                ViewBag.listaVacia = true;
-                ViewBag.MessageErrorProyectos = "No hay usuarios disponibles";
-                return View();
+                return RedirectToAction("Index", "Home");
             }
-            ViewBag.listaVacia = false;
-            return View();
         }
         /**
          * <author>Ariel Cornejo</author>
@@ -639,13 +767,13 @@ namespace AppWebERS.Controllers
             if (list.Count == 0)
             {
                 ViewBag.listaVacia = true;
-                ViewBag.MessageErrorProyectos = "No hay proyectos disponibles";
+                ViewBag.MessageErrorProyectos = "No hay proyectos disponibles.";
                 return View();
             }
             if (list2.Count == 0)
             {
                 ViewBag.listaVacia = true;
-                ViewBag.MessageErrorProyectos = "No hay usuarios disponibles";
+                ViewBag.MessageErrorProyectos = "No hay usuarios disponibles.";
                 return View();
             }
             ViewBag.listaVacia = false;
@@ -662,21 +790,38 @@ namespace AppWebERS.Controllers
         [HttpGet]
         public ActionResult ModificarJefeProyecto(int id)
         {
-            Proyecto proyecto = new Proyecto();
-            this.id_proyecto = id;
-            ViewBag.idProyecto = id;
-            var list = proyecto.ObtenerUsuarios2(id);
-            if (list.Count == 0)
+            String tipo;
+            using (var db = ApplicationDbContext.Create())
             {
-                
-                ViewBag.MessageErrorProyectos = "No Hay Usuarios Disponibles";
+                var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
+                string s = User.Identity.GetUserId();
+                ApplicationUser user = userManager.FindByIdAsync(s).Result;
+                tipo = user.Tipo;
+
+            }
+            if (tipo == "SYSADMIN")
+            {
+                Proyecto proyecto = new Proyecto();
+                this.id_proyecto = id;
+                ViewBag.idProyecto = id;
+                var list = proyecto.ObtenerUsuarios2(id);
+                if (list.Count == 0)
+                {
+
+                    ViewBag.MessageErrorProyectos = "No Hay Usuarios Disponibles";
+                    ViewBag.MiListadoUsuarios = list;
+                    ViewBag.listaVacia = true;
+                    return View();
+                }
                 ViewBag.MiListadoUsuarios = list;
-                ViewBag.listaVacia = true;
+                ViewBag.listaVacia = false;
                 return View();
             }
-            ViewBag.MiListadoUsuarios = list;
-            ViewBag.listaVacia = false;
-            return View();
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
 
         }
         /**
@@ -703,28 +848,44 @@ namespace AppWebERS.Controllers
         [HttpGet]
         public ActionResult AgregarUsuarioAProyecto(int proyecto1)
         {
-
-            //int PosProyecto = Int32.Parse(proyecto1);
-            //List<string> ListaProyectos = ListaProyectosIds();
-            //string IdProyectoAUnirse = ListaProyectos[PosProyecto];
-            TempData["alerta"] = new Alerta("Solicitud enviada", TipoAlerta.SUCCESS);
-            string UsuarioSolicitanteRut = ObtenerIdUsuarioActivo();
-           
-            //proyecto1 = "1";
-            string Values = "'" +proyecto1 + "','" + UsuarioSolicitanteRut + "'";
-            string Consulta = "INSERT INTO solicitud_vinculacion_proyecto (ref_proyecto,ref_solicitante) VALUES (" + Values + ");";
-            
-            if (this.Conector.RealizarConsultaNoQuery(Consulta))
+            String tipo;
+            using (var db = ApplicationDbContext.Create())
             {
-                this.Conector.CerrarConexion();
-                ViewBag.Message = "Solicitud enviada";
+                var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
+                string s = User.Identity.GetUserId();
+                ApplicationUser user = userManager.FindByIdAsync(s).Result;
+                tipo = user.Tipo;
+
+            }
+            if (tipo == "USUARIO")
+            {
+                //int PosProyecto = Int32.Parse(proyecto1);
+                //List<string> ListaProyectos = ListaProyectosIds();
+                //string IdProyectoAUnirse = ListaProyectos[PosProyecto];
+                TempData["alerta"] = new Alerta("Solicitud enviada", TipoAlerta.SUCCESS);
+                string UsuarioSolicitanteRut = ObtenerIdUsuarioActivo();
+
+                //proyecto1 = "1";
+                string Values = "'" + proyecto1 + "','" + UsuarioSolicitanteRut + "'";
+                string Consulta = "INSERT INTO solicitud_vinculacion_proyecto (ref_proyecto,ref_solicitante) VALUES (" + Values + ");";
+
+                if (this.Conector.RealizarConsultaNoQuery(Consulta))
+                {
+                    this.Conector.CerrarConexion();
+                    ViewBag.Message = "Solicitud enviada";
+                }
+                else
+                {
+                    this.Conector.CerrarConexion();
+                }
+
+                return RedirectToAction("ListarProyectos", "Proyecto");
             }
             else
             {
-                this.Conector.CerrarConexion();
+                return RedirectToAction("Index", "Home");
             }
 
-            return RedirectToAction("ListarProyectos", "Proyecto");
         }
 
 
@@ -774,52 +935,105 @@ namespace AppWebERS.Controllers
                 return UsuarioSolicitanteRut;
             }
         }
-        
-       
+        /**
+          * <author>Diego Iturriaga</author>
+          * <summary>
+          * Action GET que retorna la vista Requiito para ingresar un requisito segun los campos de un volere
+          * si el usuario cumple con los permisos de accesso.
+          * </summary>
+          * <param name="id">id correspondiente al Proyecto Actual.</param>
+          * <returns> Redireccion a la ventana Requisito si el usuario Cumple con los permisos.
+          * Redirreciona al index si el usuario no tiene los permisos para entrar a la vista.</returns>
+          */
+
         [HttpGet]
         public ActionResult Requisito(int id)
         {
-            ViewBag.IdProyecto = id;
-            Requisito requisito = new Requisito(null,null,null,null,null,null,null,null,null,null, DateTime.Now.ToString("yyyy-MM-dd"), null,null);
-            return View(requisito);
+            String idUsuario;
+            using (var db = ApplicationDbContext.Create())
+            {
+                var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
+                string s = User.Identity.GetUserId();
+                ApplicationUser user = userManager.FindByIdAsync(s).Result;
+                idUsuario = user.Id;
+
+            }
+            Proyecto proyecto = this.GetProyecto(id);
+            int permiso = proyecto.ObtenerRolDelUsuario(idUsuario, id);
+            if (permiso==0 || permiso == 2)
+            {
+                
+                ViewBag.IdProyecto = id;
+                List<CheckBox> list = obtenerActores(id);
+                Requisito requisito = new Requisito(null, null, null, null, null, null, null, null, null, null, DateTime.Now.ToString("yyyy-MM-dd"), null, null);
+                requisito.Actores = list;
+                return View(requisito);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         //ATENCION: FORMTATO FECHA: AAAA-MM-DD
         /**
           * <author>Diego Iturriaga</author>
           * <summary>
-          * Action POST que retorna una redireccion a Detalles despues de ejecutar al insertar un proyecto.
+          * Action POST que retorna una redireccion a Detalles despues de ejecutar la insercion de un requisito.
           * </summary>
           * <param>Todos los atributos de un requisito.</param>
-          * <returns> Redireccion a la ventana Detalles.</returns>
+          * <returns> Redireccion a la ventana Detalles si se registra el Requisisto.</returns>
           */
         [HttpPost]
-        public ActionResult IngresarRequisito(string idRequisito, string nombre, string descripcion, string prioridad, string fuente,
-            string estabilidad, string estado, string tipoRequisito, string medida, string escala,
-            string fecha, string incremento, string tipo, string idProyecto)
+        public ActionResult IngresarRequisito(Requisito r, string idProyecto)
         {
-            
-            Requisito requisito = new Requisito(idRequisito, nombre, descripcion, prioridad, fuente, estabilidad, estado, 
-                tipoRequisito, medida, escala, fecha, incremento, tipo);
-            int id = Int32.Parse(idProyecto);
-            if (requisito.VerificarIdRequisito(id,idRequisito))
+            Requisito requisito = new Requisito(r.IdRequisito, r.Nombre, r.Descripcion, r.Prioridad, r.Fuente, r.Estabilidad, r.Estado
+               , r.TipoRequisito, r.Medida, r.Escala, r.Fecha, r.Incremento, r.Tipo);
+            List<String> listaa = new List<string>();
+            if (r.Actores != null)
             {
-                if (requisito.RegistrarRequisito(id))
+                for (int i = 0; i < r.Actores.Count; i++)
                 {
-                    TempData["alerta"] = new Alerta("Exito al crear Requisito", TipoAlerta.SUCCESS);
-                    return RedirectToAction("Detalles/" + id, "Proyecto");
+                    if (r.Actores[i].isChecked)
+                    {
+                        listaa.Add(r.Actores[i].id);
+                    }
+                }
+            }
+            int id = Int32.Parse(idProyecto);
+            if (requisito.VerificarIdRequisito(id, r.IdRequisito))
+            {
+                if (requisito.ValidarNombreRequisito(id, r.Nombre))
+                {
+                    string idVerdadero = requisito.RegistrarRequisito(id);
+                    if (!idVerdadero.Equals(""))
+                    {
 
+                        foreach (var actor in listaa)
+                        {
+                            if (!r.registrarActor(actor, idVerdadero))
+                            {
+                                TempData["alerta"] = new Alerta("!!!!!", TipoAlerta.SUCCESS);
+                            }
+                        }
+                        TempData["alerta"] = new Alerta("Éxito al crear Requisito.", TipoAlerta.SUCCESS);
+                        return RedirectToAction("Detalles/" + id, "Proyecto");
+
+                    }
+                    else
+                    {
+                        TempData["alerta"] = new Alerta("ERROR al crear Requisito.", TipoAlerta.ERROR);
+                    }
                 }
                 else
                 {
-                    TempData["alerta"] = new Alerta("ERROR al crear Requisito", TipoAlerta.ERROR);
+                    TempData["alerta"] = new Alerta("El Nombre del Requisito ingresado ya existe dentro del Proyecto", TipoAlerta.ERROR);
                 }
             }
             else
             {
                 TempData["alerta"] = new Alerta("El Id del Requisito ingresado ya existe dentro del Proyecto", TipoAlerta.ERROR);
             }
-            
             return RedirectToAction("Requisito/" + id, "Proyecto");
         }
 
@@ -833,7 +1047,7 @@ namespace AppWebERS.Controllers
         public ActionResult DeshabilitarProyecto(string id)
         {
             //Popups estado modificado
-            TempData["alerta"] = new Alerta("Estado Modificado", TipoAlerta.SUCCESS);
+            TempData["alerta"] = new Alerta("Estado Modificado.", TipoAlerta.SUCCESS);
 
             string nuevoEstado = "DESHABILITADO";
             string consulta = "UPDATE proyecto SET estado = '" + nuevoEstado + "'" +
@@ -868,7 +1082,7 @@ namespace AppWebERS.Controllers
         [HttpGet]
         public ActionResult HabilitarProyecto(string id)
         {
-            TempData["alerta"] = new Alerta("Estado Modificado", TipoAlerta.SUCCESS);
+            TempData["alerta"] = new Alerta("Estado Modificado.", TipoAlerta.SUCCESS);
             string nuevoEstado = "HABILITADO";
             string consulta = "UPDATE proyecto SET estado = '" + nuevoEstado + "'" +
                                "WHERE (id_proyecto ='" + id + "') ";
@@ -978,8 +1192,8 @@ namespace AppWebERS.Controllers
             if (this.Conector.RealizarConsultaNoQuery(Consulta) == true)
             {
                 this.Conector.CerrarConexion();
-                ViewBag.Message = "Solicitud enviada";
-                TempData["alerta"] = new Alerta("Solicitud enviada", TipoAlerta.SUCCESS);
+                ViewBag.Message = "Solicitud enviada.";
+                TempData["alerta"] = new Alerta("Solicitud enviada.", TipoAlerta.SUCCESS);
             }
             else
             {
@@ -991,6 +1205,7 @@ namespace AppWebERS.Controllers
 
         public ActionResult SolicitudDeProyecto(int id)
         {
+
             string s;
             using (var db = ApplicationDbContext.Create())
             {
@@ -1023,6 +1238,65 @@ namespace AppWebERS.Controllers
             }
              return value;
         }
+
+        private List<CheckBox> obtenerActores(int id) {
+            List<CheckBox> l = new List<CheckBox>();
+            //ARREGLAR LA CONSULTA
+            string consulta = "SELECT actor.nombre, actor.id_actor FROM actor WHERE actor.ref_proyecto = '" + id + "'";
+
+            MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
+            if (reader != null)
+            {
+                while (reader.Read())
+                {
+                    l.Add(new CheckBox() { nombre = reader[0].ToString(), id= reader[1].ToString(),isChecked = false });
+                }
+                Conector.CerrarConexion();
+            }
+            return l;
+        }
+
+        private List<Referencia> ObtenerReferencias(int id)
+        {
+            List<Referencia> lista = new List<Referencia>();
+
+            string consulta = "SELECT * FROM  referencia WHERE referencia.ref_proyecto = '" + id + "'";
+            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
+
+            if (reader != null)
+            {
+                while (reader.Read())
+                {
+                    Referencia referencia = new Referencia();
+                    referencia.id = reader[0].ToString();
+                    referencia.valor = reader[1].ToString();
+                    lista.Add(referencia);
+                }
+
+                return lista;
+            }
+            else
+            {
+                return null;
+            }
+
+
+        }
+
+        private string ParsearReferenciaLibro(string autores, string anio, string titulo, string lugar, string editorial)
+        {
+            string referencia;
+            referencia = autores + ", (" + anio + ")," + titulo + ", " + lugar + ":" + editorial + ".";
+            return referencia;
+        }
+
+        private string ParsearReferenciaPaper(string autores,string fecha, string titulo, string revista, string volumen, string pag)
+        {
+            string referencia;
+            referencia = autores + ",("+ fecha + "),"+ titulo + ", " + revista + "," + volumen + "," + pag + ".";
+            return referencia;
+
+        }
         /**
          * <author>Ariel Cornejo</author>
          * <summary>
@@ -1035,11 +1309,27 @@ namespace AppWebERS.Controllers
         public ActionResult ListarRequisitosMinimalista(int id)
         {
             Proyecto proyecto = this.GetProyecto(id);
-            ViewData["proyecto"] = proyecto;
-            ViewData["permiso"] = this.TipoDePermiso(id);
-            Requisito requisito = new Requisito(null, null, null, null, null, null, null, null, null, null, DateTime.Now.ToString("yyyy-MM-dd"), null, null);
-            ViewData["diccionarioRequisitos"] = requisito.ObtenerDiccionarioRequisitos(id);
-            return View(requisito);
+            String tipo;
+            String idUser;
+            using (var db = ApplicationDbContext.Create())
+            {
+                var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
+                string s = User.Identity.GetUserId();
+                ApplicationUser user = userManager.FindByIdAsync(s).Result;
+                tipo = user.Tipo;
+                idUser = user.Id;
+            }
+            int rol = proyecto.ObtenerRolDelUsuario(idUser,id);
+            if (rol != 3 )
+            {
+                ViewData["proyecto"] = proyecto;
+                ViewData["permiso"] = this.TipoDePermiso(id);
+                Requisito requisito = new Requisito(null, null, null, null, null, null, null, null, null, null, DateTime.Now.ToString("yyyy-MM-dd"), null, null);
+                ViewData["diccionarioRequisitos"] = requisito.ObtenerDiccionarioRequisitos(id);
+                return View(requisito);
+            }
+            return RedirectToAction("Index", "Home");
+
         }
         /**
          * <author>Ariel Cornejo</author>
@@ -1059,8 +1349,8 @@ namespace AppWebERS.Controllers
             if (requisito.VerificarIdRequisito(id, idRequisito))
             {
                 if (requisito.ValidarNombreRequisito(id,nombre)) {
-
-                    if (requisito.RegistrarRequisito(Int32.Parse(idProyecto)))
+                    string idRequisitoNuevo = requisito.RegistrarRequisito(Int32.Parse(idProyecto));
+                    if (idRequisitoNuevo!=null)
                     {
                         TempData["alerta"] = new Alerta("Exito al crear Requisito de Usuario", TipoAlerta.SUCCESS);
                     }
@@ -1123,12 +1413,18 @@ namespace AppWebERS.Controllers
             return RedirectToAction("ListarRequisitosMinimalista", "Proyecto", new { id = idProyecto });
         }
 
-        public ActionResult ListarDiagramas()
+        public ActionResult ListarDiagramas(int id)
         {
+            Proyecto proyecto = this.GetProyecto(id);
+            var UsuarioActual = User.Identity.GetUserId();
+            ViewData["proyecto"] = proyecto;
+            ViewData["permiso"] = TipoDePermiso(id);
+
             return View();
         }
+
+
     }
 
-    
-
+   
 }

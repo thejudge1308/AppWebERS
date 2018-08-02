@@ -27,6 +27,13 @@ namespace AppWebERS.Controllers
 
         }
 
+        //Creador: Patricio Quezada
+        //Retorna la fecha del servidor para el datePicker
+        [HttpGet]
+        public ActionResult FechaActual() {
+            return Json(DateTime.Now.ToString("yyyy/MM/dd"), JsonRequestBehavior.AllowGet);  
+        }
+
         [HttpGet]
         public ActionResult Requisito(int id)
         {
@@ -35,11 +42,11 @@ namespace AppWebERS.Controllers
 
         [HttpPost]
         public ActionResult Requisito(string idRequisito, string nombre, string descripcion, string prioridad, string fuente,
-            string estabilidad, string estado, string tipoUsuario, string tipoRequisito, string medida, string escala,
+            string estabilidad, string estado, string tipoRequisito, string medida, string escala,
             string fecha, string incremento, string tipo)
         {
             Requisito requisito = new Requisito(idRequisito, nombre, descripcion, prioridad, fuente, estabilidad, estado,
-                tipoUsuario, tipoRequisito, medida, escala, fecha, incremento, tipo);
+                tipoRequisito, medida, escala, fecha, incremento, tipo);
             return View();
         }
     }

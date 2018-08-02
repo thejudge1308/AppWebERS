@@ -933,7 +933,7 @@ namespace AppWebERS.Models{
          * <param name="idProyecto">Contiene un int con el id de un proyecto.</param>
          * <returns> true si el rol es jefe de proyecto, false en caso contrario.</returns>
          */
-        private bool VerificarRolEnProyecto(string rut, int idProyecto) {
+        public bool VerificarRolEnProyecto(string rut, int idProyecto) {
             string consulta = "SELECT vinculo_usuario_proyecto.rol FROM vinculo_usuario_proyecto WHERE vinculo_usuario_proyecto.ref_usuario = '" + rut + "' AND vinculo_usuario_proyecto.ref_proyecto=" + idProyecto + ";";
             MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
             if (reader != null)

@@ -15,7 +15,6 @@ using MySql.Data.MySqlClient;
 namespace AppWebERS.Models {
     public class Requisito
     {
-
         /**
         * Constructor de la clase Requisito
         * 
@@ -182,10 +181,13 @@ namespace AppWebERS.Models {
          * <returns>Retorna el valor string de la escala.</returns>
          * 
          **/
+
         [Required(ErrorMessage = "El campo Escala es obligatorio.")]
-        [StringLength(20, ErrorMessage = "La Escala debe tener a lo más 20 caracteres.", MinimumLength = 1)]
+        [StringLength(100, ErrorMessage = "La Escala debe tener a lo más 100 caracteres, sin espacios.", MinimumLength = 1)]
         [Display(Name = "Escala")]
+        [RegularExpression("[\x00-\x7F]+(^[a-zA-Z]*-[a-zA-Z]*(-[a-zA-Z]*)*)|(^[0-9]*-[0-9]*)|(^[0-9]*|^[a-zA-Z]*)$", ErrorMessage = "La escala ingresada no es válida")]
         public string Escala { get; set; }
+
 
         /**
          * Setter y Getter de la fecha actualizacion.
@@ -280,17 +282,19 @@ namespace AppWebERS.Models {
                 "VALUES ('" + this.IdRequisito + "','" + this.Nombre + "','" + this.Descripcion + "','" + this.Fuente + "','" +
                  this.TipoRequisito + "','" + this.Prioridad + "','" + this.Estabilidad + "','" + this.Estado + "','" + this.Medida
                  + "','" + this.Escala + "','" + this.Incremento + "','" + this.Fecha + "'," + idProyecto + ",'" + this.Tipo + "'); " +
-                 "SELECT LAST_INSERT_ID() AS T1;" +
                  "COMMIT;";
-            ConectorBD Conector = ConectorBD.Instance;
-            MySqlDataReader reader = Conector.RealizarConsulta(consultaInsert);
-            if (reader != null)
+            ApplicationDbContext con = ApplicationDbContext.Create();
+            if (con.RealizarConsultaNoQuery(consultaInsert))
             {
-                while (reader.Read())
-                {
-                    value = reader[0].ToString();
+                MySqlDataReader reader = con.RealizarConsulta("SELECT LAST_INSERT_ID() AS T1 FROM requisito LIMIT 1;");
+                if (reader != null) {
+                    while (reader.Read())
+                    {
+                        value = reader[0].ToString();
+                    }
                 }
-                Conector.CerrarConexion();
+                
+                con.EnsureConnectionClosed();
             }
             return value;
 
@@ -309,6 +313,14 @@ namespace AppWebERS.Models {
             return false;
         }
 
+        /**
+         * 
+         * <autor>Diego Iturriaga</autor>
+         * <summary>Metodo para verificar el id de un requisito en especifico dentro de un proyecto.</summary>
+         * <param name="idProyecto">Id del proyecto al que se asocia el requisito.</param>
+         * <param name="idRequisito">Id del requisito que se desea comprobar si esta en uso (Ej: RU001)</param>
+         * <returns>True si el Id es valido / False si el Id no es valido para agregar el Requisito.</returns>
+         */
         public bool VerificarIdRequisito(int idProyecto, string idRequisito)
         {
             ApplicationDbContext conexionLocal = ApplicationDbContext.Create();
@@ -405,6 +417,14 @@ namespace AppWebERS.Models {
             return false;
         }
 
+        /**
+         * 
+         * <autor>Diego Iturriaga</autor>
+         * <summary>Metodo para obtener el numero de un requisito en especifico.</summary>
+         * <param name="idProyecto">Id del proyecto al que se asocia el requisito.</param>
+         * <param name="idRequisito">Id del requisito que se desea obtener su numero.</param>
+         * <returns>El numero del requisto (Se refiere a la variable autoincremental - PK).</returns>
+         */
         public int ObtenerNumRequisito(int idProyecto, string idRequisito)
         {
             ApplicationDbContext conexionPrivada = ApplicationDbContext.Create();
@@ -420,6 +440,14 @@ namespace AppWebERS.Models {
             return -1;
         }
 
+        /**
+         * 
+         * <autor>Diego Iturriaga</autor>
+         * <summary>Metodo para validar si el nombre de un requisito esta en uso dentro de un proyecto.</summary>
+         * <param name="idProyecto">Id del proyecto al que se asocia el requisito.</param>
+         * <param name="nombreRequisito">Nombre del requisito que se desea comprobar si esta en uso.</param>
+         * <returns>True si el nombre es valido / False si el nombre no es valido para agregar el Requisito.</returns>
+         */
         public bool ValidarNombreRequisito(int idProyecto, string nombreRequisito)
         {
             ApplicationDbContext conexionLocal = ApplicationDbContext.Create();

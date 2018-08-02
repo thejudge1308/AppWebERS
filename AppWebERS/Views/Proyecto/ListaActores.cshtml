@@ -25,6 +25,12 @@
             <a class="nav-link" href="@Url.Action("Detalles", "Proyecto", new { id = ProyectoActual.IdProyecto })">Detalles</a>
         </li>
         <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("ListarRequisitosMinimalista", "Proyecto", new { id = ProyectoActual.IdProyecto })">Requisitos</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("ListarDiagramas", "Proyecto", new { id = ProyectoActual.IdProyecto})">Diagramas</a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link" href="@Url.Action("ListaUsuarios", "Proyecto", new { id = ProyectoActual.IdProyecto })">Usuarios</a>
         </li>
         <li class="nav-item">
@@ -36,7 +42,7 @@
     <div class="form-group">
         <div class="col-12">
             @{
-                if (TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN)
+                if (TipoUsuario != Proyecto.AUTH_COMO_SYSADMIN)
                 {
                     <a class="btn btn-primary mt-3" href="@Url.Action("AgregarActor", "Proyecto", new { id = ProyectoActual.IdProyecto })">Agregar actor</a>
                 }

@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using MySql.Data.MySqlClient;
 using AppWebERS.Utilidades;
+using System.Net;
 
 namespace AppWebERS.Controllers{
     public class DiagramaController : Controller{
@@ -43,7 +44,7 @@ namespace AppWebERS.Controllers{
 
 
         [HttpPost]
-        public ActionResult SubirDiagrama(HttpPostedFileBase file, string nombre, string id, int diagramaValue)
+        public ActionResult SubirDiagrama(HttpPostedFileBase file, string nombre, string id, int diagramaValue, string url)
         {
 
             int idProyecto = Int32.Parse(id);
@@ -51,12 +52,17 @@ namespace AppWebERS.Controllers{
 
             try
             {
-               
+
+                System.Net.WebClient webClient = new WebClient();
+                string path = Path.Combine(Server.MapPath("~/UploadedFiles"), nombre + ".jpg");
+                webClient.DownloadFile(@url, @path);
+
+
                 string tipoDeDiagrama = tipoDiagrama(diagramaValue);
-                Debug.Write(tipoDeDiagrama);
+              
                 string _FileName = id + Path.GetFileName(file.FileName);
                 string _path = Path.Combine(Server.MapPath("~/UploadedFiles"), _FileName);
-
+                
                 if (this.ValidarExtencion(file))
                 {
                     Debug.Write("extencion valida ");
@@ -110,6 +116,7 @@ namespace AppWebERS.Controllers{
                     TempData["alerta"] = new Alerta("Tipo de archivo no soportado. Seleccione un archivo de imagen (.jpg, .jpeg, .png, .bmp o .gif)", TipoAlerta.ERROR);
                     ViewBag.Messagw = "Tipo de archivo no soportado. Seleccione un archivo de imagen (.jpg, .jpeg, .png, .bmp o .gif)";
                 }
+                
                 return RedirectToAction("SubirDiagrama", "Diagrama", new { id = idProyecto });
             }
             catch

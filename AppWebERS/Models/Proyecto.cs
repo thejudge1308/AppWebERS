@@ -73,6 +73,7 @@ namespace AppWebERS.Models{
         }
         
 
+
         private ApplicationDbContext conexion = ApplicationDbContext.Create();
 
         /**
@@ -108,6 +109,23 @@ namespace AppWebERS.Models{
             Estado = estado;
         }
 
+        public Proyecto(int idProyecto, string nombre, string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string ambienteOperacional, string relacionProyectos, string estado) {
+            IdProyecto = idProyecto;
+            Nombre = nombre;
+            Proposito = proposito;
+            Alcance = alcance;
+            Contexto = contexto;
+            Definiciones = definiciones;
+            Acronimos = acronimos;
+            Abreviaturas = abreviaturas;
+            AmbienteOperacional = ambienteOperacional;
+            RelacionProyectos = relacionProyectos;
+            Estado = estado;
+        }
+
+
+
+
         /**
          * Setter y Getter de ID del proyecto
          * 
@@ -116,7 +134,7 @@ namespace AppWebERS.Models{
          * 
          **/
         [Display(Name = "Id del Proyecto")]
-        [StringLength(128, ErrorMessage = "Este campo debe tener maximo 128 caracteres.", MinimumLength = 1)]
+        [StringLength(128, ErrorMessage = "Este campo debe tener máximo 128 caracteres.", MinimumLength = 1)]
         public int IdProyecto {get; set;}
 
         /**
@@ -128,7 +146,7 @@ namespace AppWebERS.Models{
          **/
         [Required]
         [Display(Name = "Nombre")]
-        [StringLength(255, ErrorMessage = "Es requerido", MinimumLength = 1)]
+        [StringLength(255, ErrorMessage = "El nombre es requerido.", MinimumLength = 1)]
         public string Nombre { get; set;}
 
         /**
@@ -139,8 +157,8 @@ namespace AppWebERS.Models{
          * 
          **/
         [Required]
-        [Display(Name = "Proposito")]
-        [StringLength(255, ErrorMessage = "Es requerido", MinimumLength = 1)]
+        [Display(Name = "Propósito")]
+        [StringLength(255, ErrorMessage = "El propósito es requerido.", MinimumLength = 1)]
         public string Proposito {get; set;}
         /**
          * Setter y Getter del alcance del proyecto
@@ -151,7 +169,7 @@ namespace AppWebERS.Models{
          **/
         [Required]
         [Display(Name = "Alcance")]
-        [StringLength(255, ErrorMessage = "Es requerido", MinimumLength = 1)]
+        [StringLength(255, ErrorMessage = "El alcance es requerido.", MinimumLength = 1)]
         public string Alcance {get; set;}
 
         /**
@@ -163,7 +181,7 @@ namespace AppWebERS.Models{
          **/
         [Required]
         [Display(Name = "Contexto")]
-        [StringLength(255, ErrorMessage = "Es requerido", MinimumLength = 1)]
+        [StringLength(255, ErrorMessage = "El contexto es requerido.", MinimumLength = 1)]
         public string Contexto {get; set;}
 
         /**
@@ -183,7 +201,7 @@ namespace AppWebERS.Models{
          * <returns>Retorna el valor string de los acronimos.</returns>
          * 
          **/
-        [Display(Name = "Acronimos")]
+        [Display(Name = "Acrónimos")]
         public string Acronimos {get; set;}
 
         /**
@@ -218,7 +236,7 @@ namespace AppWebERS.Models{
 
         [Required]
         [Display(Name = "Ambiente operacional")]
-        [StringLength(255, ErrorMessage = "Es requerido", MinimumLength = 1)]
+        [StringLength(255, ErrorMessage = "El ambiente operacional es requerido.", MinimumLength = 1)]
         public string AmbienteOperacional {get; set;}
 
 
@@ -229,7 +247,7 @@ namespace AppWebERS.Models{
         * <returns>Retorna el valor string de la relacion con otros proyectos del proyecto.</returns>
         * 
         **/
-        [Display(Name = "Relacion con otros proyectos")]
+        [Display(Name = "Relación con otros proyectos")]
         public string RelacionProyectos {get; set;}
 
         /**
@@ -396,13 +414,13 @@ namespace AppWebERS.Models{
                 string definiciones = data["definiciones"].ToString();
                 string acronimos = data["acronimos"].ToString();
                 string abreviaturas = data["abreviaturas"].ToString();
-                string referencias = data["referencias"].ToString();
+                //string referencias = data["referencias"].ToString();
                 string ambiente_operacional = data["ambiente_operacional"].ToString();
                 string relacion_con_otros_proyectos = data["relacion_con_otros_proyectos"].ToString();
                 string estado = data["estado"].ToString();
 
 
-                proyecto = new Proyecto(ID, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambiente_operacional, relacion_con_otros_proyectos, estado);
+                proyecto = new Proyecto(ID, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, ambiente_operacional, relacion_con_otros_proyectos, estado);
                 //Debug.WriteLine(proyecto.Proposito);
                 this.conexion.EnsureConnectionClosed();
             }
@@ -915,7 +933,7 @@ namespace AppWebERS.Models{
          * <param name="idProyecto">Contiene un int con el id de un proyecto.</param>
          * <returns> true si el rol es jefe de proyecto, false en caso contrario.</returns>
          */
-        private bool VerificarRolEnProyecto(string rut, int idProyecto) {
+        public bool VerificarRolEnProyecto(string rut, int idProyecto) {
             string consulta = "SELECT vinculo_usuario_proyecto.rol FROM vinculo_usuario_proyecto WHERE vinculo_usuario_proyecto.ref_usuario = '" + rut + "' AND vinculo_usuario_proyecto.ref_proyecto=" + idProyecto + ";";
             MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
             if (reader != null)

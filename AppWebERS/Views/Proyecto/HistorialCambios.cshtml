@@ -1,0 +1,42 @@
+﻿@using AppWebERS.Models;
+@model Proyecto
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "HistorialCambios";
+
+}
+
+@{
+    var ProyectoActual = (Proyecto)ViewData["proyecto"];
+
+    var TipoUsuario = (int)ViewData["permiso"];
+}
+
+
+<h2>HistorialCambios</h2>
+
+@if (ProyectoActual != null)
+{
+    
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link" href="@Url.Action("Detalles", "Proyecto", new { id = ProyectoActual.IdProyecto })">Detalles</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="@Url.Action("ListarRequisitosMinimalista", "Proyecto", new { id = ProyectoActual.IdProyecto })">Requisitos</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="@Url.Action(" ListarDiagramas", "Proyecto", new { id = ProyectoActual.IdProyecto })">Diagramas</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="@Url.Action("ListaUsuarios", "Proyecto", new { id = ProyectoActual.IdProyecto })">Usuarios</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="@Url.Action("ListaActores", "Proyecto", new { id = ProyectoActual.IdProyecto })">Actores</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" href="@Url.Action("HistorialCambios","Proyecto",new { id = ProyectoActual.IdProyecto})">Historial de cambios</a>
+    </li>
+</ul>
+
+}

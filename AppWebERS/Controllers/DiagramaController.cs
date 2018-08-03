@@ -67,6 +67,13 @@ namespace AppWebERS.Controllers{
                         ViewBag.Message = "Debe ingresar un nombre.";
                         return RedirectToAction("SubirDiagrama", "Diagrama", new { id = idProyecto });
                     }
+
+                    if (this.ValidarExtencionURL(url)==false)
+                    {
+                        TempData["alerta"] = new Alerta("Formato no soportado", TipoAlerta.ERROR);
+                        ViewBag.Message = "Formato no soportado.";
+                        return RedirectToAction("SubirDiagrama", "Diagrama", new { id = idProyecto });
+                    }
                     if (this.ValidarURLNoRepetida2(path) == false)
                     {
                         TempData["alerta"] = new Alerta("Ya existe un archivo con este nombre", TipoAlerta.ERROR);
@@ -280,6 +287,26 @@ namespace AppWebERS.Controllers{
                    || (string.Equals(Path.GetExtension(file.FileName), ".png", StringComparison.OrdinalIgnoreCase))
                    || (string.Equals(Path.GetExtension(file.FileName), ".bmp", StringComparison.OrdinalIgnoreCase))
                    || (string.Equals(Path.GetExtension(file.FileName), ".gif", StringComparison.OrdinalIgnoreCase)))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool ValidarExtencionURL(string path)
+        {
+
+            Debug.Write(path );
+            Debug.Write(path.Substring(path.Length - 4));
+            if ((string.Equals(Path.GetExtension(path), ".jpg", StringComparison.OrdinalIgnoreCase))
+
+                   || (string.Equals(Path.GetExtension(path), ".jpeg", StringComparison.OrdinalIgnoreCase))
+                   || (string.Equals(Path.GetExtension(path), ".png", StringComparison.OrdinalIgnoreCase))
+                   || (string.Equals(Path.GetExtension(path), ".bmp", StringComparison.OrdinalIgnoreCase))
+                   || (string.Equals(Path.GetExtension(path), ".gif", StringComparison.OrdinalIgnoreCase)))
             {
                 return true;
             }

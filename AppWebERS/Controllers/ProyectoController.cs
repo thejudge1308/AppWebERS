@@ -857,7 +857,7 @@ namespace AppWebERS.Controllers
                 tipo = user.Tipo;
 
             }
-            if (tipo == "SYSADMIN")
+            if (tipo == "USUARIO")
             {
                 //int PosProyecto = Int32.Parse(proyecto1);
                 //List<string> ListaProyectos = ListaProyectosIds();
@@ -962,8 +962,11 @@ namespace AppWebERS.Controllers
             int permiso = proyecto.ObtenerRolDelUsuario(idUsuario, id);
             if (permiso==0 || permiso == 2)
             {
+                
                 ViewBag.IdProyecto = id;
+                List<CheckBox> list = obtenerActores(id);
                 Requisito requisito = new Requisito(null, null, null, null, null, null, null, null, null, null, DateTime.Now.ToString("yyyy-MM-dd"), null, null);
+                requisito.Actores = list;
                 return View(requisito);
             }
             else
@@ -982,7 +985,7 @@ namespace AppWebERS.Controllers
           * <returns> Redireccion a la ventana Detalles si se registra el Requisisto.</returns>
           */
         [HttpPost]
-        public ActionResult IngresarRequisito(Requisito r,string idProyecto)
+        public ActionResult IngresarRequisito(Requisito r, string idProyecto)
         {
             Requisito requisito = new Requisito(r.IdRequisito, r.Nombre, r.Descripcion, r.Prioridad, r.Fuente, r.Estabilidad, r.Estado
                , r.TipoRequisito, r.Medida, r.Escala, r.Fecha, r.Incremento, r.Tipo);
@@ -998,24 +1001,39 @@ namespace AppWebERS.Controllers
                 }
             }
             int id = Int32.Parse(idProyecto);
-            string idVerdadero = requisito.RegistrarRequisito(id);
-            if (!idVerdadero.Equals(""))
+            if (requisito.VerificarIdRequisito(id, r.IdRequisito))
             {
-                
-                foreach (var actor in listaa) {
-                    if (!r.registrarActor(actor,idVerdadero)) {
-                        TempData["alerta"] = new Alerta("!!!!!", TipoAlerta.SUCCESS);
+                if (requisito.ValidarNombreRequisito(id, r.Nombre))
+                {
+                    string idVerdadero = requisito.RegistrarRequisito(id);
+                    if (!idVerdadero.Equals(""))
+                    {
+
+                        foreach (var actor in listaa)
+                        {
+                            if (!r.registrarActor(actor, idVerdadero))
+                            {
+                                TempData["alerta"] = new Alerta("!!!!!", TipoAlerta.SUCCESS);
+                            }
+                        }
+                        TempData["alerta"] = new Alerta("Éxito al crear Requisito.", TipoAlerta.SUCCESS);
+                        return RedirectToAction("Detalles/" + id, "Proyecto");
+
+                    }
+                    else
+                    {
+                        TempData["alerta"] = new Alerta("ERROR al crear Requisito.", TipoAlerta.ERROR);
                     }
                 }
-                TempData["alerta"] = new Alerta("Éxito al crear Requisito.", TipoAlerta.SUCCESS);
-                return RedirectToAction("Detalles/" + id, "Proyecto");
-                
+                else
+                {
+                    TempData["alerta"] = new Alerta("El Nombre del Requisito ingresado ya existe dentro del Proyecto", TipoAlerta.ERROR);
+                }
             }
             else
             {
-                TempData["alerta"] = new Alerta("ERROR al crear Requisito.", TipoAlerta.ERROR);
+                TempData["alerta"] = new Alerta("El Id del Requisito ingresado ya existe dentro del Proyecto", TipoAlerta.ERROR);
             }
-            
             return RedirectToAction("Requisito/" + id, "Proyecto");
         }
 
@@ -1302,7 +1320,7 @@ namespace AppWebERS.Controllers
                 idUser = user.Id;
             }
             int rol = proyecto.ObtenerRolDelUsuario(idUser,id);
-            if (tipo== "USUARIO" && rol != 3 )
+            if (rol != 3 )
             {
                 ViewData["proyecto"] = proyecto;
                 ViewData["permiso"] = this.TipoDePermiso(id);
@@ -1395,10 +1413,17 @@ namespace AppWebERS.Controllers
             return RedirectToAction("ListarRequisitosMinimalista", "Proyecto", new { id = idProyecto });
         }
 
-        public ActionResult ListarDiagramas()
+        public ActionResult ListarDiagramas(int id)
         {
+            Proyecto proyecto = this.GetProyecto(id);
+            var UsuarioActual = User.Identity.GetUserId();
+            ViewData["proyecto"] = proyecto;
+            ViewData["permiso"] = TipoDePermiso(id);
+
             return View();
         }
+
+
     }
 
    

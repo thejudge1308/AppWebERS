@@ -78,6 +78,7 @@ namespace AspNet.Identity.MySQL
                 user.Estado = row["Estado"] == "1" ? true : false;
                 user.Nombre = row["Nombre"];
                 user.Apellido = row["Apellido"];
+                user.DisponibilidadVinculacion = row["Disponibilidad_Vinculacion"] == "1" ? true : false;
             }
 
             return user;
@@ -115,6 +116,7 @@ namespace AspNet.Identity.MySQL
                 user.Estado = row["Estado"] == "1" ? true : false;
                 user.Nombre = row["Nombre"];
                 user.Apellido = row["Apellido"];
+                user.DisponibilidadVinculacion = row["Disponibilidad_Vinculacion"] == "1" ? true : false;
                 users.Add(user);
             }
 
@@ -153,6 +155,7 @@ namespace AspNet.Identity.MySQL
                 user.Estado = row["Estado"] == "1" ? true : false;
                 user.Nombre = row["Nombre"];
                 user.Apellido = row["Apellido"];
+                user.DisponibilidadVinculacion = row["Disponibilidad_Vinculacion"] == "1" ? true : false;
             }
 
             return user;
@@ -215,8 +218,8 @@ namespace AspNet.Identity.MySQL
         /// <returns></returns>
         public int Insert(TUser user)
         {
-            string commandText = @"Insert into Users (UserName, Id, PasswordHash, SecurityStamp,Email,EmailConfirmed,PhoneNumber,PhoneNumberConfirmed, AccessFailedCount,LockoutEnabled,LockoutEndDateUtc,TwoFactorEnabled, Rut, Tipo, Estado, Nombre, Apellido)
-                values (@name, @id, @pwdHash, @SecStamp,@email,@emailconfirmed,@phonenumber,@phonenumberconfirmed,@accesscount,@lockoutenabled,@lockoutenddate,@twofactorenabled, @rut, @tipo, @estado, @nombre, @apellido);";
+            string commandText = @"Insert into Users (UserName, Id, PasswordHash, SecurityStamp,Email,EmailConfirmed,PhoneNumber,PhoneNumberConfirmed, AccessFailedCount,LockoutEnabled,LockoutEndDateUtc,TwoFactorEnabled, Rut, Tipo, Estado, Nombre, Apellido, Disponibilidad_Vinculacion)
+                values (@name, @id, @pwdHash, @SecStamp,@email,@emailconfirmed,@phonenumber,@phonenumberconfirmed,@accesscount,@lockoutenabled,@lockoutenddate,@twofactorenabled, @rut, @tipo, @estado, @nombre, @apellido, @disponibilidad_vinculacion);";
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             parameters.Add("@name", user.UserName);
             parameters.Add("@id", user.Id);
@@ -235,6 +238,7 @@ namespace AspNet.Identity.MySQL
             parameters.Add("@estado", user.Estado);
             parameters.Add("@nombre", user.Nombre);
             parameters.Add("@apellido", user.Apellido);
+            parameters.Add("@disponibilidad_vinculacion", user.DisponibilidadVinculacion);
 
             return _database.Execute(commandText, parameters);
         }
@@ -273,7 +277,7 @@ namespace AspNet.Identity.MySQL
             string commandText = @"Update Users set UserName = @userName, PasswordHash = @pswHash, SecurityStamp = @secStamp, 
                 Email=@email, EmailConfirmed=@emailconfirmed, PhoneNumber=@phonenumber, PhoneNumberConfirmed=@phonenumberconfirmed,
                 AccessFailedCount=@accesscount, LockoutEnabled=@lockoutenabled, LockoutEndDateUtc=@lockoutenddate, TwoFactorEnabled=@twofactorenabled,
-                Rut=@rut, Tipo=@tipo, Estado=@estado, Nombre=@nombre, Apellido=@apellido WHERE Id = @userId";
+                Rut=@rut, Tipo=@tipo, Estado=@estado, Nombre=@nombre, Apellido=@apellido, Disponibilidad_Vinculacion = @disponibilidad_vinculacion WHERE Id = @userId";
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             parameters.Add("@userName", user.UserName);
             parameters.Add("@pswHash", user.PasswordHash);
@@ -292,6 +296,7 @@ namespace AspNet.Identity.MySQL
             parameters.Add("@estado", user.Estado);
             parameters.Add("@nombre", user.Nombre);
             parameters.Add("@apellido", user.Apellido);
+            parameters.Add("@disponibilidad_vinculacion", user.DisponibilidadVinculacion);
             return _database.Execute(commandText, parameters);
         }
 
@@ -327,6 +332,7 @@ namespace AspNet.Identity.MySQL
                 user.Estado = row["Estado"] == "1" ? true: false;
                 user.Nombre = row["Nombre"];
                 user.Apellido = row["Apellido"];
+                user.DisponibilidadVinculacion = row["Disponibilidad_Vinculacion"] == "1" ? true: false;
             }
 
             return user;
@@ -405,6 +411,7 @@ namespace AspNet.Identity.MySQL
                 user.Estado = row["Estado"] == "1" ? true : false;
                 user.Nombre = row["Nombre"];
                 user.Apellido = row["Apellido"];
+                user.DisponibilidadVinculacion = row["Disponibilidad_Vinculacion"] == "1" ? true : false;
                 users.Add(user);
             }
 

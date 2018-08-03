@@ -29,11 +29,14 @@
             <a class="nav-link" href="@Url.Action("ListarRequisitosMinimalista", "Proyecto", new { id = ProyectoActual.IdProyecto})">Requisitos</a>
         </li>
         <li class="nav-item">
+            <a class="nav-link" href="@Url.Action(" ListarDiagramas", "Proyecto" , new { id=ProyectoActual.IdProyecto})">Diagramas</a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link active" href="@Url.Action("ListaUsuarios", "Proyecto", new { id = ProyectoActual.IdProyecto })">Usuarios</a>
         </li>
-
-
-
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("ListaActores","Proyecto",new { id = ProyectoActual.IdProyecto})">Actores</a>
+        </li>
         @{
             <!--
         if(TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO || TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN) {
@@ -74,10 +77,10 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th scope="col">Numero</th>
+                    <th scope="col">Número</th>
                     <th scope="col">Rut</th>
                     <th scope="col">Nombre</th>
-                    <th scope="col">Correo Electronico</th>
+                    <th scope="col">Correo Electrónico</th>
                     <th scope="col">Tipo</th>
                 </tr>
             </thead>
@@ -108,7 +111,7 @@
                     {
                         <div class="jumbotron jumbotron-fluid">
                             <div class="container">
-                                <h1>No hay usuarios en el proyecto</h1>
+                                <h1>No hay usuarios en el proyecto.</h1>
                             </div>
                         </div>
                         }
@@ -117,7 +120,7 @@
                     {
         <div class="jumbotron jumbotron-fluid">
             <div class="container">
-                <h1>Proyecto no encontrado</h1>
+                <h1>Proyecto no encontrado.</h1>
             </div>
         </div>
                     }

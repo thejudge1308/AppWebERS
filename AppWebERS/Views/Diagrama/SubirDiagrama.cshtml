@@ -8,45 +8,115 @@
 
 <h2>Subir Diagrama</h2>
 
+<br />
+
+
 
 <br />
 
 @using (Html.BeginForm("SubirDiagrama", "Diagrama", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
-   
 
-<div class="form-group">
 
-    <label for="disabledTextInput">ID proyecto:</label>
-    <input type="text" id="disabledTextInput" name="id" class="form-control font-weight-bold" disabled="disabled" placeholder="@ViewBag.IdProyecto">
+    <div class="form-group">
 
-    <label for="formGroupExampleInput">Nombre:</label>
-    <input type="text" class="form-control" name="nombre" placeholder="Nombre del diagrama" id="txtNombre" /><br />
+        <label for="disabledTextInput">Desde:</label>
 
-    <label for="formGroupExampleInput">URL:</label>
-    <input type="text" class="form-control" name="url" placeholder="URL de algún diagrama" id="txtUrl" /><br />
+        <select class="form-control" id="idOpValue" name="opValue" onChange="mostrar(this.value);">
+            <option value="1">Seleccione una opción</option>
+            <option value="2">Ordenador</option>
+            <option value="3">URL</option>
+        </select>
 
-    <label for="formGroupExampleInput1">Tipo de diagrama:</label>
-    <select class="form-control" id="idDiagramaValue"  name="diagramaValue">
-        <option value="1">Caso de uso</option>
-         <option value="2">Arquitectura física</option>
-        <option value="3">Arquitectura lógica</option>
-    </select>
-</div>
+    </div>
 
-    <div>
-        @Html.TextBox("file", "", new { type = "file" })
-        <br />
-        <br />
+    <div id="url" style="display: none;">
 
-       
+        <div class="form-group">
+
+            <label for="disabledTextInput">ID proyecto:</label>
+            <input type="text" id="disabledTextInput" name="id" class="form-control font-weight-bold" disabled="disabled" placeholder="@ViewBag.IdProyecto">
+
+            <label for="formGroupExampleInput">Nombre:</label>
+            <input type="text" class="form-control" name="nombreURL" placeholder="Nombre del diagrama" id="txtNombre" /><br />
+
+            <label for="formGroupExampleInput1">Tipo de diagrama:</label>
+            <select class="form-control" id="idDiagramaValue" name="diagramaValueURL">
+                <option value="1">Caso de uso</option>
+                <option value="2">Arquitectura física</option>
+                <option value="3">Arquitectura lógica</option>
+            </select>
+
+
+
+        </div>
+
+        <label for="formGroupExampleInput">URL:</label>
+        <input type="text" class="form-control" name="url" placeholder="URL de algún diagrama" id="txtUrl" /><br />
 
         <input type="submit" class="btn btn-primary" value="Subir" />
 
         @ViewBag.Message
 
+    </div>
+
+    <div id="ordenador" style="display: none;">
+
+
+        <div class="form-group">
+
+            <label for="disabledTextInput">ID proyecto:</label>
+            <input type="text" id="disabledTextInput" name="id" class="form-control font-weight-bold" disabled="disabled" placeholder="@ViewBag.IdProyecto">
+
+            <label for="formGroupExampleInput">Nombre:</label>
+            <input type="text" class="form-control" name="nombre" placeholder="Nombre del diagrama" id="txtNombre" /><br />
+
+            <label for="formGroupExampleInput1">Tipo de diagrama:</label>
+            <select class="form-control" id="idDiagramaValue" name="diagramaValue">
+                <option value="1">Caso de uso</option>
+                <option value="2">Arquitectura física</option>
+                <option value="3">Arquitectura lógica</option>
+            </select>
+
+
+
+        </div>
+
+        @Html.TextBox("file", "", new { type = "file" })
+        <br />
+        <br />
+
+        <input type="submit" class="btn btn-primary" value="Subir" />
+
+        @ViewBag.Message
 
     </div>
 
 
-}  
+
+
+
+
+}
+
+
+
+
+
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript">
+
+    function mostrar(id) {
+        if (id == "2") {
+            $("#ordenador").show();
+            $("#url").hide();
+        }
+
+        if (id == "3") {
+            $("#ordenador").hide();
+            $("#url").show();
+        }
+
+
+    }
+</script>

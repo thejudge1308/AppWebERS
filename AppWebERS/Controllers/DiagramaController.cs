@@ -44,21 +44,24 @@ namespace AppWebERS.Controllers{
 
 
         [HttpPost]
-        public ActionResult SubirDiagrama(HttpPostedFileBase file, string nombre, string id, int diagramaValue, string url)
+        public ActionResult SubirDiagrama(HttpPostedFileBase file, string nombre, string id, int diagramaValue, int diagramaValueURL, string url, int opValue, string nombreURL)
         {
 
+            Debug.Write(opValue + " valor de la opcion ");
+            Debug.Write(diagramaValue + " valor del tipo de diagrama");
             int idProyecto = Int32.Parse(id);
-            string tipoDeDiagrama = tipoDiagrama(diagramaValue);
+           
 
             try
             {
 
-                if (url.Length > 0)
+                if (url.Length > 0 && opValue ==3)
                 {
+                    string tipoDeDiagramaURL = tipoDiagrama(diagramaValueURL);
                     System.Net.WebClient webClient = new WebClient();
-                    string path = Path.Combine(Server.MapPath("~/UploadedFiles"), id + nombre + ".jpg");
+                    string path = Path.Combine(Server.MapPath("~/UploadedFiles"), id + nombreURL + ".jpg");
                   
-                    if (nombre.Length == 0)
+                    if (nombreURL.Length == 0)
                     {
                          TempData["alerta"] = new Alerta("Debe ingresar un nombre", TipoAlerta.ERROR);
                         ViewBag.Message = "Debe ingresar un nombre.";
@@ -71,7 +74,7 @@ namespace AppWebERS.Controllers{
                         return RedirectToAction("SubirDiagrama", "Diagrama", new { id = idProyecto });
                     }
 
-                    if (this.ValidarLargoNombre(nombre) == false)
+                    if (this.ValidarLargoNombre(nombreURL) == false)
                     {
                         TempData["alerta"] = new Alerta("El nombre debe tener no más de 45 caracteres", TipoAlerta.ERROR);
                         ViewBag.Message = "El nombre debe tener no más de 45 caracteres";
@@ -79,7 +82,7 @@ namespace AppWebERS.Controllers{
                     }
 
 
-                    if (this.ValidarNombreNoRepetido(nombre) == false)
+                    if (this.ValidarNombreNoRepetido(nombreURL) == false)
                     {
 
                         TempData["alerta"] = new Alerta("Ya existe un diagrama con este nombre", TipoAlerta.ERROR);
@@ -88,12 +91,12 @@ namespace AppWebERS.Controllers{
                     }
 
                     webClient.DownloadFile(@url, @path);
-                    this.agregar(nombre, id, path, tipoDeDiagrama);
+                    this.agregar(nombreURL, id, path, tipoDeDiagramaURL);
                     TempData["alerta"] = new Alerta("Diagrama subido con éxito!!", TipoAlerta.SUCCESS);
                     ViewBag.Message = "Diagrama subido con éxito!!";
                     Conector.CerrarConexion();
                 
-                        return RedirectToAction("SubirDiagrama", "Diagrama", new { id = idProyecto });
+                   return RedirectToAction("SubirDiagrama", "Diagrama", new { id = idProyecto });
                     
                     
                     
@@ -102,8 +105,8 @@ namespace AppWebERS.Controllers{
 
 
 
-               
-              
+
+                string tipoDeDiagrama = tipoDiagrama(diagramaValue);
                 string _FileName = id + Path.GetFileName(file.FileName);
                 string _path = Path.Combine(Server.MapPath("~/UploadedFiles"), _FileName);
 

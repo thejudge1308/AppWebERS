@@ -989,7 +989,7 @@ namespace AppWebERS.Controllers
         public ActionResult IngresarRequisito(Requisito r, string idProyecto)
         {
             Requisito requisito = new Requisito(r.IdRequisito, r.Nombre, r.Descripcion, r.Prioridad, r.Fuente, r.Estabilidad, r.Estado
-               , r.TipoRequisito, r.Medida, r.Escala, r.Fecha, r.Incremento, r.Tipo);
+               , r.TipoRequisito, r.Medida, r.Escala, r.Fecha, r.Incremento, "USUARIO");
             List<String> listaa = new List<string>();
             if (r.IncrementoCheck.isChecked)
             {
@@ -1043,6 +1043,107 @@ namespace AppWebERS.Controllers
             return RedirectToAction("Requisito/" + id, "Proyecto");
         }
 
+        /**
+          * <author>Diego Iturriaga</author>
+          * <summary>
+          * Action GET que retorna la vista Requiito para ingresar un requisito segun los campos de un volere
+          * si el usuario cumple con los permisos de accesso.
+          * </summary>
+          * <param name="id">id correspondiente al Proyecto Actual.</param>
+          * <param name="idRequisitoUsuario">id del requisito de usuario que se vincula al requisito de sistema que se desea crear.</param>
+          * <returns> Redireccion a la ventana RequisitoSistema si el usuario Cumple con los permisos.
+          * Redirreciona al index si el usuario no tiene los permisos para entrar a la vista.</returns>
+          */
+
+        [HttpGet]
+        public ActionResult RequisitoSistema(int id, string idRequisitoUsuario)
+        {
+            String idUsuario;
+            using (var db = ApplicationDbContext.Create())
+            {
+                var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
+                string s = User.Identity.GetUserId();
+                ApplicationUser user = userManager.FindByIdAsync(s).Result;
+                idUsuario = user.Id;
+
+            }
+            Proyecto proyecto = this.GetProyecto(id);
+            int permiso = proyecto.ObtenerRolDelUsuario(idUsuario, id);
+            if (permiso == 0 || permiso == 2)
+            {
+
+                ViewBag.IdProyecto = id;
+                ViewBag.IdRequisitoUsuario = idRequisitoUsuario;
+                List<CheckBox> list = obtenerActores(id);
+                Requisito requisito = new Requisito(null, null, null, null, null, null, null, null, null, null, DateTime.Now.ToString("yyyy-MM-dd"), "0", null);
+                requisito.Actores = list;
+                requisito.IncrementoCheck = new CheckBox() { nombre = "1", id = "1", isChecked = false };
+                return View(requisito);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
+        /**
+          * <author>Diego Iturriaga</author>
+          * <summary>
+          * Action POST que retorna una redireccion a Detalles despues de ejecutar la insercion de un requisito de Sistema.
+          * </summary>
+          * <param name="idProyecto">id del proyecto al cual se agregara el requisito de sistema.</param>
+          * <param name="idRequisitoUsuario">id del requisito de usuario al que se asociara el requisito de sistema.</param>
+          * <param name="r">Objeto Requisito que contiene los valores de los campos ingresados en la interfaz.</param>
+          * <returns> Redireccion a la ventana Detalles si se registra el Requisisto / En caso de error se redirecciona
+          * a la vista RequisitoSistema.</returns>
+          */
+        [HttpPost]
+        public ActionResult IngresarRequisitoSistema(Requisito r, string idProyecto, string idRequisitoUsuario)
+        {
+            Requisito requisito = new Requisito(r.IdRequisito, r.Nombre, r.Descripcion, r.Prioridad, r.Fuente, r.Estabilidad, r.Estado
+               , r.TipoRequisito, r.Medida, r.Escala, r.Fecha, r.Incremento, "SISTEMA");
+            List<String> listaa = new List<string>();
+            if (r.IncrementoCheck.isChecked)
+            {
+                requisito.Incremento = "" + (Int32.Parse(r.Incremento) + 1);
+            }
+            if (r.Actores != null)
+            {
+                for (int i = 0; i < r.Actores.Count; i++)
+                {
+                    if (r.Actores[i].isChecked)
+                    {
+                        listaa.Add(r.Actores[i].id);
+                    }
+                }
+            }
+
+            int id = Int32.Parse(idProyecto);
+            if (requisito.VerificarIdRequisito(id, r.IdRequisito))
+            {
+                if (requisito.ValidarNombreRequisito(id, r.Nombre))
+                {
+                    if (requisito.RegistrarRequisitoDeSoftware(Int32.Parse(idProyecto), idRequisitoUsuario, r.IdRequisito)) { 
+                        TempData["alerta"] = new Alerta("Éxito al crear Requisito.", TipoAlerta.SUCCESS);
+                        return RedirectToAction("Detalles/" + id, "Proyecto");
+
+                    }
+                    else
+                    {
+                        TempData["alerta"] = new Alerta("ERROR al crear Requisito.", TipoAlerta.ERROR);
+                    }
+                }
+                else
+                {
+                    TempData["alerta"] = new Alerta("El Nombre del Requisito ingresado ya existe dentro del Proyecto", TipoAlerta.ERROR);
+                }
+            }
+            else
+            {
+                TempData["alerta"] = new Alerta("El Id del Requisito ingresado ya existe dentro del Proyecto", TipoAlerta.ERROR);
+            }
+            return RedirectToAction("RequisitoSistema/" + id, "Proyecto");
+        }
 
         /*
        * Autor Fabian Oyarce
@@ -1398,7 +1499,7 @@ namespace AppWebERS.Controllers
             { 
                 if (nuevoRequisistoS.ValidarNombreRequisito(id, nombre))
                 {
-                    if (nuevoRequisistoS.RegistrarRequisitoDeSoftwareMinimalista(Int32.Parse(idProyecto), idRequisitoUsuario, idRequisito))
+                    if (nuevoRequisistoS.RegistrarRequisitoDeSoftware(Int32.Parse(idProyecto), idRequisitoUsuario, idRequisito))
                     {
                         TempData["alerta"] = new Alerta("Exito al crear Requisito de Sistema", TipoAlerta.SUCCESS);
                     }

@@ -170,7 +170,7 @@ namespace AppWebERS.Models {
          * 
          **/
         [Required(ErrorMessage = "El campo Medida es obligatorio.")]
-        [StringLength(20, ErrorMessage = "La medida debe tener a lo más 20 caracteres.", MinimumLength = 1)]
+        [StringLength(100, ErrorMessage = "La Medida debe tener a lo más 100 caracteres.", MinimumLength = 1)]
         [Display(Name = "Medida")]
         public string Medida { get; set; }
 
@@ -398,7 +398,7 @@ namespace AppWebERS.Models {
          * <param name="idRequisitoUsuario">Id del requisito de usuario al que se asocia el requisito de usuario.</param>
          * <returns>True si se registra exitosamente, false si falla el registro.</returns>
          */ 
-        public bool RegistrarRequisitoDeSoftwareMinimalista(int idProyecto, string idRequisitoUsuario, string idRequisitoSistema)
+        public bool RegistrarRequisitoDeSoftware(int idProyecto, string idRequisitoUsuario, string idRequisitoSistema)
         {
             if (!string.IsNullOrEmpty(idRequisitoUsuario) && !string.IsNullOrEmpty(idRequisitoSistema))
             {

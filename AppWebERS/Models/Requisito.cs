@@ -395,7 +395,7 @@ namespace AppWebERS.Models {
          * <summary>Metodo para registrar un requisito de software en la base de datos.</summary>
          * <param name="idProyecto">Id del proyecto al que pertenece el proyecto.</param>
          * <param name="idRequisitoSistema">Id del requisito de sistema que se desea agregar.</param>
-         * <param name="idRequisitoUsuario">Id del requisito de usuario al que se asocia el requisito de usuario.</param>
+         * <param name="idRequisitoUsuario">Id del requisito de usuario al que se asocia el requisito de sistema.</param>
          * <returns>True si se registra exitosamente, false si falla el registro.</returns>
          */ 
         public bool RegistrarRequisitoDeSoftware(int idProyecto, string idRequisitoUsuario, string idRequisitoSistema)
@@ -421,6 +421,35 @@ namespace AppWebERS.Models {
                         }
                     }
 
+                }
+            }
+            return false;
+        }
+
+        /**
+         * 
+         * <autor>Diego Iturriaga</autor>
+         * <summary>Metodo para asociar un requisito de software en la tabla asociacion de la base de datos.</summary>
+         * <param name="idProyecto">Id del proyecto al que pertenece el proyecto.</param>
+         * <param name="idRequisitoSistema">Id del requisito de sistema que se desea asociar.</param>
+         * <param name="idRequisitoUsuario">Id del requisito de usuario al que se asocia el requisito de sistema.</param>
+         * <returns>True si se registra exitosamente, false si falla el registro.</returns>
+         */
+        public bool AsociarRequisitoDeSoftware(int idProyecto, string idRequisitoUsuario, string idRequisitoSistema)
+        {
+            if (!string.IsNullOrEmpty(idRequisitoUsuario) && !string.IsNullOrEmpty(idRequisitoSistema))
+            {
+                ApplicationDbContext conexionLocal = ApplicationDbContext.Create();
+                
+                int num_requisitoUsuario = this.ObtenerNumRequisito(idProyecto, idRequisitoUsuario);
+                int num_requisitoSistema = this.ObtenerNumRequisito(idProyecto, idRequisitoSistema);
+                if (num_requisitoSistema != -1 && num_requisitoUsuario != -1)
+                {
+                    string consultaInsert2 = "INSERT INTO asociacion(req_usuario, req_software) VALUES(" + num_requisitoUsuario + "," + num_requisitoSistema + ");";
+                    if (conexionLocal.RealizarConsultaNoQuery(consultaInsert2))
+                    {
+                        return true;
+                    }
                 }
             }
             return false;

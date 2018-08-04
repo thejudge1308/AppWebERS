@@ -1023,7 +1023,7 @@ namespace AppWebERS.Controllers
                             }
                         }
                         TempData["alerta"] = new Alerta("Éxito al crear Requisito.", TipoAlerta.SUCCESS);
-                        return RedirectToAction("Detalles/" + id, "Proyecto");
+                        return RedirectToAction("ListarRequisitosMinimalista/" + id, "Proyecto");
 
                     }
                     else
@@ -1125,7 +1125,7 @@ namespace AppWebERS.Controllers
                 {
                     if (requisito.RegistrarRequisitoDeSoftware(Int32.Parse(idProyecto), idRequisitoUsuario, r.IdRequisito)) { 
                         TempData["alerta"] = new Alerta("Éxito al crear Requisito.", TipoAlerta.SUCCESS);
-                        return RedirectToAction("Detalles/" + id, "Proyecto");
+                        return RedirectToAction("ListarRequisitosMinimalista/" + id, "Proyecto");
 
                     }
                     else

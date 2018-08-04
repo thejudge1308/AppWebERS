@@ -972,7 +972,8 @@ namespace AppWebERS.Controllers
             }
             else
             {
-                return RedirectToAction("Index", "Home");
+                TempData["alerta"] = new Alerta("No tiene el permiso para Agregar un Requisito.", TipoAlerta.ERROR);
+                return RedirectToAction("ListarRequisitosMinimalista/"+id, "Proyecto");
             }
         }
 
@@ -1092,7 +1093,8 @@ namespace AppWebERS.Controllers
             }
             else
             {
-                return RedirectToAction("Index", "Home");
+                TempData["alerta"] = new Alerta("No tiene el permiso para Asociar un Requisito.", TipoAlerta.ERROR);
+                return RedirectToAction("ListarRequisitosMinimalista/"+id, "Proyecto");
             }
         }
 
@@ -1170,7 +1172,8 @@ namespace AppWebERS.Controllers
             }
             else
             {
-                return RedirectToAction("Index", "Home");
+                TempData["alerta"] = new Alerta("No tiene el permiso para Agregar un Requisito.", TipoAlerta.ERROR);
+                return RedirectToAction("ListarRequisitosMinimalista/"+id, "Proyecto");
             }
         }
 
@@ -1539,32 +1542,56 @@ namespace AppWebERS.Controllers
         [HttpPost]
         public ActionResult GuardarRequisitoUsuarioMinimilista(String idRequisito, String nombre,String idProyecto)
         {
-            Requisito requisito = new Requisito(idRequisito,nombre,String.Empty,String.Empty,String.Empty,String.Empty,String.Empty,String.Empty,String.Empty,String.Empty,DateTime.Now.ToString("yyyy-MM-dd"),String.Empty,"USUARIO");
             int id = Int32.Parse(idProyecto);
-            if (requisito.VerificarIdRequisito(id, idRequisito))
+            Proyecto proyecto = this.GetProyecto(id);
+            String idUser;
+            using (var db = ApplicationDbContext.Create())
             {
-                if (requisito.ValidarNombreRequisito(id,nombre)) {
-                    string idRequisitoNuevo = requisito.RegistrarRequisito(Int32.Parse(idProyecto));
-                    if (idRequisitoNuevo!=null)
+                var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
+                string s = User.Identity.GetUserId();
+                ApplicationUser user = userManager.FindByIdAsync(s).Result;
+                idUser = user.Id;
+            }
+            int rol = proyecto.ObtenerRolDelUsuario(idUser, id);
+
+            if (rol == 0 || rol == 2)
+            {
+                Requisito requisito = new Requisito(idRequisito, nombre, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, DateTime.Now.ToString("yyyy-MM-dd"), String.Empty, "USUARIO");
+                if (requisito.VerificarIdRequisito(id, idRequisito))
+                {
+                    if (requisito.ValidarNombreRequisito(id, nombre))
                     {
-                        TempData["alerta"] = new Alerta("Exito al crear Requisito de Usuario", TipoAlerta.SUCCESS);
+                        if (!string.IsNullOrEmpty(requisito.IdRequisito) && !string.IsNullOrEmpty(requisito.Nombre) && !string.IsNullOrWhiteSpace(requisito.IdRequisito) && !string.IsNullOrWhiteSpace(requisito.Nombre)) {
+                            string idRequisitoNuevo = requisito.RegistrarRequisito(Int32.Parse(idProyecto));
+                            if (idRequisitoNuevo != null)
+                            {
+                                TempData["alerta"] = new Alerta("Exito al crear Requisito de Usuario", TipoAlerta.SUCCESS);
+                            }
+                            else
+                            {
+                                TempData["alerta"] = new Alerta("Error al crear Requisito de Usuario", TipoAlerta.ERROR);
+                            }
+                        }
+                        else
+                        {
+                            TempData["alerta"] = new Alerta("Error al crear Requisito de Usuario", TipoAlerta.ERROR);
+                        }
                     }
                     else
                     {
-                        TempData["alerta"] = new Alerta("Error al crear Requisito de Usuario", TipoAlerta.ERROR);
+                        TempData["alerta"] = new Alerta("El Nombre del Requisito ingresado ya existe dentro del Proyecto", TipoAlerta.ERROR);
                     }
                 }
                 else
                 {
-                    TempData["alerta"] = new Alerta("El Nombre del Requisito ingresado ya existe dentro del Proyecto", TipoAlerta.ERROR);
+                    TempData["alerta"] = new Alerta("El Id del Requisito ingresado ya existe dentro del Proyecto", TipoAlerta.ERROR);
                 }
             }
             else
             {
-                TempData["alerta"] = new Alerta("El Id del Requisito ingresado ya existe dentro del Proyecto", TipoAlerta.ERROR);
+                TempData["alerta"] = new Alerta("No tiene el permiso para Agregar un Requisito.", TipoAlerta.ERROR);
             }
             return RedirectToAction("ListarRequisitosMinimalista", "Proyecto", new { id = Int32.Parse(idProyecto) });
-
         }
         /**
         * 
@@ -1579,31 +1606,56 @@ namespace AppWebERS.Controllers
         [HttpPost]
         public ActionResult AgregarRequisitoDeSoftwareMinimalista( string idRequisitoUsuario, string idRequisito, string nombre, String idProyecto)
         {
-            Requisito nuevoRequisistoS = new Requisito(idRequisito, nombre, string.Empty, string.Empty, string.Empty,
+            int id = Int32.Parse(idProyecto);
+            Proyecto proyecto = this.GetProyecto(id);
+            String idUser;
+            using (var db = ApplicationDbContext.Create())
+            {
+                var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
+                string s = User.Identity.GetUserId();
+                ApplicationUser user = userManager.FindByIdAsync(s).Result;
+                idUser = user.Id;
+            }
+            int rol = proyecto.ObtenerRolDelUsuario(idUser, id);
+
+            if (rol == 0 || rol == 2)
+            {
+                Requisito nuevoRequisistoS = new Requisito(idRequisito, nombre, string.Empty, string.Empty, string.Empty,
                 string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, DateTime.Now.ToString("yyyy-MM-dd"),
                 string.Empty, "SISTEMA");
-            int id = Int32.Parse(idProyecto);
-            if (nuevoRequisistoS.VerificarIdRequisito(id, idRequisito))
-            { 
-                if (nuevoRequisistoS.ValidarNombreRequisito(id, nombre))
+                if (nuevoRequisistoS.VerificarIdRequisito(id, idRequisito))
                 {
-                    if (nuevoRequisistoS.RegistrarRequisitoDeSoftware(Int32.Parse(idProyecto), idRequisitoUsuario, idRequisito))
+                    if (nuevoRequisistoS.ValidarNombreRequisito(id, nombre))
                     {
-                        TempData["alerta"] = new Alerta("Exito al crear Requisito de Sistema", TipoAlerta.SUCCESS);
+                        if (!string.IsNullOrEmpty(nuevoRequisistoS.IdRequisito) && !string.IsNullOrEmpty(nuevoRequisistoS.Nombre) && !string.IsNullOrWhiteSpace(nuevoRequisistoS.IdRequisito) && !string.IsNullOrWhiteSpace(nuevoRequisistoS.Nombre))
+                        {
+                            if (nuevoRequisistoS.RegistrarRequisitoDeSoftware(Int32.Parse(idProyecto), idRequisitoUsuario, idRequisito))
+                            {
+                                TempData["alerta"] = new Alerta("Exito al crear Requisito de Sistema", TipoAlerta.SUCCESS);
+                            }
+                            else
+                            {
+                                TempData["alerta"] = new Alerta("Error al crear Requisito de Sistema", TipoAlerta.ERROR);
+                            }
+                        }
+                        else
+                        {
+                            TempData["alerta"] = new Alerta("Error al crear Requisito de Sistema", TipoAlerta.ERROR);
+                        }
                     }
                     else
                     {
-                        TempData["alerta"] = new Alerta("Error al crear Requisito de Sistema", TipoAlerta.ERROR);
+                        TempData["alerta"] = new Alerta("El Nombre del Requisito ingresado ya existe dentro del Proyecto", TipoAlerta.ERROR);
                     }
                 }
                 else
                 {
-                    TempData["alerta"] = new Alerta("El Nombre del Requisito ingresado ya existe dentro del Proyecto", TipoAlerta.ERROR);
+                    TempData["alerta"] = new Alerta("El Id del Requisito ingresado ya existe dentro del Proyecto", TipoAlerta.ERROR);
                 }
             }
             else
             {
-                TempData["alerta"] = new Alerta("El Id del Requisito ingresado ya existe dentro del Proyecto", TipoAlerta.ERROR);
+                TempData["alerta"] = new Alerta("No tiene el permiso para Agregar un Requisito.", TipoAlerta.ERROR);
             }
             return RedirectToAction("ListarRequisitosMinimalista", "Proyecto", new { id = idProyecto });
         }

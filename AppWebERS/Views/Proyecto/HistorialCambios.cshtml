@@ -46,11 +46,11 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>#</th>
-                        <th>ID Modificación</th>
-                        <th>Versión</th>
-                        <th>Autor</th>
-                        <th>Fecha</th>
+                        <th scope="col">#</th>
+                        <th scope="col">ID Modificación</th>
+                        <th scope="col">Versión</th>
+                        <th scope="col">Autor</th>
+                        <th scope="col">Fecha</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -61,7 +61,7 @@
                             foreach (ModificacionDERS item in (List<ModificacionDERS>)Cambios)
                             {
                                 <tr>
-                                    <th>@Aux</th>
+                                    <th scope="row">@Aux</th>
                                     <td>@item.IdModificacion</td>
                                     <td>@item.Version</td>
                                     <td>@item.Fecha</td>

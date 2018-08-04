@@ -24,6 +24,9 @@ namespace AppWebERS.Controllers
     {
 
         private int id_proyecto;
+       
+        Dictionary<Requisito, List<Requisito>> requisitos = new Dictionary<Requisito, List<Requisito>>();
+
 
         private ConectorBD Conector = ConectorBD.Instance;
         private ApplicationDbContext conexion = ApplicationDbContext.Create();
@@ -219,10 +222,13 @@ namespace AppWebERS.Controllers
             Proyecto proyecto = this.GetProyecto(id);
 
             string fecha =  DateTime.Now.ToString();
-            String html = "<html> <head> <style> body { margin: 2cm; } .logo { font-size: 40px; font-weigth: bold; } .titulo { text-align: center; } .fecha { margin-left: 20px; } .espacio-izq { margin-left: 20px; } table td{ font-size: 18px; padding-bottom: 15px; } </style> </head> <body> <table> <tr> <td class=\"logo\">AppWebERS</td> <td </tr> </table> <h1 class=\"titulo\">Detalles de proyecto</h1> <hr> <p class=\"fecha\">Fecha: " + fecha +"</p> <hr> <table class=\"espacio-izq\"> <tr> <td>Nombre proyecto</td> <td>: " + proyecto.Nombre + "</td> </tr> <tr> <td>Proposito</td> <td>: " + proyecto.Proposito + "</td> </tr> <tr> <td>Alcance</td> <td>: " + proyecto.Alcance + "</td> </tr> <tr> <td>Contexto</td> <td>: " + proyecto.Contexto + "</td> </tr> <tr> <td>Definiciones</td> <td>: " + proyecto.Definiciones + "</td> </tr> <tr> <td>Acronimos</td> <td>: "+ proyecto.Acronimos + "</td> </tr> <tr> <td>Abreviaturas</td> <td>: " + proyecto.Abreviaturas + "</td> </tr> <tr> <td>Referencias</td> <td>: " + proyecto.Referencias + "</td> </tr> <tr> <td>Ambiente operacional</td> <td>: " + proyecto.AmbienteOperacional + "</td> </tr> <tr> <td>Relacion con otros proyectos</td> <td>: " + proyecto.RelacionProyectos +  "</td> </tr> </table> </body> </html>";
-            String html2 = "<h1>Texto</h1> <p> de</p> <p><sup><strong>prueba</strong></sup></p> <p><em>para</em></p> <h2><s>probar</s></h2> <p><br></p> <ol> <li>el</li> </ol> <p><sub>formato</sub></p> <p><span>pdf</span></p> <p><span>es</span></p> <p><span style=\"background - color: red; \">resposive</span></p> <p><span style=\"color: yellow; background - color: green; \">porsia</span></p> <p>Fin</p>";
-            
 
+            string html = "<html> <head> <style> body { margin: 2cm; } .logo { font-size: 40px; font-weigth: bold; } .titulo { text-align: center; margin-top: 30px;margin-bottom: 30px; } .fecha { margin-left: 100px; } .espacio-izq { margin-left: 50px; } table td{ font-size: 18px; } </style> </head> <body> <table> <tr> <td class=\"logo\">AppWebERS</td> <td </tr> </table> <hr> <p class=\"fecha\">Fecha: " + fecha + "</p> <hr> <h1 class=\"titulo\">Detalles de proyecto</h1> <table class=\"espacio - izq\"> <tr> <td>Nombre proyecto</td> <td>: " + proyecto.Nombre + "</td> </tr> <tr> <td>Proposito</td> <td>: " + proyecto.Proposito + "</td> </tr> <tr> <td>Alcance</td> <td>: " + proyecto.Alcance + "</td> </tr> <tr> <td>Contexto</td> <td>: " + proyecto.Contexto + "</td> </tr> <tr> <td>Definiciones</td> <td>: " + proyecto.Definiciones + "</td> </tr> <tr> <td>Acronimos</td> <td>: " + proyecto.Acronimos + "</td> </tr> <tr> <td>Abreviaturas</td> <td>: " + proyecto.Abreviaturas + "</td> </tr> <tr> <td>Referencias</td> <td>: " + proyecto.Referencias + "</td> </tr> <tr> <td>Ambiente operacional</td> <td>: " + proyecto.AmbienteOperacional + "</td> </tr> <tr> <td>Relacion con otros proyectos</td> <td>: " + proyecto.RelacionProyectos + "</td> </tr> </table> ";
+            string minimalista = this.AgregarListadoMinimalista(id);
+
+
+            string final = " </body> </html>";
+            html = html + minimalista + final;
             var htmlToPdf = new NReco.PdfGenerator.HtmlToPdfConverter();
             var pdfBytes = htmlToPdf.GeneratePdf(html);
             MemoryStream ms = new MemoryStream(pdfBytes);
@@ -230,6 +236,79 @@ namespace AppWebERS.Controllers
 
             return File(ms, "application/pdf"); ;
         }
+
+        /**
+         * 
+         * <autor>Rodrigo Letelier</autor>
+         * <summary>Crea el html que inserta los requisitos de usuario junto a los de sistema en el documento.</summary>
+         * <param name="idp">Id del proyecto al que se asocia el requisito.</param>
+         * <returns>El html con los requisitos dentro.</returns>
+         */
+
+        private string AgregarListadoMinimalista(int idp) {
+
+            string s = "<h1 class=\"titulo\" >Listado de requisitos</h1> <table class=\"espacio - izq\">  </table>";
+            
+            MySqlDataReader reader;
+            string consulta = "select * from requisito where requisito.ref_proyecto = " + idp;
+            reader = this.conexion.RealizarConsulta(consulta);
+
+            if (reader == null) {
+                return "";
+            }
+
+            while (reader.Read()) {
+
+                string idr = reader["id_requisito"].ToString();
+                string nombre = reader["nombre"].ToString();
+                string descripcion = reader["descripcion"].ToString();
+                string prioridad = reader["prioridad"].ToString();
+                string fuente = reader["fuente"].ToString();
+                string estabilidad = reader["estabilidad"].ToString();
+                string estado = reader["estado"].ToString();
+                string tipoRequisito = reader["categoria"].ToString();
+                string medida = reader["medida"].ToString();
+                string escala = reader["escala"].ToString();
+                string fecha = reader["fecha_actualizacion"].ToString();
+                string incremento = reader["incremento"].ToString();
+                string tipo = reader["tipo"].ToString();
+                Requisito requ = new Requisito(idr, nombre, descripcion, prioridad, fuente, estabilidad, estado, tipoRequisito, medida, escala, fecha, incremento, tipo);
+
+                if (reader["tipo"].ToString() == "USUARIO")
+                {
+                    requisitos.Add(requ, requ.ObtenerListaRequisitosSistema(idp, requ.ObtenerNumRequisito(idp, requ.IdRequisito)));
+                }
+               
+            }
+
+            this.conexion.EnsureConnectionClosed();
+
+            foreach (var item in requisitos)
+            {
+                Requisito ru = item.Key;
+                s = s + "<tr> <td> <b>RU " + ru.IdRequisito + "</b> " + ru.Nombre + ".";
+                List<Requisito> aux = item.Value;
+
+                if (aux.Count != 0)
+                {
+                    s = s + "<ul>";
+
+                    foreach (Requisito r in aux)
+                    {
+                        s = s + "<li>" + "<b>RS " + r.IdRequisito + "</b> " + r.Nombre + ".</li>";
+                    }
+
+                    s = s + "</ul>";
+                }
+                s = s + "</td> </tr>";
+
+            }
+            string final = "</table>";
+            s = s + final;
+            return s;
+        }
+
+       
         
 
         // GET: Proyecto/ListaUsuarios/5

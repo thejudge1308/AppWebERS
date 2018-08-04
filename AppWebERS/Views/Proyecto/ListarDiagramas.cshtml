@@ -7,44 +7,59 @@
 }
 
 
-<!--<ul class="nav nav-tabs">
-    <li class="nav-item">
-        <a class="nav-link" href="@*Url.Action("Detalles", "Proyecto", new { id = ProyectoActual.IdProyecto })*@">Detalles</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="@*Url.Action("ListarRequisitosMinimalista", "Proyecto", new { id = ProyectoActual.IdProyecto })*@">Requisitos</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link active" href="@*Url.Action("ListarDiagramas", "Proyecto", new { id = ProyectoActual.IdProyecto})*@">Diagramas</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="@*Url.Action("ListaUsuarios", "Proyecto", new { id = ProyectoActual.IdProyecto })*@">Usuarios</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="@*Url.Action("ListaActores","Proyecto",new { id = ProyectoActual.IdProyecto})*@">Actores</a>
-    </li>
-</ul> -->
-
 <h2>Diagramas</h2>
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link" href="@Url.Action("Detalles", "Proyecto", new { id = ProyectoActual.IdProyecto })">Detalles</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="@Url.Action("ListarRequisitosMinimalista", "Proyecto", new { id = ProyectoActual.IdProyecto })">Requisitos</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" href="@Url.Action("ListarDiagramas", "Proyecto", new { id = ProyectoActual.IdProyecto})">Diagramas</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="@Url.Action("ListaUsuarios", "Proyecto", new { id = ProyectoActual.IdProyecto })">Usuarios</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="@Url.Action("ListaActores","Proyecto",new { id = ProyectoActual.IdProyecto})">Actores</a>
+    </li>
+</ul>
+
 <div class="dropdown-divider"></div>
 
 <a href="../../Diagrama/SubirDiagrama/@ProyectoActual.IdProyecto" class="btn btn-primary w-auto">Agregar diagrama</a>
 
 <div class="row mt-1">
-    <div clsss="col-4">
+    <div class="col-4">
         <div class="card mx-2 my-2">
             <h4 class="card-header">Diagrama de casos de uso</h4>
             <div class="card-body">
-                <img class="card-img-bottom" src="https://i-msdn.sec.s-msft.com/dynimg/IC378068.jpeg" alt="Card image cap">
+                <img class="card-img-bottom" src="http://www.abiztar.com.mx/articulos/imagenes/caso_de_abuso.gif" alt="Card image cap">
             </div>
             <div class="card-footer">
                 <p class="card-text">
                     Diagrama de casos de uso del proyecto AppDERS
                 </p>
-                <a href="#!" class="btn btn-primary">Ampliar</a>
+                <a href="#exampleModal" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Ampliar</a>
             </div>
         </div>
     </div>
 </div>
 
+<div class="modal mt-5 mx-auto w-100" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="true" style="overflow: scroll;">
+    <div class="modal-dialog-centered">
+       
+        <div class="modal-body float-right pl-5 w-100">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <h1 aria-hidden="true">&times;</h1>
+            </button>
+            <div class="container float-right pl-2">
+                <div class="row justify-content-center">
+                    <img src="http://www.abiztar.com.mx/articulos/imagenes/caso_de_abuso.gif" alt="Card image cap">
+                </div>
+            </div>
 
+        </div>
+    </div>
+    </div>

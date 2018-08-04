@@ -564,7 +564,7 @@ namespace AppWebERS.Models {
             List<Requisito> listaRequisitos = new List<Requisito>();
             ApplicationDbContext conexion1 = ApplicationDbContext.Create();
             string nombre = String.Empty;
-            string consulta = "SELECT requisito.* FROM requisito WHERE requisito.ref_proyecto ="+id+" AND requisito.id_requisito NOT IN (SELECT asociacion.req_software FROM asociacion WHERE asociacion.req_usuario ="+idRequisito+");";
+            string consulta = "SELECT requisito.* FROM requisito WHERE requisito.tipo='SISTEMA' AND requisito.ref_proyecto =" + id+ " AND requisito.num_requisito NOT IN (SELECT asociacion.req_software FROM asociacion WHERE asociacion.req_usuario =" + idRequisito+");";
             MySqlDataReader reader = conexion1.RealizarConsulta(consulta);
             if (reader != null)
             {

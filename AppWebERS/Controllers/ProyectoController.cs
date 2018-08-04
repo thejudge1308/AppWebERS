@@ -1049,7 +1049,7 @@ namespace AppWebERS.Controllers
           * Action GET que retorna la vista Requisito para asociar un requisito de sistema existente a un requisito de usuario.
           * </summary>
           * <param name="id">id correspondiente al Proyecto Actual.</param>
-          * <param name="idRequisitoUsuario">id del requisito de usuario que se vincula al requisito de sistema que se desea crear.</param>
+          * <param name="idRequisito">id del requisito de usuario que se vincula al requisito de sistema que se desea crear.</param>
           * <returns> Redireccion a la ventana AsociarRequisitoSistemaExistente si el usuario Cumple con los permisos.
           * Redirreciona al index si el usuario no tiene los permisos para entrar a la vista.</returns>
           */
@@ -1078,10 +1078,10 @@ namespace AppWebERS.Controllers
                     if (lista.Count > 0)
                     {
                         ViewBag.lista = lista;
-                        ViewBag.listaVacia = true;
+                        ViewBag.listaVacia = false;
                     }
                     else {
-                        ViewBag.listaVacia = false;
+                        ViewBag.listaVacia = true;
                     }
                     
                 }

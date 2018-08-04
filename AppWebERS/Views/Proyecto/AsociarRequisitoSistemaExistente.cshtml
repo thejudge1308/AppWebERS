@@ -22,7 +22,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var requisito in @ViewBag.Lista)
+                        @foreach (var requisito in @ViewBag.lista)
                         {
                             <tr class="text-center">
                                 <td data-info="info">@requisito.IdRequisito</td><!-- Reemplazar por como quiera que le pongan en el foreach a la variable. Ej: (arroba)Item.Nombre -->
@@ -36,10 +36,11 @@
                 </table>
             </div>
         }
+		else{
         <div>
             <h6 class="text-danger">No hay Requisitos</h6>
         </div>
-
+		}
         <div><h6></h6></div>
         <script>
 

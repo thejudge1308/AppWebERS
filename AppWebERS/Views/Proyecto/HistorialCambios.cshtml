@@ -2,7 +2,7 @@
 @model Proyecto
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "HistorialCambios";
+ViewBag.Title = "HistorialCambios";
 
 }
 
@@ -10,6 +10,8 @@
     var ProyectoActual = (Proyecto)ViewData["proyecto"];
 
     var TipoUsuario = (int)ViewData["permiso"];
+
+    var Cambios = (List<ModificacionDERS>)ViewData["cambios"];
 }
 
 
@@ -17,48 +19,77 @@
 
 @if (ProyectoActual != null)
 {
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("Detalles", "Proyecto", new { id = ProyectoActual.IdProyecto })">Detalles</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("ListarRequisitosMinimalista", "Proyecto", new { id = ProyectoActual.IdProyecto })">Requisitos</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action(" ListarDiagramas", "Proyecto", new { id = ProyectoActual.IdProyecto })">Diagramas</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("ListaUsuarios", "Proyecto", new { id = ProyectoActual.IdProyecto })">Usuarios</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("ListaActores", "Proyecto", new { id = ProyectoActual.IdProyecto })">Actores</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" href="@Url.Action("HistorialCambios","Proyecto",new { id = ProyectoActual.IdProyecto})">Historial de cambios</a>
+        </li>
+    </ul>
     
-<ul class="nav nav-tabs">
-    <li class="nav-item">
-        <a class="nav-link" href="@Url.Action("Detalles", "Proyecto", new { id = ProyectoActual.IdProyecto })">Detalles</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="@Url.Action("ListarRequisitosMinimalista", "Proyecto", new { id = ProyectoActual.IdProyecto })">Requisitos</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="@Url.Action(" ListarDiagramas", "Proyecto", new { id = ProyectoActual.IdProyecto })">Diagramas</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="@Url.Action("ListaUsuarios", "Proyecto", new { id = ProyectoActual.IdProyecto })">Usuarios</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="@Url.Action("ListaActores", "Proyecto", new { id = ProyectoActual.IdProyecto })">Actores</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link active" href="@Url.Action("HistorialCambios","Proyecto",new { id = ProyectoActual.IdProyecto})">Historial de cambios</a>
-    </li>
-</ul>
-
-
     <div class="container-fluid my-2">
-        <table class="table table-striped">
+    if(Cambios != null)
+    {
+        <table class="table">
             <thead>
                 <tr>
-                    <th>ID Proyecto</th>
-                    <th>ID Usuario</th>
-                    <th>Nombre Usuario</th>
-                    <th>Cambio</th>
+                    <th>#</th>
+                    <th>ID Modificación</th>
+                    <th>Versión</th>
+                    <th>Autor</th>
+                    <th>Fecha</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <th scope="row">1000</th>
-                    <th>999999</th>
-                    <th>JuanFCO</th>
-                    <th>Agregó un requisito muy importante (crítico)</th>
-                </tr>
+                @{
+                    var Aux = 1;
+                    if (Cambios.Count != 0)
+                    {
+                        foreach (ModificacionDERS item in (List<ModificacionDERS>)Cambios)
+                        {
+                            <tr>
+                                <th>@Aux</th>
+                                <td>@item.IdModificacion</td>
+                                <td>@item.Version</td>
+                                <td>@item.Fecha</td>
+                                <td>@item.RefUsuario</td>
+                            </tr>
+                            ++Aux;
+                        }
+                    }
+                }
             </tbody>
         </table>
-    </div>
-
+    }
+    else
+    {
+        <div class="jumbotron jumbotron-fluid">
+            <div class="container">
+                <h1>No hay modificaciones.</h1>
+            </div>
+        </div>
+    }    
 }
+<!-- Caso de proyecto = null -->
+else
+{
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1>Proyecto no encontrado.</h1>
+        </div>
+    </div>
+}
+</div>

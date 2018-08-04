@@ -37,31 +37,33 @@
     @{
         <div class="dropdown-divider"></div>
         <div>
-            @using (Html.BeginForm("GuardarRequisitoUsuarioMinimilista", "Proyecto", new
-            {
-                idProyecto = ProyectoActual.IdProyecto
-            }, FormMethod.Post))
-            {
-                <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                    Agregar Requisito
-                </a>
+            <div class="form-group">
+                @using (Html.BeginForm("GuardarRequisitoUsuarioMinimilista", "Proyecto", new
+                {
+                    idProyecto = ProyectoActual.IdProyecto
+                }, FormMethod.Post))
+                {
+                    <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                        Agregar Requisito
+                    </a>
 
 
-                <div class="collapse" id="collapseExample">
-                    <div class="card card-body w-50">
-                        @Html.Display("Id Requisito")
-                        @Html.EditorFor(m => m.IdRequisito, new { htmlAttributes = new { @class = "form-control mx-auto my-3", placeholder = "Ingrese Id del requisito de usuario" } })
-                        @Html.ValidationMessageFor(m => m.IdRequisito, "", new { @class = "text-danger" })
+                    <div class="collapse" id="collapseExample">
+                        <div class="card card-body w-50">
+                            @Html.Display("Id Requisito")
+                            @Html.EditorFor(m => m.IdRequisito, new { htmlAttributes = new { @class = "form-control mx-auto my-3", placeholder = "Ingrese Id del requisito de usuario" } })
+                            @Html.ValidationMessageFor(m => m.IdRequisito, "", new { @class = "text-danger" })
 
-                        @Html.Display(" Nombre del Requisito")
-                        @Html.EditorFor(m => m.Nombre, new { htmlAttributes = new { @class = "form-control mx-auto m-3", placeholder = "Ingrese nombre del requisito de usuario" } })
-                        @Html.ValidationMessageFor(m => m.Nombre, "", new { @class = "text-danger" })
+                            @Html.Display(" Nombre del Requisito")
+                            @Html.EditorFor(m => m.Nombre, new { htmlAttributes = new { @class = "form-control mx-auto m-3", placeholder = "Ingrese nombre del requisito de usuario" } })
+                            @Html.ValidationMessageFor(m => m.Nombre, "", new { @class = "text-danger" })
 
-                        <button class="btn btn-primary w-50 mx-auto" type="submit">Guardar Cambios</button>
+                            <button class="btn btn-primary w-50 mx-auto" type="submit">Guardar Cambios</button>
+                        </div>
                     </div>
-                </div>
-            }
-            @Html.ActionLink("Agregar Requisito Usuario Volere", "Requisito", new { id = ProyectoActual.IdProyecto }, new { @class = "btn btn-primary", id = "btnRequisito", type = "submit" })
+                }
+                <a class="btn btn-primary" href="@Url.Action("Requisito","Proyecto",new { id = ProyectoActual.IdProyecto})">Nuevo Requisito Usuario Volere</a>
+            </div>
             @foreach (KeyValuePair<Requisito, List<Requisito>> r in diccionarioRequisitos)
             {
                 <div>
@@ -90,12 +92,15 @@
                                     </div>
                                 }
 
-                                <div class="d-flex justify-content-end mb-1 mr-2">
-                                    <a class="btn btn-primary" data-toggle="collapse" href="#@r.GetHashCode()" aria-expanded="false" aria-controls=@r.GetHashCode()>
-                                        Agregar
-                                    </a>
-
-                                </div>
+                                    <div class="d-flex justify-content-end mb-1 mr-2">
+                                        <div class="form-group">
+                                        <a class="btn btn-primary" data-toggle="collapse" href="#@r.GetHashCode()" aria-expanded="false" aria-controls=@r.GetHashCode()>
+                                            Agregar
+                                        </a>
+                                        
+                                            <a class="btn btn-primary" href="@Url.Action("RequisitoSistema","Proyecto",new { id = ProyectoActual.IdProyecto, idRequisitoUsuario = r.Key.IdRequisito})">Nuevo Requisito Sistema Volere</a>
+                                        </div>   
+                                    </div>
 
                                 @using (Html.BeginForm("AgregarRequisitoDeSoftwareMinimalista", "Proyecto", new
                                 {

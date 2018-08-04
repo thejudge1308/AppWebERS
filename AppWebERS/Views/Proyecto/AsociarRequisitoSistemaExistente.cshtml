@@ -1,0 +1,60 @@
+﻿@{
+    /**/
+
+    ViewBag.Title = " Asociar Requisitos de Sistema";
+
+}
+@using (Html.BeginForm("ModificarJefeProyecto", "Proyecto"))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <h2>Asociar Requisito de Sistema</h2>
+        <h4>Seleccione el Requisito</h4>
+        @if (!ViewBag.listaVacia)
+        {
+            <div class="card-body table-responsive">
+                <table class="table">
+                    <thead >
+                        <tr class="text-center">
+                            <th scope="col">ID</th>
+                            <th scope="col">Nombre De Requisito</th>
+                            <th scope="col">          </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var requisito in @ViewBag.lista)
+                        {
+                            <tr class="text-center">
+                                <td data-info="info">@requisito.IdRequisito</td><!-- Reemplazar por como quiera que le pongan en el foreach a la variable. Ej: (arroba)Item.Nombre -->
+                                <td data-info="info">@requisito.Nombre</td>
+                                <td>
+                                    <a class="btn btn-primary" href="@Url.Action("AsociarRequisitoSistemaExistente2","Proyecto",new { idRequisitoSistema = requisito.IdRequisito, idProyecto = @ViewBag.idProyecto, idRequisitoUsuario = @ViewBag.idReqUsuario})">Asociar Requisito</a>
+                                   @* @Html.ActionLink("Asociar  Requisito", "AsociarRequisitoSistemaExistente2", new { idRequisitoSistema = requisito.IdRequisito, idProyecto = @ViewBag.idProyecto, idRequisitoUsuario = @ViewBag.idReqUsuario }, new { @class = "btn btn-secondary", id = "btnModificar", type = "button" })*@
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+		else{
+        <div>
+            <h6 class="text-danger">No hay Requisitos</h6>
+        </div>
+		}
+        <div><h6></h6></div>
+        <script>
+
+        </script>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-9">
+
+                <a class="btn btn-primary" href="@Url.Action("ListarRequisitosMinimalista","Proyecto",new { id = @ViewBag.idProyecto})">Regresar</a>
+               @* @Html.ActionLink("Regresar", "ListarRequisitosMinimalista", new { id = @ViewBag.idProyecto }, new { @class = "btn btn-secondary", id = "btnModificar", type = "button" })*@
+            </div>
+        </div>
+
+
+
+    </div>
+}

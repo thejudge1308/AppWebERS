@@ -1,14 +1,17 @@
 ﻿@model AppWebERS.Models.Requisito
 @{
-    /**/
+                /**/
 
-    ViewBag.Title = "Tarjeta de Volere";
+                /**/
+
+                ViewBag.Title = "Tarjeta de Volere";
 }
 
 
 <h2>TarjetaVolere</h2>
 
-@using(Html.BeginForm("IngresarRequisito", "Proyecto", new {
+@using (Html.BeginForm("IngresarRequisitoSistema", "Proyecto", new
+{
 
 
     idRequisito = Model.IdRequisito,
@@ -24,8 +27,10 @@
     fecha = Model.Fecha,
     incremento = Model.Incremento,
     tipo = Model.Tipo,
-    idProyecto = @ViewBag.IdProyecto
-}, FormMethod.Post)) {
+    idProyecto = @ViewBag.IdProyecto,
+    idRequisitoUsuario = @ViewBag.IdRequisitoUsuario
+}, FormMethod.Post))
+{
 
 <div class="card">
     @Html.AntiForgeryToken()
@@ -34,7 +39,7 @@
 
             @Html.LabelFor(m => m.IdRequisito, new { @class = "col-form-label", style = "margin-left:15px" })
             <div class="col-sm-3">
-                @Html.TextBoxFor(m => m.IdRequisito, new { @class = "form-control mx-sm-2", placeholder = "RU1234", maxlenght = "6" })
+                @Html.TextBoxFor(m => m.IdRequisito, new { @class = "form-control mx-sm-2", placeholder = "RS1234", maxlenght = "6" })
 
             </div>
 
@@ -76,9 +81,9 @@
                 <select id="Estado" name="Estado" class="form-control mx-sm-2">
                     <option>Pendiente</option>
                     <option>En Proceso</option>
-					<option>En Pruebas</option>
-					<option>Bloqueado</option>
-					<option>Completado</option>
+                    <option>En Pruebas</option>
+                    <option>Bloqueado</option>
+                    <option>Completado</option>
                 </select>
             </div>
         </div>
@@ -89,9 +94,9 @@
                 <select id="Prioridad" name="Prioridad" class="form-control mx-sm-2">
                     <option>Crítico</option>
                     <option>Alto</option>
-					<option>Estándar</option>
-					<option>Bajo</option>
-					<option>Deseable</option>
+                    <option>Estándar</option>
+                    <option>Bajo</option>
+                    <option>Deseable</option>
                 </select>
             </div>
             @Html.LabelFor(m => m.Estabilidad, new { @class = "col-form-label" })
@@ -117,13 +122,13 @@
 
         </div>
         @*<form class="form-inline">
-            <div class="form-group row" style="margin-bottom:10px">
-                @Html.LabelFor(m => m.Fecha, new { @class = "col-sm-3 col-form-label" })
-                <div class="col-sm-8">
-                    @Html.TextBoxFor(m => m.Fecha, new { placeholder = "Fecha Actualización", @class = "form-control mx-sm-2" })
+                <div class="form-group row" style="margin-bottom:10px">
+                    @Html.LabelFor(m => m.Fecha, new { @class = "col-sm-3 col-form-label" })
+                    <div class="col-sm-8">
+                        @Html.TextBoxFor(m => m.Fecha, new { placeholder = "Fecha Actualización", @class = "form-control mx-sm-2" })
+                    </div>
                 </div>
-            </div>
-        </form>*@
+            </form>*@
         <div>
             @Html.LabelFor(m => m.Fecha)
             @Html.TextBoxFor(m => m.Fecha, new { placeholder = "Fecha Actualizacion", @class = "form-control col-form-label", oncopy = "return false", onpaste = "return false" })
@@ -143,27 +148,28 @@
             <label>Actores</label>
             <div class="form-group " style="margin-bottom:10px">
                 <div style="padding-left:15px">
-                    @for(int i=0; i< Model.Actores.Count;i++){
-                        <div class="form-group d-inline-block">
-                            <div class="form-check-inline col-sm-1">
-
-                                @Html.HiddenFor(m => m.Actores[i].id)
-                                @Html.CheckBoxFor(m => m.Actores[i].isChecked,new { style ="margin-right:8px"})
-                                @Html.LabelFor(m => Model.Actores[i].isChecked, Model.Actores[i].nombre, new { @class = "form-check-label", style = "margin-right:5px" })
-
-                            </div>
-                        </div>
-                    }
-                    @**
-                    @foreach (var actor in Model.Actores)
+                    @for (int i = 0; i < Model.Actores.Count; i++)
                     {
-                        <div class="form-group d-inline-block">
-                            <div class="form-check-inline col-sm-1">
-                                @Html.Label(actor.nombre, new { @class = "form-check-label", style = "margin-right:5px" })
-                                @Html.CheckBox(actor.nombre,false, new { value = actor.seleccionado ,@class = "form-check-input" })
+<div class="form-group d-inline-block">
+    <div class="form-check-inline col-sm-1">
+
+        @Html.HiddenFor(m => m.Actores[i].id)
+        @Html.CheckBoxFor(m => m.Actores[i].isChecked, new { style = "margin-right:8px" })
+        @Html.LabelFor(m => Model.Actores[i].isChecked, Model.Actores[i].nombre, new { @class = "form-check-label", style = "margin-right:5px" })
+
+    </div>
+</div>
+}
+                    @**
+                        @foreach (var actor in Model.Actores)
+                        {
+                            <div class="form-group d-inline-block">
+                                <div class="form-check-inline col-sm-1">
+                                    @Html.Label(actor.nombre, new { @class = "form-check-label", style = "margin-right:5px" })
+                                    @Html.CheckBox(actor.nombre,false, new { value = actor.seleccionado ,@class = "form-check-input" })
+                                </div>
                             </div>
-                        </div>
-                    }*@
+                        }*@
                 </div>
             </div>
         }
@@ -184,5 +190,6 @@
     @Scripts.Render("~/Scripts/jquery-ui/Idioma/datee-picker-es.js")
     @Scripts.Render("~/Scripts/Requisito/DatePicker.js")
 }
+
 
 

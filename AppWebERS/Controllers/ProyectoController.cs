@@ -56,12 +56,12 @@ namespace AppWebERS.Controllers
         public ActionResult MostrarReferencia(int id)
         {
             List<Referencia> referencias = this.ObtenerReferencias(id);
-            if(referencias != null) {
-                return Json(referencias , JsonRequestBehavior.AllowGet);
+            if (referencias != null) {
+                return Json(referencias, JsonRequestBehavior.AllowGet);
             } else {
                 return Json("null", JsonRequestBehavior.AllowGet);
             }
-            
+
         }
 
         public class JsonReferenciaLibro {
@@ -121,8 +121,8 @@ namespace AppWebERS.Controllers
         [HttpPost]
         public ActionResult RemoverReferenciaPaper(Referencia r) {
 
-            string consulta = "DELETE FROM referencia WHERE referencia.ref_proyecto ="+r.id+"  and referencia.referencia = '"+r.valor+"';";
-            if(this.conexion.RealizarConsultaNoQuery(consulta)) {
+            string consulta = "DELETE FROM referencia WHERE referencia.ref_proyecto =" + r.id + "  and referencia.referencia = '" + r.valor + "';";
+            if (this.conexion.RealizarConsultaNoQuery(consulta)) {
                 return Json(true, JsonRequestBehavior.AllowGet);
 
             } else {
@@ -153,7 +153,7 @@ namespace AppWebERS.Controllers
 
             switch (json.atributo) {
 
-                case "nombre":        
+                case "nombre":
                     proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo);
                     return Json(true, JsonRequestBehavior.AllowGet);
                     break;
@@ -203,11 +203,11 @@ namespace AppWebERS.Controllers
                     return Json(true, JsonRequestBehavior.AllowGet);
                     break;
             }
-            
+
             return Json(false, JsonRequestBehavior.AllowGet);
         }
 
-        
+
         [Authorize]
         // Get: Proyecto/infoProyecto/5
         public ActionResult infoProyecto(int id) {
@@ -218,19 +218,19 @@ namespace AppWebERS.Controllers
         public FileResult ExportarPDF(int id) {
             Proyecto proyecto = this.GetProyecto(id);
 
-            string fecha =  DateTime.Now.ToString();
-            String html = "<html> <head> <style> body { margin: 2cm; } .logo { font-size: 40px; font-weigth: bold; } .titulo { text-align: center; } .fecha { margin-left: 20px; } .espacio-izq { margin-left: 20px; } table td{ font-size: 18px; padding-bottom: 15px; } </style> </head> <body> <table> <tr> <td class=\"logo\">AppWebERS</td> <td </tr> </table> <h1 class=\"titulo\">Detalles de proyecto</h1> <hr> <p class=\"fecha\">Fecha: " + fecha +"</p> <hr> <table class=\"espacio-izq\"> <tr> <td>Nombre proyecto</td> <td>: " + proyecto.Nombre + "</td> </tr> <tr> <td>Proposito</td> <td>: " + proyecto.Proposito + "</td> </tr> <tr> <td>Alcance</td> <td>: " + proyecto.Alcance + "</td> </tr> <tr> <td>Contexto</td> <td>: " + proyecto.Contexto + "</td> </tr> <tr> <td>Definiciones</td> <td>: " + proyecto.Definiciones + "</td> </tr> <tr> <td>Acronimos</td> <td>: "+ proyecto.Acronimos + "</td> </tr> <tr> <td>Abreviaturas</td> <td>: " + proyecto.Abreviaturas + "</td> </tr> <tr> <td>Referencias</td> <td>: " + proyecto.Referencias + "</td> </tr> <tr> <td>Ambiente operacional</td> <td>: " + proyecto.AmbienteOperacional + "</td> </tr> <tr> <td>Relacion con otros proyectos</td> <td>: " + proyecto.RelacionProyectos +  "</td> </tr> </table> </body> </html>";
+            string fecha = DateTime.Now.ToString();
+            String html = "<html> <head> <style> body { margin: 2cm; } .logo { font-size: 40px; font-weigth: bold; } .titulo { text-align: center; } .fecha { margin-left: 20px; } .espacio-izq { margin-left: 20px; } table td{ font-size: 18px; padding-bottom: 15px; } </style> </head> <body> <table> <tr> <td class=\"logo\">AppWebERS</td> <td </tr> </table> <h1 class=\"titulo\">Detalles de proyecto</h1> <hr> <p class=\"fecha\">Fecha: " + fecha + "</p> <hr> <table class=\"espacio-izq\"> <tr> <td>Nombre proyecto</td> <td>: " + proyecto.Nombre + "</td> </tr> <tr> <td>Proposito</td> <td>: " + proyecto.Proposito + "</td> </tr> <tr> <td>Alcance</td> <td>: " + proyecto.Alcance + "</td> </tr> <tr> <td>Contexto</td> <td>: " + proyecto.Contexto + "</td> </tr> <tr> <td>Definiciones</td> <td>: " + proyecto.Definiciones + "</td> </tr> <tr> <td>Acronimos</td> <td>: " + proyecto.Acronimos + "</td> </tr> <tr> <td>Abreviaturas</td> <td>: " + proyecto.Abreviaturas + "</td> </tr> <tr> <td>Referencias</td> <td>: " + proyecto.Referencias + "</td> </tr> <tr> <td>Ambiente operacional</td> <td>: " + proyecto.AmbienteOperacional + "</td> </tr> <tr> <td>Relacion con otros proyectos</td> <td>: " + proyecto.RelacionProyectos + "</td> </tr> </table> </body> </html>";
             String html2 = "<h1>Texto</h1> <p> de</p> <p><sup><strong>prueba</strong></sup></p> <p><em>para</em></p> <h2><s>probar</s></h2> <p><br></p> <ol> <li>el</li> </ol> <p><sub>formato</sub></p> <p><span>pdf</span></p> <p><span>es</span></p> <p><span style=\"background - color: red; \">resposive</span></p> <p><span style=\"color: yellow; background - color: green; \">porsia</span></p> <p>Fin</p>";
-            
+
 
             var htmlToPdf = new NReco.PdfGenerator.HtmlToPdfConverter();
             var pdfBytes = htmlToPdf.GeneratePdf(html);
             MemoryStream ms = new MemoryStream(pdfBytes);
-           
+
 
             return File(ms, "application/pdf"); ;
         }
-        
+
 
         // GET: Proyecto/ListaUsuarios/5
         public ActionResult ListaUsuarios(int id) {
@@ -243,10 +243,10 @@ namespace AppWebERS.Controllers
                 idUsuario = user.Id;
 
             }
-            
+
             Proyecto proyecto = this.GetProyecto(id);
-            int permiso = proyecto.ObtenerRolDelUsuario(idUsuario,id);
-            if (permiso==1 || permiso==2 ||  permiso==0)
+            int permiso = proyecto.ObtenerRolDelUsuario(idUsuario, id);
+            if (permiso == 1 || permiso == 2 || permiso == 0)
             {
                 List<Usuario> usuarios = new Proyecto().GetListaUsuarios(id);
                 List<SolicitudDeProyecto> solicitudes = new Proyecto().GetSolicitudesProyecto(id);
@@ -264,7 +264,7 @@ namespace AppWebERS.Controllers
             }
         }
 
-       
+
         public ActionResult AgregarActor(int id) {
             Console.WriteLine("id : " + id);
             var UsuarioActual = User.Identity.GetUserId();
@@ -278,9 +278,9 @@ namespace AppWebERS.Controllers
         public ActionResult AgregarActor(FormCollection datos) {
 
             MySqlDataReader reader;
-        
-            int idProyecto = int.Parse(datos["actual"].ToString());            
-            string nombre = datos["Nombre"];       
+
+            int idProyecto = int.Parse(datos["actual"].ToString());
+            string nombre = datos["Nombre"];
             string descripcion = datos["Descripcion"];
             string numActual = datos["NumActual"];
             int actual = int.Parse(numActual.ToString());
@@ -292,7 +292,7 @@ namespace AppWebERS.Controllers
 
             string consulta = "SELECT id_actor FROM actor ORDER BY id_actor desc LIMIT 1";
             reader = this.conexion.RealizarConsulta(consulta);
-            int id_actor=0;
+            int id_actor = 0;
 
             if (reader == null)
             {
@@ -306,10 +306,10 @@ namespace AppWebERS.Controllers
 
             this.conexion.EnsureConnectionClosed();
 
-            Actor actor = new Actor(id_actor,descripcion,actual,futuro,contacto,nombre);
+            Actor actor = new Actor(id_actor, descripcion, actual, futuro, contacto, nombre);
             Proyecto proyecto = this.GetProyecto(idProyecto);
 
-            consulta = "insert into actor values ( " + id_actor + ", '" + nombre + "','" + descripcion + "','" + actual + "','" + futuro + "','" + contacto + "','" + idProyecto + "')" ;
+            consulta = "insert into actor values ( " + id_actor + ", '" + nombre + "','" + descripcion + "','" + actual + "','" + futuro + "','" + contacto + "','" + idProyecto + "')";
 
             if (contacto < 0 || futuro < 0 || actual < 0)
             {
@@ -326,7 +326,7 @@ namespace AppWebERS.Controllers
                 TempData["alerta"] = new Alerta("El nombre del actor ya existe", TipoAlerta.ERROR);
                 ViewData["actual"] = idProyecto;
                 ViewData["usuario"] = TipoDePermiso(idProyecto);
-                
+
                 return View(actor);
             }
             else {
@@ -337,20 +337,20 @@ namespace AppWebERS.Controllers
                 ViewData["usuario"] = TipoDePermiso(idProyecto);
                 return RedirectToAction("ListaActores", new { id = idProyecto });
             }
-           
-            
+
+
         }
 
         public Boolean VerificarNombreRepetido(int idp, string nombre) {
             MySqlDataReader reader;
             string consulta = "SELECT actor.nombre FROM actor,proyecto WHERE actor.ref_proyecto = " + idp;
             reader = this.conexion.RealizarConsulta(consulta);
-            if (reader != null) { 
+            if (reader != null) {
                 while (reader.Read()) {
                     if (reader["nombre"].ToString() == nombre) {
                         this.conexion.EnsureConnectionClosed();
                         return true;
-                    }   
+                    }
                 }
             }
             this.conexion.EnsureConnectionClosed();
@@ -405,9 +405,9 @@ namespace AppWebERS.Controllers
         public ActionResult ListarProyectos()
         {
             String TipoUsuario = ObtenerTipoUsuarioActivo();
-            List<Proyecto> proyectosTodos = new List<Proyecto>(); 
-            List<Proyecto> proyectosAsociados = new List<Proyecto>(); 
-            List<Proyecto> proyectosNoAsociados = new List<Proyecto>(); 
+            List<Proyecto> proyectosTodos = new List<Proyecto>();
+            List<Proyecto> proyectosAsociados = new List<Proyecto>();
+            List<Proyecto> proyectosNoAsociados = new List<Proyecto>();
             Debug.WriteLine("Tipo Usuario " + TipoUsuario);
             if (TipoUsuario.Equals("SYSADMIN"))
             {
@@ -417,7 +417,7 @@ namespace AppWebERS.Controllers
             {
                 proyectosAsociados = ListaDeProyectosAsociados(ObtenerIdUsuarioActivo());
                 proyectosNoAsociados = ListaDeProyectoNoAsociados(ObtenerIdUsuarioActivo());
-                
+
             }
             ViewData["usuario_actual"] = TipoUsuario;
             ViewData["proyectosTodos"] = proyectosTodos;
@@ -527,10 +527,10 @@ namespace AppWebERS.Controllers
         */
         public List<Proyecto> ListaDeProyectoNoAsociados(string id)
         {
-            List<Proyecto>proyectosNoAsociados = new List<Proyecto>();
+            List<Proyecto> proyectosNoAsociados = new List<Proyecto>();
             string estado = "HABILITADO";
             string consulta = "SELECT proyecto.id_proyecto,proyecto.nombre, proyecto.proposito, proyecto.alcance, proyecto.contexto, proyecto.definiciones," +
-                "proyecto.acronimos, proyecto.abreviaturas, proyecto.referencias, proyecto.ambiente_operacional, proyecto.relacion_con_otros_proyectos, proyecto.estado"+" FROM Proyecto where  proyecto.estado = '" + estado + "' AND " +
+                "proyecto.acronimos, proyecto.abreviaturas, proyecto.referencias, proyecto.ambiente_operacional, proyecto.relacion_con_otros_proyectos, proyecto.estado" + " FROM Proyecto where  proyecto.estado = '" + estado + "' AND " +
                               "Proyecto.nombre NOT IN" +
                               "(SELECT Proyecto.nombre FROM Proyecto, users, vinculo_usuario_proyecto " +
                               "WHERE users.id ='" + id + "'  AND Vinculo_usuario_proyecto.ref_proyecto = Proyecto.id_proyecto AND Vinculo_usuario_proyecto.ref_usuario = users.id)";
@@ -580,10 +580,10 @@ namespace AppWebERS.Controllers
             }
         }
 
-      
+
         public ActionResult AgregarUsuarioProyecto(int id)
         {
-            return RedirectToAction("AgregarUsuarioProyecto","SysAdmin", new { idProyecto = id});
+            return RedirectToAction("AgregarUsuarioProyecto", "SysAdmin", new { idProyecto = id });
         }
 
         public ActionResult InvitarUsuario(int id)
@@ -610,7 +610,7 @@ namespace AppWebERS.Controllers
         private int TipoDePermiso(int id) {
             //Obtiene id del usuario de la sesion
             var UsuarioActual = User.Identity.GetUserId();
-            int ModoVista = new Proyecto().ObtenerRolDelUsuario(UsuarioActual.ToString(),id);
+            int ModoVista = new Proyecto().ObtenerRolDelUsuario(UsuarioActual.ToString(), id);
             return ModoVista;
         }
         /**
@@ -658,7 +658,7 @@ namespace AppWebERS.Controllers
          * <returns> la vista con el correspondiente mensaje de retroalimentacion. </returns>
          */
         [HttpPost]
-        public ActionResult CrearProyecto(string nombre,string usuario) {
+        public ActionResult CrearProyecto(string nombre, string usuario) {
             if (ModelState.IsValid) {
                 Proyecto proyecto = new Proyecto();
                 List<SelectListItem> lista = proyecto.ObtenerUsuarios();
@@ -693,7 +693,7 @@ namespace AppWebERS.Controllers
                     }
                 }
                 else
-                   TempData["alerta"] = new Alerta("Este nombre ya está asociado a un proyecto.", TipoAlerta.ERROR);
+                    TempData["alerta"] = new Alerta("Este nombre ya está asociado a un proyecto.", TipoAlerta.ERROR);
             }
             else
                 TempData["alerta"] = new Alerta("Modelo no válido.", TipoAlerta.ERROR);
@@ -836,8 +836,8 @@ namespace AppWebERS.Controllers
         public ActionResult ModificarJefeProyectoLogico(String rut, int id)
         {
             Proyecto proyecto = new Proyecto();
-            proyecto.ModificarJefeProyecto(rut,id);
-            return RedirectToAction("Detalles/"+id,"Proyecto");
+            proyecto.ModificarJefeProyecto(rut, id);
+            return RedirectToAction("Detalles/" + id, "Proyecto");
         }
 
         /*
@@ -960,18 +960,20 @@ namespace AppWebERS.Controllers
             }
             Proyecto proyecto = this.GetProyecto(id);
             int permiso = proyecto.ObtenerRolDelUsuario(idUsuario, id);
-            if (permiso==0 || permiso == 2)
+            if (permiso == 0 || permiso == 2)
             {
-                
+
                 ViewBag.IdProyecto = id;
                 List<CheckBox> list = obtenerActores(id);
-                Requisito requisito = new Requisito(null, null, null, null, null, null, null, null, null, null, DateTime.Now.ToString("yyyy-MM-dd"), null, null);
+                Requisito requisito = new Requisito(null, null, null, null, null, null, null, null, null, null, DateTime.Now.ToString("yyyy-MM-dd"), "0", null);
                 requisito.Actores = list;
+                requisito.IncrementoCheck = new CheckBox() { nombre = "1", id = "1", isChecked = false };
                 return View(requisito);
             }
             else
             {
-                return RedirectToAction("Index", "Home");
+                TempData["alerta"] = new Alerta("No tiene el permiso para Agregar un Requisito.", TipoAlerta.ERROR);
+                return RedirectToAction("ListarRequisitosMinimalista/"+id, "Proyecto");
             }
         }
 
@@ -988,8 +990,12 @@ namespace AppWebERS.Controllers
         public ActionResult IngresarRequisito(Requisito r, string idProyecto)
         {
             Requisito requisito = new Requisito(r.IdRequisito, r.Nombre, r.Descripcion, r.Prioridad, r.Fuente, r.Estabilidad, r.Estado
-               , r.TipoRequisito, r.Medida, r.Escala, r.Fecha, r.Incremento, r.Tipo);
+               , r.TipoRequisito, r.Medida, r.Escala, r.Fecha, r.Incremento, "USUARIO");
             List<String> listaa = new List<string>();
+            if (r.IncrementoCheck.isChecked)
+            {
+                requisito.Incremento = "" + (Int32.Parse(r.Incremento) + 1);
+            }
             if (r.Actores != null)
             {
                 for (int i = 0; i < r.Actores.Count; i++)
@@ -1000,6 +1006,7 @@ namespace AppWebERS.Controllers
                     }
                 }
             }
+
             int id = Int32.Parse(idProyecto);
             if (requisito.VerificarIdRequisito(id, r.IdRequisito))
             {
@@ -1017,7 +1024,7 @@ namespace AppWebERS.Controllers
                             }
                         }
                         TempData["alerta"] = new Alerta("Éxito al crear Requisito.", TipoAlerta.SUCCESS);
-                        return RedirectToAction("Detalles/" + id, "Proyecto");
+                        return RedirectToAction("ListarRequisitosMinimalista/" + id, "Proyecto");
 
                     }
                     else
@@ -1037,6 +1044,206 @@ namespace AppWebERS.Controllers
             return RedirectToAction("Requisito/" + id, "Proyecto");
         }
 
+        /**
+          * <author>Roberto Ureta</author>
+          * <summary>
+          * Action GET que retorna la vista Requisito para asociar un requisito de sistema existente a un requisito de usuario.
+          * </summary>
+          * <param name="id">id correspondiente al Proyecto Actual.</param>
+          * <param name="idRequisito">id del requisito de usuario que se vincula al requisito de sistema que se desea crear.</param>
+          * <returns> Redireccion a la ventana AsociarRequisitoSistemaExistente si el usuario Cumple con los permisos.
+          * Redirreciona al index si el usuario no tiene los permisos para entrar a la vista.</returns>
+          */
+        [HttpGet]
+        public ActionResult AsociarRequisitoSistemaExistente(int id, string idRequisito) {
+            String idUsuario;
+            using (var db = ApplicationDbContext.Create())
+            {
+                var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
+                string s = User.Identity.GetUserId();
+                ApplicationUser user = userManager.FindByIdAsync(s).Result;
+                idUsuario = user.Id;
+
+            }
+            Proyecto proyecto = this.GetProyecto(id);
+            int permiso = proyecto.ObtenerRolDelUsuario(idUsuario, id);
+            if (permiso == 0 || permiso == 2)
+            {
+                ViewBag.idProyecto = id;
+                ViewBag.idReqUsuario = idRequisito;
+                Requisito req = new Requisito();
+                int idReq = req.ObtenerNumRequisito(id, idRequisito);
+                if (idReq != -1)
+                {
+                    List<Requisito> lista = req.ObtenerListaRequisitosSistemaAsociadosProyecto(id, idReq);
+                    if (lista.Count > 0)
+                    {
+                        ViewBag.lista = lista;
+                        ViewBag.listaVacia = false;
+                    }
+                    else {
+                        ViewBag.listaVacia = true;
+                    }
+                    
+                }
+                else {
+                    ViewBag.listaVacia = false;
+                }
+                return View();
+            }
+            else
+            {
+                TempData["alerta"] = new Alerta("No tiene el permiso para Asociar un Requisito.", TipoAlerta.ERROR);
+                return RedirectToAction("ListarRequisitosMinimalista/"+id, "Proyecto");
+            }
+        }
+
+        /**
+          * <author>Roberto Ureta</author>
+          * <summary>
+          * Action GET que usa la vista Requisito para asociar un requisito de sistema existente a un requisito de usuario.
+          * </summary>
+          * <param name="id">id correspondiente al Proyecto Actual.</param>
+          * <param name="idRequisitoSistema">id del requisito de sistema que se vincula al requisito de usuario que se desea asociar.</param>
+          * <param name="idRequisitoUsuario">id del requisito de usuario que se vincula al requisito de sistema que se desea asociar.</param>
+          * <returns> Redireccion a la ventana ListarRequisitosMinimalista si el usuario Cumple con los permisos.
+          * Redirreciona al index si el usuario no tiene los permisos para entrar a la vista.</returns>
+          */
+        [HttpGet]
+        public ActionResult AsociarRequisitoSistemaExistente2(string idRequisitoSistema, int idProyecto, string idRequisitoUsuario)
+        {
+            String idUsuario;
+            using (var db = ApplicationDbContext.Create())
+            {
+                var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
+                string s = User.Identity.GetUserId();
+                ApplicationUser user = userManager.FindByIdAsync(s).Result;
+                idUsuario = user.Id;
+
+            }
+            Proyecto proyecto = this.GetProyecto(idProyecto);
+            int permiso = proyecto.ObtenerRolDelUsuario(idUsuario, idProyecto);
+            if (permiso == 0 || permiso == 2)
+            {
+                Requisito req = new Requisito();
+                if (req.AsociarRequisitoDeSoftware(idProyecto, idRequisitoUsuario, idRequisitoSistema))
+                {
+                    TempData["alerta"] = new Alerta("Éxito al asociar Requisito de Sistema.", TipoAlerta.SUCCESS);
+                    return RedirectToAction("ListarRequisitosMinimalista/" + idProyecto, "Proyecto");
+                }
+                else
+                {
+                    TempData["alerta"] = new Alerta("Error al asociar Requisito de Sistema.", TipoAlerta.ERROR);
+                    return RedirectToAction("AsociarRequisitoSistemaExistente", "Proyecto", new { id = idProyecto , idRequisito = idRequisitoUsuario});
+                }
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+        }
+        /**
+          * <author>Diego Iturriaga</author>
+          * <summary>
+          * Action GET que retorna la vista Requiito para ingresar un requisito segun los campos de un volere
+          * si el usuario cumple con los permisos de accesso.
+          * </summary>
+          * <param name="id">id correspondiente al Proyecto Actual.</param>
+          * <param name="idRequisitoUsuario">id del requisito de usuario que se vincula al requisito de sistema que se desea crear.</param>
+          * <returns> Redireccion a la ventana RequisitoSistema si el usuario Cumple con los permisos.
+          * Redirreciona al index si el usuario no tiene los permisos para entrar a la vista.</returns>
+          */
+
+        [HttpGet]
+        public ActionResult RequisitoSistema(int id, string idRequisitoUsuario)
+        {
+            String idUsuario;
+            using (var db = ApplicationDbContext.Create())
+            {
+                var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
+                string s = User.Identity.GetUserId();
+                ApplicationUser user = userManager.FindByIdAsync(s).Result;
+                idUsuario = user.Id;
+
+            }
+            Proyecto proyecto = this.GetProyecto(id);
+            int permiso = proyecto.ObtenerRolDelUsuario(idUsuario, id);
+            if (permiso == 0 || permiso == 2)
+            {
+
+                ViewBag.IdProyecto = id;
+                ViewBag.IdRequisitoUsuario = idRequisitoUsuario;
+                List<CheckBox> list = obtenerActores(id);
+                Requisito requisito = new Requisito(null, null, null, null, null, null, null, null, null, null, DateTime.Now.ToString("yyyy-MM-dd"), "0", null);
+                requisito.Actores = list;
+                requisito.IncrementoCheck = new CheckBox() { nombre = "1", id = "1", isChecked = false };
+                return View(requisito);
+            }
+            else
+            {
+                TempData["alerta"] = new Alerta("No tiene el permiso para Agregar un Requisito.", TipoAlerta.ERROR);
+                return RedirectToAction("ListarRequisitosMinimalista/"+id, "Proyecto");
+            }
+        }
+
+        /**
+          * <author>Diego Iturriaga</author>
+          * <summary>
+          * Action POST que retorna una redireccion a Detalles despues de ejecutar la insercion de un requisito de Sistema.
+          * </summary>
+          * <param name="idProyecto">id del proyecto al cual se agregara el requisito de sistema.</param>
+          * <param name="idRequisitoUsuario">id del requisito de usuario al que se asociara el requisito de sistema.</param>
+          * <param name="r">Objeto Requisito que contiene los valores de los campos ingresados en la interfaz.</param>
+          * <returns> Redireccion a la ventana Detalles si se registra el Requisisto / En caso de error se redirecciona
+          * a la vista RequisitoSistema.</returns>
+          */
+        [HttpPost]
+        public ActionResult IngresarRequisitoSistema(Requisito r, string idProyecto, string idRequisitoUsuario)
+        {
+            Requisito requisito = new Requisito(r.IdRequisito, r.Nombre, r.Descripcion, r.Prioridad, r.Fuente, r.Estabilidad, r.Estado
+               , r.TipoRequisito, r.Medida, r.Escala, r.Fecha, r.Incremento, "SISTEMA");
+            List<String> listaa = new List<string>();
+            if (r.IncrementoCheck.isChecked)
+            {
+                requisito.Incremento = "" + (Int32.Parse(r.Incremento) + 1);
+            }
+            if (r.Actores != null)
+            {
+                for (int i = 0; i < r.Actores.Count; i++)
+                {
+                    if (r.Actores[i].isChecked)
+                    {
+                        listaa.Add(r.Actores[i].id);
+                    }
+                }
+            }
+
+            int id = Int32.Parse(idProyecto);
+            if (requisito.VerificarIdRequisito(id, r.IdRequisito))
+            {
+                if (requisito.ValidarNombreRequisito(id, r.Nombre))
+                {
+                    if (requisito.RegistrarRequisitoDeSoftware(Int32.Parse(idProyecto), idRequisitoUsuario, r.IdRequisito)) { 
+                        TempData["alerta"] = new Alerta("Éxito al crear Requisito.", TipoAlerta.SUCCESS);
+                        return RedirectToAction("ListarRequisitosMinimalista/" + id, "Proyecto");
+
+                    }
+                    else
+                    {
+                        TempData["alerta"] = new Alerta("ERROR al crear Requisito.", TipoAlerta.ERROR);
+                    }
+                }
+                else
+                {
+                    TempData["alerta"] = new Alerta("El Nombre del Requisito ingresado ya existe dentro del Proyecto", TipoAlerta.ERROR);
+                }
+            }
+            else
+            {
+                TempData["alerta"] = new Alerta("El Id del Requisito ingresado ya existe dentro del Proyecto", TipoAlerta.ERROR);
+            }
+            return RedirectToAction("RequisitoSistema/" + id, "Proyecto");
+        }
 
         /*
        * Autor Fabian Oyarce
@@ -1344,32 +1551,56 @@ namespace AppWebERS.Controllers
         [HttpPost]
         public ActionResult GuardarRequisitoUsuarioMinimilista(String idRequisito, String nombre,String idProyecto)
         {
-            Requisito requisito = new Requisito(idRequisito,nombre,String.Empty,String.Empty,String.Empty,String.Empty,String.Empty,String.Empty,String.Empty,String.Empty,DateTime.Now.ToString("yyyy-MM-dd"),String.Empty,"USUARIO");
             int id = Int32.Parse(idProyecto);
-            if (requisito.VerificarIdRequisito(id, idRequisito))
+            Proyecto proyecto = this.GetProyecto(id);
+            String idUser;
+            using (var db = ApplicationDbContext.Create())
             {
-                if (requisito.ValidarNombreRequisito(id,nombre)) {
-                    string idRequisitoNuevo = requisito.RegistrarRequisito(Int32.Parse(idProyecto));
-                    if (idRequisitoNuevo!=null)
+                var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
+                string s = User.Identity.GetUserId();
+                ApplicationUser user = userManager.FindByIdAsync(s).Result;
+                idUser = user.Id;
+            }
+            int rol = proyecto.ObtenerRolDelUsuario(idUser, id);
+
+            if (rol == 0 || rol == 2)
+            {
+                Requisito requisito = new Requisito(idRequisito, nombre, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, DateTime.Now.ToString("yyyy-MM-dd"), String.Empty, "USUARIO");
+                if (requisito.VerificarIdRequisito(id, idRequisito))
+                {
+                    if (requisito.ValidarNombreRequisito(id, nombre))
                     {
-                        TempData["alerta"] = new Alerta("Exito al crear Requisito de Usuario", TipoAlerta.SUCCESS);
+                        if (!string.IsNullOrEmpty(requisito.IdRequisito) && !string.IsNullOrEmpty(requisito.Nombre) && !string.IsNullOrWhiteSpace(requisito.IdRequisito) && !string.IsNullOrWhiteSpace(requisito.Nombre)) {
+                            string idRequisitoNuevo = requisito.RegistrarRequisito(Int32.Parse(idProyecto));
+                            if (idRequisitoNuevo != null)
+                            {
+                                TempData["alerta"] = new Alerta("Exito al crear Requisito de Usuario", TipoAlerta.SUCCESS);
+                            }
+                            else
+                            {
+                                TempData["alerta"] = new Alerta("Error al crear Requisito de Usuario", TipoAlerta.ERROR);
+                            }
+                        }
+                        else
+                        {
+                            TempData["alerta"] = new Alerta("Error al crear Requisito de Usuario", TipoAlerta.ERROR);
+                        }
                     }
                     else
                     {
-                        TempData["alerta"] = new Alerta("Error al crear Requisito de Usuario", TipoAlerta.ERROR);
+                        TempData["alerta"] = new Alerta("El Nombre del Requisito ingresado ya existe dentro del Proyecto", TipoAlerta.ERROR);
                     }
                 }
                 else
                 {
-                    TempData["alerta"] = new Alerta("El Nombre del Requisito ingresado ya existe dentro del Proyecto", TipoAlerta.ERROR);
+                    TempData["alerta"] = new Alerta("El Id del Requisito ingresado ya existe dentro del Proyecto", TipoAlerta.ERROR);
                 }
             }
             else
             {
-                TempData["alerta"] = new Alerta("El Id del Requisito ingresado ya existe dentro del Proyecto", TipoAlerta.ERROR);
+                TempData["alerta"] = new Alerta("No tiene el permiso para Agregar un Requisito.", TipoAlerta.ERROR);
             }
             return RedirectToAction("ListarRequisitosMinimalista", "Proyecto", new { id = Int32.Parse(idProyecto) });
-
         }
         /**
         * 
@@ -1384,43 +1615,64 @@ namespace AppWebERS.Controllers
         [HttpPost]
         public ActionResult AgregarRequisitoDeSoftwareMinimalista( string idRequisitoUsuario, string idRequisito, string nombre, String idProyecto)
         {
-            Requisito nuevoRequisistoS = new Requisito(idRequisito, nombre, string.Empty, string.Empty, string.Empty,
+            int id = Int32.Parse(idProyecto);
+            Proyecto proyecto = this.GetProyecto(id);
+            String idUser;
+            using (var db = ApplicationDbContext.Create())
+            {
+                var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
+                string s = User.Identity.GetUserId();
+                ApplicationUser user = userManager.FindByIdAsync(s).Result;
+                idUser = user.Id;
+            }
+            int rol = proyecto.ObtenerRolDelUsuario(idUser, id);
+
+            if (rol == 0 || rol == 2)
+            {
+                Requisito nuevoRequisistoS = new Requisito(idRequisito, nombre, string.Empty, string.Empty, string.Empty,
                 string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, DateTime.Now.ToString("yyyy-MM-dd"),
                 string.Empty, "SISTEMA");
-            int id = Int32.Parse(idProyecto);
-            if (nuevoRequisistoS.VerificarIdRequisito(id, idRequisito))
-            { 
-                if (nuevoRequisistoS.ValidarNombreRequisito(id, nombre))
+                if (nuevoRequisistoS.VerificarIdRequisito(id, idRequisito))
                 {
-                    if (nuevoRequisistoS.RegistrarRequisitoDeSoftwareMinimalista(Int32.Parse(idProyecto), idRequisitoUsuario, idRequisito))
+                    if (nuevoRequisistoS.ValidarNombreRequisito(id, nombre))
                     {
-                        TempData["alerta"] = new Alerta("Exito al crear Requisito de Sistema", TipoAlerta.SUCCESS);
+                        if (!string.IsNullOrEmpty(nuevoRequisistoS.IdRequisito) && !string.IsNullOrEmpty(nuevoRequisistoS.Nombre) && !string.IsNullOrWhiteSpace(nuevoRequisistoS.IdRequisito) && !string.IsNullOrWhiteSpace(nuevoRequisistoS.Nombre))
+                        {
+                            if (nuevoRequisistoS.RegistrarRequisitoDeSoftware(Int32.Parse(idProyecto), idRequisitoUsuario, idRequisito))
+                            {
+                                TempData["alerta"] = new Alerta("Exito al crear Requisito de Sistema", TipoAlerta.SUCCESS);
+                            }
+                            else
+                            {
+                                TempData["alerta"] = new Alerta("Error al crear Requisito de Sistema", TipoAlerta.ERROR);
+                            }
+                        }
+                        else
+                        {
+                            TempData["alerta"] = new Alerta("Error al crear Requisito de Sistema", TipoAlerta.ERROR);
+                        }
                     }
                     else
                     {
-                        TempData["alerta"] = new Alerta("Error al crear Requisito de Sistema", TipoAlerta.ERROR);
+                        TempData["alerta"] = new Alerta("El Nombre del Requisito ingresado ya existe dentro del Proyecto", TipoAlerta.ERROR);
                     }
                 }
                 else
                 {
-                    TempData["alerta"] = new Alerta("El Nombre del Requisito ingresado ya existe dentro del Proyecto", TipoAlerta.ERROR);
+                    TempData["alerta"] = new Alerta("El Id del Requisito ingresado ya existe dentro del Proyecto", TipoAlerta.ERROR);
                 }
             }
             else
             {
-                TempData["alerta"] = new Alerta("El Id del Requisito ingresado ya existe dentro del Proyecto", TipoAlerta.ERROR);
+                TempData["alerta"] = new Alerta("No tiene el permiso para Agregar un Requisito.", TipoAlerta.ERROR);
             }
             return RedirectToAction("ListarRequisitosMinimalista", "Proyecto", new { id = idProyecto });
         }
 
         public ActionResult ListarDiagramas(int id)
         {
-            Proyecto proyecto = this.GetProyecto(id);
-            var UsuarioActual = User.Identity.GetUserId();
-            ViewData["proyecto"] = proyecto;
-            ViewData["permiso"] = TipoDePermiso(id);
-
-            return View();
+            DiagramaModels model = new DiagramaModels(id, TipoDePermiso(id));
+            return View(model);
         }
 
 

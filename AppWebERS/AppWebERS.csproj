@@ -403,6 +403,7 @@
     <Content Include="Views\Proyecto\ListaActores.cshtml" />
     <Content Include="Views\Proyecto\AgregarActor.cshtml" />
     <Content Include="Views\Proyecto\RequisitoSistema.cshtml" />
+    <Content Include="Views\Proyecto\AsociarRequisitoSistemaExistente.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

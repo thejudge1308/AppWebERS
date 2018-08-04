@@ -1,0 +1,117 @@
+﻿
+@using AppWebERS.Models;
+@model Usuario
+@{
+    ViewBag.Title = "Lista de Actores";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+
+
+@{
+    var ProyectoActual = (Proyecto)ViewData["proyecto"];
+    var TipoUsuario = (int)ViewData["permiso"];
+    var usuarios = (List<Usuario>)ViewData["usuarios"];
+    var solicitudes = (List<SolicitudDeProyecto>)ViewData["solicitudes"];
+    var actores = (List<Actor>)ViewData["actores"];
+}
+
+@if (ProyectoActual != null)
+{
+    <h2>Lista de actores.</h2>
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("Detalles", "Proyecto", new { id = ProyectoActual.IdProyecto })">Detalles</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("ListarRequisitosMinimalista", "Proyecto", new { id = ProyectoActual.IdProyecto })">Requisitos</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("ListarDiagramas", "Proyecto", new { id = ProyectoActual.IdProyecto})">Diagramas</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("ListaUsuarios", "Proyecto", new { id = ProyectoActual.IdProyecto })">Usuarios</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" href="@Url.Action("ListaActores","Proyecto",new { id = ProyectoActual.IdProyecto})">Actores</a>
+        </li>
+
+    </ul>
+
+    <div class="form-group">
+        <div class="col-12">
+            @{
+                if (TipoUsuario != Proyecto.AUTH_COMO_SYSADMIN)
+                {
+                    <a class="btn btn-primary mt-3" href="@Url.Action("AgregarActor", "Proyecto", new { id = ProyectoActual.IdProyecto })">Agregar actor</a>
+                }
+
+            }
+        </div>
+    </div>
+
+                if (actores != null)
+                {
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Descripcion</th>
+                    <th scope="col">Num Actual</th>
+                    <th scope="col">Num Futuro</th>
+                    <th scope="col">Num Contactables</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    var auxiliar = 1;
+                    if (usuarios.Count != 0)
+                    {
+                        foreach (Actor item in (List<Actor>)actores)
+                        {
+
+                            <tr>
+                                <th scope="row">@auxiliar</th>
+                                <td>@item.Nombre</td>
+                                <td>@item.Descripcion</td>
+                                <td>@item.NumActual</td>
+                                <td>@item.NumFuturo</td>
+                                <td>@item.NumContactables</td>
+                            </tr>
+                            ++auxiliar;
+                        }
+                    }
+                }
+            </tbody>
+
+        </table>
+        }
+        else
+        {
+        <div class="jumbotron jumbotron-fluid">
+            <div class="container">
+                <h1>No hay actores en el proyecto</h1>
+            </div>
+        </div>
+        }
+        }
+        else
+        {
+        <div class="jumbotron jumbotron-fluid">
+            <div class="container">
+                <h1>Proyecto no encontrado</h1>
+            </div>
+        </div>
+        }
+
+
+
+        @section scripts{
+            <script type="text/javascript" src="~/Scripts/alertaSolicitud.js"></script>
+        }
+
+
+

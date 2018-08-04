@@ -74,15 +74,11 @@
             @Html.LabelFor(m => m.Estado, new { @class = "col-form-label", style = "margin-right:30px" })
             <div class="col-sm-3">
                 <select id="Estado" name="Estado" class="form-control mx-sm-2">
-                    <option>No Cumple</option>
-                    <option>Cumple</option>
-                </select>
-            </div>
-            @Html.LabelFor(m => m.Tipo, new { @class = "col-form-label" })
-            <div class="col-sm-3">
-                <select id="Tipo" name="Tipo" class="form-control mx-sm-2">
-                    <option>Usuario</option>
-                    <option>Sistema</option>
+                    <option>Pendiente</option>
+                    <option>En Proceso</option>
+					<option>En Pruebas</option>
+					<option>Bloqueado</option>
+					<option>Completado</option>
                 </select>
             </div>
         </div>
@@ -91,8 +87,11 @@
             @Html.LabelFor(m => m.Prioridad, new { @class = "col-form-label", style = "margin-left:15px;margin-right:35px" })
             <div class="col-sm-3">
                 <select id="Prioridad" name="Prioridad" class="form-control mx-sm-2">
-                    <option>Crítica</option>
-                    <option>No Crítica</option>
+                    <option>Crítico</option>
+                    <option>Alto</option>
+					<option>Estándar</option>
+					<option>Bajo</option>
+					<option>Deseable</option>
                 </select>
             </div>
             @Html.LabelFor(m => m.Estabilidad, new { @class = "col-form-label" })
@@ -131,9 +130,11 @@
             @Html.ValidationMessageFor(m => m.Fecha, "", new { @style = "color:rgb(209,52,56); font-size:12px" })
         </div>
         <div>
-            @Html.LabelFor(m => m.Incremento)
-            @Html.TextBoxFor(m => m.Incremento, new { placeholder = "Incremento", @class = "form-control col-form-label" })
-            @Html.ValidationMessageFor(m => m.Incremento, "", new { @style = "color:rgb(209,52,56); font-size:14px" })
+            @Html.HiddenFor(m => m.IncrementoCheck.id, new { @class = "form-check-label", style = "margin-right:5px" })
+            @Html.LabelFor(m => m.IncrementoCheck)
+            @*@Html.TextBoxFor(m => m.Incremento, new { placeholder = "Incremento", @class = "form-control col-form-label" })*@
+            @Html.CheckBoxFor(m => m.IncrementoCheck.isChecked, new { style = "margin-left:8px" })
+            @*@Html.ValidationMessageFor(m => m.Incremento, "", new { @style = "color:rgb(209,52,56); font-size:14px" })*@
         </div>
 
 

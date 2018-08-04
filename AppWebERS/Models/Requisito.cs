@@ -232,6 +232,15 @@ namespace AppWebERS.Models {
         public List<CheckBox> Actores { get; set; }
 
         /**
+        * Setter y Getter del atributo IncrementoCheck
+        * 
+        * <param name = "actores" > La lista de actores involucrados en el requisito.</param>
+        * <returns>Retorna la lista de actores.</returns>
+        * 
+        **/
+        [Display(Name = "Incremento")]
+        public CheckBox IncrementoCheck { get; set; }
+        /**
          * Método para Crear un Requisito
          * <returns>Retorna un boolean que indica el correcto registro del requisito.</returns>
          **/

@@ -965,8 +965,9 @@ namespace AppWebERS.Controllers
                 
                 ViewBag.IdProyecto = id;
                 List<CheckBox> list = obtenerActores(id);
-                Requisito requisito = new Requisito(null, null, null, null, null, null, null, null, null, null, DateTime.Now.ToString("yyyy-MM-dd"), null, null);
+                Requisito requisito = new Requisito(null, null, null, null, null, null, null, null, null, null, DateTime.Now.ToString("yyyy-MM-dd"), "0", null);
                 requisito.Actores = list;
+                requisito.IncrementoCheck = new CheckBox() { nombre = "1", id = "1", isChecked = false };
                 return View(requisito);
             }
             else
@@ -990,6 +991,10 @@ namespace AppWebERS.Controllers
             Requisito requisito = new Requisito(r.IdRequisito, r.Nombre, r.Descripcion, r.Prioridad, r.Fuente, r.Estabilidad, r.Estado
                , r.TipoRequisito, r.Medida, r.Escala, r.Fecha, r.Incremento, r.Tipo);
             List<String> listaa = new List<string>();
+            if (r.IncrementoCheck.isChecked)
+            {
+                requisito.Incremento = "" + (Int32.Parse(r.Incremento) + 1);
+            }
             if (r.Actores != null)
             {
                 for (int i = 0; i < r.Actores.Count; i++)
@@ -1000,6 +1005,7 @@ namespace AppWebERS.Controllers
                     }
                 }
             }
+           
             int id = Int32.Parse(idProyecto);
             if (requisito.VerificarIdRequisito(id, r.IdRequisito))
             {

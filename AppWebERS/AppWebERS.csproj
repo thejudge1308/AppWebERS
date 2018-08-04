@@ -186,6 +186,7 @@
     <Compile Include="Controllers\CuentaController.cs" />
     <Compile Include="Controllers\ActorController.cs" />
     <Compile Include="Controllers\DiagramaController.cs" />
+    <Compile Include="Controllers\HistorialController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\JefeProyectoController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
@@ -402,10 +403,12 @@
     <Content Include="Views\CasoDeUso\UploadFile.cshtml" />
     <Content Include="Views\Proyecto\ListaActores.cshtml" />
     <Content Include="Views\Proyecto\AgregarActor.cshtml" />
+    <Content Include="Views\Proyecto\HistorialCambios.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="UploadedFiles\" />
+    <Folder Include="Views\Historial\" />
     <Folder Include="Views\SolicitudDeProyecto\" />
   </ItemGroup>
   <ItemGroup>

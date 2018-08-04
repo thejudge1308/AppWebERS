@@ -214,7 +214,6 @@
     <Compile Include="Models\CasoDeUso.cs" />
     <Compile Include="Models\ConectorBD.cs" />
     <Compile Include="Models\DiagramaModels.cs" />
-    <Compile Include="Models\HistorialModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\CuentasViewModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />

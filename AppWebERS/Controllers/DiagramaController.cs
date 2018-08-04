@@ -81,7 +81,7 @@ namespace AppWebERS.Controllers{
                                 if (this.ValidarNombreNoRepetido(nombre)==true)
                                 {
                                     Debug.Write("nombre no repedito");
-                                    this.agregar(nombre, id, _path, tipoDeDiagrama);
+                                    this.agregar(nombre, id, "../../UploadedFiles/" +_FileName, tipoDeDiagrama);
                                     file.SaveAs(_path);
                                     TempData["alerta"] = new Alerta("Diagrama subido con éxito!!", TipoAlerta.SUCCESS);
                                     ViewBag.Message = "Diagrama subido con éxito!!";

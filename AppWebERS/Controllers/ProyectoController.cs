@@ -1104,7 +1104,8 @@ namespace AppWebERS.Controllers
           * Action GET que usa la vista Requisito para asociar un requisito de sistema existente a un requisito de usuario.
           * </summary>
           * <param name="id">id correspondiente al Proyecto Actual.</param>
-          * <param name="idRequisitoUsuario">id del requisito de usuario que se vincula al requisito de sistema que se desea crear.</param>
+          * <param name="idRequisitoSistema">id del requisito de sistema que se vincula al requisito de usuario que se desea asociar.</param>
+          * <param name="idRequisitoUsuario">id del requisito de usuario que se vincula al requisito de sistema que se desea asociar.</param>
           * <returns> Redireccion a la ventana ListarRequisitosMinimalista si el usuario Cumple con los permisos.
           * Redirreciona al index si el usuario no tiene los permisos para entrar a la vista.</returns>
           */
@@ -1125,8 +1126,16 @@ namespace AppWebERS.Controllers
             if (permiso == 0 || permiso == 2)
             {
                 Requisito req = new Requisito();
-                req.AsociarRequisitoDeSoftware(idProyecto, idRequisitoUsuario, idRequisitoSistema);
-                return RedirectToAction("ListarRequisitosMinimalista/" + idProyecto, "Proyecto");
+                if (req.AsociarRequisitoDeSoftware(idProyecto, idRequisitoUsuario, idRequisitoSistema))
+                {
+                    TempData["alerta"] = new Alerta("Éxito al asociar Requisito de Sistema.", TipoAlerta.SUCCESS);
+                    return RedirectToAction("ListarRequisitosMinimalista/" + idProyecto, "Proyecto");
+                }
+                else
+                {
+                    TempData["alerta"] = new Alerta("Error al asociar Requisito de Sistema.", TipoAlerta.ERROR);
+                    return RedirectToAction("AsociarRequisitoSistemaExistente", "Proyecto", new { id = idProyecto , idRequisito = idRequisitoUsuario});
+                }
             }
             else
             {

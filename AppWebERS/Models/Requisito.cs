@@ -395,7 +395,7 @@ namespace AppWebERS.Models {
          * <summary>Metodo para registrar un requisito de software en la base de datos.</summary>
          * <param name="idProyecto">Id del proyecto al que pertenece el proyecto.</param>
          * <param name="idRequisitoSistema">Id del requisito de sistema que se desea agregar.</param>
-         * <param name="idRequisitoUsuario">Id del requisito de usuario al que se asocia el requisito de usuario.</param>
+         * <param name="idRequisitoUsuario">Id del requisito de usuario al que se asocia el requisito de sistema.</param>
          * <returns>True si se registra exitosamente, false si falla el registro.</returns>
          */ 
         public bool RegistrarRequisitoDeSoftware(int idProyecto, string idRequisitoUsuario, string idRequisitoSistema)
@@ -421,6 +421,35 @@ namespace AppWebERS.Models {
                         }
                     }
 
+                }
+            }
+            return false;
+        }
+
+        /**
+         * 
+         * <autor>Diego Iturriaga</autor>
+         * <summary>Metodo para asociar un requisito de software en la tabla asociacion de la base de datos.</summary>
+         * <param name="idProyecto">Id del proyecto al que pertenece el proyecto.</param>
+         * <param name="idRequisitoSistema">Id del requisito de sistema que se desea asociar.</param>
+         * <param name="idRequisitoUsuario">Id del requisito de usuario al que se asocia el requisito de sistema.</param>
+         * <returns>True si se registra exitosamente, false si falla el registro.</returns>
+         */
+        public bool AsociarRequisitoDeSoftware(int idProyecto, string idRequisitoUsuario, string idRequisitoSistema)
+        {
+            if (!string.IsNullOrEmpty(idRequisitoUsuario) && !string.IsNullOrEmpty(idRequisitoSistema))
+            {
+                ApplicationDbContext conexionLocal = ApplicationDbContext.Create();
+                
+                int num_requisitoUsuario = this.ObtenerNumRequisito(idProyecto, idRequisitoUsuario);
+                int num_requisitoSistema = this.ObtenerNumRequisito(idProyecto, idRequisitoSistema);
+                if (num_requisitoSistema != -1 && num_requisitoUsuario != -1)
+                {
+                    string consultaInsert2 = "INSERT INTO asociacion(req_usuario, req_software) VALUES(" + num_requisitoUsuario + "," + num_requisitoSistema + ");";
+                    if (conexionLocal.RealizarConsultaNoQuery(consultaInsert2))
+                    {
+                        return true;
+                    }
                 }
             }
             return false;
@@ -481,11 +510,11 @@ namespace AppWebERS.Models {
         /**
          * <author>Roberto Ureta</author>
          * <summary>
-         * Obtiene una lista de requisitos de sistema que le corresponden a un requisito de usuario especifico.
+         * Obtiene una lista de requisitos de sistema que le corresponden a un proyecto.
          * </summary>
          * <param name="id">entero que contiene el id de un proyecto</param>
          * <param name="idRequisito">string que contiene el id de un requisito de usuario</param>
-         * <returns> lista con los requisitos de sistema correspondientes a un requisito de usuario.</returns>
+         * <returns> lista con los requisitos de sistema correspondientes a un proyecto.</returns>
          */
         public List<Requisito> ObtenerListaRequisitosSistema(int id, int idRequisito)
         {
@@ -517,6 +546,49 @@ namespace AppWebERS.Models {
                     listaRequisitos.Add(requisitoSistema);
                 }
             }            
+            conexion1.EnsureConnectionClosed();
+            return listaRequisitos.OrderBy(requisito => requisito.IdRequisito).ToList();
+        }
+
+        /**
+         * <author>Roberto Ureta</author>
+         * <summary>
+         * Obtiene una lista de requisitos de sistema que le corresponden a un requisito de usuario especifico.
+         * </summary>
+         * <param name="id">entero que contiene el id de un proyecto</param>
+         * <param name="idRequisito">string que contiene el id de un requisito de usuario</param>
+         * <returns> lista con los requisitos de sistema correspondientes a un requisito de usuario.</returns>
+         */
+        public List<Requisito> ObtenerListaRequisitosSistemaAsociadosProyecto(int id, int idRequisito)
+        {
+            List<Requisito> listaRequisitos = new List<Requisito>();
+            ApplicationDbContext conexion1 = ApplicationDbContext.Create();
+            string nombre = String.Empty;
+            string consulta = "SELECT requisito.* FROM requisito WHERE requisito.ref_proyecto ="+id+" AND requisito.id_requisito NOT IN (SELECT asociacion.req_software FROM asociacion WHERE asociacion.req_usuario ="+idRequisito+");";
+            MySqlDataReader reader = conexion1.RealizarConsulta(consulta);
+            if (reader != null)
+            {
+                while (reader.Read())
+                {
+                    Requisito requisitoSistema = new Requisito()
+                    {
+                        IdRequisito = reader["id_requisito"].ToString(),
+                        Nombre = reader["nombre"].ToString(),
+                        Descripcion = reader["descripcion"].ToString(),
+                        Prioridad = reader["prioridad"].ToString(),
+                        Fuente = reader["fuente"].ToString(),
+                        Estabilidad = reader["estabilidad"].ToString(),
+                        Estado = reader["estado"].ToString(),
+                        TipoRequisito = reader["categoria"].ToString(),
+                        Medida = reader["medida"].ToString(),
+                        Escala = reader["escala"].ToString(),
+                        Fecha = reader["fecha_actualizacion"].ToString(),
+                        Incremento = reader["incremento"].ToString(),
+                        Tipo = reader["tipo"].ToString()
+                    };
+                    listaRequisitos.Add(requisitoSistema);
+                }
+            }
             conexion1.EnsureConnectionClosed();
             return listaRequisitos.OrderBy(requisito => requisito.IdRequisito).ToList();
         }

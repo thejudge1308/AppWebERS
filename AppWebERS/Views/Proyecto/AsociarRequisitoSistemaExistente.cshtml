@@ -14,7 +14,7 @@
         {
             <div class="card-body table-responsive">
                 <table class="table">
-                    <thead class="thead-dark">
+                    <thead >
                         <tr class="text-center">
                             <th scope="col">ID</th>
                             <th scope="col">Nombre De Requisito</th>
@@ -28,7 +28,8 @@
                                 <td data-info="info">@requisito.IdRequisito</td><!-- Reemplazar por como quiera que le pongan en el foreach a la variable. Ej: (arroba)Item.Nombre -->
                                 <td data-info="info">@requisito.Nombre</td>
                                 <td>
-                                    @Html.ActionLink("Asociar  Requisito", "AsociarRequisitoSistemaExistente2", new { idRequisitoSistema = requisito.IdRequisito, idProyecto = @ViewBag.idProyecto ,idRequisitoUsuario = @ViewBag.idReqUsuario}, new { @class = "btn btn-secondary", id = "btnModificar", type = "button" })
+                                    <a class="btn btn-primary" href="@Url.Action("AsociarRequisitoSistemaExistente2","Proyecto",new { idRequisitoSistema = requisito.IdRequisito, idProyecto = @ViewBag.idProyecto, idRequisitoUsuario = @ViewBag.idReqUsuario})">Asociar Requisito</a>
+                                   @* @Html.ActionLink("Asociar  Requisito", "AsociarRequisitoSistemaExistente2", new { idRequisitoSistema = requisito.IdRequisito, idProyecto = @ViewBag.idProyecto, idRequisitoUsuario = @ViewBag.idReqUsuario }, new { @class = "btn btn-secondary", id = "btnModificar", type = "button" })*@
                                 </td>
                             </tr>
                         }
@@ -48,7 +49,8 @@
         <div class="form-group">
             <div class="col-md-offset-2 col-md-9">
 
-                @Html.ActionLink("Regresar", "ListarRequisitosMinimalista", new { id = @ViewBag.idProyecto }, new { @class = "btn btn-secondary", id = "btnModificar", type = "button" })
+                <a class="btn btn-primary" href="@Url.Action("ListarRequisitosMinalista","Proyecto",new { id = @ViewBag.idProyecto})">Regresar</a>
+               @* @Html.ActionLink("Regresar", "ListarRequisitosMinimalista", new { id = @ViewBag.idProyecto }, new { @class = "btn btn-secondary", id = "btnModificar", type = "button" })*@
             </div>
         </div>
 

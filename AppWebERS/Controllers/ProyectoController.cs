@@ -219,22 +219,65 @@ namespace AppWebERS.Controllers
         }
 
         public FileResult ExportarPDF(int id) {
+
+
+            FileResult fileResult = null;
+            var generator = new NReco.PdfGenerator.HtmlToPdfConverter();
             Proyecto proyecto = this.GetProyecto(id);
 
-            string fecha =  DateTime.Now.ToString();
 
-            string html = "<html> <head> <style> body { margin: 2cm; } .logo { font-size: 40px; font-weigth: bold; } .titulo { text-align: center; margin-top: 30px;margin-bottom: 30px; } .fecha { margin-left: 100px; } .espacio-izq { margin-left: 50px; } table td{ font-size: 18px; } </style> </head> <body> <table> <tr> <td class=\"logo\">AppWebERS</td> <td </tr> </table> <hr> <p class=\"fecha\">Fecha: " + fecha + "</p> <hr> <h1 class=\"titulo\">Detalles de proyecto</h1> <table class=\"espacio - izq\"> <tr> <td>Nombre proyecto</td> <td>: " + proyecto.Nombre + "</td> </tr> <tr> <td>Proposito</td> <td>: " + proyecto.Proposito + "</td> </tr> <tr> <td>Alcance</td> <td>: " + proyecto.Alcance + "</td> </tr> <tr> <td>Contexto</td> <td>: " + proyecto.Contexto + "</td> </tr> <tr> <td>Definiciones</td> <td>: " + proyecto.Definiciones + "</td> </tr> <tr> <td>Acronimos</td> <td>: " + proyecto.Acronimos + "</td> </tr> <tr> <td>Abreviaturas</td> <td>: " + proyecto.Abreviaturas + "</td> </tr> <tr> <td>Referencias</td> <td>: " + proyecto.Referencias + "</td> </tr> <tr> <td>Ambiente operacional</td> <td>: " + proyecto.AmbienteOperacional + "</td> </tr> <tr> <td>Relacion con otros proyectos</td> <td>: " + proyecto.RelacionProyectos + "</td> </tr> </table> ";
+
+            string fecha = DateTime.Now.ToString();
+            string htmlContent = "<html>  <head> <style> body { margin: 2cm; } .logo { font-size: 40px; font-weigth: bold; } .titulo { text-align: center; margin-top: 30px;margin-bottom: 30px; } .fecha { margin-left: 100px; } .espacio-izq { margin-left: 50px; } table td{ font-size: 18px; } </style> </head> <body> <meta charset=\"UTF-8\" /> <table> <tr> <td class=\"logo\">AppWebERS</td> <td </tr> </table> <hr> <p class=\"fecha\">Fecha: " + fecha + "</p> <hr> <h1 class=\"titulo\"> 1) Detalles del proyecto</h1> " +
+
+                
+
+                "<table> " +
+                "<tr> <td> <strong style=\"font-size: 20px; \" > 1.1) Nombre </strong> <br><br> </td></tr> " +
+                "<tr> <td>" + proyecto.Nombre + "</td> </tr> " +
+
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.2) Propósito </strong> <br><br> </td></tr> " +
+                "<tr> <td>" + proyecto.Proposito + "</td> </tr> " +
+
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.3) Alcance </strong> <br><br> </td></tr> " +
+                "<tr> <td>" + proyecto.Alcance + "</td> </tr> " +
+
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.4) Contexto </strong> <br><br> </td></tr> " +
+                "<tr> <td>" + proyecto.Contexto + "</td> </tr> " +
+
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.5) Definiciones </strong> <br><br> </td></tr> " +
+                "<tr> <td>" + proyecto.Definiciones + "</td> </tr> " +
+
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.6) Acrónimos </strong> <br><br> </td></tr> " +
+                "<tr> <td>" + proyecto.Acronimos + "</td> </tr> " +
+
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.7) Abreviaturas </strong> <br><br> </td></tr> " +
+                "<tr> <td>" + proyecto.Abreviaturas + "</td> </tr> " +
+
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.8) Referencias </strong> <br><br> </td></tr> " +
+                "<tr> <td>" + proyecto.Referencias + "</td> </tr> " +
+
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.9) Ambiente Operacional </strong> <br><br> </td></tr> " +
+                "<tr> <td>" + proyecto.AmbienteOperacional + "</td> </tr> " +
+
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.10) Relación con otros proyectos </strong> <br><br> </td></tr> " +
+                "<tr> <td>" + proyecto.RelacionProyectos + "</td> </tr> " +
+                "</table> ";
             string minimalista = this.AgregarListadoMinimalista(id);
-
-
             string final = " </body> </html>";
-            html = html + minimalista + final;
-            var htmlToPdf = new NReco.PdfGenerator.HtmlToPdfConverter();
-            var pdfBytes = htmlToPdf.GeneratePdf(html);
-            MemoryStream ms = new MemoryStream(pdfBytes);
-           
+            htmlContent = htmlContent + minimalista + final;
 
-            return File(ms, "application/pdf"); ;
+            string filename = fecha+".pdf";
+
+            generator.Orientation = NReco.PdfGenerator.PageOrientation.Default;
+
+            var pdfBytes = generator.GeneratePdf(htmlContent);
+
+            HttpContext.Response.ContentEncoding = System.Text.Encoding.UTF8;
+            fileResult = new FileContentResult(pdfBytes, "application/pdf");
+            fileResult.FileDownloadName = filename;
+
+            return fileResult;
         }
 
         /**
@@ -245,9 +288,9 @@ namespace AppWebERS.Controllers
          * <returns>El html con los requisitos dentro.</returns>
          */
 
-        private string AgregarListadoMinimalista(int idp) {
+            private string AgregarListadoMinimalista(int idp) {
 
-            string s = "<h1 class=\"titulo\" >Listado de requisitos</h1> <table class=\"espacio - izq\">  </table>";
+            string s = "<h1 class=\"titulo\" > 2) Listado de requisitos</h1> <table class=\"espacio - izq\">  </table>";
             
             MySqlDataReader reader;
             string consulta = "select * from requisito where requisito.ref_proyecto = " + idp;

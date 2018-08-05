@@ -264,6 +264,42 @@ namespace AppWebERS.Controllers
             }
         }
 
+        public List<Requisito> ObtenerTarjetas(int idProyecto)
+        {
+            List<Requisito> listaRequisitos = new List<Requisito>();
+            ApplicationDbContext conexionPrivada = ApplicationDbContext.Create();
+            string consulta = "SELECT requisito.id_requisito, requisito.nombre, requisito.descripcion, requisito.fuente, requisito.categoria, requisito.prioridad, requisito.estabilidad, requisito.estado, requisito.medida, requisito.escala, requisito.incremento, requisito.fecha_actualizacion, requisito.tipo, actor.nombre  FROM requisito, vinculo_actor_requisito, actor WHERE requisito.id_requisito = vinculo_actor_requisito.ref_req AND vinculo_actor_requisito.ref_actor = actor.id_actor AND " + idProyecto + " = requisito.ref_proyecto";
+            MySqlDataReader reader = conexionPrivada.RealizarConsulta(consulta);
+
+            if (reader != null)
+            {
+                while (reader.Read())
+                {
+                    Requisito requisitoTarjeta = new Requisito()
+                    {
+                        IdRequisito = reader["id_requisito"].ToString(),
+                        Nombre = reader["nombre"].ToString(),
+                        Descripcion = reader["descripcion"].ToString(),
+                        Prioridad = reader["prioridad"].ToString(),
+                        Fuente = reader["fuente"].ToString(),
+                        Estabilidad = reader["estabilidad"].ToString(),
+                        Estado = reader["estado"].ToString(),
+                        TipoRequisito = reader["categoria"].ToString(),
+                        Medida = reader["medida"].ToString(),
+                        Escala = reader["escala"].ToString(),
+                        Fecha = reader["fecha_actualizacion"].ToString(),
+                        Incremento = reader["incremento"].ToString(),
+                        Tipo = reader["tipo"].ToString()
+                    };
+                    listaRequisitos.Add(requisitoTarjeta);
+
+                    
+                }
+            }
+            conexionPrivada.EnsureConnectionClosed();
+            return listaRequisitos;
+        }
+
        
         public ActionResult AgregarActor(int id) {
             Console.WriteLine("id : " + id);

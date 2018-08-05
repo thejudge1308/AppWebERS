@@ -300,6 +300,31 @@ namespace AppWebERS.Models {
 
             
         }
+        /**
+         * <author>Raimundo Vásquez</author>/author>
+         * <summary>
+         * Metodo que realiza la consulta UPDATE en la base de datos para modificar el proyecto
+         * </summary>
+         * <param name="r">Requisito actual que se esta modificando del cual obtendremos los campos para las columnas en la tabla requisito</param>
+         * <param name="id">ID  del proyecto actual en  el que se esta modificando el requisito</param>
+         * <param name="num_requisito">numero real del requisito que estamos editando</param>
+         * <returns> Redireccion a la ventana Detalles</returns>
+         */
+        public bool ActualizarRequisito(Requisito r,int id,int num_requisito)
+        {
+          
+            string update = "START TRANSACTION;"+
+                "UPDATE requisito SET id_requisito = '" + r.IdRequisito + "', nombre = '" + r.Nombre + "', descripcion = '" + r.Descripcion +"',"
+                + "prioridad = '"+r.Prioridad + "', fuente = '" + r.Fuente + "', estabilidad = '"+ r.Estabilidad + "', fecha_actualizacion ='" + r.Fecha + "', "
+                + "incremento = '" + r.Incremento +"', tipo = '" + r.Tipo +"' WHERE num_requisito =" +num_requisito +" AND  ref_proyecto ='" +id+ "'; "+
+                "COMMIT;";
+            ApplicationDbContext con = ApplicationDbContext.Create();
+            if (con.RealizarConsultaNoQuery(update))
+            {
+                return true;
+            }
+            return false;
+        }
 
 
         public bool registrarActor(string actor, string id)

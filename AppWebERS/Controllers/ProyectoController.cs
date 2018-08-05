@@ -974,7 +974,76 @@ namespace AppWebERS.Controllers
                 return RedirectToAction("Index", "Home");
             }
         }
+        /**
+          * <author>Raimundo Vásquez</author>
+          * <summary>
+          * POST que actualiza en la base de datos el requisito seleccionado para editar
+          * </summary>
+          * <param name="id">id correspondiente al Proyecto Actual.</param>
+          * <param name="num_requisito">id correspondiente al requisito que queremos modificar.</param>
+          * <returns> View de tarjeta volere para editar el requisito</returns>
+          */
+        [HttpGet]
+        public ActionResult EditarRequisito(int id,int num_requisito)
+        {
+            Requisito requisito = this.obtenerRequisito(id,num_requisito);
+            ViewData["requisito"] = requisito;
+            List<CheckBox> list = obtenerActores(id);
+            this.obtenerActoresAsociados(num_requisito, list);
+            requisito.Actores = list;
+            ViewBag.IdProyecto = id;
+            ViewBag.numRequisito = num_requisito;
+            return View(requisito);
+        }
+        /**
+          * <author>Raimundo Vásquez</author>
+          * <summary>
+          * POST que actualiza en la base de datos el requisito seleccionado para editar
+          * </summary>
+          * <param name="r">requisito que tiene todos los valores ingresados en la vista.</param>
+          * <param name="idProyecto">id del proyecto al cual esta asociado el requisito</param>
+          * <param name="num_requisito"> id del requisito que estamos editando</param>
+          * <returns> Redireccion a la ventana Requisito si el usuario Cumple con los permisos.
+          * Redirreciona al index si el usuario no tiene los permisos para entrar a la vista.</returns>
+          */
 
+        [HttpPost]
+        public ActionResult EditarRequisito(Requisito r, string idProyecto,string num_requisito)
+        {
+            Requisito requisito = new Requisito(r.IdRequisito, r.Nombre, r.Descripcion, r.Prioridad, r.Fuente, r.Estabilidad, r.Estado
+               , r.TipoRequisito, r.Medida, r.Escala, r.Fecha, r.Incremento, r.Tipo);
+            List<String> listaa = new List<string>();
+            if (r.Actores != null)
+            {
+                for (int i = 0; i < r.Actores.Count; i++)
+                {
+                    if (r.Actores[i].isChecked)
+                    {
+                        listaa.Add(r.Actores[i].id);
+                    }
+                }
+            }
+            int id = Int32.Parse(idProyecto);
+            int num = Int32.Parse(num_requisito);
+            bool validate = requisito.ActualizarRequisito(requisito,id,num);
+            if (validate)
+            {
+                foreach (var actor in listaa)
+                {
+                    if (!r.registrarActor(actor, num_requisito.ToString()))
+                    {
+                        TempData["alerta"] = new Alerta("!!!!!", TipoAlerta.SUCCESS);
+                    }
+                }
+                TempData["alerta"] = new Alerta("Éxito al editar Requisito.", TipoAlerta.SUCCESS);
+                return RedirectToAction("ListarRequisitosMinimalista", "Proyecto", new { id = idProyecto });
+            }
+            else
+            {
+                TempData["alerta"] = new Alerta("ERROR al editar Requisito.", TipoAlerta.ERROR);
+            }
+            return RedirectToAction("ListarRequisitosMinimalista", "Proyecto", new { id = idProyecto });
+        }
         //ATENCION: FORMTATO FECHA: AAAA-MM-DD
         /**
           * <author>Diego Iturriaga</author>
@@ -1037,6 +1106,7 @@ namespace AppWebERS.Controllers
             return RedirectToAction("Requisito/" + id, "Proyecto");
         }
 
+        
 
         /*
        * Autor Fabian Oyarce
@@ -1256,6 +1326,31 @@ namespace AppWebERS.Controllers
             return l;
         }
 
+        /**
+         * <author>Raimundo Vásquez</author>
+         * <summary>
+         * Este método se encarga , a partir de la lista de actores del proyecto, identificar cuales ya estan asociados a este proyecto
+         * * </summary>
+         * <param name="num_requisito">id del requisito que buscamos en vinculo_Actor_requisito</param>
+         * <param name="actores">lista de los actores asociados al proyecto</param>
+         * 
+         */
+        private void obtenerActoresAsociados( int num_requisito,List<CheckBox> actores)
+        {
+            List<CheckBox> l = new List<CheckBox>();
+            ApplicationDbContext con = ApplicationDbContext.Create();
+            foreach ( var actor in actores)
+            {
+                string select = "SELECT * from vinculo_actor_requisito WHERE ref_actor = '" + actor.id + "' AND ref_req = '" + num_requisito + "'";
+                MySqlDataReader reader = con.RealizarConsulta(select);
+                if (reader != null)
+                {
+                    actor.isChecked = true;
+                }
+                con.EnsureConnectionClosed();
+            }
+        }
+
         private List<Referencia> ObtenerReferencias(int id)
         {
             List<Referencia> lista = new List<Referencia>();
@@ -1419,7 +1514,40 @@ namespace AppWebERS.Controllers
             return View(model);
         }
 
+        /**
+          <autor> Raimundo Vasquez</autor>
+        * <summary>Metodo para obtener un id según proyecto y numero ( autoincremental en bd) del requisito</summary>
+        * <param name="id">Id del proyecto al que pertenece el requisito.</param>
+        * <param name="num_requisito">Id del requisito de sistema que se desea editar.</param>
+        * <returns>Objeto con los valores del requisito que se desea editar.</returns>
+        */
 
+        private Requisito obtenerRequisito(int id,int num_requisito)
+        {
+            Requisito r = new Requisito();
+
+            string consulta = "SELECT * FROM requisito WHERE ref_proyecto = '" + id + "' AND " +
+                "num_requisito = " + num_requisito;
+            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
+            if(reader != null)
+            {
+                reader.Read();
+                r.IdRequisito = reader["id_requisito"].ToString();
+                r.Nombre = reader["nombre"].ToString();
+                r.Descripcion = reader["descripcion"].ToString();
+                r.Prioridad = reader["prioridad"].ToString();
+                r.Fuente = reader["fuente"].ToString();
+                r.Estabilidad = reader["estabilidad"].ToString();
+                r.Estado = reader["estado"].ToString();
+                r.TipoRequisito = reader["categoria"].ToString();
+                r.Medida = reader["medida"].ToString();
+                r.Escala = reader["escala"].ToString();
+                r.Fecha = DateTime.Now.ToString("yyyy-MM-dd");
+                r.Incremento = reader["incremento"].ToString();
+                r.Tipo = reader["tipo"].ToString();
+            }
+            return r;
+        }
     }
 
    

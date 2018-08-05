@@ -1,27 +1,29 @@
 ﻿@model AppWebERS.Models.DiagramaModels
 @{
-    
+
     ViewBag.Title = "Diagramas";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var ProyectoActual = Model.IdProyecto;
+    //var TipoUsuario = (int)ViewData["permiso"];
 }
 
 
 <h2>Diagramas</h2>
 <ul class="nav nav-tabs">
     <li class="nav-item">
-        <a class="nav-link" href="@Url.Action("Detalles", "Proyecto", new { id = ProyectoActual.IdProyecto })">Detalles</a>
+        <a class="nav-link" href="@Url.Action("Detalles", "Proyecto", new { id = ProyectoActual })">Detalles</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="@Url.Action("ListarRequisitosMinimalista", "Proyecto", new { id = ProyectoActual.IdProyecto })">Requisitos</a>
+        <a class="nav-link" href="@Url.Action("ListarRequisitosMinimalista", "Proyecto", new { id = ProyectoActual })">Requisitos</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link active" href="@Url.Action("ListarDiagramas", "Proyecto", new { id = ProyectoActual.IdProyecto})">Diagramas</a>
+        <a class="nav-link active" href="@Url.Action("ListarDiagramas", "Proyecto", new { id = ProyectoActual})">Diagramas</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="@Url.Action("ListaUsuarios", "Proyecto", new { id = ProyectoActual.IdProyecto })">Usuarios</a>
+        <a class="nav-link" href="@Url.Action("ListaUsuarios", "Proyecto", new { id = ProyectoActual })">Usuarios</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="@Url.Action("ListaActores","Proyecto",new { id = ProyectoActual.IdProyecto})">Actores</a>
+        <a class="nav-link" href="@Url.Action("ListaActores","Proyecto",new { id = ProyectoActual})">Actores</a>
     </li>
 </ul>
 
@@ -29,96 +31,180 @@
 
 <a href="../../Diagrama/SubirDiagrama/@Model.IdProyecto" class="btn btn-primary w-auto">Agregar diagrama</a>
 
-<div>
+<div class="row">
     @if (Model.urlsCasosDeUso != null)
     {
+
         if (Model.urlsCasosDeUso.Count > 0)
         {
             if (Model.urlsCasosDeUso.Count == 1)
             {
-                <h3 style="margin-top:20px;margin-bottom:20px">Diagrama Caso de Uso</h3>
+                <div class="row w-100">
+                    <h3 style="margin-top:20px;margin-bottom:20px">Diagrama Caso de Uso</h3>
+                </div>
             }
             else
-            {<h3 style="margin-top:20px;margin-bottom:20px">Diagramas de Casos de Uso</h3> }
+            {
 
-            <div class="card-deck">
-                @foreach (var im in Model.urlsCasosDeUso)
-                {
-                    <div class="card">
-                        <div class="card-header">
-                            @Html.Label(im.nombre)
-                        </div>
-                        <div class="card-body">
-                            <img src=@im.url alt="Card image cap" style="height:auto;width:100%" />
-                        </div>
-                    </div>
-                }
-            </div>
+                <div class="row w-100">
+                    <h3 style="margin-top:20px;margin-bottom:20px">Diagrama Caso de Uso</h3>
+                </div>
+            }
+
+          <div class="row w-100">
+              <div class="col-4">
+                  @foreach (var im in Model.urlsCasosDeUso)
+                  {
+                      <div class="card">
+                          <div class="card-header">
+                              @Html.Label(im.nombre)
+                          </div>
+                          <div class="card-body">
+                              <img src=@im.url alt="Card image cap" style="height:auto;width:100%" />
+                          </div>
+                          <div class="card-footer">
+
+                              <a href="#@im.GetHashCode()" class="btn btn-primary" data-toggle="modal" data-target="#@im.GetHashCode()">Ampliar</a>
+                          </div>
+                      </div>
+
+                      <div class="modal mt-5 mx-auto w-100" id=@im.GetHashCode() tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="true" style="overflow: scroll;">
+                          <div class="modal-dialog-centered">
+
+                              <div class="modal-body float-right pl-5 w-100">
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <h1 aria-hidden="true">&times;</h1>
+                                  </button>
+                                  <div class="container float-right pl-2">
+                                      <div class="row justify-content-center">
+                                          <img src=@im.url alt="Card image cap">
+                                      </div>
+                                  </div>
+
+                              </div>
+                          </div>
+                      </div>
+                  }
+              </div>
+        </div>
         }
     }
 </div>
-<div>
+    
+<div class="row">
     @if (Model.urlsaArquiFisica != null)
     {
+
         if (Model.urlsaArquiFisica.Count > 0)
         {
-            if (Model.urlsaArquiFisica.Count == 1) {<h3 style="margin-top:20px;margin-bottom:20px">Diagrama Arquitectura Física</h3> }
-            else {<h3 style="margin-top:20px;margin-bottom:20px">Diagramas Arquitectura Física</h3> }
+            if (Model.urlsaArquiFisica.Count == 1)
+            {
+                <div class="row w-100">
+                    <h3 style="margin-top:20px;margin-bottom:20px">Diagrama Arquitectura Física</h3>
+                </div>
+            }
+            else
+            {<div class="row w-100">
+                    <h3 style="margin-top:20px;margin-bottom:20px">Diagrama Arquitectura Física</h3>
+                </div>
+            }
             
-            <div class="card-deck">
-                @foreach (var im in Model.urlsaArquiFisica)
-                {
-                    <div class="card">
-                        <div class="card-header">
-                            @Html.Label(im.nombre)
+      
+                <div class="col-4">
+                    @foreach (var im in Model.urlsaArquiFisica)
+                    {
+                        <div class="card d-inline-flex">
+                            <div class="card-header">
+                                @Html.Label(im.nombre)
+                            </div>
+                            <div class="card-body">
+                                <img src=@im.url alt="Card image cap" style="height:auto;width:100%" />
+                            </div>
+                            <div class="card-footer">
+
+                                <a href="#@im.GetHashCode()" class="btn btn-primary" data-toggle="modal" data-target="#@im.GetHashCode()">Ampliar</a>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <img src=@im.url alt="Card image cap" style="height:auto;width:100%" />
+                        <div class="modal mt-5 mx-auto w-100" id=@im.GetHashCode() tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="true" style="overflow: scroll;">
+                            <div class="modal-dialog-centered">
+
+                                <div class="modal-body float-right pl-5 w-100">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <h1 aria-hidden="true">&times;</h1>
+                                    </button>
+                                    <div class="container float-right pl-2">
+                                        <div class="row justify-content-center">
+                                            <img src=@im.url alt="Card image cap">
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                }
-            </div>
+                    }
+                </div>
+            }
         }
-    }
-</div>
-<div>
+    </div>
+    
+<div class="row">
     @if (Model.urlsArquiLogica != null)
     {
+
         if (Model.urlsArquiLogica.Count > 0)
         {
-            if (Model.urlsArquiLogica.Count ==1) {<h3 style="margin-top:20px;margin-bottom:20px">Diagrama Arquitectura Lógica</h3> }
-            else { <h3 style="margin-top:20px;margin-bottom:20px">Diagramas Arquitectura Lógica</h3>}
-            
-            <div class="card-deck">
+            if (Model.urlsArquiLogica.Count == 1)
+            {
+                <div class="row w-100">
+                    <h3 style="margin-top:20px;margin-bottom:20px">Diagrama Arquitectura Lógica</h3>
+                    <
+                </div>
+            }
+            else
+            {
+                <div class="row w-100">
+                    <h3 style="margin-top:20px;margin-bottom:20px">Diagramas Arquitectura Lógica</h3>
+                </div>
+            }
+        
+            <div class="col-4">
                 @foreach (var im in Model.urlsArquiLogica)
                 {
-                    <div class="card">
+                    <div class="card d-inline-flex">
                         <div class="card-header">
                             @Html.Label(im.nombre)
                         </div>
                         <div class="card-body">
                             <img src=@im.url alt="Card image cap" style="height:auto;width:100%" />
                         </div>
+                        <div class="card-footer">
+
+                            <a href="#@im.GetHashCode()" class="btn btn-primary" data-toggle="modal" data-target="#@im.GetHashCode()">Ampliar</a>
+                        </div>
                     </div>
+                    <div class="modal mt-5 mx-auto w-100" id=@im.GetHashCode() tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="true" style="overflow: scroll;">
+                        <div class="modal-dialog-centered">
+
+                            <div class="modal-body float-right pl-5 w-100">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <h1 aria-hidden="true">&times;</h1>
+                                </button>
+                                <div class="container float-right pl-2">
+                                    <div class="row justify-content-center">
+                                        <img src=@im.url alt="Card image cap">
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
                 }
             </div>
         }
     }
 </div>
 
-<div class="modal mt-5 mx-auto w-100" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="true" style="overflow: scroll;">
-    <div class="modal-dialog-centered">
-       
-        <div class="modal-body float-right pl-5 w-100">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <h1 aria-hidden="true">&times;</h1>
-            </button>
-            <div class="container float-right pl-2">
-                <div class="row justify-content-center">
-                    <img src="http://www.abiztar.com.mx/articulos/imagenes/caso_de_abuso.gif" alt="Card image cap">
-                </div>
-            </div>
 
-        </div>
-    </div>
-    </div>
+

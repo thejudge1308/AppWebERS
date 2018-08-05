@@ -989,6 +989,7 @@ namespace AppWebERS.Controllers
             Requisito requisito = this.obtenerRequisito(id,num_requisito);
             ViewData["requisito"] = requisito;
             List<CheckBox> list = obtenerActores(id);
+            this.obtenerActoresAsociados(num_requisito, list);
             requisito.Actores = list;
             ViewBag.IdProyecto = id;
             ViewBag.numRequisito = num_requisito;
@@ -999,7 +1000,9 @@ namespace AppWebERS.Controllers
           * <summary>
           * POST que actualiza en la base de datos el requisito seleccionado para editar
           * </summary>
-          * <param name="id">id correspondiente al Proyecto Actual.</param>
+          * <param name="r">requisito que tiene todos los valores ingresados en la vista.</param>
+          * <param name="idProyecto">id del proyecto al cual esta asociado el requisito</param>
+          * <param name="num_requisito"> id del requisito que estamos editando</param>
           * <returns> Redireccion a la ventana Requisito si el usuario Cumple con los permisos.
           * Redirreciona al index si el usuario no tiene los permisos para entrar a la vista.</returns>
           */
@@ -1323,6 +1326,31 @@ namespace AppWebERS.Controllers
             return l;
         }
 
+        /**
+         * <author>Raimundo Vásquez</author>
+         * <summary>
+         * Este método se encarga , a partir de la lista de actores del proyecto, identificar cuales ya estan asociados a este proyecto
+         * * </summary>
+         * <param name="num_requisito">id del requisito que buscamos en vinculo_Actor_requisito</param>
+         * <param name="actores">lista de los actores asociados al proyecto</param>
+         * 
+         */
+        private void obtenerActoresAsociados( int num_requisito,List<CheckBox> actores)
+        {
+            List<CheckBox> l = new List<CheckBox>();
+            ApplicationDbContext con = ApplicationDbContext.Create();
+            foreach ( var actor in actores)
+            {
+                string select = "SELECT * from vinculo_actor_requisito WHERE ref_actor = '" + actor.id + "' AND ref_req = '" + num_requisito + "'";
+                MySqlDataReader reader = con.RealizarConsulta(select);
+                if (reader != null)
+                {
+                    actor.isChecked = true;
+                }
+                con.EnsureConnectionClosed();
+            }
+        }
+
         private List<Referencia> ObtenerReferencias(int id)
         {
             List<Referencia> lista = new List<Referencia>();
@@ -1514,7 +1542,7 @@ namespace AppWebERS.Controllers
                 r.TipoRequisito = reader["categoria"].ToString();
                 r.Medida = reader["medida"].ToString();
                 r.Escala = reader["escala"].ToString();
-                r.Fecha = reader["fecha_actualizacion"].ToString();
+                r.Fecha = DateTime.Now.ToString("yyyy-MM-dd");
                 r.Incremento = reader["incremento"].ToString();
                 r.Tipo = reader["tipo"].ToString();
             }

@@ -140,7 +140,7 @@
                                 <div class="form-check-inline col-sm-1">
 
                                     @Html.HiddenFor(m => m.Actores[i].id)
-                                    @Html.CheckBoxFor(m => m.Actores[i].isChecked, new { style = "margin-right:8px" })
+                                    @Html.CheckBoxFor(m => Model.Actores[i].isChecked, new { style = "margin-right:8px" })
                                     @Html.LabelFor(m => Model.Actores[i].isChecked, Model.Actores[i].nombre, new { @class = "form-check-label", style = "margin-right:5px" })
 
                                 </div>

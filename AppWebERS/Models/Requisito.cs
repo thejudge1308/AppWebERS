@@ -308,7 +308,7 @@ namespace AppWebERS.Models {
          * <param name="r">Requisito actual que se esta modificando del cual obtendremos los campos para las columnas en la tabla requisito</param>
          * <param name="id">ID  del proyecto actual en  el que se esta modificando el requisito</param>
          * <param name="num_requisito">numero real del requisito que estamos editando</param>
-         * <returns> Redireccion a la ventana Detalles</returns>
+         * <returns> un bool que nos dice si se realizó correctamente la actualización del requisito</returns>
          */
         public bool ActualizarRequisito(Requisito r,int id,int num_requisito)
         {
@@ -319,14 +319,36 @@ namespace AppWebERS.Models {
                 + "incremento = '" + r.Incremento +"', tipo = '" + r.Tipo +"' WHERE num_requisito =" +num_requisito +" AND  ref_proyecto ='" +id+ "'; "+
                 "COMMIT;";
             ApplicationDbContext con = ApplicationDbContext.Create();
-            if (con.RealizarConsultaNoQuery(update))
+            if (con.RealizarConsultaNoQuery(update) & this.eliminarActores(num_requisito))
             {
+                con.EnsureConnectionClosed();
                 return true;
             }
             return false;
         }
 
-
+        /**
+         * <author>Raimundo Vásquez</author>/author>
+         * <summary>
+         * Metodo que realiza la consulta DELETE en la base de datos para eliminar los actores, para luego asociarlos de nuevo
+         * </summary>
+         * <param name="num_requisito">numero real del requisito que estamos editando</param>
+         * <returns> bool que nos verifica si eliminamos los actores o no</returns>
+         */
+        public bool eliminarActores(int num_requisito)
+        {
+            ApplicationDbContext con = ApplicationDbContext.Create();
+            string delete = "DELETE FROM vinculo_actor_requisito WHERE ref_req ='" + num_requisito + "'";
+            if (con.RealizarConsultaNoQuery(delete))
+            {
+                con.EnsureConnectionClosed();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         public bool registrarActor(string actor, string id)
         {
             string n = this.idVerdadero;

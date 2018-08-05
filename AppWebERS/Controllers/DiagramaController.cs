@@ -70,8 +70,8 @@ namespace AppWebERS.Controllers{
 
                     if (this.ValidarExtencionURL(url)==false)
                     {
-                        TempData["alerta"] = new Alerta("Formato no soportado", TipoAlerta.ERROR);
-                        ViewBag.Message = "Formato no soportado.";
+                        TempData["alerta"] = new Alerta("Formato no soportado. Seleccione un archivo de imagen (.jpg, .jpeg, .png, .bmp o .gif)", TipoAlerta.ERROR);
+                        ViewBag.Messagw = "Formato no soportado. Seleccione un archivo de imagen (.jpg, .jpeg, .png, .bmp o .gif)";
                         return RedirectToAction("SubirDiagrama", "Diagrama", new { id = idProyecto });
                     }
                     if (this.ValidarURLNoRepetida2(path) == false)
@@ -188,23 +188,38 @@ namespace AppWebERS.Controllers{
         {
             try
             {
-                string ConsultaNombre = "SELECT nombre FROM Diagrama WHERE nombre = '" + nombre + "';";
-                MySqlDataReader reader = this.Conector.RealizarConsulta(ConsultaNombre);
-                if (reader == null)
+               
+                string consulta = "use appers; " +
+                    "SELECT diagrama.nombre " +
+                    "FROM diagrama " +
+                    "WHERE diagrama.nombre ='"+nombre+"';";
+                Debug.Write(consulta);
+              
+                MySqlDataReader reader2 = this.Conector.RealizarConsulta(consulta);
+               
+                if (reader2 == null)
                 {
                     this.Conector.CerrarConexion();
                     return true;
                 }
                 else
                 {
-                    while (reader.Read())
+                    while (reader2.Read())
                     {
-                        if (reader["nombre"].ToString()== "null")
+                        if (reader2["nombre"].ToString()== "null")
                         {
+                            this.Conector.CerrarConexion();
                             return true;
                         }
-                        Debug.Write(reader["nombre"].ToString());
-                        return false;
+
+                        if (reader2["nombre"].ToString() == nombre)
+                        {
+                            
+                            this.Conector.CerrarConexion();
+                            
+                            return false;
+                        }
+                       
                     }
                     
                     this.Conector.CerrarConexion();
@@ -214,6 +229,7 @@ namespace AppWebERS.Controllers{
             }
             catch
             {
+                this.Conector.CerrarConexion();
                 return true;
             }
         }
@@ -235,6 +251,7 @@ namespace AppWebERS.Controllers{
                 {
                     while (reader.Read())
                     {
+                        this.Conector.CerrarConexion();
                         return false;
                     }
 
@@ -245,6 +262,7 @@ namespace AppWebERS.Controllers{
             }
             catch
             {
+                this.Conector.CerrarConexion();
                 return true;
             }
         }
@@ -265,6 +283,7 @@ namespace AppWebERS.Controllers{
                 {
                     while (reader.Read())
                     {
+                        this.Conector.CerrarConexion();
                         return false;
                     }
 
@@ -275,6 +294,7 @@ namespace AppWebERS.Controllers{
             }
             catch
             {
+                this.Conector.CerrarConexion();
                 return true;
             }
         }

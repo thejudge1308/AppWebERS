@@ -264,6 +264,11 @@ namespace AppWebERS
             return false;
         }
 
+        /*
+         * Creador: Maximo Hernandez
+         * Accion: Modifica la disponbilidad de vinculacion de un usuario.
+         * Retorno: Task del usuario.
+         */
         public async Task setDisponibilidadVinculacionAsync(string UserId, bool IsEnabled)
         {
             using (var db = ApplicationDbContext.Create())
@@ -273,6 +278,38 @@ namespace AppWebERS
                 ApplicationUser usuario = await usuarioTask;
                 await store.SetDisponibilidadVinculacionAsync(usuario, IsEnabled);
                 store.UpdateAsync(usuario);
+            }
+        }
+
+        /*
+         * Creador: Maximo Hernandez
+         * Accion: Obtiene el nombre del usuario identificado.
+         * Retorno: Task<string> que contiene el nombre del usuario identificado.
+         */
+        public async Task<string> getNombreUsuarioIdentificado(string UserId)
+        {
+            using (var db = ApplicationDbContext.Create())
+            {
+                var store = new UserStore<ApplicationUser>(db);
+                var usuarioTask = store.FindByIdAsync(UserId);
+                ApplicationUser usuario = await usuarioTask;
+                return await store.getNombreUsuarioAsync(usuario);
+            }
+        }
+
+        /*
+         * Creador: Maximo Hernandez
+         * Accion: Obtiene la disponibilidad del usuario identificado.
+         * Retorno: Task<string> que contiene el nombre del usuario identificado.
+         */
+        public async Task<bool> getDisponibilidadVinculacionUsuarioIdentificado(string UserId)
+        {
+            using (var db = ApplicationDbContext.Create())
+            {
+                var store = new UserStore<ApplicationUser>(db);
+                var usuarioTask = store.FindByIdAsync(UserId);
+                ApplicationUser usuario = await usuarioTask;
+                return await store.getDisponibilidadVinculacionUsuarioAsync(usuario);
             }
         }
     }

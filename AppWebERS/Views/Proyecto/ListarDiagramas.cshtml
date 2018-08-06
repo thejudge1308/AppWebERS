@@ -1,11 +1,68 @@
 ﻿@model AppWebERS.Models.DiagramaModels
 @{
-    
+
     ViewBag.Title = "Diagramas";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
 }
 
+<style>
+    #myImg {
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    }
 
+    #myImg:hover {opacity: 0.7;}
+
+    /* The Modal (background) */
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        padding-top: 100px; /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+    }
+
+    /* Modal Content (Image) */
+    .modal-content {
+        margin: auto;
+        display: block;
+        width: 80%;
+        max-width: 700px;
+    }
+
+    /* Caption of Modal Image (Image Text) - Same Width as the Image */
+    #caption {
+        margin: auto;
+        display: block;
+        width: 80%;
+        max-width: 700px;
+        text-align: center;
+        color: #ccc;
+        padding: 10px 0;
+        height: 150px;
+    }
+
+    /* Add Animation - Zoom in the Modal */
+    .modal-content, #caption {
+        animation-name: zoom;
+        animation-duration: 0.6s;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: #bbb;
+        text-decoration: none;
+        cursor: pointer;
+    }
+</style>
 
 <h2>Diagramas</h2>
 <div class="dropdown-divider"></div>
@@ -32,7 +89,7 @@
                             @Html.Label(im.nombre)
                         </div>
                         <div class="card-body">
-                            <img src=@im.url alt="Card image cap" style="height:auto;width:100%" />
+                            <img id=@im.nombre src=@im.url alt="Card image cap" onclick="handleClick(this);" style="height:auto;width:100%" />
                         </div>
                     </div>
                 }
@@ -45,9 +102,11 @@
     {
         if (Model.urlsaArquiFisica.Count > 0)
         {
-            if (Model.urlsaArquiFisica.Count == 1) {<h3 style="margin-top:20px;margin-bottom:20px">Diagrama Arquitectura Física</h3> }
-            else {<h3 style="margin-top:20px;margin-bottom:20px">Diagramas Arquitectura Física</h3> }
-            
+            if (Model.urlsaArquiFisica.Count == 1)
+            {<h3 style="margin-top:20px;margin-bottom:20px">Diagrama Arquitectura Física</h3> }
+            else
+            {<h3 style="margin-top:20px;margin-bottom:20px">Diagramas Arquitectura Física</h3> }
+
             <div class="card-deck">
                 @foreach (var im in Model.urlsaArquiFisica)
                 {
@@ -56,7 +115,7 @@
                             @Html.Label(im.nombre)
                         </div>
                         <div class="card-body">
-                            <img src=@im.url alt="Card image cap" style="height:auto;width:100%" />
+                            <img id=@im.nombre src=@im.url alt="Card image cap" onclick="handleClick(this);" style="height:auto;width:100%" />
                         </div>
                     </div>
                 }
@@ -69,9 +128,11 @@
     {
         if (Model.urlsArquiLogica.Count > 0)
         {
-            if (Model.urlsArquiLogica.Count ==1) {<h3 style="margin-top:20px;margin-bottom:20px">Diagrama Arquitectura Lógica</h3> }
-            else { <h3 style="margin-top:20px;margin-bottom:20px">Diagramas Arquitectura Lógica</h3>}
-            
+            if (Model.urlsArquiLogica.Count == 1)
+            {<h3 style="margin-top:20px;margin-bottom:20px">Diagrama Arquitectura Lógica</h3> }
+            else
+            { <h3 style="margin-top:20px;margin-bottom:20px">Diagramas Arquitectura Lógica</h3>}
+
             <div class="card-deck">
                 @foreach (var im in Model.urlsArquiLogica)
                 {
@@ -80,7 +141,7 @@
                             @Html.Label(im.nombre)
                         </div>
                         <div class="card-body">
-                            <img src=@im.url alt="Card image cap" style="height:auto;width:100%" />
+                            <img id=@im.nombre src=@im.url alt="Card image cap" onclick="handleClick(this);" style="height:auto;width:100%" />
                         </div>
                     </div>
                 }
@@ -89,4 +150,36 @@
     }
 </div>
 
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div id="nombreImagen"></div>
+            <span class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <img class="img-responsive" id="img01" style="max-width:100%;">
+        </div>
+        <div class="modal-footer">
+        </div>
+    </div>
+</div>
 
+
+<script>
+    var modal = document.getElementById('myModal');
+    var img = document.getElementById('myImg');
+    var modalImg = document.getElementById("img01");
+    var captionText = document.getElementById("nombreImagen");
+
+    function handleClick(sender) {
+        modal.style.display = "block";
+        modalImg.src = sender.src;
+        captionText.innerHTML = sender.id;
+    }
+
+    var span = document.getElementsByClassName("close")[0];
+
+    span.onclick = function () {
+        modal.style.display = "none";
+    }
+</script>

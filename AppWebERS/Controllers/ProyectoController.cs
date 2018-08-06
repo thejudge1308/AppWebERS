@@ -290,7 +290,7 @@ namespace AppWebERS.Controllers
 
             private string AgregarListadoMinimalista(int idp) {
 
-            string s = "<h1 class=\"titulo\" > 2) Listado de requisitos</h1> <table class=\"espacio - izq\">  </table>";
+            string s = "<h1 class=\"titulo\" > 2) Listado de requisitos</h1> <table class=\"espacio - izq\">";
             
             MySqlDataReader reader;
             string consulta = "select * from requisito where requisito.ref_proyecto = " + idp;
@@ -344,10 +344,8 @@ namespace AppWebERS.Controllers
                     s = s + "</ul>";
                 }
                 s = s + "</td> </tr>";
-
             }
-            string final = "</table>";
-            s = s + final;
+            s = s + "</table>";
             return s;
         }
 

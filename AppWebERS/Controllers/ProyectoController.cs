@@ -990,9 +990,13 @@ namespace AppWebERS.Controllers
         {
             Requisito requisito = this.obtenerRequisito(id,num_requisito);
             ViewData["requisito"] = requisito;
+            ViewData["tipo"] = requisito.Tipo;
             List<CheckBox> list = obtenerActores(id);
+            List<CheckBox> list2 = this.obtenerRequisitosUsuario(requisito, num_requisito,id);
+            this.obtenereRequisitosUsuariosAsociados(requisito,num_requisito, list2,id);
             this.obtenerActoresAsociados(num_requisito, list);
             requisito.Actores = list;
+            requisito.Requisitos = list2;
             ViewBag.IdProyecto = id;
             ViewBag.numRequisito = num_requisito;
             return View(requisito);
@@ -1014,14 +1018,25 @@ namespace AppWebERS.Controllers
         {
             Requisito requisito = new Requisito(r.IdRequisito, r.Nombre, r.Descripcion, r.Prioridad, r.Fuente, r.Estabilidad, r.Estado
                , r.TipoRequisito, r.Medida, r.Escala, r.Fecha, r.Incremento, r.Tipo);
-            List<String> listaa = new List<string>();
+            List<String> listaActores = new List<string>();
+            List<String> listaReqUsuario = new List<string>();
+            if (r.Requisitos != null)
+            {
+                for(int i = 0; i < r.Requisitos.Count; i++)
+                {
+                    if(r.Requisitos[i].isChecked)
+                    {
+                        listaReqUsuario.Add(r.Requisitos[i].nombre);
+                    }
+                }
+            }
             if (r.Actores != null)
             {
                 for (int i = 0; i < r.Actores.Count; i++)
                 {
                     if (r.Actores[i].isChecked)
                     {
-                        listaa.Add(r.Actores[i].id);
+                        listaActores.Add(r.Actores[i].id);
                     }
                 }
             }
@@ -1030,13 +1045,27 @@ namespace AppWebERS.Controllers
             bool validate = requisito.ActualizarRequisito(requisito,id,num);
             if (validate)
             {
-                foreach (var actor in listaa)
+                foreach (var actor in listaActores)
                 {
                     if (!r.registrarActor(actor, num_requisito.ToString()))
                     {
                         TempData["alerta"] = new Alerta("!!!!!", TipoAlerta.SUCCESS);
                     }
                 }
+                if (r.Tipo.Equals("SISTEMA"))
+                {
+                    foreach (var req in listaReqUsuario)
+                    {
+                        string numReqUsuario = r.ObtenerNumRequisito(id, req).ToString() ;
+                        if (r.AsociarRequisitoDeSoftware(id, req, r.IdRequisito))
+                        {
+                            TempData["alerta"] = new Alerta("!!!!!", TipoAlerta.SUCCESS);
+
+                        }
+                    }
+                }
+                
+
                 TempData["alerta"] = new Alerta("Éxito al editar Requisito.", TipoAlerta.SUCCESS);
                 return RedirectToAction("ListarRequisitosMinimalista", "Proyecto", new { id = idProyecto });
             }
@@ -1046,7 +1075,8 @@ namespace AppWebERS.Controllers
             }
             return RedirectToAction("ListarRequisitosMinimalista", "Proyecto", new { id = idProyecto });
         }
-        //ATENCION: FORMTATO FECHA: AAAA-MM-DD
+
+        
         /**
           * <author>Diego Iturriaga</author>
           * <summary>
@@ -1531,17 +1561,81 @@ namespace AppWebERS.Controllers
             }
             return l;
         }
+        /**
+             * <author>Raimundo Vásquez</author>
+             * <summary>
+             * Este método retorna la lista de todos los requisitos de usuario asociados al proyecto
+             * * </summary>
+             * <param name="num_requisito">id del requisito que buscamos en el proyecto</param>
+             * <param name="r">requisito que usaremos para verificar si es de usuario o sistema</param>
+             * <param name="id">id del proyecto en el que buscaremos</param>
+             * <returns>retorna una lista con todos los requisitos de usuario</returns>
+             * 
+             */
+        private List<CheckBox> obtenerRequisitosUsuario(Requisito r, int num_requisito,int id)
+        {
+            List<CheckBox> l = new List<CheckBox>();
 
+            if (r.Tipo.Equals("SISTEMA")) {
+                ApplicationDbContext con = ApplicationDbContext.Create();
+                string consulta1 = "SELECT requisito.id_requisito , requisito.nombre FROM requisito WHERE requisito.tipo = 'USUARIO'" +
+                    " AND  requisito.ref_proyecto = '" + id + "'";
+                MySqlDataReader reader = con.RealizarConsulta(consulta1);
+                if (reader != null)
+                {
+                    while (reader.Read())
+                    {
+                        l.Add(new CheckBox() { nombre = reader[0].ToString(), id = reader[1].ToString(), isChecked = false });
+                    }
+                    Conector.CerrarConexion();
+                }
+               
+                
+                return l;
+            }
+
+            return l;
+            
+        }
         /**
          * <author>Raimundo Vásquez</author>
          * <summary>
-         * Este método se encarga , a partir de la lista de actores del proyecto, identificar cuales ya estan asociados a este proyecto
+         * Dado una lista de requisitos de usuario, modifica la lista con los que ya esta asociado
          * * </summary>
-         * <param name="num_requisito">id del requisito que buscamos en vinculo_Actor_requisito</param>
-         * <param name="actores">lista de los actores asociados al proyecto</param>
+         * <param name="num_requisito">id del requisito que buscamos en el proyecto</param>
+         * <param name="r">requisito que usaremos para verificar si es de usuario o sistema</param>
+         * <param name="id">id del proyecto en el que buscaremos</param>
+         * <param name="r_usuarios">lista de requisitos de usuario</param>
          * 
          */
-        private void obtenerActoresAsociados( int num_requisito,List<CheckBox> actores)
+        private void obtenereRequisitosUsuariosAsociados(Requisito r,int num_requisito, List<CheckBox> r_usuarios,int id)
+        {
+            ApplicationDbContext con = ApplicationDbContext.Create();
+            
+            foreach (var element in r_usuarios)
+            {
+                int rusuario = r.ObtenerNumRequisito(id, element.nombre);
+                string consulta2 = "SELECT * FROM asociacion WHERE "
+                    + "asociacion.req_software = '" + num_requisito + "' AND asociacion.req_usuario = '" + rusuario + "'" ;
+                MySqlDataReader reader = con.RealizarConsulta(consulta2);
+                if (reader != null)
+                {
+                    element.isChecked = true;
+                }
+                con.EnsureConnectionClosed();
+
+            }
+        }
+            /**
+             * <author>Raimundo Vásquez</author>
+             * <summary>
+             * Este método se encarga , a partir de la lista de actores del proyecto, identificar cuales ya estan asociados a este proyecto
+             * * </summary>
+             * <param name="num_requisito">id del requisito que buscamos en vinculo_Actor_requisito</param>
+             * <param name="actores">lista de los actores asociados al proyecto</param>
+             * 
+             */
+            private void obtenerActoresAsociados( int num_requisito,List<CheckBox> actores)
         {
             List<CheckBox> l = new List<CheckBox>();
             ApplicationDbContext con = ApplicationDbContext.Create();

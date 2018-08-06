@@ -46,6 +46,7 @@ namespace AppWebERS.Models {
             Incremento = incremento;
             Tipo = tipo;
             Actores = new List<CheckBox>();
+            Requisitos = new List<CheckBox>();
 
         }
 
@@ -240,6 +241,10 @@ namespace AppWebERS.Models {
         **/
         [Display(Name = "Incremento")]
         public CheckBox IncrementoCheck { get; set; }
+
+
+        [Display(Name = "Requisitos Usuario")]
+        public List<CheckBox> Requisitos { get; set; }
         /**
          * Método para Crear un Requisito
          * <returns>Retorna un boolean que indica el correcto registro del requisito.</returns>
@@ -330,8 +335,13 @@ namespace AppWebERS.Models {
             ApplicationDbContext con = ApplicationDbContext.Create();
             if (con.RealizarConsultaNoQuery(update) & this.eliminarActores(num_requisito))
             {
+                if (r.Tipo.Equals("SISTEMA"))
+                {
+                    this.eliminarAsociacion(num_requisito);
+                }
                 con.EnsureConnectionClosed();
                 return true;
+                
             }
             return false;
         }
@@ -348,6 +358,21 @@ namespace AppWebERS.Models {
         {
             ApplicationDbContext con = ApplicationDbContext.Create();
             string delete = "DELETE FROM vinculo_actor_requisito WHERE ref_req ='" + num_requisito + "'";
+            if (con.RealizarConsultaNoQuery(delete))
+            {
+                con.EnsureConnectionClosed();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool eliminarAsociacion(int num_requisito)
+        {
+            ApplicationDbContext con = ApplicationDbContext.Create();
+            string delete = "DELETE FROM asociacion WHERE req_software = '" + num_requisito + "'";
             if (con.RealizarConsultaNoQuery(delete))
             {
                 con.EnsureConnectionClosed();

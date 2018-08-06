@@ -986,17 +986,18 @@ namespace AppWebERS.Controllers
           * <returns> View de tarjeta volere para editar el requisito</returns>
           */
         [HttpGet]
-        public ActionResult EditarRequisito(int id,int num_requisito)
+        public ActionResult EditarRequisito(int id,string idRequisito)
         {
-            Requisito requisito = this.obtenerRequisito(id,num_requisito);
+            Requisito requisito = this.obtenerRequisito(id,idRequisito);
             ViewData["requisito"] = requisito;
             ViewData["tipo"] = requisito.Tipo;
             List<CheckBox> list = obtenerActores(id);
-            List<CheckBox> list2 = this.obtenerRequisitosUsuario(requisito, num_requisito,id);
-            this.obtenereRequisitosUsuariosAsociados(requisito,num_requisito, list2,id);
-            this.obtenerActoresAsociados(num_requisito, list);
+            List<CheckBox> list2 = this.obtenerRequisitosUsuario(requisito,id);
+            this.obtenereRequisitosUsuariosAsociados(requisito,idRequisito, list2,id);
+            this.obtenerActoresAsociados(requisito,idRequisito, list,id);
             requisito.Actores = list;
             requisito.Requisitos = list2;
+            int num_requisito = requisito.ObtenerNumRequisito(id, idRequisito);
             ViewBag.IdProyecto = id;
             ViewBag.numRequisito = num_requisito;
             return View(requisito);
@@ -1572,7 +1573,7 @@ namespace AppWebERS.Controllers
              * <returns>retorna una lista con todos los requisitos de usuario</returns>
              * 
              */
-        private List<CheckBox> obtenerRequisitosUsuario(Requisito r, int num_requisito,int id)
+        private List<CheckBox> obtenerRequisitosUsuario(Requisito r,int id)
         {
             List<CheckBox> l = new List<CheckBox>();
 
@@ -1608,12 +1609,13 @@ namespace AppWebERS.Controllers
          * <param name="r_usuarios">lista de requisitos de usuario</param>
          * 
          */
-        private void obtenereRequisitosUsuariosAsociados(Requisito r,int num_requisito, List<CheckBox> r_usuarios,int id)
+        private void obtenereRequisitosUsuariosAsociados(Requisito r,string idRequisito, List<CheckBox> r_usuarios,int id)
         {
             ApplicationDbContext con = ApplicationDbContext.Create();
             
             foreach (var element in r_usuarios)
             {
+                int num_requisito = r.ObtenerNumRequisito(id, idRequisito);
                 int rusuario = r.ObtenerNumRequisito(id, element.nombre);
                 string consulta2 = "SELECT * FROM asociacion WHERE "
                     + "asociacion.req_software = '" + num_requisito + "' AND asociacion.req_usuario = '" + rusuario + "'" ;
@@ -1635,10 +1637,11 @@ namespace AppWebERS.Controllers
              * <param name="actores">lista de los actores asociados al proyecto</param>
              * 
              */
-            private void obtenerActoresAsociados( int num_requisito,List<CheckBox> actores)
+            private void obtenerActoresAsociados( Requisito r,string idRequisito,List<CheckBox> actores,int id)
         {
             List<CheckBox> l = new List<CheckBox>();
             ApplicationDbContext con = ApplicationDbContext.Create();
+            int num_requisito = r.ObtenerNumRequisito(id, idRequisito);
             foreach ( var actor in actores)
             {
                 string select = "SELECT * from vinculo_actor_requisito WHERE ref_actor = '" + actor.id + "' AND ref_req = '" + num_requisito + "'";
@@ -1871,12 +1874,12 @@ namespace AppWebERS.Controllers
         * <returns>Objeto con los valores del requisito que se desea editar.</returns>
         */
 
-        private Requisito obtenerRequisito(int id,int num_requisito)
+        private Requisito obtenerRequisito(int id,string idRequisito)
         {
             Requisito r = new Requisito();
 
             string consulta = "SELECT * FROM requisito WHERE ref_proyecto = '" + id + "' AND " +
-                "num_requisito = " + num_requisito;
+                "id_requisito = '" + idRequisito +"'";
             MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
             if(reader != null)
             {

@@ -1679,6 +1679,16 @@ namespace AppWebERS.Controllers
             return View();
         }
 
+        public ActionResult HistorialCambios(int id)
+        {
+            Proyecto proyecto = this.GetProyecto(id);
+            var UsuarioActual = User.Identity.GetUserId();
+            ViewData["proyecto"] = proyecto;
+            ViewData["permiso"] = TipoDePermiso(id);
+
+            return View();
+        }
+
 
     }
 

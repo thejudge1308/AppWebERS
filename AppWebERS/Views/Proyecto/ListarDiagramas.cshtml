@@ -8,6 +8,28 @@
 
 
 <h2>Diagramas</h2>
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link" href="@Url.Action("Detalles", "Proyecto", new { id = ProyectoActual.IdProyecto })">Detalles</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="@Url.Action("ListarRequisitosMinimalista", "Proyecto", new { id = ProyectoActual.IdProyecto })">Requisitos</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" href="@Url.Action("ListarDiagramas", "Proyecto", new { id = ProyectoActual.IdProyecto })">Diagramas</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="@Url.Action("ListaUsuarios", "Proyecto", new { id = ProyectoActual.IdProyecto })">Usuarios</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="@Url.Action("ListaActores", "Proyecto", new { id = ProyectoActual.IdProyecto })">Actores</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="@Url.Action("HistorialCambios","Proyecto",new { id = ProyectoActual.IdProyecto})">Historial de cambios</a>
+    </li>
+</ul>
+
+
 <div class="dropdown-divider"></div>
 
 <a href="../../Diagrama/SubirDiagrama/@Model.IdProyecto" class="btn btn-primary w-auto">Agregar diagrama</a>

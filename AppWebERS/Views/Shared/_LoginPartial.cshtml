@@ -7,7 +7,19 @@
     using (Html.BeginForm("LogOff", "Cuenta", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
     {
     @Html.AntiForgeryToken()
+        <style>
+            .glyphicon.glyphicon-success:before {
+                content: "\25cf";
+                font-size: 1.5em;
+                color: green;
+            }
 
+            .glyphicon.glyphicon-danger:before {
+                content: "\25cf";
+                font-size: 1.5em;
+                color: red;
+            }
+        </style>   
 
 
 <ul class="nav navbar-nav navbar-right">
@@ -15,7 +27,21 @@
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fa fa-user" style="text-align: center;"></i>
-                <i class="glyphicon glyphicon-user" style="text-align: center;"></i> @User.Identity.GetUserName()
+                <i class="glyphicon glyphicon-user" style="text-align: center;"></i> @Html.Action("RetornarNombreUsuarioIdentificado", "Cuenta").ToString()
+                @{
+                    string tipo = Html.Action("RetornarTipoUsuarioAutentificado", "Cuenta").ToString();
+                    if (!tipo.Equals("SYSADMIN"))
+                    {
+                        if (Html.Action("RetornarDisponibilidadVinculacionUsuarioIdentificado", "Cuenta").ToString().Equals("True"))
+                        {
+                            <i class="glyphicon glyphicon-success" style="text-align: center;"></i>
+                        }
+                        else
+                        {
+                            <i class="glyphicon glyphicon-danger" style="text-align: center;"></i>
+                        }
+                    }
+                }
             </a>
 
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">

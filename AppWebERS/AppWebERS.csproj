@@ -229,13 +229,6 @@
     <Compile Include="Utilidades\Alerta.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content - Copia\bootstrap-grid.css" />
-    <Content Include="Content - Copia\bootstrap-grid.min.css" />
-    <Content Include="Content - Copia\bootstrap-reboot.css" />
-    <Content Include="Content - Copia\bootstrap-reboot.min.css" />
-    <Content Include="Content - Copia\bootstrap.css" />
-    <Content Include="Content - Copia\bootstrap.min.css" />
-    <Content Include="Content - Copia\Site.css" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-reboot.css" />
@@ -270,12 +263,6 @@
     <Content Include="Content\bootstrap-reboot.css.map" />
     <Content Include="Content\bootstrap-grid.min.css.map" />
     <Content Include="Content\bootstrap-grid.css.map" />
-    <Content Include="Content - Copia\bootstrap-grid.css.map" />
-    <Content Include="Content - Copia\bootstrap-grid.min.css.map" />
-    <Content Include="Content - Copia\bootstrap-reboot.css.map" />
-    <Content Include="Content - Copia\bootstrap-reboot.min.css.map" />
-    <Content Include="Content - Copia\bootstrap.css.map" />
-    <Content Include="Content - Copia\bootstrap.min.css.map" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />

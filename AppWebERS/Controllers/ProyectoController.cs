@@ -100,6 +100,7 @@ namespace AppWebERS.Controllers
             public string volumen { set; get; }
             public string pag { set; get; }
         }
+
         [HttpPost]
         public ActionResult AgregarReferenciaPaper(JsonReferenciaPaper paper)
         {
@@ -113,6 +114,29 @@ namespace AppWebERS.Controllers
             }
             else
             {
+                return Json(false, JsonRequestBehavior.AllowGet);
+
+            }
+        }
+
+        public class JsonReferenciaConferencia {
+            public string id { set; get; }
+            public string autores { get; set; }
+            public string fecha { get; set; }
+            public string titulo { get; set; }
+            public string lugar { get; set; }
+            public string nombre_conferencia { get; set; }
+        }
+
+        [HttpPost]
+        public ActionResult AgregarReferenciaConferencia(JsonReferenciaConferencia paper) {
+            //string autores, string fecha, string titulo, string lugar, string nombreConferencia
+            string referencia = this.ParsearReferenciaPaperConferencia(paper.autores, paper.fecha, paper.titulo, paper.lugar, paper.nombre_conferencia);
+            string consulta = "INSERT INTO Referencia(ref_proyecto,referencia) VALUES('" + paper.id + "','" + referencia + "');";
+            if(this.conexion.RealizarConsultaNoQuery(consulta)) {
+                return Json(true, JsonRequestBehavior.AllowGet);
+
+            } else {
                 return Json(false, JsonRequestBehavior.AllowGet);
 
             }
@@ -1283,17 +1307,24 @@ namespace AppWebERS.Controllers
 
         }
 
-        private string ParsearReferenciaLibro(string autores, string anio, string titulo, string lugar, string editorial)
+        private string ParsearReferenciaLibro(string autores, string anio, string titulo, string paginas, string editorial)
         {
             string referencia;
-            referencia = autores + ", (" + anio + ")," + titulo + ", " + lugar + ":" + editorial + ".";
+            referencia = autores + ", \""+titulo+"\", "+editorial+", pp. "+paginas+", "+anio;
             return referencia;
         }
 
         private string ParsearReferenciaPaper(string autores,string fecha, string titulo, string revista, string volumen, string pag)
         {
             string referencia;
-            referencia = autores + ",("+ fecha + "),"+ titulo + ", " + revista + "," + volumen + "," + pag + ".";
+            referencia = autores + ", \"" + titulo + "\", " + revista + ", Pp. " + pag + ", Vol. "+volumen+", " + fecha;
+            return referencia;
+
+        }
+
+        private string ParsearReferenciaPaperConferencia(string autores, string fecha, string titulo, string lugar, string nombreConferencia) {
+            string referencia;
+            referencia = autores + ", \"" + titulo + "\". Presentado en "+nombreConferencia+", "+lugar+", "+fecha;
             return referencia;
 
         }
@@ -1304,7 +1335,7 @@ namespace AppWebERS.Controllers
          * </summary>
          * <param name="idProyecto"> ID del proyecto doonde se agregara el requisito</param>
          * 
-         */ 
+         */
         [HttpGet]
         public ActionResult ListarRequisitosMinimalista(int id)
         {

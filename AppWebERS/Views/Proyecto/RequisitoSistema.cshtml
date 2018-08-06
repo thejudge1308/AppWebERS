@@ -137,7 +137,7 @@
         <div>
             @Html.HiddenFor(m => m.IncrementoCheck.id, new { @class = "form-check-label", style = "margin-right:5px" })
             @Html.LabelFor(m => m.IncrementoCheck)
-            @*@Html.TextBoxFor(m => m.Incremento, new { placeholder = "Incremento", @class = "form-control col-form-label" })*@
+            @Html.TextBoxFor(m => m.Incremento, new { placeholder = "Incremento", @class = "form-control col-form-label", disabled = "disabled", @readonly = "readonly" })
             @Html.CheckBoxFor(m => m.IncrementoCheck.isChecked, new { style = "margin-left:8px" })
             @*@Html.ValidationMessageFor(m => m.Incremento, "", new { @style = "color:rgb(209,52,56); font-size:14px" })*@
         </div>

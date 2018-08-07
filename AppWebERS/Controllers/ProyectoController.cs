@@ -1671,6 +1671,12 @@ namespace AppWebERS.Controllers
 
         public ActionResult ListarDiagramas(int id)
         {
+            DiagramaModels model = new DiagramaModels(id, TipoDePermiso(id));
+            return View(model);
+        }
+
+        public ActionResult HistorialCambios(int id)
+        {
             Proyecto proyecto = this.GetProyecto(id);
             var UsuarioActual = User.Identity.GetUserId();
             ViewData["proyecto"] = proyecto;

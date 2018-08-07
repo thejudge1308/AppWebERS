@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -571,69 +572,91 @@ namespace AppWebERS.Models{
          * <param name = "valor" > El nombre del JSON, el cual será un string compuesto por HTML y e valor de la base de datos del atributo al que hace referencia.</param>
          * <param name = "atributo" > La etiqueta para reconocer a qué atributo se debe actualizar en la base de datos.</param>
          */
-        public void ActualizarDatosProyecto(int idProyecto, string valor, string atributo)
+        public void ActualizarDatosProyecto(int idProyecto, string valor, string atributo, string idUsuario)
         {
             string consulta;
+            string consulta2;
             MySqlDataReader reader;
+            MySqlDataReader reader2;
             switch (atributo)
             {
                 case "nombre":
                     consulta = "UPDATE proyecto SET nombre='" + valor + "' WHERE id_proyecto=" + idProyecto;
+                    consulta2 = "BEGIN DECLARE versionActual float; IF (SELECT COUNT(*) FROM modificacion_ders) > 0 THEN SET versionActual = (SELECT modificacion_ders.version FROM modificacion_ders WHERE" + idProyecto + " = modificacion_ders.ref_proyecto ORDER BY modificacion_ders.fecha DESC LIMIT 1); ELSE SET versionActual = 1.00; INSERT INTO modificacion_ders(id_modificacion,version, ref_proyecto, fecha, ref_autor_modificacion, descripcion) VALUES(" + 1 + ", versionActual" + 0.01 + ", " + idProyecto + ", current_date," + idUsuario + ", 'Modificacion en Nombre: '" + valor + "); END IF; END ";
                     reader = this.conexion.RealizarConsulta(consulta);
+                    reader2 = this.conexion.RealizarConsulta(consulta2);
                     this.conexion.EnsureConnectionClosed();
                     break;
 
                 case "proposito":
                     consulta = "UPDATE proyecto SET proposito='" + valor + "' WHERE id_proyecto=" + idProyecto;
+                    consulta2 = "BEGIN DECLARE versionActual float; SET versionActual = (SELECT modificacion_ders.version FROM modificacion_ders WHERE" + idProyecto + " = modificacion_ders.ref_proyecto ORDER BY modificacion_ders.fecha DESC LIMIT 1); INSERT INTO modificacion_ders(id_modificacion,version, ref_proyecto, fecha, ref_autor_modificacion, descripcion) VALUES(" + 1 + ", versionActual" + 0.01 + ", " + idProyecto + ", current_date," + idUsuario + ", 'Modificacion en Proposito: '" + valor + "); END ";
                     reader = this.conexion.RealizarConsulta(consulta);
+                    reader2 = this.conexion.RealizarConsulta(consulta2);
                     this.conexion.EnsureConnectionClosed();
                     break;                    
 
                 case "alcance":
                     consulta = "UPDATE proyecto SET alcance='" + valor + "' WHERE id_proyecto=" + idProyecto;
+                    consulta2 = "BEGIN DECLARE versionActual float; SET versionActual = (SELECT modificacion_ders.version FROM modificacion_ders WHERE" + idProyecto + " = modificacion_ders.ref_proyecto ORDER BY modificacion_ders.fecha DESC LIMIT 1); INSERT INTO modificacion_ders(id_modificacion,version, ref_proyecto, fecha, ref_autor_modificacion, descripcion) VALUES(" + 1 + ", versionActual" + 0.01 + ", " + idProyecto + ", current_date," + idUsuario + ", 'Modificacion en Alcance: '" + valor + "); END ";
                     reader = this.conexion.RealizarConsulta(consulta);
+                    reader2 = this.conexion.RealizarConsulta(consulta2);
                     this.conexion.EnsureConnectionClosed();
                     break;
 
                 case "contexto":
                     consulta = "UPDATE proyecto SET contexto='" + valor + "' WHERE id_proyecto=" + idProyecto;
+                    consulta2 = "BEGIN DECLARE versionActual float; SET versionActual = (SELECT modificacion_ders.version FROM modificacion_ders WHERE" + idProyecto + " = modificacion_ders.ref_proyecto ORDER BY modificacion_ders.fecha DESC LIMIT 1); INSERT INTO modificacion_ders(id_modificacion,version, ref_proyecto, fecha, ref_autor_modificacion, descripcion) VALUES(" + 1 + ", versionActual" + 0.01 + ", " + idProyecto + ", current_date," + idUsuario + ", 'Modificacion en Contexto: '"+valor+"); END ";
                     reader = this.conexion.RealizarConsulta(consulta);
+                    reader2 = this.conexion.RealizarConsulta(consulta2);
                     this.conexion.EnsureConnectionClosed();
                     break;
 
                 case "definicion":
                     consulta = "UPDATE proyecto SET definiciones='" + valor + "' WHERE id_proyecto=" + idProyecto;
+                    consulta2 = "BEGIN DECLARE versionActual float; SET versionActual = (SELECT modificacion_ders.version FROM modificacion_ders WHERE" + idProyecto + " = modificacion_ders.ref_proyecto ORDER BY modificacion_ders.fecha DESC LIMIT 1); INSERT INTO modificacion_ders(id_modificacion,version, ref_proyecto, fecha, ref_autor_modificacion, descripcion) VALUES(" + 1 + ", versionActual" + 0.01 + ", " + idProyecto + ", current_date," + idUsuario + ", 'Modificacion en Definicion: '" + valor + "); END ";
                     reader = this.conexion.RealizarConsulta(consulta);
+                    reader2 = this.conexion.RealizarConsulta(consulta2);
                     this.conexion.EnsureConnectionClosed();
                     break;
 
                 case "acronimo":
                     consulta = "UPDATE proyecto SET acronimos='" + valor + "' WHERE id_proyecto=" + idProyecto;
+                    consulta2 = "BEGIN DECLARE versionActual float; SET versionActual = (SELECT modificacion_ders.version FROM modificacion_ders WHERE" + idProyecto + " = modificacion_ders.ref_proyecto ORDER BY modificacion_ders.fecha DESC LIMIT 1); INSERT INTO modificacion_ders(id_modificacion,version, ref_proyecto, fecha, ref_autor_modificacion, descripcion) VALUES(" + 1 + ", versionActual" + 0.01 + ", " + idProyecto + ", current_date," + idUsuario + ", 'Modificacion en Acronimo: '" + valor + "); END ";
                     reader = this.conexion.RealizarConsulta(consulta);
+                    reader2 = this.conexion.RealizarConsulta(consulta2);
                     this.conexion.EnsureConnectionClosed();
                     break;
 
                 case "abreviatura":
                     consulta = "UPDATE proyecto SET abreviaturas='" + valor + "' WHERE id_proyecto=" + idProyecto;
+                    consulta2 = "BEGIN DECLARE versionActual float; SET versionActual = (SELECT modificacion_ders.version FROM modificacion_ders WHERE" + idProyecto + " = modificacion_ders.ref_proyecto ORDER BY modificacion_ders.fecha DESC LIMIT 1); INSERT INTO modificacion_ders(id_modificacion,version, ref_proyecto, fecha, ref_autor_modificacion, descripcion) VALUES(" + 1 + ", versionActual" + 0.01 + ", " + idProyecto + ", current_date," + idUsuario + ", 'Modificacion en Abreviatura: '" + valor + "); END ";
                     reader = this.conexion.RealizarConsulta(consulta);
+                    reader2 = this.conexion.RealizarConsulta(consulta2);
                     this.conexion.EnsureConnectionClosed();
                     break;
 
                 case "referencia":
                     consulta = "UPDATE proyecto SET referencias='" + valor + "' WHERE id_proyecto=" + idProyecto;
+                    consulta2 = "BEGIN DECLARE versionActual float; SET versionActual = (SELECT modificacion_ders.version FROM modificacion_ders WHERE" + idProyecto + " = modificacion_ders.ref_proyecto ORDER BY modificacion_ders.fecha DESC LIMIT 1); INSERT INTO modificacion_ders(id_modificacion,version, ref_proyecto, fecha, ref_autor_modificacion, descripcion) VALUES(" + 1 + ", versionActual" + 0.01 + ", " + idProyecto + ", current_date," + idUsuario + ", 'Modificacion en Referencia: '" + valor + "); END ";
                     reader = this.conexion.RealizarConsulta(consulta);
+                    reader2 = this.conexion.RealizarConsulta(consulta2);
                     this.conexion.EnsureConnectionClosed();
                     break;
 
                 case "ambiente":
                     consulta = "UPDATE proyecto SET ambiente_operacional='" + valor + "' WHERE id_proyecto=" + idProyecto;
+                    consulta2 = "BEGIN DECLARE versionActual float; SET versionActual = (SELECT modificacion_ders.version FROM modificacion_ders WHERE" + idProyecto + " = modificacion_ders.ref_proyecto ORDER BY modificacion_ders.fecha DESC LIMIT 1); INSERT INTO modificacion_ders(id_modificacion,version, ref_proyecto, fecha, ref_autor_modificacion, descripcion) VALUES(" + 1 + ", versionActual" + 0.01 + ", " + idProyecto + ", current_date," + idUsuario + ", 'Modificacion en Ambiente: '" + valor + "); END ";
                     reader = this.conexion.RealizarConsulta(consulta);
+                    reader2 = this.conexion.RealizarConsulta(consulta2);
                     this.conexion.EnsureConnectionClosed();
                     break;
 
                 case "relacion":
                     consulta = "UPDATE proyecto SET relacion_con_otros_proyectos='" + valor + "' WHERE id_proyecto=" + idProyecto;
+                    consulta2 = "BEGIN DECLARE versionActual float; SET versionActual = (SELECT modificacion_ders.version FROM modificacion_ders WHERE" + idProyecto + " = modificacion_ders.ref_proyecto ORDER BY modificacion_ders.fecha DESC LIMIT 1); INSERT INTO modificacion_ders(id_modificacion,version, ref_proyecto, fecha, ref_autor_modificacion, descripcion) VALUES(" + 1 + ", versionActual" + 0.01 + ", " + idProyecto + ", current_date," + idUsuario + ", 'Modificacion en Relacion: '" + valor + "); END ";
                     reader = this.conexion.RealizarConsulta(consulta);
+                    reader2 = this.conexion.RealizarConsulta(consulta2);
                     this.conexion.EnsureConnectionClosed();
                     break;
             }

@@ -9,9 +9,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 
 }
-
-
-
 @{
     var ProyectoActual = (Proyecto)ViewData["proyecto"];
     var TipoUsuario = (int)ViewData["permiso"];
@@ -19,7 +16,7 @@
     var solicitudes = (List<SolicitudDeProyecto>)ViewData["solicitudes"];
 }
 @if (ProyectoActual != null)
-{
+{  
     <h2>Lista de usuarios.</h2>
     <ul class="nav nav-tabs">
         <li class="nav-item">

@@ -17,6 +17,8 @@ using System.Web.Script.Serialization;
 using System.IO;
 using static AppWebERS.Models.Requisito;
 using Newtonsoft.Json;
+using System.Drawing;
+using MySql.Data;
 
 namespace AppWebERS.Controllers
 {
@@ -24,6 +26,9 @@ namespace AppWebERS.Controllers
     {
 
         private int id_proyecto;
+       
+        Dictionary<Requisito, List<Requisito>> requisitos = new Dictionary<Requisito, List<Requisito>>();
+
 
         private ConectorBD Conector = ConectorBD.Instance;
         private ApplicationDbContext conexion = ApplicationDbContext.Create();
@@ -215,21 +220,309 @@ namespace AppWebERS.Controllers
             return Json(proyecto, JsonRequestBehavior.AllowGet);
         }
 
-        public FileResult ExportarPDF(int id) {
+
+
+        
+
+        private List<Diagrama> ObtenerDiagramas(int idProyecto)
+        {
+            ApplicationDbContext conexion = ApplicationDbContext.Create();
+            List<Diagrama> imagenes = new List<Diagrama>();
+            string consulta = "SELECT * FROM diagrama WHERE ref_proyecto = " + idProyecto + ";";
+            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
+            if (reader != null)
+            {
+                while (reader.Read())
+                {
+                    int id = Convert.ToInt32(reader["id_diagrama"].ToString());
+                    string nombre = reader["nombre"].ToString();
+                    string ruta = reader["ruta"].ToString();
+                    string tipo = reader["tipo"].ToString();
+                    int refProyecto = Convert.ToInt32(reader["ref_proyecto"].ToString());
+                    Diagrama dm = new Diagrama(id, nombre, ruta, tipo,refProyecto);
+                    imagenes.Add(dm);
+                }
+            }
+            conexion.EnsureConnectionClosed();
+            return imagenes;
+        }
+
+
+
+        public ActionResult ExportarPDF(int id) {
+
+
+            FileResult fileResult = null;
+            var generator = new NReco.PdfGenerator.HtmlToPdfConverter();
             Proyecto proyecto = this.GetProyecto(id);
 
-            string fecha =  DateTime.Now.ToString();
-            String html = "<html> <head> <style> body { margin: 2cm; } .logo { font-size: 40px; font-weigth: bold; } .titulo { text-align: center; } .fecha { margin-left: 20px; } .espacio-izq { margin-left: 20px; } table td{ font-size: 18px; padding-bottom: 15px; } </style> </head> <body> <table> <tr> <td class=\"logo\">AppWebERS</td> <td </tr> </table> <h1 class=\"titulo\">Detalles de proyecto</h1> <hr> <p class=\"fecha\">Fecha: " + fecha +"</p> <hr> <table class=\"espacio-izq\"> <tr> <td>Nombre proyecto</td> <td>: " + proyecto.Nombre + "</td> </tr> <tr> <td>Proposito</td> <td>: " + proyecto.Proposito + "</td> </tr> <tr> <td>Alcance</td> <td>: " + proyecto.Alcance + "</td> </tr> <tr> <td>Contexto</td> <td>: " + proyecto.Contexto + "</td> </tr> <tr> <td>Definiciones</td> <td>: " + proyecto.Definiciones + "</td> </tr> <tr> <td>Acronimos</td> <td>: "+ proyecto.Acronimos + "</td> </tr> <tr> <td>Abreviaturas</td> <td>: " + proyecto.Abreviaturas + "</td> </tr> <tr> <td>Referencias</td> <td>: " + proyecto.Referencias + "</td> </tr> <tr> <td>Ambiente operacional</td> <td>: " + proyecto.AmbienteOperacional + "</td> </tr> <tr> <td>Relacion con otros proyectos</td> <td>: " + proyecto.RelacionProyectos +  "</td> </tr> </table> </body> </html>";
-            String html2 = "<h1>Texto</h1> <p> de</p> <p><sup><strong>prueba</strong></sup></p> <p><em>para</em></p> <h2><s>probar</s></h2> <p><br></p> <ol> <li>el</li> </ol> <p><sub>formato</sub></p> <p><span>pdf</span></p> <p><span>es</span></p> <p><span style=\"background - color: red; \">resposive</span></p> <p><span style=\"color: yellow; background - color: green; \">porsia</span></p> <p>Fin</p>";
             
 
-            var htmlToPdf = new NReco.PdfGenerator.HtmlToPdfConverter();
-            var pdfBytes = htmlToPdf.GeneratePdf(html);
-            MemoryStream ms = new MemoryStream(pdfBytes);
-           
 
-            return File(ms, "application/pdf"); ;
+
+            DateTime fechadt = DateTime.Now;
+            string fecha = String.Format("{0:dddd d 'de' MMMM 'del' yyyy}", fechadt);
+            string htmlContent = "<html>" +
+                "  <head>" +
+                " <style> " +
+                "body { margin: 2cm; } .logo { font-size: 40px; font-weigth: bold; } .titulo { text-align: left; margin-top: 30px;margin-bottom: 30px; } .fecha { margin-left: 100px; } .espacio-izq { margin-left: 50px; } table td{ font-size: 18px;  } " +
+                "</style>" +
+                " </head> " +
+                "<body> " +
+                "<meta charset=\"UTF-8\" /> <table> <tr> <td class=\"logo\">AppWebERS</td> <td </tr> </table> <hr> <p class=\"fecha\">Fecha: " + fecha + "</p> <hr> <h1 class=\"titulo\"> 1) Detalles del proyecto</h1> " +
+            
+                
+
+                "<table> " +
+                "<tr> <td> <strong style=\"font-size: 20px; \" > 1.1) Nombre </strong> <br><br> </td></tr> " +
+                "<tr> <td>" + proyecto.Nombre + "</td> </tr> " +
+
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.2) Propósito </strong> <br><br> </td></tr> " +
+                "<tr> <td>" + proyecto.Proposito + "</td> </tr> " +
+
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.3) Alcance </strong> <br><br> </td></tr> " +
+                "<tr> <td>" + proyecto.Alcance + "</td> </tr> " +
+
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.4) Contexto </strong> <br><br> </td></tr> " +
+                "<tr> <td>" + proyecto.Contexto + "</td> </tr> " +
+
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.5) Definiciones </strong> <br><br> </td></tr> " +
+                "<tr> <td>" + proyecto.Definiciones + "</td> </tr> " +
+
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.6) Acrónimos </strong> <br><br> </td></tr> " +
+                "<tr> <td>" + proyecto.Acronimos + "</td> </tr> " +
+
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.7) Abreviaturas </strong> <br><br> </td></tr> " +
+                "<tr> <td>" + proyecto.Abreviaturas + "</td> </tr> " +
+
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.8) Referencias </strong> <br><br> </td></tr> " +
+                "<tr> <td>" + proyecto.Referencias + "</td> </tr> " +
+
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.9) Ambiente Operacional </strong> <br><br> </td></tr> " +
+                "<tr> <td>" + proyecto.AmbienteOperacional + "</td> </tr> " +
+
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.10) Relación con otros proyectos </strong> <br><br> </td></tr> " +
+                "<tr> <td>" + proyecto.RelacionProyectos + "</td> </tr> " +
+                
+                "</table> ";
+
+            string minimalista = this.AgregarListadoMinimalista(id);
+            string volere = this.CrearVolere();
+            string diagramas = this.obtenerHtmlDiagramas(id);
+            string referencias = this.obtenerReferencias(id);
+            string final = " </body> </html>";
+            
+            htmlContent = htmlContent + minimalista + volere + diagramas  + referencias +  final;
+            
+            string filename = fecha+".pdf";
+
+            generator.Orientation = NReco.PdfGenerator.PageOrientation.Default;
+
+            var pdfBytes = generator.GeneratePdf(htmlContent);
+
+            HttpContext.Response.ContentEncoding = System.Text.Encoding.UTF8;
+            fileResult = new FileContentResult(pdfBytes, "application/pdf");
+            fileResult.FileDownloadName = filename;
+
+            return fileResult;
         }
+
+        private string obtenerReferencias(int idProyecto)
+        {
+            ApplicationDbContext conexion = ApplicationDbContext.Create();
+            List<AppWebERS.Models.Referencia> referencias = new List<AppWebERS.Models.Referencia>();
+            string consulta = "SELECT * FROM referencia WHERE ref_proyecto = " + idProyecto + ";";
+            MySqlDataReader reader = conexion.RealizarConsulta(consulta);
+            if (reader != null)
+            {
+                while (reader.Read())
+                {
+                    string referencia = reader["referencia"].ToString();
+                    AppWebERS.Models.Referencia dm = new AppWebERS.Models.Referencia(idProyecto, referencia);
+                    referencias.Add(dm);
+                }
+            }
+            conexion.EnsureConnectionClosed();
+
+
+            string ht = "";
+
+            foreach (AppWebERS.Models.Referencia t in referencias)
+            {
+                ht += "<tr> <td align=\"left\" > " + "<br>" + "- " + t.getReferencia() + "</td> </tr> ";
+            }
+
+            if (referencias.Count == 0)
+            {
+                return "";
+            }
+
+            string htmlReferencias = "<html>" +
+            "  <head>" +
+            " <style> " +
+            "body { margin: 2cm; } .logo { font-size: 40px; font-weigth: bold; } .titulo { text-align: left; margin-top: 30px;margin-bottom: 30px; } .fecha { margin-left: 100px; } .espacio-izq { margin-left: 50px; } table td{ font-size: 18px;  } " +
+            "</style>" +
+            " </head> " +
+            "<body> " +
+            "<meta charset=\"UTF-8\" /> " +
+
+            "<table> " +
+
+            "<tr> <td>  <h1 class=\"titulo\" > 5) Referencias</h1> </td></tr> " +
+
+            ht +
+
+            "</table> ";
+
+
+            return htmlReferencias;
+        }
+
+        private string obtenerHtmlDiagramas(int id)
+        {
+            List<Diagrama> diagramas = this.ObtenerDiagramas(id);
+            String ht = "";
+            int contador = 1;
+
+            foreach (Diagrama t in diagramas)
+            {
+                System.Drawing.Image img = System.Drawing.Image.FromFile(t.GetRuta());
+
+                if (img.Width < 700 && img.Height < 450)
+                {
+                    ht += "<tr> <td align=\"center\" > " + "<br>"  + " <img src=\"" + t.GetRuta() + "\" alt =\"HTML5 Icon\" style =\"width: " + img.Width + "px; height: " + img.Height + "px; \" >" + "</td> </tr> ";
+                }
+                else if (img.Width <= 700 && img.Height >= 450)
+                {
+                    ht += "<tr> <td align=\"center\" > " + "<br>" + " <img src=\"" + t.GetRuta() + "\" alt =\"HTML5 Icon\" style =\"width: " + img.Width + "px; height:450px; \" >" + "</td> </tr> ";
+                }
+                else if (img.Width >= 700 && img.Height <= 450)
+                {
+                    ht += "<tr> <td align=\"center\" > " + "<br>" + " <img src=\"" + t.GetRuta() + "\" alt =\"HTML5 Icon\" style =\"width:700px; height: " + img.Height + "px; \" >" + "</td> </tr> ";
+                }
+                else
+                {
+                    ht += "<tr> <td align=\"center\"> " + "<br>" + " <img src=\"" + t.GetRuta() + "\" alt =\"HTML5 Icon\" style =\"width: 700px; height: 450px; \" >" + "</td> </tr> ";
+                }
+
+                ht += "<tr> <td align=\"center\">" + "4." + contador + " " + t.GetNombre() + " " + "[" + t.GetTipo() + "]" + "</td> </tr> ";
+                contador++;
+            }
+
+            string htmlDiagramas = "<html>" +
+                "  <head>" +
+                " <style> " +
+                "body { margin: 2cm; } .logo { font-size: 40px; font-weigth: bold; } .titulo { text-align: left; margin-top: 30px;margin-bottom: 30px; } .fecha { margin-left: 100px; } .espacio-izq { margin-left: 50px; } table td{ font-size: 18px;  } " +
+                "</style>" +
+                " </head> " +
+                "<body> " +
+                "<meta charset=\"UTF-8\" /> " +
+
+                "<table> " +
+
+                "<tr> <td>  <h1 class=\"titulo\" > 4) Diagramas</h1> </td></tr> " +
+
+                ht +
+
+                "</table> ";
+            return htmlDiagramas;
+        }
+
+        /**
+         * 
+         * <autor>Rodrigo Letelier</autor>
+         * <summary>Crea el html que inserta los requisitos de usuario junto a los de sistema en el documento.</summary>
+         * <param name="idp">Id del proyecto al que se asocia el requisito.</param>
+         * <returns>El html con los requisitos dentro.</returns>
+         */
+
+        private string AgregarListadoMinimalista(int idp) {
+
+            string s = "<h1 class=\"titulo\" > 2) Listado de requisitos</h1> <table class=\"espacio - izq\">";
+            
+            MySqlDataReader reader;
+            string consulta = "select * from requisito where requisito.ref_proyecto = " + idp;
+            reader = this.conexion.RealizarConsulta(consulta);
+
+            if (reader == null) {
+                return "";
+            }
+
+            while (reader.Read()) {
+
+                string idr = reader["id_requisito"].ToString();
+                string nombre = reader["nombre"].ToString();
+                string descripcion = reader["descripcion"].ToString();
+                string prioridad = reader["prioridad"].ToString();
+                string fuente = reader["fuente"].ToString();
+                string estabilidad = reader["estabilidad"].ToString();
+                string estado = reader["estado"].ToString();
+                string tipoRequisito = reader["categoria"].ToString();
+                string medida = reader["medida"].ToString();
+                string escala = reader["escala"].ToString();
+                string fecha = reader["fecha_actualizacion"].ToString();
+                string incremento = reader["incremento"].ToString();
+                string tipo = reader["tipo"].ToString();
+                Requisito requ = new Requisito(idr, nombre, descripcion, prioridad, fuente, estabilidad, estado, tipoRequisito, medida, escala, fecha, incremento, tipo);
+
+                if (reader["tipo"].ToString() == "USUARIO")
+                {
+                    requisitos.Add(requ, requ.ObtenerListaRequisitosSistema(idp, requ.ObtenerNumRequisito(idp, requ.IdRequisito)));
+                }
+               
+            }
+
+            this.conexion.EnsureConnectionClosed();
+
+            foreach (var item in requisitos)
+            {
+                Requisito ru = item.Key;
+                s = s + "<tr> <td> <b>RU " + ru.IdRequisito + "</b> " + ru.Nombre + ".";
+                List<Requisito> aux = item.Value;
+
+                if (aux.Count != 0)
+                {
+                    s = s + "<ul>";
+
+                    foreach (Requisito r in aux)
+                    {
+                        s = s + "<li>" + "<b>RS " + r.IdRequisito + "</b> " + r.Nombre + ".</li>";
+                    }
+
+                    s = s + "</ul>";
+                }
+                s = s + "</td> </tr>";
+            }
+            s = s + "</table>";
+            return s;
+        }
+
+        private string CrearVolere() {
+            string s = "<h1 class=\"titulo\" > 3) Requisitos Volere</h1> ";
+            string tabla = "";
+            foreach (var item in requisitos)
+            {
+                Requisito ru = item.Key;
+                tabla = tabla + "<div style=\"page -break-after:always\"></div> <table border=\"1\"style=\"border: 1px solid black; border-collapse: collapse; width: 100%; \"> <tr> <td colspan=\"3\" style=\"text-align:center; padding: 5px;  \">RU \"" + ru.Nombre + "\"</td> </tr> <tr> <td style=\"padding: 5px;\"><b>ID: " + ru.IdRequisito + "</b></td> <td style=\"padding: 5px;\"><b>Tipo Requisito</b></td> <td style=\"padding: 5px;\">" + ru.TipoRequisito+ "</td> </tr> <tr> <td style=\"padding: 5px;\"><b>Prioridad</b></td><td colspan=\"2\" style=\"padding: 5px;\" >" +ru.Prioridad + "</td> </tr><tr> <td style=\"padding: 5px;\"><b>Descripcion</b></td> <td colspan=\"2\" style=\"padding: 5px;\">" + ru.Descripcion+"</td> </tr> <tr> <td style=\"padding: 5px;\"><b>Fuente</b></td> <td colspan=\"2\" style=\"padding: 5px; \">" + ru.Fuente+ "</td> </tr> <tr class=\"big\"> <td style=\"padding: 5px;\"><b>Actor</b></td> <td colspan=\"2\" style=\"padding: 5px;\">actores</td> </tr> <tr> <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\" ><b> Fecha: "+ru.Fecha +" </b></td> <td style=\"padding: 5px;\"><b>Incremento: "+ru.Incremento+"</b></td> </tr> <tr> <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\"><b>Estado: "+ru.Estado+"</b> </td> <td style=\"padding: 5px;\"><b>Escala: "+ru.Escala+"</b></td> </tr> <tr > <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\"><b> Estabilidad: " +ru.Estabilidad+"</b></td> <td style=\"padding: 5px;\"> <b>Medida: "+ru.Medida+"</b></td> </tr> </table>";
+                tabla = tabla + "<br/>";
+                List<Requisito> aux = item.Value;
+
+                if (aux.Count != 0)
+                {
+                    foreach (Requisito r in aux)
+                    {
+                        tabla = tabla + "<div style=\"page -break-after:always\"></div> <table border=\"1\"style=\"border: 1px solid black; border-collapse: collapse; width: 100%; \"> <tr> <td colspan=\"3\" style=\"text-align:center; padding: 5px;  \">RS \"" + r.Nombre + "\"</td> </tr> <tr> <td style=\"padding: 5px;\"><b>ID: " + r.IdRequisito + "</b></td> <td style=\"padding: 5px;\"><b>Tipo Requisito</b></td> <td style=\"padding: 5px;\">" + r.TipoRequisito + "</td> </tr> <tr> <td style=\"padding: 5px;\"><b>Prioridad</b></td><td colspan=\"2\" style=\"padding: 5px;\" >" + r.Prioridad + "</td> </tr><tr> <td style=\"padding: 5px;\"><b>Descripcion</b></td> <td colspan=\"2\" style=\"padding: 5px;\">" + r.Descripcion + "</td> </tr> <tr> <td style=\"padding: 5px;\"><b>Fuente</b></td> <td colspan=\"2\" style=\"padding: 5px; \">" + r.Fuente + "</td> </tr> <tr class=\"big\"> <td style=\"padding: 5px;\"><b>Actor</b></td> <td colspan=\"2\" style=\"padding: 5px;\">actores</td> </tr> <tr> <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\" ><b> Fecha: " + r.Fecha + " </b></td> <td style=\"padding: 5px;\"><b>Incremento: " + r.Incremento + "</b></td> </tr> <tr> <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\"><b>Estado: " + r.Estado + "</b> </td> <td style=\"padding: 5px;\"><b>Escala: " + r.Escala + "</b></td> </tr> <tr > <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\"><b> Estabilidad: " + r.Estabilidad + "</b></td> <td style=\"padding: 5px;\"> <b>Medida: " + r.Medida + "</b></td> </tr> </table>";
+                        tabla = tabla + "<br/>";
+                    }
+
+                }
+                ;
+            }
+            s = s + tabla;
+            return s;
+        }
+
+       
         
 
         // GET: Proyecto/ListaUsuarios/5

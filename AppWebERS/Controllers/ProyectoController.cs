@@ -1879,6 +1879,8 @@ namespace AppWebERS.Controllers
             var UsuarioActual = User.Identity.GetUserId();
             ViewData["proyecto"] = proyecto;
             ViewData["permiso"] = TipoDePermiso(id);
+            return View();
+        }
 
         private Requisito obtenerRequisito(int id,string idRequisito)
         {
@@ -1905,8 +1907,6 @@ namespace AppWebERS.Controllers
                 r.Tipo = reader["tipo"].ToString();
             }
             return r;
-        }
-            return View();
         }
 
 

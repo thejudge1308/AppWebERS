@@ -100,6 +100,7 @@ namespace AppWebERS.Controllers
             public string volumen { set; get; }
             public string pag { set; get; }
         }
+
         [HttpPost]
         public ActionResult AgregarReferenciaPaper(JsonReferenciaPaper paper)
         {
@@ -113,6 +114,29 @@ namespace AppWebERS.Controllers
             }
             else
             {
+                return Json(false, JsonRequestBehavior.AllowGet);
+
+            }
+        }
+
+        public class JsonReferenciaConferencia {
+            public string id { set; get; }
+            public string autores { get; set; }
+            public string fecha { get; set; }
+            public string titulo { get; set; }
+            public string lugar { get; set; }
+            public string nombre_conferencia { get; set; }
+        }
+
+        [HttpPost]
+        public ActionResult AgregarReferenciaConferencia(JsonReferenciaConferencia paper) {
+            //string autores, string fecha, string titulo, string lugar, string nombreConferencia
+            string referencia = this.ParsearReferenciaPaperConferencia(paper.autores, paper.fecha, paper.titulo, paper.lugar, paper.nombre_conferencia);
+            string consulta = "INSERT INTO Referencia(ref_proyecto,referencia) VALUES('" + paper.id + "','" + referencia + "');";
+            if(this.conexion.RealizarConsultaNoQuery(consulta)) {
+                return Json(true, JsonRequestBehavior.AllowGet);
+
+            } else {
                 return Json(false, JsonRequestBehavior.AllowGet);
 
             }
@@ -286,8 +310,9 @@ namespace AppWebERS.Controllers
             int actual = int.Parse(numActual.ToString());
             string numFuturo = datos["NumFuturo"];
             int futuro = int.Parse(numFuturo.ToString());
-            string numContac = datos["NumContactables"];
-            int contacto = int.Parse(numContac.ToString());
+
+            /*string numContac = datos["NumContactables"];
+            int contacto = int.Parse(numContac.ToString());*/
 
 
             string consulta = "SELECT id_actor FROM actor ORDER BY id_actor desc LIMIT 1";
@@ -306,14 +331,14 @@ namespace AppWebERS.Controllers
 
             this.conexion.EnsureConnectionClosed();
 
-            Actor actor = new Actor(id_actor, descripcion, actual, futuro, contacto, nombre);
+            Actor actor = new Actor(id_actor,descripcion,actual,futuro,nombre);
             Proyecto proyecto = this.GetProyecto(idProyecto);
 
-            consulta = "insert into actor values ( " + id_actor + ", '" + nombre + "','" + descripcion + "','" + actual + "','" + futuro + "','" + contacto + "','" + idProyecto + "')";
+            consulta = "insert into actor values ( " + id_actor + ", '" + nombre + "','" + descripcion + "','" + actual + "','" + futuro  + "','" + idProyecto + "')" ;
 
-            if (contacto < 0 || futuro < 0 || actual < 0)
+            if (futuro < 0 || actual < 0)
             {
-                TempData["alerta"] = new Alerta("Los valores numericos no pueden ser menores a 0", TipoAlerta.ERROR);
+                TempData["alerta"] = new Alerta("Los valores numéricos no pueden ser menores a 0", TipoAlerta.ERROR);
                 ViewData["actual"] = idProyecto;
                 ViewData["usuario"] = TipoDePermiso(idProyecto);
 
@@ -330,7 +355,7 @@ namespace AppWebERS.Controllers
                 return View(actor);
             }
             else {
-                consulta = "insert into actor values ( " + id_actor + ", '" + nombre + "','" + descripcion + "','" + actual + "','" + futuro + "','" + contacto + "','" + idProyecto + "')";
+                consulta = "insert into actor values ( " + id_actor + ", '" + nombre + "','" + descripcion + "','" + actual + "','" + futuro + "','" + idProyecto + "')";
                 reader = this.conexion.RealizarConsulta(consulta);
                 this.conexion.EnsureConnectionClosed();
                 ViewData["actual"] = idProyecto;
@@ -1584,17 +1609,24 @@ namespace AppWebERS.Controllers
 
         }
 
-        private string ParsearReferenciaLibro(string autores, string anio, string titulo, string lugar, string editorial)
+        private string ParsearReferenciaLibro(string autores, string anio, string titulo, string paginas, string editorial)
         {
             string referencia;
-            referencia = autores + ", (" + anio + ")," + titulo + ", " + lugar + ":" + editorial + ".";
+            referencia = autores + ", \""+titulo+"\", "+editorial+", pp. "+paginas+", "+anio;
             return referencia;
         }
 
         private string ParsearReferenciaPaper(string autores,string fecha, string titulo, string revista, string volumen, string pag)
         {
             string referencia;
-            referencia = autores + ",("+ fecha + "),"+ titulo + ", " + revista + "," + volumen + "," + pag + ".";
+            referencia = autores + ", \"" + titulo + "\", " + revista + ", Pp. " + pag + ", Vol. "+volumen+", " + fecha;
+            return referencia;
+
+        }
+
+        private string ParsearReferenciaPaperConferencia(string autores, string fecha, string titulo, string lugar, string nombreConferencia) {
+            string referencia;
+            referencia = autores + ", \"" + titulo + "\". Presentado en "+nombreConferencia+", "+lugar+", "+fecha;
             return referencia;
 
         }
@@ -1605,7 +1637,7 @@ namespace AppWebERS.Controllers
          * </summary>
          * <param name="idProyecto"> ID del proyecto doonde se agregara el requisito</param>
          * 
-         */ 
+         */
         [HttpGet]
         public ActionResult ListarRequisitosMinimalista(int id)
         {

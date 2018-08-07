@@ -988,9 +988,8 @@ namespace AppWebERS.Models{
                     string descripcion = reader.GetString(2);
                     int numActual = reader.GetInt32(3);
                     int numFuturo = reader.GetInt32(4);
-                    int numContactables = reader.GetInt32(5);
                     
-                    listaActores.Add(new Actor(idActor,descripcion,numActual,numFuturo,numContactables,nombre));
+                    listaActores.Add(new Actor(idActor,descripcion,numActual,numFuturo,nombre));
                 }
 
                 this.conexion.EnsureConnectionClosed();

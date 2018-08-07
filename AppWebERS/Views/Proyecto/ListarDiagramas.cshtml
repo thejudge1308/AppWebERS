@@ -6,32 +6,38 @@
 
 }
 
-<style>
-    #myImg {
-    border-radius: 5px;
-    cursor: pointer;
-    transition: 0.3s;
-    }
-
-    #myImg:hover {opacity: 0.7;}
 <h2>Diagramas</h2>
 <ul class="nav nav-tabs">
     <li class="nav-item">
-        <a class="nav-link" href="@Url.Action("Detalles", "Proyecto", new { id = ProyectoActual.IdProyecto })">Detalles</a>
+        <a class="nav-link" href="@Url.Action("Detalles", "Proyecto", new { id = @Model.IdProyecto})">Detalles</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="@Url.Action("ListarRequisitosMinimalista", "Proyecto", new { id = ProyectoActual.IdProyecto })">Requisitos</a>
+        <a class="nav-link" href="@Url.Action("ListarRequisitosMinimalista", "Proyecto", new { id = @Model.IdProyecto })">Requisitos</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link active" href="@Url.Action("ListarDiagramas", "Proyecto", new { id = ProyectoActual.IdProyecto})">Diagramas</a>
+        <a class="nav-link active" href="@Url.Action("ListarDiagramas", "Proyecto", new { id = @Model.IdProyecto })">Diagramas</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="@Url.Action("ListaUsuarios", "Proyecto", new { id = ProyectoActual.IdProyecto })">Usuarios</a>
+        <a class="nav-link" href="@Url.Action("ListaUsuarios", "Proyecto", new { id = @Model.IdProyecto})">Usuarios</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="@Url.Action("ListaActores","Proyecto",new { id = ProyectoActual.IdProyecto})">Actores</a>
+        <a class="nav-link" href="@Url.Action("ListaActores", "Proyecto", new { id = @Model.IdProyecto})">Actores</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="@Url.Action("HistorialCambios","Proyecto",new { id = @Model.IdProyecto})">Historial de cambios</a>
     </li>
 </ul>
+
+<style>
+    #myImg {
+        border-radius: 5px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+        #myImg:hover {
+            opacity: 0.7;
+        }
 
     /* The Modal (background) */
     .modal {
@@ -82,27 +88,7 @@
     }
 </style>
 
-<h2>Diagramas</h2>
-<ul class="nav nav-tabs">
-    <li class="nav-item">
-        <a class="nav-link" href="@Url.Action("Detalles", "Proyecto", new { id = ProyectoActual.IdProyecto })">Detalles</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="@Url.Action("ListarRequisitosMinimalista", "Proyecto", new { id = ProyectoActual.IdProyecto })">Requisitos</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link active" href="@Url.Action("ListarDiagramas", "Proyecto", new { id = ProyectoActual.IdProyecto })">Diagramas</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="@Url.Action("ListaUsuarios", "Proyecto", new { id = ProyectoActual.IdProyecto })">Usuarios</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="@Url.Action("ListaActores", "Proyecto", new { id = ProyectoActual.IdProyecto })">Actores</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="@Url.Action("HistorialCambios","Proyecto",new { id = ProyectoActual.IdProyecto})">Historial de cambios</a>
-    </li>
-</ul>
+
 
 
 <div class="dropdown-divider"></div>
@@ -189,19 +175,6 @@
         }
     }
 </div>
-
-<div class="modal mt-5 mx-auto w-100" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="true" style="overflow: scroll;">
-    <div class="modal-dialog-centered">
-       
-        <div class="modal-body float-right pl-5 w-100">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <h1 aria-hidden="true">&times;</h1>
-            </button>
-            <div class="container float-right pl-2">
-                <div class="row justify-content-center">
-                    <img src="http://www.abiztar.com.mx/articulos/imagenes/caso_de_abuso.gif" alt="Card image cap">
-                </div>
-            </div>
 <div id="myModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
@@ -215,10 +188,6 @@
         </div>
     </div>
 </div>
-
-        </div>
-    </div>
-    </div>
 
 <script>
     var modal = document.getElementById('myModal');

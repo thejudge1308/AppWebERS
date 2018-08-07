@@ -114,13 +114,13 @@
             <div class="form-group row" style="margin-bottom:10px">
                 @Html.LabelFor(m => m.Medida, new { @class = "col-form-label", style = "margin-left:15px;margin-right:45px" })
                 <div class="col-sm-3">
-                    @Html.TextBoxFor(m => m.Medida, new { placeholder = "Ingrese la medida", @class = "form-control mx-sm-2" })
+                    @Html.TextBoxFor(m => Model.Medida, new { placeholder = "Ingrese la medida", @class = "form-control mx-sm-2" })
                     @Html.ValidationMessageFor(m => m.Medida, "", new { @style = "color:rgb(209,52,56); font-size:12px" })
                 </div>
             </div>
             <div>
                 @Html.LabelFor(m => m.Escala)
-                @Html.TextBoxFor(m => m.Escala, new { placeholder = "Escala", @class = "form-control col-form-label" })
+                @Html.TextBoxFor(m => Model.Escala, new { placeholder = "Escala", @class = "form-control col-form-label" })
                 @Html.ValidationMessageFor(m => m.Escala, "", new { @style = "color:rgb(209,52,56); font-size:12px" })
 
             </div>
@@ -195,6 +195,7 @@
         <div class="form-group">
             <div style="margin-top:10px;align">
                 <button type="submit" class="btn btn-success">Guardar cambios</button>
+                @Html.ActionLink("Atras", "ListarRequisitosMinimalista", "Proyecto", new { id = ViewBag.IdProyecto }, new { boton = "valor", @class = "btn btn-dark" })
             </div>
         </div>
 

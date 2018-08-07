@@ -211,6 +211,7 @@
     <Compile Include="Identity\UserTable.cs" />
     <Compile Include="Models\Actor.cs" />
     <Compile Include="Models\CasoDeUso.cs" />
+    <Compile Include="Models\Diagrama.cs" />
     <Compile Include="Models\ConectorBD.cs" />
     <Compile Include="Models\DiagramaModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />

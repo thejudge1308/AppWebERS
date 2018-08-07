@@ -17,6 +17,8 @@ using System.Web.Script.Serialization;
 using System.IO;
 using static AppWebERS.Models.Requisito;
 using Newtonsoft.Json;
+using System.Drawing;
+using MySql.Data;
 
 namespace AppWebERS.Controllers
 {
@@ -218,12 +220,43 @@ namespace AppWebERS.Controllers
             return Json(proyecto, JsonRequestBehavior.AllowGet);
         }
 
+
+
+        
+
+        private List<Diagrama> ObtenerDiagramas(int idProyecto)
+        {
+            ApplicationDbContext conexion = ApplicationDbContext.Create();
+            List<Diagrama> imagenes = new List<Diagrama>();
+            string consulta = "SELECT * FROM diagrama WHERE ref_proyecto = " + idProyecto + ";";
+            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
+            if (reader != null)
+            {
+                while (reader.Read())
+                {
+                    int id = Convert.ToInt32(reader["id_diagrama"].ToString());
+                    string nombre = reader["nombre"].ToString();
+                    string ruta = reader["ruta"].ToString();
+                    string tipo = reader["tipo"].ToString();
+                    int refProyecto = Convert.ToInt32(reader["ref_proyecto"].ToString());
+                    Diagrama dm = new Diagrama(id, nombre, ruta, tipo,refProyecto);
+                    imagenes.Add(dm);
+                }
+            }
+            conexion.EnsureConnectionClosed();
+            return imagenes;
+        }
+
+
+
         public ActionResult ExportarPDF(int id) {
 
 
             FileResult fileResult = null;
             var generator = new NReco.PdfGenerator.HtmlToPdfConverter();
             Proyecto proyecto = this.GetProyecto(id);
+
+            
 
 
 
@@ -232,7 +265,7 @@ namespace AppWebERS.Controllers
             string htmlContent = "<html>" +
                 "  <head>" +
                 " <style> " +
-                "body { margin: 2cm; } .logo { font-size: 40px; font-weigth: bold; } .titulo { text-align: center; margin-top: 30px;margin-bottom: 30px; } .fecha { margin-left: 100px; } .espacio-izq { margin-left: 50px; } table td{ font-size: 18px;  } " +
+                "body { margin: 2cm; } .logo { font-size: 40px; font-weigth: bold; } .titulo { text-align: left; margin-top: 30px;margin-bottom: 30px; } .fecha { margin-left: 100px; } .espacio-izq { margin-left: 50px; } table td{ font-size: 18px;  } " +
                 "</style>" +
                 " </head> " +
                 "<body> " +
@@ -270,11 +303,16 @@ namespace AppWebERS.Controllers
 
                 "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.10) Relación con otros proyectos </strong> <br><br> </td></tr> " +
                 "<tr> <td>" + proyecto.RelacionProyectos + "</td> </tr> " +
+                
                 "</table> ";
+
             string minimalista = this.AgregarListadoMinimalista(id);
             string volere = this.CrearVolere();
+            string diagramas = this.obtenerHtmlDiagramas(id);
+            string referencias = this.obtenerReferencias(id);
             string final = " </body> </html>";
-            htmlContent = htmlContent + minimalista + volere + final;
+            
+            htmlContent = htmlContent + minimalista + volere + diagramas  + referencias +  final;
             
             string filename = fecha+".pdf";
 
@@ -289,6 +327,61 @@ namespace AppWebERS.Controllers
             return fileResult;
         }
 
+        private string obtenerReferencias(int id)
+        {
+            return "";
+        }
+
+        private string obtenerHtmlDiagramas(int id)
+        {
+            List<Diagrama> diagramas = this.ObtenerDiagramas(id);
+            String ht = "";
+            int contador = 1;
+
+            foreach (Diagrama t in diagramas)
+            {
+                System.Drawing.Image img = System.Drawing.Image.FromFile(t.GetRuta());
+
+                if (img.Width < 700 && img.Height < 450)
+                {
+                    ht += "<tr> <td align=\"center\" > " + "<br>"  + " <img src=\"" + t.GetRuta() + "\" alt =\"HTML5 Icon\" style =\"width: " + img.Width + "px; height: " + img.Height + "px; \" >" + "</td> </tr> ";
+                }
+                else if (img.Width <= 700 && img.Height >= 450)
+                {
+                    ht += "<tr> <td align=\"center\" > " + "<br>" + " <img src=\"" + t.GetRuta() + "\" alt =\"HTML5 Icon\" style =\"width: " + img.Width + "px; height:450px; \" >" + "</td> </tr> ";
+                }
+                else if (img.Width >= 700 && img.Height <= 450)
+                {
+                    ht += "<tr> <td align=\"center\" > " + "<br>" + " <img src=\"" + t.GetRuta() + "\" alt =\"HTML5 Icon\" style =\"width:700px; height: " + img.Height + "px; \" >" + "</td> </tr> ";
+                }
+                else
+                {
+                    ht += "<tr> <td align=\"center\"> " + "<br>" + " <img src=\"" + t.GetRuta() + "\" alt =\"HTML5 Icon\" style =\"width: 700px; height: 450px; \" >" + "</td> </tr> ";
+                }
+
+                ht += "<tr> <td align=\"center\">" + "4." + contador + " " + t.GetNombre() + " " + "[" + t.GetTipo() + "]" + "</td> </tr> ";
+                contador++;
+            }
+
+            string htmlDiagramas = "<html>" +
+                "  <head>" +
+                " <style> " +
+                "body { margin: 2cm; } .logo { font-size: 40px; font-weigth: bold; } .titulo { text-align: left; margin-top: 30px;margin-bottom: 30px; } .fecha { margin-left: 100px; } .espacio-izq { margin-left: 50px; } table td{ font-size: 18px;  } " +
+                "</style>" +
+                " </head> " +
+                "<body> " +
+                "<meta charset=\"UTF-8\" /> " +
+
+                "<table> " +
+
+                "<tr> <td>  <h1 class=\"titulo\" > 4) Diagramas</h1> </td></tr> " +
+
+                ht +
+
+                "</table> ";
+            return htmlDiagramas;
+        }
+
         /**
          * 
          * <autor>Rodrigo Letelier</autor>
@@ -297,7 +390,7 @@ namespace AppWebERS.Controllers
          * <returns>El html con los requisitos dentro.</returns>
          */
 
-            private string AgregarListadoMinimalista(int idp) {
+        private string AgregarListadoMinimalista(int idp) {
 
             string s = "<h1 class=\"titulo\" > 2) Listado de requisitos</h1> <table class=\"espacio - izq\">";
             

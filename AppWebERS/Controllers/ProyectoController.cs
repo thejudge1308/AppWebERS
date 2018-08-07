@@ -1769,13 +1769,12 @@ namespace AppWebERS.Controllers
             return View(model);
         }
 
-        /**
-          <autor> Raimundo Vasquez</autor>
-        * <summary>Metodo para obtener un id según proyecto y numero ( autoincremental en bd) del requisito</summary>
-        * <param name="id">Id del proyecto al que pertenece el requisito.</param>
-        * <param name="num_requisito">Id del requisito de sistema que se desea editar.</param>
-        * <returns>Objeto con los valores del requisito que se desea editar.</returns>
-        */
+        public ActionResult HistorialCambios(int id)
+        {
+            Proyecto proyecto = this.GetProyecto(id);
+            var UsuarioActual = User.Identity.GetUserId();
+            ViewData["proyecto"] = proyecto;
+            ViewData["permiso"] = TipoDePermiso(id);
 
         private Requisito obtenerRequisito(int id,int num_requisito)
         {
@@ -1803,6 +1802,10 @@ namespace AppWebERS.Controllers
             }
             return r;
         }
+            return View();
+        }
+
+
     }
 
    

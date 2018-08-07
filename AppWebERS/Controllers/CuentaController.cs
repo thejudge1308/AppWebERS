@@ -391,8 +391,9 @@ namespace AppWebERS.Controllers
                         await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), usuarioViewModel.Password);
                     }
                     TempData["alerta"] = new Alerta("El usuario se modificó exitosamente.", TipoAlerta.SUCCESS);
-
-                    return RedirectToAction("ListarUsuarios", new {rut = usuarioViewModel.Rut});
+                    if(this.RetornarTipoUsuarioAutentificado().Equals("SYSADMIN"))
+                        return RedirectToAction("ListarUsuarios", new {rut = usuarioViewModel.Rut});
+                    return RedirectToAction("Index", "Home");
                 }
             }            
             return View(usuarioViewModel);
@@ -479,6 +480,46 @@ namespace AppWebERS.Controllers
             catch
             {
                 return "INVITADO";
+            }
+        }
+
+        /*
+         * Creador: Maximo Hernandez
+         * Accion: Retorna el nombre del usuario autentificado
+         * Retorno: String con el nombre de usuario autentificado, en caso de error se devuelve el string "Invitado".
+         */
+        public string RetornarNombreUsuarioIdentificado()
+        {
+            try
+            {
+                Task<string> tipo = UserManager.getNombreUsuarioIdentificado(User.Identity.GetUserId());
+                return tipo.Result;
+            }
+            catch
+            {
+                return "INVITADO";
+            }
+        }
+
+        /*
+         * Creador: Maximo Hernandez
+         * Accion: Retorna la disponibilidad del usuario autentificado
+         * Retorno: String con la disponibilidad del usuario autentificado, "True" si es que el usuario esta disponible, "False" en caso contrario
+         */
+        public string RetornarDisponibilidadVinculacionUsuarioIdentificado()
+        {
+            try
+            {
+                Task<bool> tipo = UserManager.getDisponibilidadVinculacionUsuarioIdentificado(User.Identity.GetUserId());
+                if (tipo.Result)
+                {
+                    return "True";
+                }
+                return "False";
+            }
+            catch
+            {
+                return "False";
             }
         }
 

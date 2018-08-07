@@ -98,7 +98,8 @@ namespace AppWebERS.Controllers{
                     }
 
                     webClient.DownloadFile(@url, @path);
-                    this.agregar(nombreURL, id, path, tipoDeDiagramaURL);
+                    this.agregar(nombre, id, "../../UploadedFiles/" + nombreURL, tipoDeDiagramaURL);
+                    //this.agregar(nombreURL, id, path, tipoDeDiagramaURL);
                     TempData["alerta"] = new Alerta("Diagrama subido con éxito!!", TipoAlerta.SUCCESS);
                     ViewBag.Message = "Diagrama subido con éxito!!";
                     Conector.CerrarConexion();
@@ -158,8 +159,8 @@ namespace AppWebERS.Controllers{
                     return RedirectToAction("SubirDiagrama", "Diagrama", new { id = idProyecto });
                 }
 
-             
-                this.agregar(nombre, id, _path, tipoDeDiagrama);
+                this.agregar(nombre, id, "../../UploadedFiles/" + _FileName, tipoDeDiagrama);
+                //this.agregar(nombre, id, _path, tipoDeDiagrama);
                 file.SaveAs(_path);
                 TempData["alerta"] = new Alerta("Diagrama subido con éxito!!", TipoAlerta.SUCCESS);
                 ViewBag.Message = "Diagrama subido con éxito!!";

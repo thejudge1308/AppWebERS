@@ -310,8 +310,9 @@ namespace AppWebERS.Controllers
             int actual = int.Parse(numActual.ToString());
             string numFuturo = datos["NumFuturo"];
             int futuro = int.Parse(numFuturo.ToString());
-            string numContac = datos["NumContactables"];
-            int contacto = int.Parse(numContac.ToString());
+
+            /*string numContac = datos["NumContactables"];
+            int contacto = int.Parse(numContac.ToString());*/
 
 
             string consulta = "SELECT id_actor FROM actor ORDER BY id_actor desc LIMIT 1";
@@ -330,12 +331,12 @@ namespace AppWebERS.Controllers
 
             this.conexion.EnsureConnectionClosed();
 
-            Actor actor = new Actor(id_actor,descripcion,actual,futuro,contacto,nombre);
+            Actor actor = new Actor(id_actor,descripcion,actual,futuro,nombre);
             Proyecto proyecto = this.GetProyecto(idProyecto);
 
-            consulta = "insert into actor values ( " + id_actor + ", '" + nombre + "','" + descripcion + "','" + actual + "','" + futuro + "','" + contacto + "','" + idProyecto + "')" ;
+            consulta = "insert into actor values ( " + id_actor + ", '" + nombre + "','" + descripcion + "','" + actual + "','" + futuro  + "','" + idProyecto + "')" ;
 
-            if (contacto < 0 || futuro < 0 || actual < 0)
+            if (futuro < 0 || actual < 0)
             {
                 TempData["alerta"] = new Alerta("Los valores numericos no pueden ser menores a 0", TipoAlerta.ERROR);
                 ViewData["actual"] = idProyecto;
@@ -354,7 +355,7 @@ namespace AppWebERS.Controllers
                 return View(actor);
             }
             else {
-                consulta = "insert into actor values ( " + id_actor + ", '" + nombre + "','" + descripcion + "','" + actual + "','" + futuro + "','" + contacto + "','" + idProyecto + "')";
+                consulta = "insert into actor values ( " + id_actor + ", '" + nombre + "','" + descripcion + "','" + actual + "','" + futuro + "','" + idProyecto + "')";
                 reader = this.conexion.RealizarConsulta(consulta);
                 this.conexion.EnsureConnectionClosed();
                 ViewData["actual"] = idProyecto;

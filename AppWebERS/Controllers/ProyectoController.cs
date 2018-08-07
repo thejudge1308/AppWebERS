@@ -1546,6 +1546,14 @@ namespace AppWebERS.Controllers
              return value;
         }
 
+        /**
+        * <author>Jose Nunnez</author>
+        * <summary>
+        * Metodo para obtener los actores desde la BD
+        * </summary>
+        * <param name=""="id"> Es el ID correspondiente a un proyecto
+        * <returns> Un listado con del tipo CheckBox que posee el nombre y el valor del checkbox correspondiente a un actor</returns>
+        */
         private List<CheckBox> obtenerActores(int id) {
             List<CheckBox> l = new List<CheckBox>();
             //ARREGLAR LA CONSULTA
@@ -1860,6 +1868,14 @@ namespace AppWebERS.Controllers
             return RedirectToAction("ListarRequisitosMinimalista", "Proyecto", new { id = idProyecto });
         }
 
+        /**
+        * <author>Jose Nunnez</author>
+        * <summary>
+        * Metodo para ejecutar/abrir la ventana de listarDiagramas
+        * </summary>
+        * <param name=""="id"> Es el ID correspondiente a un proyecto
+        * <returns> La vista de listar Diagramas</returns>
+        */
         public ActionResult ListarDiagramas(int id)
         {
             DiagramaModels model = new DiagramaModels(id, TipoDePermiso(id));

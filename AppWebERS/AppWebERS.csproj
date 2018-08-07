@@ -211,6 +211,7 @@
     <Compile Include="Identity\UserTable.cs" />
     <Compile Include="Models\Actor.cs" />
     <Compile Include="Models\CasoDeUso.cs" />
+    <Compile Include="Models\Diagrama.cs" />
     <Compile Include="Models\ConectorBD.cs" />
     <Compile Include="Models\DiagramaModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -219,6 +220,7 @@
     <Compile Include="Models\ModificacionDERS.cs" />
     <Compile Include="Models\NombreProyecto.cs" />
     <Compile Include="Models\Proyecto.cs" />
+    <Compile Include="Models\Referencia.cs" />
     <Compile Include="Models\Requisito.cs" />
     <Compile Include="Models\SolicitudDeProyecto.cs" />
     <Compile Include="Models\SolicitudDeUsuario.cs" />

@@ -1873,6 +1873,12 @@ namespace AppWebERS.Controllers
         * <param name="num_requisito">Id del requisito de sistema que se desea editar.</param>
         * <returns>Objeto con los valores del requisito que se desea editar.</returns>
         */
+        public ActionResult HistorialCambios(int id)
+        {
+            Proyecto proyecto = this.GetProyecto(id);
+            var UsuarioActual = User.Identity.GetUserId();
+            ViewData["proyecto"] = proyecto;
+            ViewData["permiso"] = TipoDePermiso(id);
 
         private Requisito obtenerRequisito(int id,string idRequisito)
         {
@@ -1900,6 +1906,10 @@ namespace AppWebERS.Controllers
             }
             return r;
         }
+            return View();
+        }
+
+
     }
 
    

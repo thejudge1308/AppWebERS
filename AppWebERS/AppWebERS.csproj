@@ -220,6 +220,7 @@
     <Compile Include="Models\ModificacionDERS.cs" />
     <Compile Include="Models\NombreProyecto.cs" />
     <Compile Include="Models\Proyecto.cs" />
+    <Compile Include="Models\Referencia.cs" />
     <Compile Include="Models\Requisito.cs" />
     <Compile Include="Models\SolicitudDeProyecto.cs" />
     <Compile Include="Models\SolicitudDeUsuario.cs" />

@@ -327,9 +327,55 @@ namespace AppWebERS.Controllers
             return fileResult;
         }
 
-        private string obtenerReferencias(int id)
+        private string obtenerReferencias(int idProyecto)
         {
-            return "";
+            ApplicationDbContext conexion = ApplicationDbContext.Create();
+            List<AppWebERS.Models.Referencia> referencias = new List<AppWebERS.Models.Referencia>();
+            string consulta = "SELECT * FROM referencia WHERE ref_proyecto = " + idProyecto + ";";
+            MySqlDataReader reader = conexion.RealizarConsulta(consulta);
+            if (reader != null)
+            {
+                while (reader.Read())
+                {
+                    string referencia = reader["referencia"].ToString();
+                    AppWebERS.Models.Referencia dm = new AppWebERS.Models.Referencia(idProyecto, referencia);
+                    referencias.Add(dm);
+                }
+            }
+            conexion.EnsureConnectionClosed();
+
+
+            string ht = "";
+
+            foreach (AppWebERS.Models.Referencia t in referencias)
+            {
+                ht += "<tr> <td align=\"left\" > " + "<br>" + "- " + t.getReferencia() + "</td> </tr> ";
+            }
+
+            if (referencias.Count == 0)
+            {
+                return "";
+            }
+
+            string htmlReferencias = "<html>" +
+            "  <head>" +
+            " <style> " +
+            "body { margin: 2cm; } .logo { font-size: 40px; font-weigth: bold; } .titulo { text-align: left; margin-top: 30px;margin-bottom: 30px; } .fecha { margin-left: 100px; } .espacio-izq { margin-left: 50px; } table td{ font-size: 18px;  } " +
+            "</style>" +
+            " </head> " +
+            "<body> " +
+            "<meta charset=\"UTF-8\" /> " +
+
+            "<table> " +
+
+            "<tr> <td>  <h1 class=\"titulo\" > 5) Referencias</h1> </td></tr> " +
+
+            ht +
+
+            "</table> ";
+
+
+            return htmlReferencias;
         }
 
         private string obtenerHtmlDiagramas(int id)

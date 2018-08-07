@@ -338,7 +338,7 @@ namespace AppWebERS.Controllers
 
             if (futuro < 0 || actual < 0)
             {
-                TempData["alerta"] = new Alerta("Los valores numericos no pueden ser menores a 0", TipoAlerta.ERROR);
+                TempData["alerta"] = new Alerta("Los valores numéricos no pueden ser menores a 0", TipoAlerta.ERROR);
                 ViewData["actual"] = idProyecto;
                 ViewData["usuario"] = TipoDePermiso(idProyecto);
 

@@ -218,7 +218,7 @@ namespace AppWebERS.Controllers
             return Json(proyecto, JsonRequestBehavior.AllowGet);
         }
 
-        public FileResult ExportarPDF(int id) {
+        public ActionResult ExportarPDF(int id) {
 
 
             FileResult fileResult = null;
@@ -227,9 +227,17 @@ namespace AppWebERS.Controllers
 
 
 
-            string fecha = DateTime.Now.ToString();
-            string htmlContent = "<html>  <head> <style> body { margin: 2cm; } .logo { font-size: 40px; font-weigth: bold; } .titulo { text-align: center; margin-top: 30px;margin-bottom: 30px; } .fecha { margin-left: 100px; } .espacio-izq { margin-left: 50px; } table td{ font-size: 18px; } </style> </head> <body> <meta charset=\"UTF-8\" /> <table> <tr> <td class=\"logo\">AppWebERS</td> <td </tr> </table> <hr> <p class=\"fecha\">Fecha: " + fecha + "</p> <hr> <h1 class=\"titulo\"> 1) Detalles del proyecto</h1> " +
-
+            DateTime fechadt = DateTime.Now;
+            string fecha = String.Format("{0:dddd d 'de' MMMM 'del' yyyy}", fechadt);
+            string htmlContent = "<html>" +
+                "  <head>" +
+                " <style> " +
+                "body { margin: 2cm; } .logo { font-size: 40px; font-weigth: bold; } .titulo { text-align: center; margin-top: 30px;margin-bottom: 30px; } .fecha { margin-left: 100px; } .espacio-izq { margin-left: 50px; } table td{ font-size: 18px;  } " +
+                "</style>" +
+                " </head> " +
+                "<body> " +
+                "<meta charset=\"UTF-8\" /> <table> <tr> <td class=\"logo\">AppWebERS</td> <td </tr> </table> <hr> <p class=\"fecha\">Fecha: " + fecha + "</p> <hr> <h1 class=\"titulo\"> 1) Detalles del proyecto</h1> " +
+            
                 
 
                 "<table> " +
@@ -264,9 +272,10 @@ namespace AppWebERS.Controllers
                 "<tr> <td>" + proyecto.RelacionProyectos + "</td> </tr> " +
                 "</table> ";
             string minimalista = this.AgregarListadoMinimalista(id);
+            string volere = this.CrearVolere();
             string final = " </body> </html>";
-            htmlContent = htmlContent + minimalista + final;
-
+            htmlContent = htmlContent + minimalista + volere + final;
+            
             string filename = fecha+".pdf";
 
             generator.Orientation = NReco.PdfGenerator.PageOrientation.Default;
@@ -346,6 +355,31 @@ namespace AppWebERS.Controllers
                 s = s + "</td> </tr>";
             }
             s = s + "</table>";
+            return s;
+        }
+
+        private string CrearVolere() {
+            string s = "<h1 class=\"titulo\" > 3) Requisitos Volere</h1> ";
+            string tabla = "";
+            foreach (var item in requisitos)
+            {
+                Requisito ru = item.Key;
+                tabla = tabla + "<div style=\"page -break-after:always\"></div> <table border=\"1\"style=\"border: 1px solid black; border-collapse: collapse; width: 100%; \"> <tr> <td colspan=\"3\" style=\"text-align:center; padding: 5px;  \">RU \"" + ru.Nombre + "\"</td> </tr> <tr> <td style=\"padding: 5px;\"><b>ID: " + ru.IdRequisito + "</b></td> <td style=\"padding: 5px;\"><b>Tipo Requisito</b></td> <td style=\"padding: 5px;\">" + ru.TipoRequisito+ "</td> </tr> <tr> <td style=\"padding: 5px;\"><b>Prioridad</b></td><td colspan=\"2\" style=\"padding: 5px;\" >" +ru.Prioridad + "</td> </tr><tr> <td style=\"padding: 5px;\"><b>Descripcion</b></td> <td colspan=\"2\" style=\"padding: 5px;\">" + ru.Descripcion+"</td> </tr> <tr> <td style=\"padding: 5px;\"><b>Fuente</b></td> <td colspan=\"2\" style=\"padding: 5px; \">" + ru.Fuente+ "</td> </tr> <tr class=\"big\"> <td style=\"padding: 5px;\"><b>Actor</b></td> <td colspan=\"2\" style=\"padding: 5px;\">actores</td> </tr> <tr> <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\" ><b> Fecha: "+ru.Fecha +" </b></td> <td style=\"padding: 5px;\"><b>Incremento: "+ru.Incremento+"</b></td> </tr> <tr> <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\"><b>Estado: "+ru.Estado+"</b> </td> <td style=\"padding: 5px;\"><b>Escala: "+ru.Escala+"</b></td> </tr> <tr > <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\"><b> Estabilidad: " +ru.Estabilidad+"</b></td> <td style=\"padding: 5px;\"> <b>Medida: "+ru.Medida+"</b></td> </tr> </table>";
+                tabla = tabla + "<br/>";
+                List<Requisito> aux = item.Value;
+
+                if (aux.Count != 0)
+                {
+                    foreach (Requisito r in aux)
+                    {
+                        tabla = tabla + "<div style=\"page -break-after:always\"></div> <table border=\"1\"style=\"border: 1px solid black; border-collapse: collapse; width: 100%; \"> <tr> <td colspan=\"3\" style=\"text-align:center; padding: 5px;  \">RS \"" + r.Nombre + "\"</td> </tr> <tr> <td style=\"padding: 5px;\"><b>ID: " + r.IdRequisito + "</b></td> <td style=\"padding: 5px;\"><b>Tipo Requisito</b></td> <td style=\"padding: 5px;\">" + r.TipoRequisito + "</td> </tr> <tr> <td style=\"padding: 5px;\"><b>Prioridad</b></td><td colspan=\"2\" style=\"padding: 5px;\" >" + r.Prioridad + "</td> </tr><tr> <td style=\"padding: 5px;\"><b>Descripcion</b></td> <td colspan=\"2\" style=\"padding: 5px;\">" + r.Descripcion + "</td> </tr> <tr> <td style=\"padding: 5px;\"><b>Fuente</b></td> <td colspan=\"2\" style=\"padding: 5px; \">" + r.Fuente + "</td> </tr> <tr class=\"big\"> <td style=\"padding: 5px;\"><b>Actor</b></td> <td colspan=\"2\" style=\"padding: 5px;\">actores</td> </tr> <tr> <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\" ><b> Fecha: " + r.Fecha + " </b></td> <td style=\"padding: 5px;\"><b>Incremento: " + r.Incremento + "</b></td> </tr> <tr> <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\"><b>Estado: " + r.Estado + "</b> </td> <td style=\"padding: 5px;\"><b>Escala: " + r.Escala + "</b></td> </tr> <tr > <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\"><b> Estabilidad: " + r.Estabilidad + "</b></td> <td style=\"padding: 5px;\"> <b>Medida: " + r.Medida + "</b></td> </tr> </table>";
+                        tabla = tabla + "<br/>";
+                    }
+
+                }
+                ;
+            }
+            s = s + tabla;
             return s;
         }
 

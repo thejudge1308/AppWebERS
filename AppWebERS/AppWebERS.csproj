@@ -390,6 +390,7 @@
     <Content Include="Views\CasoDeUso\UploadFile.cshtml" />
     <Content Include="Views\Proyecto\ListaActores.cshtml" />
     <Content Include="Views\Proyecto\AgregarActor.cshtml" />
+    <Content Include="Views\Proyecto\EditarRequisito.cshtml" />
     <Content Include="Views\Proyecto\HistorialCambios.cshtml" />
     <Content Include="Views\Proyecto\RequisitoSistema.cshtml" />
     <Content Include="Views\Proyecto\AsociarRequisitoSistemaExistente.cshtml" />
@@ -430,7 +431,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>51255</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>

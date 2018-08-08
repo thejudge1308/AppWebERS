@@ -412,6 +412,17 @@ namespace AppWebERS.Models {
             return false;
         }
 
+        public bool RegistrarActor2(string actor, int numRequisito)
+        {
+
+            string consultaInsertar = "INSERT INTO vinculo_actor_requisito(ref_actor,ref_req) VALUES('" + actor + "','" + numRequisito + "');";
+            if (this.conexion.RealizarConsultaNoQuery(consultaInsertar))
+            {
+                return true;
+            }
+            return false;
+        }
+
         /**
          * 
          * <autor>Diego Iturriaga</autor>

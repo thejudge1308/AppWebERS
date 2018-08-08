@@ -49,5 +49,12 @@ namespace AppWebERS.Controllers
                 tipoRequisito, medida, escala, fecha, incremento, tipo);
             return View();
         }
+
+        public ActionResult Volver(string idProyecto)
+        {
+
+            int value = Int32.Parse(idProyecto);
+            return RedirectToAction("Detalles", "Proyecto", new { id = value });
+        }
     }
 }

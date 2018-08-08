@@ -100,6 +100,7 @@ namespace AppWebERS.Controllers
             public string volumen { set; get; }
             public string pag { set; get; }
         }
+
         [HttpPost]
         public ActionResult AgregarReferenciaPaper(JsonReferenciaPaper paper)
         {
@@ -113,6 +114,29 @@ namespace AppWebERS.Controllers
             }
             else
             {
+                return Json(false, JsonRequestBehavior.AllowGet);
+
+            }
+        }
+
+        public class JsonReferenciaConferencia {
+            public string id { set; get; }
+            public string autores { get; set; }
+            public string fecha { get; set; }
+            public string titulo { get; set; }
+            public string lugar { get; set; }
+            public string nombre_conferencia { get; set; }
+        }
+
+        [HttpPost]
+        public ActionResult AgregarReferenciaConferencia(JsonReferenciaConferencia paper) {
+            //string autores, string fecha, string titulo, string lugar, string nombreConferencia
+            string referencia = this.ParsearReferenciaPaperConferencia(paper.autores, paper.fecha, paper.titulo, paper.lugar, paper.nombre_conferencia);
+            string consulta = "INSERT INTO Referencia(ref_proyecto,referencia) VALUES('" + paper.id + "','" + referencia + "');";
+            if(this.conexion.RealizarConsultaNoQuery(consulta)) {
+                return Json(true, JsonRequestBehavior.AllowGet);
+
+            } else {
                 return Json(false, JsonRequestBehavior.AllowGet);
 
             }
@@ -152,54 +176,53 @@ namespace AppWebERS.Controllers
             Proyecto proyecto = new Proyecto();
 
             switch (json.atributo) {
-
-                case "nombre":
-                    proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo);
+                case "nombre":        
+                    proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo, User.Identity.GetUserId());
                     return Json(true, JsonRequestBehavior.AllowGet);
                     break;
 
                 case "proposito":
-                    proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo);
+                    proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo, User.Identity.GetUserId());
                     return Json(true, JsonRequestBehavior.AllowGet);
                     break;
 
                 case "alcance":
-                    proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo);
+                    proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo, User.Identity.GetUserId());
                     return Json(true, JsonRequestBehavior.AllowGet);
                     break;
 
                 case "contexto":
-                    proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo);
+                    proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo, User.Identity.GetUserId());
                     return Json(true, JsonRequestBehavior.AllowGet);
                     break;
 
                 case "definicion":
-                    proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo);
+                    proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo, User.Identity.GetUserId());
                     return Json(true, JsonRequestBehavior.AllowGet);
                     break;
 
                 case "acronimo":
-                    proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo);
+                    proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo, User.Identity.GetUserId());
                     return Json(true, JsonRequestBehavior.AllowGet);
                     break;
 
                 case "abreviatura":
-                    proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo);
+                    proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo, User.Identity.GetUserId());
                     return Json(true, JsonRequestBehavior.AllowGet);
                     break;
 
                 case "referencia":
-                    proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo);
+                    proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo, User.Identity.GetUserId());
                     return Json(true, JsonRequestBehavior.AllowGet);
                     break;
 
                 case "ambiente":
-                    proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo);
+                    proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo, User.Identity.GetUserId());
                     return Json(true, JsonRequestBehavior.AllowGet);
                     break;
 
                 case "relacion":
-                    proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo);
+                    proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo, User.Identity.GetUserId());
                     return Json(true, JsonRequestBehavior.AllowGet);
                     break;
             }
@@ -286,8 +309,9 @@ namespace AppWebERS.Controllers
             int actual = int.Parse(numActual.ToString());
             string numFuturo = datos["NumFuturo"];
             int futuro = int.Parse(numFuturo.ToString());
-            string numContac = datos["NumContactables"];
-            int contacto = int.Parse(numContac.ToString());
+
+            /*string numContac = datos["NumContactables"];
+            int contacto = int.Parse(numContac.ToString());*/
 
 
             string consulta = "SELECT id_actor FROM actor ORDER BY id_actor desc LIMIT 1";
@@ -306,14 +330,14 @@ namespace AppWebERS.Controllers
 
             this.conexion.EnsureConnectionClosed();
 
-            Actor actor = new Actor(id_actor, descripcion, actual, futuro, contacto, nombre);
+            Actor actor = new Actor(id_actor,descripcion,actual,futuro,nombre);
             Proyecto proyecto = this.GetProyecto(idProyecto);
 
-            consulta = "insert into actor values ( " + id_actor + ", '" + nombre + "','" + descripcion + "','" + actual + "','" + futuro + "','" + contacto + "','" + idProyecto + "')";
+            consulta = "insert into actor values ( " + id_actor + ", '" + nombre + "','" + descripcion + "','" + actual + "','" + futuro  + "','" + idProyecto + "')" ;
 
-            if (contacto < 0 || futuro < 0 || actual < 0)
+            if (futuro < 0 || actual < 0)
             {
-                TempData["alerta"] = new Alerta("Los valores numericos no pueden ser menores a 0", TipoAlerta.ERROR);
+                TempData["alerta"] = new Alerta("Los valores numéricos no pueden ser menores a 0", TipoAlerta.ERROR);
                 ViewData["actual"] = idProyecto;
                 ViewData["usuario"] = TipoDePermiso(idProyecto);
 
@@ -330,7 +354,7 @@ namespace AppWebERS.Controllers
                 return View(actor);
             }
             else {
-                consulta = "insert into actor values ( " + id_actor + ", '" + nombre + "','" + descripcion + "','" + actual + "','" + futuro + "','" + contacto + "','" + idProyecto + "')";
+                consulta = "insert into actor values ( " + id_actor + ", '" + nombre + "','" + descripcion + "','" + actual + "','" + futuro + "','" + idProyecto + "')";
                 reader = this.conexion.RealizarConsulta(consulta);
                 this.conexion.EnsureConnectionClosed();
                 ViewData["actual"] = idProyecto;
@@ -976,8 +1000,108 @@ namespace AppWebERS.Controllers
                 return RedirectToAction("ListarRequisitosMinimalista/"+id, "Proyecto");
             }
         }
+        /**
+          * <author>Raimundo Vásquez</author>
+          * <summary>
+          * POST que actualiza en la base de datos el requisito seleccionado para editar
+          * </summary>
+          * <param name="id">id correspondiente al Proyecto Actual.</param>
+          * <param name="num_requisito">id correspondiente al requisito que queremos modificar.</param>
+          * <returns> View de tarjeta volere para editar el requisito</returns>
+          */
+        [HttpGet]
+        public ActionResult EditarRequisito(int id,string idRequisito)
+        {
+            Requisito requisito = this.obtenerRequisito(id,idRequisito);
+            ViewData["requisito"] = requisito;
+            ViewData["tipo"] = requisito.Tipo;
+            List<CheckBox> list = obtenerActores(id);
+            List<CheckBox> list2 = this.obtenerRequisitosUsuario(requisito,id);
+            this.obtenereRequisitosUsuariosAsociados(requisito,idRequisito, list2,id);
+            this.obtenerActoresAsociados(requisito,idRequisito, list,id);
+            requisito.Actores = list;
+            requisito.Requisitos = list2;
+            int num_requisito = requisito.ObtenerNumRequisito(id, idRequisito);
+            ViewBag.IdProyecto = id;
+            ViewBag.numRequisito = num_requisito;
+            return View(requisito);
+        }
+        /**
+          * <author>Raimundo Vásquez</author>
+          * <summary>
+          * POST que actualiza en la base de datos el requisito seleccionado para editar
+          * </summary>
+          * <param name="r">requisito que tiene todos los valores ingresados en la vista.</param>
+          * <param name="idProyecto">id del proyecto al cual esta asociado el requisito</param>
+          * <param name="num_requisito"> id del requisito que estamos editando</param>
+          * <returns> Redireccion a la ventana Requisito si el usuario Cumple con los permisos.
+          * Redirreciona al index si el usuario no tiene los permisos para entrar a la vista.</returns>
+          */
 
-        //ATENCION: FORMTATO FECHA: AAAA-MM-DD
+        [HttpPost]
+        public ActionResult EditarRequisito(Requisito r, string idProyecto,string num_requisito)
+        {
+            Requisito requisito = new Requisito(r.IdRequisito, r.Nombre, r.Descripcion, r.Prioridad, r.Fuente, r.Estabilidad, r.Estado
+               , r.TipoRequisito, r.Medida, r.Escala, r.Fecha, r.Incremento, r.Tipo);
+            List<String> listaActores = new List<string>();
+            List<String> listaReqUsuario = new List<string>();
+            if (r.Requisitos != null)
+            {
+                for(int i = 0; i < r.Requisitos.Count; i++)
+                {
+                    if(r.Requisitos[i].isChecked)
+                    {
+                        listaReqUsuario.Add(r.Requisitos[i].nombre);
+                    }
+                }
+            }
+            if (r.Actores != null)
+            {
+                for (int i = 0; i < r.Actores.Count; i++)
+                {
+                    if (r.Actores[i].isChecked)
+                    {
+                        listaActores.Add(r.Actores[i].id);
+                    }
+                }
+            }
+            int id = Int32.Parse(idProyecto);
+            int num = Int32.Parse(num_requisito);
+            bool validate = requisito.ActualizarRequisito(requisito,id,num);
+            if (validate)
+            {
+                foreach (var actor in listaActores)
+                {
+                    if (!r.registrarActor(actor, num_requisito.ToString()))
+                    {
+                        TempData["alerta"] = new Alerta("!!!!!", TipoAlerta.SUCCESS);
+                    }
+                }
+                if (r.Tipo.Equals("SISTEMA"))
+                {
+                    foreach (var req in listaReqUsuario)
+                    {
+                        string numReqUsuario = r.ObtenerNumRequisito(id, req).ToString() ;
+                        if (r.AsociarRequisitoDeSoftware(id, req, r.IdRequisito))
+                        {
+                            TempData["alerta"] = new Alerta("!!!!!", TipoAlerta.SUCCESS);
+
+                        }
+                    }
+                }
+                
+
+                TempData["alerta"] = new Alerta("Éxito al editar Requisito.", TipoAlerta.SUCCESS);
+                return RedirectToAction("ListarRequisitosMinimalista", "Proyecto", new { id = idProyecto });
+            }
+            else
+            {
+                TempData["alerta"] = new Alerta("ERROR al editar Requisito.", TipoAlerta.ERROR);
+            }
+            return RedirectToAction("ListarRequisitosMinimalista", "Proyecto", new { id = idProyecto });
+        }
+
+        
         /**
           * <author>Diego Iturriaga</author>
           * <summary>
@@ -1446,6 +1570,14 @@ namespace AppWebERS.Controllers
              return value;
         }
 
+        /**
+        * <author>Jose Nunnez</author>
+        * <summary>
+        * Metodo para obtener los actores desde la BD
+        * </summary>
+        * <param name=""="id"> Es el ID correspondiente a un proyecto
+        * <returns> Un listado con del tipo CheckBox que posee el nombre y el valor del checkbox correspondiente a un actor</returns>
+        */
         private List<CheckBox> obtenerActores(int id) {
             List<CheckBox> l = new List<CheckBox>();
             //ARREGLAR LA CONSULTA
@@ -1461,6 +1593,97 @@ namespace AppWebERS.Controllers
                 Conector.CerrarConexion();
             }
             return l;
+        }
+        /**
+             * <author>Raimundo Vásquez</author>
+             * <summary>
+             * Este método retorna la lista de todos los requisitos de usuario asociados al proyecto
+             * * </summary>
+             * <param name="num_requisito">id del requisito que buscamos en el proyecto</param>
+             * <param name="r">requisito que usaremos para verificar si es de usuario o sistema</param>
+             * <param name="id">id del proyecto en el que buscaremos</param>
+             * <returns>retorna una lista con todos los requisitos de usuario</returns>
+             * 
+             */
+        private List<CheckBox> obtenerRequisitosUsuario(Requisito r,int id)
+        {
+            List<CheckBox> l = new List<CheckBox>();
+
+            if (r.Tipo.Equals("SISTEMA")) {
+                ApplicationDbContext con = ApplicationDbContext.Create();
+                string consulta1 = "SELECT requisito.id_requisito , requisito.nombre FROM requisito WHERE requisito.tipo = 'USUARIO'" +
+                    " AND  requisito.ref_proyecto = '" + id + "'";
+                MySqlDataReader reader = con.RealizarConsulta(consulta1);
+                if (reader != null)
+                {
+                    while (reader.Read())
+                    {
+                        l.Add(new CheckBox() { nombre = reader[0].ToString(), id = reader[1].ToString(), isChecked = false });
+                    }
+                    Conector.CerrarConexion();
+                }
+               
+                
+                return l;
+            }
+
+            return l;
+            
+        }
+        /**
+         * <author>Raimundo Vásquez</author>
+         * <summary>
+         * Dado una lista de requisitos de usuario, modifica la lista con los que ya esta asociado
+         * * </summary>
+         * <param name="num_requisito">id del requisito que buscamos en el proyecto</param>
+         * <param name="r">requisito que usaremos para verificar si es de usuario o sistema</param>
+         * <param name="id">id del proyecto en el que buscaremos</param>
+         * <param name="r_usuarios">lista de requisitos de usuario</param>
+         * 
+         */
+        private void obtenereRequisitosUsuariosAsociados(Requisito r,string idRequisito, List<CheckBox> r_usuarios,int id)
+        {
+            ApplicationDbContext con = ApplicationDbContext.Create();
+            
+            foreach (var element in r_usuarios)
+            {
+                int num_requisito = r.ObtenerNumRequisito(id, idRequisito);
+                int rusuario = r.ObtenerNumRequisito(id, element.nombre);
+                string consulta2 = "SELECT * FROM asociacion WHERE "
+                    + "asociacion.req_software = '" + num_requisito + "' AND asociacion.req_usuario = '" + rusuario + "'" ;
+                MySqlDataReader reader = con.RealizarConsulta(consulta2);
+                if (reader != null)
+                {
+                    element.isChecked = true;
+                }
+                con.EnsureConnectionClosed();
+
+            }
+        }
+            /**
+             * <author>Raimundo Vásquez</author>
+             * <summary>
+             * Este método se encarga , a partir de la lista de actores del proyecto, identificar cuales ya estan asociados a este proyecto
+             * * </summary>
+             * <param name="num_requisito">id del requisito que buscamos en vinculo_Actor_requisito</param>
+             * <param name="actores">lista de los actores asociados al proyecto</param>
+             * 
+             */
+            private void obtenerActoresAsociados( Requisito r,string idRequisito,List<CheckBox> actores,int id)
+        {
+            List<CheckBox> l = new List<CheckBox>();
+            ApplicationDbContext con = ApplicationDbContext.Create();
+            int num_requisito = r.ObtenerNumRequisito(id, idRequisito);
+            foreach ( var actor in actores)
+            {
+                string select = "SELECT * from vinculo_actor_requisito WHERE ref_actor = '" + actor.id + "' AND ref_req = '" + num_requisito + "'";
+                MySqlDataReader reader = con.RealizarConsulta(select);
+                if (reader != null)
+                {
+                    actor.isChecked = true;
+                }
+                con.EnsureConnectionClosed();
+            }
         }
 
         private List<Referencia> ObtenerReferencias(int id)
@@ -1490,17 +1713,24 @@ namespace AppWebERS.Controllers
 
         }
 
-        private string ParsearReferenciaLibro(string autores, string anio, string titulo, string lugar, string editorial)
+        private string ParsearReferenciaLibro(string autores, string anio, string titulo, string paginas, string editorial)
         {
             string referencia;
-            referencia = autores + ", (" + anio + ")," + titulo + ", " + lugar + ":" + editorial + ".";
+            referencia = autores + ", \""+titulo+"\", "+editorial+", pp. "+paginas+", "+anio;
             return referencia;
         }
 
         private string ParsearReferenciaPaper(string autores,string fecha, string titulo, string revista, string volumen, string pag)
         {
             string referencia;
-            referencia = autores + ",("+ fecha + "),"+ titulo + ", " + revista + "," + volumen + "," + pag + ".";
+            referencia = autores + ", \"" + titulo + "\", " + revista + ", Pp. " + pag + ", Vol. "+volumen+", " + fecha;
+            return referencia;
+
+        }
+
+        private string ParsearReferenciaPaperConferencia(string autores, string fecha, string titulo, string lugar, string nombreConferencia) {
+            string referencia;
+            referencia = autores + ", \"" + titulo + "\". Presentado en "+nombreConferencia+", "+lugar+", "+fecha;
             return referencia;
 
         }
@@ -1511,7 +1741,7 @@ namespace AppWebERS.Controllers
          * </summary>
          * <param name="idProyecto"> ID del proyecto doonde se agregara el requisito</param>
          * 
-         */ 
+         */
         [HttpGet]
         public ActionResult ListarRequisitosMinimalista(int id)
         {
@@ -1669,20 +1899,61 @@ namespace AppWebERS.Controllers
             return RedirectToAction("ListarRequisitosMinimalista", "Proyecto", new { id = idProyecto });
         }
 
+        /**
+        * <author>Jose Nunnez</author>
+        * <summary>
+        * Metodo para ejecutar/abrir la ventana de listarDiagramas
+        * </summary>
+        * <param name=""="id"> Es el ID correspondiente a un proyecto
+        * <returns> La vista de listar Diagramas</returns>
+        */
         public ActionResult ListarDiagramas(int id)
         {
             DiagramaModels model = new DiagramaModels(id, TipoDePermiso(id));
             return View(model);
         }
 
+        /**
+          <autor> Raimundo Vasquez</autor>
+        * <summary>Metodo para obtener un id según proyecto y numero ( autoincremental en bd) del requisito</summary>
+        * <param name="id">Id del proyecto al que pertenece el requisito.</param>
+        * <param name="num_requisito">Id del requisito de sistema que se desea editar.</param>
+        * <returns>Objeto con los valores del requisito que se desea editar.</returns>
+        */
         public ActionResult HistorialCambios(int id)
         {
             Proyecto proyecto = this.GetProyecto(id);
             var UsuarioActual = User.Identity.GetUserId();
             ViewData["proyecto"] = proyecto;
             ViewData["permiso"] = TipoDePermiso(id);
-
             return View();
+        }
+
+        private Requisito obtenerRequisito(int id,string idRequisito)
+        {
+            Requisito r = new Requisito();
+
+            string consulta = "SELECT * FROM requisito WHERE ref_proyecto = '" + id + "' AND " +
+                "id_requisito = '" + idRequisito +"'";
+            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
+            if(reader != null)
+            {
+                reader.Read();
+                r.IdRequisito = reader["id_requisito"].ToString();
+                r.Nombre = reader["nombre"].ToString();
+                r.Descripcion = reader["descripcion"].ToString();
+                r.Prioridad = reader["prioridad"].ToString();
+                r.Fuente = reader["fuente"].ToString();
+                r.Estabilidad = reader["estabilidad"].ToString();
+                r.Estado = reader["estado"].ToString();
+                r.TipoRequisito = reader["categoria"].ToString();
+                r.Medida = reader["medida"].ToString();
+                r.Escala = reader["escala"].ToString();
+                r.Fecha = DateTime.Now.ToString("yyyy-MM-dd");
+                r.Incremento = reader["incremento"].ToString();
+                r.Tipo = reader["tipo"].ToString();
+            }
+            return r;
         }
 
 

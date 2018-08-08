@@ -61,7 +61,6 @@ namespace AppWebERS.Controllers{
                     System.Net.WebClient webClient = new WebClient();
                     string path = Path.Combine(Server.MapPath("~/UploadedFiles"), id + nombreURL + Path.GetExtension(url)).Replace(@"\", @"/");
                     Debug.Write(" "+ path.Replace(@"\", @"/") +" ");
-                  
                     if (nombreURL.Length == 0)
                     {
                          TempData["alerta"] = new Alerta("Debe ingresar un nombre", TipoAlerta.ERROR);
@@ -101,7 +100,7 @@ namespace AppWebERS.Controllers{
                    
                     webClient.DownloadFile(@url, @path);
                     //this.agregar(nombreURL, id, "../../UploadedFiles/" +id + nombreURL + Path.GetExtension(path), tipoDeDiagramaURL);
-                    this.agregar(nombreURL, id, path, tipoDeDiagramaURL);
+                    this.agregar(nombreURL, id, "/UploadedFiles/" +id + nombreURL + Path.GetExtension(path), tipoDeDiagramaURL);
                     TempData["alerta"] = new Alerta("Diagrama subido con éxito!!", TipoAlerta.SUCCESS);
                     ViewBag.Message = "Diagrama subido con éxito!!";
                     Conector.CerrarConexion();
@@ -164,7 +163,7 @@ namespace AppWebERS.Controllers{
                 }
 
                 //this.agregar(nombre, id, "../../UploadedFiles/" + _FileName, tipoDeDiagrama);
-                this.agregar(nombre, id, _path, tipoDeDiagrama);
+                this.agregar(nombre, id, "/UploadedFiles/" + _FileName, tipoDeDiagrama);
                 file.SaveAs(_path);
                 TempData["alerta"] = new Alerta("Diagrama subido con éxito!!", TipoAlerta.SUCCESS);
                 ViewBag.Message = "Diagrama subido con éxito!!";

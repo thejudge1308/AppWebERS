@@ -1,0 +1,95 @@
+﻿@using AppWebERS.Models;
+@model Proyecto
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "HistorialCambios";
+
+}
+
+@{
+    var ProyectoActual = (Proyecto)ViewData["proyecto"];
+
+    var TipoUsuario = (int)ViewData["permiso"];
+
+    var Cambios = (List<ModificacionDERS>)ViewData["cambios"];
+}
+
+
+<h2>HistorialCambios</h2>
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link" href="@Url.Action("Detalles", "Proyecto", new { id = ProyectoActual.IdProyecto })">Detalles</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="@Url.Action("ListarRequisitosMinimalista", "Proyecto", new { id = ProyectoActual.IdProyecto })">Requisitos</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="@Url.Action("ListarDiagramas", "Proyecto", new { id = ProyectoActual.IdProyecto })">Diagramas</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="@Url.Action("ListaUsuarios", "Proyecto", new { id = ProyectoActual.IdProyecto })">Usuarios</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="@Url.Action("ListaActores", "Proyecto", new { id = ProyectoActual.IdProyecto })">Actores</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" href="@Url.Action("HistorialCambios","Proyecto",new { id = ProyectoActual.IdProyecto})">Historial de cambios</a>
+    </li>
+</ul>
+<div class="container-fluid my-2">
+
+    @if (ProyectoActual != null)
+    {
+
+        if (Cambios != null)
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">ID Modificación</th>
+                        <th scope="col">Versión</th>
+                        <th scope="col">Autor</th>
+                        <th scope="col">Fecha</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        var Aux = 1;
+                        if (Cambios.Count != 0)
+                        {
+                            foreach (ModificacionDERS item in (List<ModificacionDERS>)Cambios)
+                            {
+                                <tr>
+                                    <th scope="row">@Aux</th>
+                                    <td>@item.IdModificacion</td>
+                                    <td>@item.Version</td>
+                                    <td>@item.Fecha</td>
+                                    <td>@item.RefUsuario</td>
+                                </tr>
+                                ++Aux;
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container">
+                    <h1>No hay modificaciones.</h1>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1>Proyecto no encontrado.</h1>
+        </div>
+    </div>
+    }
+    
+</div>

@@ -768,5 +768,24 @@ namespace AspNet.Identity.MySQL
         {
             return Task.FromResult<List<TUser>>(userTable.GetAllUsers());
         }
+
+        /*  Creador: Maximo Hernandez
+         *  Accion: Obtiene el nombre de un usuario
+         *  Retorno: Operacion asincrona con el nombre del usuario en string
+         */
+        public Task<string> getNombreUsuarioAsync(TUser usuario)
+        {
+            return Task.FromResult(usuario.UserName);
+        }
+
+        /*  Creador: Maximo Hernandez
+         *  Accion: Obtiene la disponbilidad de un usuario
+         *  Retorno: Operacion asincrona con la disponbilidad del usuario en bool. True = Disponible, False = No Disponible.
+         */
+        public Task<bool> getDisponibilidadVinculacionUsuarioAsync(ApplicationUser usuario)
+        {
+            return Task.FromResult(usuario.DisponibilidadVinculacion);
+        }
+
     }
 }

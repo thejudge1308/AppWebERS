@@ -176,14 +176,8 @@ namespace AppWebERS.Controllers
             Proyecto proyecto = new Proyecto();
 
             switch (json.atributo) {
-
-<<<<<<< HEAD
-                case "nombre":
-                    proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo);
-=======
                 case "nombre":        
                     proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo, User.Identity.GetUserId());
->>>>>>> Tucutú
                     return Json(true, JsonRequestBehavior.AllowGet);
                     break;
 

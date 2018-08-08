@@ -258,7 +258,7 @@ namespace AppWebERS.Controllers
             ApplicationDbContext conexion = ApplicationDbContext.Create();
             List<Diagrama> imagenes = new List<Diagrama>();
             string consulta = "SELECT * FROM diagrama WHERE ref_proyecto = " + idProyecto + ";";
-            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
+            MySqlDataReader reader = conexion.RealizarConsulta(consulta);
             if (reader != null)
             {
                 while (reader.Read())
@@ -437,26 +437,28 @@ namespace AppWebERS.Controllers
             List<Diagrama> diagramas = this.ObtenerDiagramas(id);
             String ht = "";
             int contador = 1;
-
+            string raiz = Server.MapPath("~/");
             foreach (Diagrama t in diagramas)
             {
-                System.Drawing.Image img = System.Drawing.Image.FromFile(t.GetRuta());
+                string rutaGuardada = t.GetRuta().Remove(0, 1);
+                string url = Path.Combine(raiz, rutaGuardada);
+                System.Drawing.Image img = System.Drawing.Image.FromFile(url);
 
                 if (img.Width < 700 && img.Height < 450)
                 {
-                    ht += "<tr> <td align=\"center\" > " + "<br>"  + " <img src=\"" + t.GetRuta() + "\" alt =\"HTML5 Icon\" style =\"width: " + img.Width + "px; height: " + img.Height + "px; \" >" + "</td> </tr> ";
+                    ht += "<tr> <td align=\"center\" > " + "<br>"  + " <img src=\"" + url + "\" alt =\"HTML5 Icon\" style =\"width: " + img.Width + "px; height: " + img.Height + "px; \" >" + "</td> </tr> ";
                 }
                 else if (img.Width <= 700 && img.Height >= 450)
                 {
-                    ht += "<tr> <td align=\"center\" > " + "<br>" + " <img src=\"" + t.GetRuta() + "\" alt =\"HTML5 Icon\" style =\"width: " + img.Width + "px; height:450px; \" >" + "</td> </tr> ";
+                    ht += "<tr> <td align=\"center\" > " + "<br>" + " <img src=\"" + url + "\" alt =\"HTML5 Icon\" style =\"width: " + img.Width + "px; height:450px; \" >" + "</td> </tr> ";
                 }
                 else if (img.Width >= 700 && img.Height <= 450)
                 {
-                    ht += "<tr> <td align=\"center\" > " + "<br>" + " <img src=\"" + t.GetRuta() + "\" alt =\"HTML5 Icon\" style =\"width:700px; height: " + img.Height + "px; \" >" + "</td> </tr> ";
+                    ht += "<tr> <td align=\"center\" > " + "<br>" + " <img src=\"" + url + "\" alt =\"HTML5 Icon\" style =\"width:700px; height: " + img.Height + "px; \" >" + "</td> </tr> ";
                 }
                 else
                 {
-                    ht += "<tr> <td align=\"center\"> " + "<br>" + " <img src=\"" + t.GetRuta() + "\" alt =\"HTML5 Icon\" style =\"width: 700px; height: 450px; \" >" + "</td> </tr> ";
+                    ht += "<tr> <td align=\"center\"> " + "<br>" + " <img src=\"" + url + "\" alt =\"HTML5 Icon\" style =\"width: 700px; height: 450px; \" >" + "</td> </tr> ";
                 }
 
                 ht += "<tr> <td align=\"center\">" + "4." + contador + " " + t.GetNombre() + " " + "[" + t.GetTipo() + "]" + "</td> </tr> ";
@@ -1394,6 +1396,10 @@ namespace AppWebERS.Controllers
                , r.TipoRequisito, r.Medida, r.Escala, r.Fecha, r.Incremento, r.Tipo);
             List<String> listaActores = new List<string>();
             List<String> listaReqUsuario = new List<string>();
+            if (r.IncrementoCheck.isChecked)
+            {
+                requisito.Incremento = "" + (Int32.Parse(r.Incremento) + 1);
+            }
             if (r.Requisitos != null)
             {
                 for(int i = 0; i < r.Requisitos.Count; i++)

@@ -50,6 +50,8 @@ namespace AppWebERS.Models {
 
         }
 
+        
+
         public Requisito()
         {
             this.IdRequisito = "";
@@ -75,15 +77,18 @@ namespace AppWebERS.Models {
             public string id { set; get; }
             public bool isChecked { set; get; }
         }
+
         private ApplicationDbContext conexion = ApplicationDbContext.Create();
         private string idVerdadero = "";
+
+
         /**
-         * Setter y Getter de ID del requisito
-         * 
-         * <param name = "idRequisito" > El identificador del requisito.</param>
-         * <returns>Retorna el valor int del idRequisito.</returns>
-         * 
-         **/
+        * Setter y Getter de ID del requisito
+        * 
+        * <param name = "idRequisito" > El identificador del requisito.</param>
+        * <returns>Retorna el valor int del idRequisito.</returns>
+        * 
+        **/
         [Required(ErrorMessage = "El campo Código es obligatorio.")]
         //[RegularExpression("[0-9]*", ErrorMessage = ".")]
         [StringLength(20, ErrorMessage = "El código debe tener entre 3 a 20 caracteres.", MinimumLength = 3)]
@@ -693,5 +698,90 @@ namespace AppWebERS.Models {
             conexion1.EnsureConnectionClosed();
             return listaRequisitos.OrderBy(requisito => requisito.IdRequisito).ToList();
         }
+
+        ///<author>Maximo Hernandez</author>
+        /// <summary>
+        /// Obtiene la cantidad de requisitos asociados a un requisito.
+        /// </summary>
+        /// <param name="IdProyecto"> Id del proyecto actual </param>
+        /// <param name="IdRequisito"> Id del requisito del que se desea obtener la cantidad de asociaciones </param>
+        /// <param name="Tipo"> 0 para consultas de requisitos de usuario, 1 para consultas de requisitos de sistema </param>
+        /// <returns> La cantidad de asociaciones del requisito </returns>
+        public int ObtenerNumeroDeRequisitosAsociadoAUnRequisito(int IdProyecto, string IdRequisito, int Tipo)
+        {
+            int NumeroDeRequisito = this.ObtenerNumRequisito(IdProyecto, IdRequisito);
+            string consulta = "";
+            ApplicationDbContext conexionLocal = ApplicationDbContext.Create();
+            if (Tipo == 0)
+            {
+                consulta = "SELECT count(*) as NumeroDeAsociaciones FROM asociacion WHERE req_usuario =" + NumeroDeRequisito + " ;";
+            }
+            else
+            {
+                consulta = "SELECT count(*) as NumeroDeAsociaciones FROM asociacion WHERE req_software =" + NumeroDeRequisito + " ;";
+            }
+            MySqlDataReader reader = conexionLocal.RealizarConsulta(consulta);
+            if (reader != null)
+            {
+                while (reader.Read())
+                {
+                    int NumeroAsociaciones = Int32.Parse(reader["NumeroDeAsociaciones"].ToString());
+                    conexionLocal.EnsureConnectionClosed();
+                    return NumeroAsociaciones ; //Ya existe Requisito con el nombre ingresado.
+                }
+            }
+            conexionLocal.EnsureConnectionClosed();
+            return -1;
+        }
+
+        ///<author>Maximo Hernandez</author>
+        /// <summary>
+        /// Elimina un requisito de usuario.
+        /// </summary>
+        /// <param name="IdProyecto">Id del proyecto actual</param>
+        /// <param name="IdRequisito">Id del requisito de usuario a eliminar</param>
+        public void EliminarRequisito(int IdProyecto, string IdRequisito)
+        {
+            ApplicationDbContext conexionLocal = ApplicationDbContext.Create();
+            int NumeroDeRequisito = this.ObtenerNumRequisito(IdProyecto, IdRequisito);
+            string consulta = "DELETE FROM requisito WHERE num_requisito =" + NumeroDeRequisito + " ;";
+            bool verificar = conexionLocal.RealizarConsultaNoQuery(consulta);
+            System.Diagnostics.Debug.Write(verificar);
+        }
+
+        ///<author>Maximo Hernandez</author>
+        /// <summary>
+        /// Elimina un requisito de sistema, eliminando tambien su asociacion con el requisito de usuario correspondiente.
+        /// </summary>
+        /// <param name="IdProyecto">Id del proyecto actual</param>
+        /// <param name="IdRequisitoSistema">Id del requisito de sistema a eliminar</param>
+        /// <param name="IdRequisitoUsuario">Id del requisito de usuario del que se debe de desvincular el requisito de sistema</param>
+        public void EliminarRequisito(int IdProyecto, string IdRequisitoSistema, string IdRequisitoUsuario)
+        {
+            DeshabilitarRequisito(IdProyecto, IdRequisitoSistema, IdRequisitoUsuario);
+            ApplicationDbContext conexionLocal = ApplicationDbContext.Create();
+            int NumeroDeRequisito = this.ObtenerNumRequisito(IdProyecto, IdRequisitoSistema);
+            string consulta = "DELETE FROM requisito WHERE num_requisito =" + NumeroDeRequisito + " ;";
+            bool verificar = conexionLocal.RealizarConsultaNoQuery(consulta);
+            System.Diagnostics.Debug.Write(verificar);
+        }
+
+        ///<author>Maximo Hernandez</author>
+        /// <summary>
+        /// Desvincula un requisito de sistema de un requisito de usuario.
+        /// </summary>
+        /// <param name="IdProyecto">Id del proyecto actual</param>
+        /// <param name="IdRequisitoSistema">Id del requisito de sistema a desvincular</param>
+        /// <param name="IdRequisitoUsuario">Id del requisito de usuario del que se debe de desvincular el requisito de sistema</param>
+        public void DeshabilitarRequisito(int IdProyecto, string IdRequisitoSistema, string IdRequisitoUsuario)
+        {
+            ApplicationDbContext conexionLocal = ApplicationDbContext.Create();
+            int NumeroDeRequisitoUsuario = this.ObtenerNumRequisito(IdProyecto, IdRequisitoUsuario);
+            int NumeroDeRequisitoSistema = this.ObtenerNumRequisito(IdProyecto, IdRequisitoSistema);
+            string consulta = "DELETE FROM asociacion WHERE req_usuario =" + NumeroDeRequisitoUsuario + " AND req_software ="+ NumeroDeRequisitoSistema + " ;";
+            bool verificar = conexionLocal.RealizarConsultaNoQuery(consulta);
+            System.Diagnostics.Debug.Write(verificar);
+        }
+
     }
 }

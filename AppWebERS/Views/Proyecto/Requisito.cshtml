@@ -126,7 +126,7 @@
         </form>*@
         <div>
             @Html.LabelFor(m => m.Fecha)
-            @Html.TextBoxFor(m => m.Fecha, new { placeholder = "Fecha Actualizacion", @class = "form-control col-form-label", oncopy = "return false", onpaste = "return false" })
+            @Html.TextBoxFor(m => m.Fecha, new { placeholder = "Fecha Actualizacion", @class = "form-control col-form-label", disabled = "disabled", @readonly = "readonly", oncopy = "return false", onpaste = "return false" })
             @Html.ValidationMessageFor(m => m.Fecha, "", new { @style = "color:rgb(209,52,56); font-size:12px" })
         </div>
         <div>
@@ -181,8 +181,6 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-    @Scripts.Render("~/Scripts/jquery-ui/Idioma/datee-picker-es.js")
-    @Scripts.Render("~/Scripts/Requisito/DatePicker.js")
 }
 
 

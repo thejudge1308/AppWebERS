@@ -296,7 +296,6 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\alertaPartialScript.js" />
-    <Content Include="Scripts\listaUsuario.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\popper-utils.js" />
     <Content Include="Scripts\popper-utils.min.js" />
@@ -389,7 +388,6 @@
     <Content Include="Views\Diagrama\SubirDiagrama.cshtml" />
     <Content Include="Views\Proyecto\ListarRequisitosMinimalista.cshtml" />
     <Content Include="Views\Proyecto\ListarDiagramas.cshtml" />
-    <Content Include="Views\CasoDeUso\UploadFile.cshtml" />
     <Content Include="Views\Proyecto\ListaActores.cshtml" />
     <Content Include="Views\Proyecto\AgregarActor.cshtml" />
     <Content Include="Views\Proyecto\EditarRequisito.cshtml" />
@@ -400,6 +398,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="UploadedFiles\" />
+    <Folder Include="Views\CasoDeUso\" />
     <Folder Include="Views\Historial\" />
     <Folder Include="Views\SolicitudDeProyecto\" />
   </ItemGroup>

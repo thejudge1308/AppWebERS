@@ -5,7 +5,13 @@
 @using AppWebERS.Models;
 @model Proyecto
 @section cabecera{
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Last-Modified" content="0">
+    <meta http-equiv="Cache-Control" content="no-cache, mustrevalidate">
+    <meta http-equiv="Pragma" content="no-cache">
     <link href="@Url.Content("~/Content/Proyecto/Detalles.css")" rel="stylesheet" />
+
+
 }
 @{
     ViewBag.Title = "Detalles del proyecto";
@@ -21,23 +27,23 @@
     <h2>Detalles</h2>
 
     <ul class="nav nav-tabs">
-
         <li class="nav-item">
-            <a class="nav-link active" href="@Url.Action("Detalles", "Proyecto", new { id = ProyectoActual.IdProyecto})">Detalles</a>
-        </li>
-
-
-        <li class="nav-item">
-            <a class="nav-link" href="@Url.Action("ListarRequisitosMinimalista", "Proyecto", new { id = ProyectoActual.IdProyecto})">Requisitos</a>
+            <a class="nav-link active" href="@Url.Action("Detalles", "Proyecto", new { id = ProyectoActual.IdProyecto })">Detalles</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="@Url.Action("ListarDiagramas", "Proyecto", new { id = ProyectoActual.IdProyecto})">Diagramas</a>
+            <a class="nav-link" href="@Url.Action("ListarRequisitosMinimalista", "Proyecto", new { id = ProyectoActual.IdProyecto })">Requisitos</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="@Url.Action("ListaUsuarios","Proyecto",new { id = ProyectoActual.IdProyecto})">Usuarios</a>
+            <a class="nav-link" href="@Url.Action("ListarDiagramas", "Proyecto", new { id = ProyectoActual.IdProyecto })">Diagramas</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="@Url.Action("ListaActores","Proyecto",new { id = ProyectoActual.IdProyecto})">Actores</a>
+            <a class="nav-link" href="@Url.Action("ListaUsuarios", "Proyecto", new { id = ProyectoActual.IdProyecto })">Usuarios</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("ListaActores", "Proyecto", new { id = ProyectoActual.IdProyecto })">Actores</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("HistorialCambios","Proyecto",new { id = ProyectoActual.IdProyecto})">Historial de cambios</a>
         </li>
     </ul>
 
@@ -53,7 +59,7 @@
                     @{@Html.TextBoxFor(p => ProyectoActual.IdProyecto, new { @class = "form-control font-weight-bold", disabled = "disabled" })}
                 </div>
             </div>
-           
+
         </div>
 
         <div class="form-group border">
@@ -75,7 +81,7 @@
                     </div>
                 }
             </div>
-            
+
         </div>
 
         <div class="form-group border">
@@ -107,7 +113,7 @@
                         </div>
                     </div>
                 }
-            </div> 
+            </div>
         </div>
 
         <div class="form-group border">
@@ -155,7 +161,7 @@
                         </div>
                     </div>
                 }
-            </div>     
+            </div>
         </div>
         <div class="form-group border">
             <div class="my-2">
@@ -170,7 +176,7 @@
                         </div>
                     </div>
                 }
-            </div>     
+            </div>
         </div>
 
 
@@ -187,7 +193,7 @@
                         </div>
                     </div>
                 }
-            </div>  
+            </div>
         </div>
 
         <div class="form-group border">
@@ -203,7 +209,7 @@
                         </div>
                     </div>
                 }
-            </div> 
+            </div>
         </div>
 
         <div class="form-group border">
@@ -228,7 +234,7 @@
                         </div>
                     </div>
                 }
-            </div>  
+            </div>
         </div>
 
         <div class="form-group">
@@ -238,11 +244,7 @@
                         @Html.ActionLink("Generar PDF", "ExportarPDF", "Proyecto", new { id = ProyectoActual.IdProyecto }, new { miAtributo = "valor1", @class = "btn btn-danger" })
                     </div>
                 </div>
-                @{
-                    if(TipoUsuario == Proyecto.AUTH_COMO_USUARIO || TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO) {
-                        <a class="btn btn-primary" href="@Url.Action("Requisito","Proyecto",new { id = ProyectoActual.IdProyecto})">Nuevo Requisito</a>
-                    }
-                }
+                
             </div>
         </div>
 
@@ -284,6 +286,7 @@
     </div>
 }
 
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     @if(TipoUsuario != Proyecto.AUTH_COMO_SYSADMIN) {
@@ -294,4 +297,7 @@
         @Scripts.Render("/Scripts/Proyecto/Detalles_sysadmin_quill.min.js")
         @Scripts.Render("~/Scripts/Proyecto/Sysadminconf.js")
     }
+
+
+
 }

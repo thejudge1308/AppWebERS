@@ -80,7 +80,7 @@
                                 <h5 class="mb-0">
                                     <a data-toggle="collapse" href="#@r.Key.IdRequisito" aria-expanded="true" aria-controls=@r.Key.IdRequisito>
                                         @r.Key.IdRequisito - @r.Key.Nombre
-                                        @Html.ActionLink("X",null,null, new { id = ProyectoActual.IdProyecto , idRequisito = r.Key.IdRequisito }, new { @class="btn btn-secondary float-right" })
+                                        @Html.ActionLink("X","EliminarRequisitoUsuario","Requisito", new { IdProyecto = ProyectoActual.IdProyecto , IdRequisito = r.Key.IdRequisito }, new { @class="btn btn-secondary float-right" })
                                     </a>
                                 </h5>
 
@@ -94,7 +94,7 @@
                                             <div class="card-header" role="tab" id="headingOne">
                                                 <h5 class="mb-0">
                                                     @req.IdRequisito - @req.Nombre
-                                                    @Html.ActionLink("X", null, null, new { id = ProyectoActual.IdProyecto, idRequisito = req.IdRequisito }, new { @class = "btn btn-secondary float-right" })
+                                                    @Html.ActionLink("X", "EliminarRequisitoSistema", "Requisito", new { IdProyecto = ProyectoActual.IdProyecto, IdRequisitoSistema = req.IdRequisito, IdRequisitoUsuario = r.Key.IdRequisito }, new { @class = "btn btn-secondary float-right" })
                                                 </h5>
                                             </div>
                                         </div>

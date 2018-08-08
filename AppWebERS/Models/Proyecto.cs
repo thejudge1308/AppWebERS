@@ -577,27 +577,21 @@ namespace AppWebERS.Models{
         public void ActualizarDatosProyecto(int idProyecto, string valor, string atributo, string idUsuario)
         {
             string consulta;
-            string consulta2;
             MySqlDataReader reader;
-            MySqlDataReader reader2;
             switch (atributo)
             {
                 case "nombre":
                     consulta = "UPDATE proyecto SET nombre='" + valor + "' WHERE id_proyecto=" + idProyecto;
-                    consulta2 = "BEGIN DECLARE versionActual float; IF (SELECT COUNT(*) FROM modificacion_ders) > 0 THEN SET versionActual = (SELECT modificacion_ders.version FROM modificacion_ders WHERE" + idProyecto + " = modificacion_ders.ref_proyecto ORDER BY modificacion_ders.fecha DESC LIMIT 1); ELSE SET versionActual = 1.00; INSERT INTO modificacion_ders(id_modificacion,version, ref_proyecto, fecha, ref_autor_modificacion, descripcion) VALUES(" + 1 + ", versionActual" + 0.01 + ", " + idProyecto + ", current_date," + idUsuario + ", 'Modificacion en Nombre: '" + valor + "); END IF; END ";
                     reader = this.conexion.RealizarConsulta(consulta);
-                    reader2 = this.conexion.RealizarConsulta(consulta2);
                     this.conexion.EnsureConnectionClosed();
-                    consulta = "CALL controlVersiones('" + idUsuario+"',"+idProyecto+",'"+valor+"')";
+                    consulta = "CALL controlVersiones222('" + idUsuario+"',"+idProyecto+",'"+valor+"','"+atributo+"')";
                     reader = this.conexion.RealizarConsulta(consulta);
                     this.conexion.EnsureConnectionClosed();
                     break;
 
                 case "proposito":
                     consulta = "UPDATE proyecto SET proposito='" + valor + "' WHERE id_proyecto=" + idProyecto;
-                    consulta2 = "BEGIN DECLARE versionActual float; SET versionActual = (SELECT modificacion_ders.version FROM modificacion_ders WHERE" + idProyecto + " = modificacion_ders.ref_proyecto ORDER BY modificacion_ders.fecha DESC LIMIT 1); INSERT INTO modificacion_ders(id_modificacion,version, ref_proyecto, fecha, ref_autor_modificacion, descripcion) VALUES(" + 1 + ", versionActual" + 0.01 + ", " + idProyecto + ", current_date," + idUsuario + ", 'Modificacion en Proposito: '" + valor + "); END ";
                     reader = this.conexion.RealizarConsulta(consulta);
-                    reader2 = this.conexion.RealizarConsulta(consulta2);
                     this.conexion.EnsureConnectionClosed();
                     consulta = "CALL controlVersiones('" + idUsuario + "'," + idProyecto + ",'" + valor + "')";
                     reader = this.conexion.RealizarConsulta(consulta);
@@ -606,9 +600,7 @@ namespace AppWebERS.Models{
 
                 case "alcance":
                     consulta = "UPDATE proyecto SET alcance='" + valor + "' WHERE id_proyecto=" + idProyecto;
-                    consulta2 = "BEGIN DECLARE versionActual float; SET versionActual = (SELECT modificacion_ders.version FROM modificacion_ders WHERE" + idProyecto + " = modificacion_ders.ref_proyecto ORDER BY modificacion_ders.fecha DESC LIMIT 1); INSERT INTO modificacion_ders(id_modificacion,version, ref_proyecto, fecha, ref_autor_modificacion, descripcion) VALUES(" + 1 + ", versionActual" + 0.01 + ", " + idProyecto + ", current_date," + idUsuario + ", 'Modificacion en Alcance: '" + valor + "); END ";
                     reader = this.conexion.RealizarConsulta(consulta);
-                    reader2 = this.conexion.RealizarConsulta(consulta2);
                     this.conexion.EnsureConnectionClosed();
                     consulta = "CALL controlVersiones('" + idUsuario + "'," + idProyecto + ",'" + valor + "')";
                     reader = this.conexion.RealizarConsulta(consulta);
@@ -617,9 +609,7 @@ namespace AppWebERS.Models{
 
                 case "contexto":
                     consulta = "UPDATE proyecto SET contexto='" + valor + "' WHERE id_proyecto=" + idProyecto;
-                    consulta2 = "BEGIN DECLARE versionActual float; SET versionActual = (SELECT modificacion_ders.version FROM modificacion_ders WHERE" + idProyecto + " = modificacion_ders.ref_proyecto ORDER BY modificacion_ders.fecha DESC LIMIT 1); INSERT INTO modificacion_ders(id_modificacion,version, ref_proyecto, fecha, ref_autor_modificacion, descripcion) VALUES(" + 1 + ", versionActual" + 0.01 + ", " + idProyecto + ", current_date," + idUsuario + ", 'Modificacion en Contexto: '"+valor+"); END ";
                     reader = this.conexion.RealizarConsulta(consulta);
-                    reader2 = this.conexion.RealizarConsulta(consulta2);
                     this.conexion.EnsureConnectionClosed();
                     consulta = "CALL controlVersiones('" + idUsuario + "'," + idProyecto + ",'" + valor + "')";
                     reader = this.conexion.RealizarConsulta(consulta);
@@ -628,9 +618,7 @@ namespace AppWebERS.Models{
 
                 case "definicion":
                     consulta = "UPDATE proyecto SET definiciones='" + valor + "' WHERE id_proyecto=" + idProyecto;
-                    consulta2 = "BEGIN DECLARE versionActual float; SET versionActual = (SELECT modificacion_ders.version FROM modificacion_ders WHERE" + idProyecto + " = modificacion_ders.ref_proyecto ORDER BY modificacion_ders.fecha DESC LIMIT 1); INSERT INTO modificacion_ders(id_modificacion,version, ref_proyecto, fecha, ref_autor_modificacion, descripcion) VALUES(" + 1 + ", versionActual" + 0.01 + ", " + idProyecto + ", current_date," + idUsuario + ", 'Modificacion en Definicion: '" + valor + "); END ";
                     reader = this.conexion.RealizarConsulta(consulta);
-                    reader2 = this.conexion.RealizarConsulta(consulta2);
                     this.conexion.EnsureConnectionClosed();
                     consulta = "CALL controlVersiones('" + idUsuario + "'," + idProyecto + ",'" + valor + "')";
                     reader = this.conexion.RealizarConsulta(consulta);
@@ -639,9 +627,7 @@ namespace AppWebERS.Models{
 
                 case "acronimo":
                     consulta = "UPDATE proyecto SET acronimos='" + valor + "' WHERE id_proyecto=" + idProyecto;
-                    consulta2 = "BEGIN DECLARE versionActual float; SET versionActual = (SELECT modificacion_ders.version FROM modificacion_ders WHERE" + idProyecto + " = modificacion_ders.ref_proyecto ORDER BY modificacion_ders.fecha DESC LIMIT 1); INSERT INTO modificacion_ders(id_modificacion,version, ref_proyecto, fecha, ref_autor_modificacion, descripcion) VALUES(" + 1 + ", versionActual" + 0.01 + ", " + idProyecto + ", current_date," + idUsuario + ", 'Modificacion en Acronimo: '" + valor + "); END ";
                     reader = this.conexion.RealizarConsulta(consulta);
-                    reader2 = this.conexion.RealizarConsulta(consulta2);
                     this.conexion.EnsureConnectionClosed();
                     consulta = "CALL controlVersiones('" + idUsuario + "'," + idProyecto + ",'" + valor + "')";
                     reader = this.conexion.RealizarConsulta(consulta);
@@ -650,9 +636,7 @@ namespace AppWebERS.Models{
 
                 case "abreviatura":
                     consulta = "UPDATE proyecto SET abreviaturas='" + valor + "' WHERE id_proyecto=" + idProyecto;
-                    consulta2 = "BEGIN DECLARE versionActual float; SET versionActual = (SELECT modificacion_ders.version FROM modificacion_ders WHERE" + idProyecto + " = modificacion_ders.ref_proyecto ORDER BY modificacion_ders.fecha DESC LIMIT 1); INSERT INTO modificacion_ders(id_modificacion,version, ref_proyecto, fecha, ref_autor_modificacion, descripcion) VALUES(" + 1 + ", versionActual" + 0.01 + ", " + idProyecto + ", current_date," + idUsuario + ", 'Modificacion en Abreviatura: '" + valor + "); END ";
                     reader = this.conexion.RealizarConsulta(consulta);
-                    reader2 = this.conexion.RealizarConsulta(consulta2);
                     this.conexion.EnsureConnectionClosed();
                     consulta = "CALL controlVersiones('" + idUsuario + "'," + idProyecto + ",'" + valor + "')";
                     reader = this.conexion.RealizarConsulta(consulta);
@@ -661,9 +645,7 @@ namespace AppWebERS.Models{
 
                 case "referencia":
                     consulta = "UPDATE proyecto SET referencias='" + valor + "' WHERE id_proyecto=" + idProyecto;
-                    consulta2 = "BEGIN DECLARE versionActual float; SET versionActual = (SELECT modificacion_ders.version FROM modificacion_ders WHERE" + idProyecto + " = modificacion_ders.ref_proyecto ORDER BY modificacion_ders.fecha DESC LIMIT 1); INSERT INTO modificacion_ders(id_modificacion,version, ref_proyecto, fecha, ref_autor_modificacion, descripcion) VALUES(" + 1 + ", versionActual" + 0.01 + ", " + idProyecto + ", current_date," + idUsuario + ", 'Modificacion en Referencia: '" + valor + "); END ";
                     reader = this.conexion.RealizarConsulta(consulta);
-                    reader2 = this.conexion.RealizarConsulta(consulta2);
                     this.conexion.EnsureConnectionClosed();
                     consulta = "CALL controlVersiones('" + idUsuario + "'," + idProyecto + ",'" + valor + "')";
                     reader = this.conexion.RealizarConsulta(consulta);
@@ -672,9 +654,7 @@ namespace AppWebERS.Models{
 
                 case "ambiente":
                     consulta = "UPDATE proyecto SET ambiente_operacional='" + valor + "' WHERE id_proyecto=" + idProyecto;
-                    consulta2 = "BEGIN DECLARE versionActual float; SET versionActual = (SELECT modificacion_ders.version FROM modificacion_ders WHERE" + idProyecto + " = modificacion_ders.ref_proyecto ORDER BY modificacion_ders.fecha DESC LIMIT 1); INSERT INTO modificacion_ders(id_modificacion,version, ref_proyecto, fecha, ref_autor_modificacion, descripcion) VALUES(" + 1 + ", versionActual" + 0.01 + ", " + idProyecto + ", current_date," + idUsuario + ", 'Modificacion en Ambiente: '" + valor + "); END ";
                     reader = this.conexion.RealizarConsulta(consulta);
-                    reader2 = this.conexion.RealizarConsulta(consulta2);
                     this.conexion.EnsureConnectionClosed();
                     consulta = "CALL controlVersiones('" + idUsuario + "'," + idProyecto + ",'" + valor + "')";
                     reader = this.conexion.RealizarConsulta(consulta);
@@ -683,9 +663,7 @@ namespace AppWebERS.Models{
 
                 case "relacion":
                     consulta = "UPDATE proyecto SET relacion_con_otros_proyectos='" + valor + "' WHERE id_proyecto=" + idProyecto;
-                    consulta2 = "BEGIN DECLARE versionActual float; SET versionActual = (SELECT modificacion_ders.version FROM modificacion_ders WHERE" + idProyecto + " = modificacion_ders.ref_proyecto ORDER BY modificacion_ders.fecha DESC LIMIT 1); INSERT INTO modificacion_ders(id_modificacion,version, ref_proyecto, fecha, ref_autor_modificacion, descripcion) VALUES(" + 1 + ", versionActual" + 0.01 + ", " + idProyecto + ", current_date," + idUsuario + ", 'Modificacion en Relacion: '" + valor + "); END ";
                     reader = this.conexion.RealizarConsulta(consulta);
-                    reader2 = this.conexion.RealizarConsulta(consulta2);
                     this.conexion.EnsureConnectionClosed();
                     consulta = "CALL controlVersiones('" + idUsuario + "'," + idProyecto + ",'" + valor + "')";
                     reader = this.conexion.RealizarConsulta(consulta);

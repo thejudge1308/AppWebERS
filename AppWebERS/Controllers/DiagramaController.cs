@@ -244,7 +244,7 @@ namespace AppWebERS.Controllers{
             try
             {
                 string _FileName = id + Path.GetFileName(file.FileName);
-                string _path = Path.Combine(Server.MapPath("~/UploadedFiles"), _FileName);
+                string _path = Path.Combine(Server.MapPath("~/UploadedFiles"), _FileName).Replace(@"\", @"/");
                 string ConsultaPath = "SELECT ruta FROM Diagrama WHERE ruta = '" + _path + "';";
                 MySqlDataReader reader = this.Conector.RealizarConsulta(ConsultaPath);
                 if (reader == null)

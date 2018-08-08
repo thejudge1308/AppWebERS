@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -564,14 +565,16 @@ namespace AppWebERS.Models{
 
         /**
          * <author>Matías Parra</author>
+         * <author>Gerardo Estrada (Modificación 07-08-2018)</author>
          * <summary>
          * Actualiza la base de datos de la tabla proyectos, con los nuevos datos.
          * </summary>
          * <param name = "idProyecto" > El identificador del proyecto.</param>
          * <param name = "valor" > El nombre del JSON, el cual será un string compuesto por HTML y e valor de la base de datos del atributo al que hace referencia.</param>
          * <param name = "atributo" > La etiqueta para reconocer a qué atributo se debe actualizar en la base de datos.</param>
+         * <param name = "idUsuario" > La etiqueta para reconocer el usuario que está realizando modificaciones en la base de datos. (Modificación 07-08-2018)</param>
          */
-        public void ActualizarDatosProyecto(int idProyecto, string valor, string atributo)
+        public void ActualizarDatosProyecto(int idProyecto, string valor, string atributo, string idUsuario)
         {
             string consulta;
             MySqlDataReader reader;
@@ -581,10 +584,16 @@ namespace AppWebERS.Models{
                     consulta = "UPDATE proyecto SET nombre='" + valor + "' WHERE id_proyecto=" + idProyecto;
                     reader = this.conexion.RealizarConsulta(consulta);
                     this.conexion.EnsureConnectionClosed();
+                    consulta = "CALL controlVersiones('" + idUsuario+"',"+idProyecto+",'"+valor+"','"+atributo+"')";
+                    reader = this.conexion.RealizarConsulta(consulta);
+                    this.conexion.EnsureConnectionClosed();
                     break;
 
                 case "proposito":
                     consulta = "UPDATE proyecto SET proposito='" + valor + "' WHERE id_proyecto=" + idProyecto;
+                    reader = this.conexion.RealizarConsulta(consulta);
+                    this.conexion.EnsureConnectionClosed();
+                    consulta = "CALL controlVersiones('" + idUsuario + "'," + idProyecto + ",'" + valor + "','" + atributo + "')";
                     reader = this.conexion.RealizarConsulta(consulta);
                     this.conexion.EnsureConnectionClosed();
                     break;                    
@@ -593,10 +602,16 @@ namespace AppWebERS.Models{
                     consulta = "UPDATE proyecto SET alcance='" + valor + "' WHERE id_proyecto=" + idProyecto;
                     reader = this.conexion.RealizarConsulta(consulta);
                     this.conexion.EnsureConnectionClosed();
+                    consulta = "CALL controlVersiones('" + idUsuario + "'," + idProyecto + ",'" + valor + "','" + atributo + "')";
+                    reader = this.conexion.RealizarConsulta(consulta);
+                    this.conexion.EnsureConnectionClosed();
                     break;
 
                 case "contexto":
                     consulta = "UPDATE proyecto SET contexto='" + valor + "' WHERE id_proyecto=" + idProyecto;
+                    reader = this.conexion.RealizarConsulta(consulta);
+                    this.conexion.EnsureConnectionClosed();
+                    consulta = "CALL controlVersiones('" + idUsuario + "'," + idProyecto + ",'" + valor + "','" + atributo + "')";
                     reader = this.conexion.RealizarConsulta(consulta);
                     this.conexion.EnsureConnectionClosed();
                     break;
@@ -605,10 +620,16 @@ namespace AppWebERS.Models{
                     consulta = "UPDATE proyecto SET definiciones='" + valor + "' WHERE id_proyecto=" + idProyecto;
                     reader = this.conexion.RealizarConsulta(consulta);
                     this.conexion.EnsureConnectionClosed();
+                    consulta = "CALL controlVersiones('" + idUsuario + "'," + idProyecto + ",'" + valor + "','" + atributo + "')";
+                    reader = this.conexion.RealizarConsulta(consulta);
+                    this.conexion.EnsureConnectionClosed();
                     break;
 
                 case "acronimo":
                     consulta = "UPDATE proyecto SET acronimos='" + valor + "' WHERE id_proyecto=" + idProyecto;
+                    reader = this.conexion.RealizarConsulta(consulta);
+                    this.conexion.EnsureConnectionClosed();
+                    consulta = "CALL controlVersiones('" + idUsuario + "'," + idProyecto + ",'" + valor + "','" + atributo + "')";
                     reader = this.conexion.RealizarConsulta(consulta);
                     this.conexion.EnsureConnectionClosed();
                     break;
@@ -617,10 +638,16 @@ namespace AppWebERS.Models{
                     consulta = "UPDATE proyecto SET abreviaturas='" + valor + "' WHERE id_proyecto=" + idProyecto;
                     reader = this.conexion.RealizarConsulta(consulta);
                     this.conexion.EnsureConnectionClosed();
+                    consulta = "CALL controlVersiones('" + idUsuario + "'," + idProyecto + ",'" + valor + "','" + atributo + "')";
+                    reader = this.conexion.RealizarConsulta(consulta);
+                    this.conexion.EnsureConnectionClosed();
                     break;
 
                 case "referencia":
                     consulta = "UPDATE proyecto SET referencias='" + valor + "' WHERE id_proyecto=" + idProyecto;
+                    reader = this.conexion.RealizarConsulta(consulta);
+                    this.conexion.EnsureConnectionClosed();
+                    consulta = "CALL controlVersiones('" + idUsuario + "'," + idProyecto + ",'" + valor + "','" + atributo + "')";
                     reader = this.conexion.RealizarConsulta(consulta);
                     this.conexion.EnsureConnectionClosed();
                     break;
@@ -629,10 +656,16 @@ namespace AppWebERS.Models{
                     consulta = "UPDATE proyecto SET ambiente_operacional='" + valor + "' WHERE id_proyecto=" + idProyecto;
                     reader = this.conexion.RealizarConsulta(consulta);
                     this.conexion.EnsureConnectionClosed();
+                    consulta = "CALL controlVersiones('" + idUsuario + "'," + idProyecto + ",'" + valor + "','" + atributo + "')";
+                    reader = this.conexion.RealizarConsulta(consulta);
+                    this.conexion.EnsureConnectionClosed();
                     break;
 
                 case "relacion":
                     consulta = "UPDATE proyecto SET relacion_con_otros_proyectos='" + valor + "' WHERE id_proyecto=" + idProyecto;
+                    reader = this.conexion.RealizarConsulta(consulta);
+                    this.conexion.EnsureConnectionClosed();
+                    consulta = "CALL controlVersiones('" + idUsuario + "'," + idProyecto + ",'" + valor + "','" + atributo + "')";
                     reader = this.conexion.RealizarConsulta(consulta);
                     this.conexion.EnsureConnectionClosed();
                     break;

@@ -222,7 +222,13 @@ namespace AppWebERS.Controllers
 
 
 
-        
+        /**
+        * 
+        * <autor>Christian Marchant</autor>
+        * <summary>Obtiene los diagramas asociados a un proyecto de la base de datos.</summary>
+        * <param name="idProyecto">Id del proyecto al que se asocia el diagrama.</param>
+        * <returns>El objeto con los diagramas asociados.</returns>
+        */
 
         private List<Diagrama> ObtenerDiagramas(int idProyecto)
         {
@@ -329,6 +335,14 @@ namespace AppWebERS.Controllers
             return fileResult;
         }
 
+        /**
+        * 
+        * <autor>Jose Vera</autor>
+        * <summary>Crea el html que inserta las referencias en el documento.</summary>
+        * <param name="idProyecto">Id del proyecto al que se asocia la referencia.</param>
+        * <returns>El html con las referencias dentro.</returns>
+        */
+
         private string obtenerReferencias(int idProyecto)
         {
             ApplicationDbContext conexion = ApplicationDbContext.Create();
@@ -379,6 +393,14 @@ namespace AppWebERS.Controllers
 
             return htmlReferencias;
         }
+
+        /**
+        * 
+        * <autor>Christian Marchant</autor>
+        * <summary>Crea el html que inserta los diagramas en el documento.</summary>
+        * <param name="id">Id del proyecto al que se asocia al diagrama.</param>
+        * <returns>El html con los diagramas.</returns>
+        */
 
         private string obtenerHtmlDiagramas(int id)
         {

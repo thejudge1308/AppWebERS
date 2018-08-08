@@ -74,7 +74,7 @@ namespace AppWebERS.Controllers{
                         ViewBag.Messagw = "Formato no soportado. Seleccione un archivo de imagen (.jpg, .jpeg, .png, .bmp o .gif)";
                         return RedirectToAction("SubirDiagrama", "Diagrama", new { id = idProyecto });
                     }
-                    if (this.ValidarURLNoRepetida2(path) == false)
+                    if (this.ValidarURLNoRepetida2("/UploadedFiles/" + id + nombreURL + Path.GetExtension(path)) == false)
                     {
                         TempData["alerta"] = new Alerta("Ya existe un archivo con este nombre", TipoAlerta.ERROR);
                         ViewBag.Message = "Ya existe un archivo con este nombre.";
@@ -243,7 +243,7 @@ namespace AppWebERS.Controllers{
             try
             {
                 string _FileName = id + Path.GetFileName(file.FileName);
-                string _path = Path.Combine(Server.MapPath("~/UploadedFiles"), _FileName).Replace(@"\", @"/");
+                string _path = "/UploadedFiles/" + _FileName;
                 string ConsultaPath = "SELECT ruta FROM Diagrama WHERE ruta = '" + _path + "';";
                 MySqlDataReader reader = this.Conector.RealizarConsulta(ConsultaPath);
                 if (reader == null)

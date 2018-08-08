@@ -255,6 +255,13 @@ namespace AppWebERS.Controllers
 
 
 
+        /**
+        * 
+        * <autor>Rodrigo Letelier</autor>
+        * <summary>Crea el html que inserta toda la informacion del proyecto a un archivo pdf.</summary>
+        * <param name="idp">Id del proyecto al que se asocia el pdf.</param>
+        * <returns>Archivo pdf con la informacion del proyecto.</returns>
+        */
         public ActionResult ExportarPDF(int id) {
 
 
@@ -520,6 +527,14 @@ namespace AppWebERS.Controllers
             s = s + "</table>";
             return s;
         }
+
+        /**
+        * 
+        * <autor>Rodrigo Letelier</autor>
+        * <summary>Crea el html que inserta los requisitos de usuario junto a los de sistema en forma volere.</summary>
+        * <param name="idp">Id del proyecto al que se asocia el requisito.</param>
+        * <returns>El html con los requisitos volere dentro.</returns>
+        */
 
         private string CrearVolere(int idp) {
             string s = "<h1 class=\"titulo\" > 3) Requisitos Volere</h1> ";

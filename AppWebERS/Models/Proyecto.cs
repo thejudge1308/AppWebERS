@@ -802,7 +802,7 @@ namespace AppWebERS.Models{
         public List<SelectListItem> ObtenerUsuarios()
         {
             List<SelectListItem> listasUsuarios = new List<SelectListItem>();
-            string consulta = "SELECT users.UserName, users.Rut FROM users WHERE Tipo != 'SYSADMIN' AND Estado = 1; ";
+            string consulta = "SELECT users.UserName, users.Rut FROM users WHERE Tipo != 'SYSADMIN' AND Estado = 1 AND Disponibilidad_Vinculacion = 1; ";
             MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
             if (reader != null)
             {

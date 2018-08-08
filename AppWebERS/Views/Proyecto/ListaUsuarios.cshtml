@@ -9,9 +9,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 
 }
-
-
-
 @{
     var ProyectoActual = (Proyecto)ViewData["proyecto"];
     var TipoUsuario = (int)ViewData["permiso"];
@@ -19,24 +16,28 @@
     var solicitudes = (List<SolicitudDeProyecto>)ViewData["solicitudes"];
 }
 @if (ProyectoActual != null)
-{
+{  
     <h2>Lista de usuarios.</h2>
     <ul class="nav nav-tabs">
         <li class="nav-item">
             <a class="nav-link" href="@Url.Action("Detalles", "Proyecto", new { id = ProyectoActual.IdProyecto })">Detalles</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="@Url.Action("ListarRequisitosMinimalista", "Proyecto", new { id = ProyectoActual.IdProyecto})">Requisitos</a>
+            <a class="nav-link" href="@Url.Action("ListarRequisitosMinimalista", "Proyecto", new { id = ProyectoActual.IdProyecto })">Requisitos</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="@Url.Action(" ListarDiagramas", "Proyecto" , new { id=ProyectoActual.IdProyecto})">Diagramas</a>
+            <a class="nav-link" href="@Url.Action("ListarDiagramas", "Proyecto", new { id = ProyectoActual.IdProyecto })">Diagramas</a>
         </li>
         <li class="nav-item">
             <a class="nav-link active" href="@Url.Action("ListaUsuarios", "Proyecto", new { id = ProyectoActual.IdProyecto })">Usuarios</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="@Url.Action("ListaActores","Proyecto",new { id = ProyectoActual.IdProyecto})">Actores</a>
+            <a class="nav-link" href="@Url.Action("ListaActores", "Proyecto", new { id = ProyectoActual.IdProyecto })">Actores</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("HistorialCambios","Proyecto",new { id = ProyectoActual.IdProyecto})">Historial de cambios</a>
+        </li>
+    
         @{
             <!--
         if(TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO || TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN) {

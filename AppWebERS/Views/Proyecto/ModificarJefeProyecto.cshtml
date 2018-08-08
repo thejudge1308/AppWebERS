@@ -13,7 +13,7 @@
     @if (!ViewBag.listaVacia) {
     <div class="card-body table-responsive">
         <table class="table">
-            <thead class="thead-dark">
+            <thead class="thead-light">
                 <tr class="text-center">
                     <th scope="col">Rut</th>
                     <th scope="col">Nombre De Usuario</th>
@@ -29,7 +29,7 @@
                         <td data-info="info">@usuario.Nombre</td>
                         <td data-info="info">@usuario.CorreoElectronico</td>
 						<td>
-							@Html.ActionLink("Asignar Jefe", "ModificarJefeProyectoLogico", new { rut = usuario.Rut, id = @ViewBag.idProyecto }, new { @class = "btn btn-secondary", id = "btnModificar", type = "button" })
+							@Html.ActionLink("Asignar Jefe", "ModificarJefeProyectoLogico", new { rut = usuario.Rut, id = @ViewBag.idProyecto }, new { @class = "btn btn-primary", id = "btnModificar", type = "button" })
 						</td>
                     </tr>
                 }
@@ -48,7 +48,7 @@
     <div class="form-group">
         <div class="col-md-offset-2 col-md-9">
             
-            @Html.ActionLink("Regresar","Detalles",new {  id = @ViewBag.idProyecto }, new { @class = "btn btn-secondary", id = "btnModificar", type = "button" })
+            @Html.ActionLink("Regresar","Detalles",new {  id = @ViewBag.idProyecto }, new { @class = "btn btn-primary", id = "btnModificar", type = "button" })
         </div>
     </div>
 

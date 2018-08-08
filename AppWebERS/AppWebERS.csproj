@@ -186,6 +186,7 @@
     <Compile Include="Controllers\CuentaController.cs" />
     <Compile Include="Controllers\ActorController.cs" />
     <Compile Include="Controllers\DiagramaController.cs" />
+    <Compile Include="Controllers\HistorialController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\JefeProyectoController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
@@ -228,13 +229,6 @@
     <Compile Include="Utilidades\Alerta.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content - Copia\bootstrap-grid.css" />
-    <Content Include="Content - Copia\bootstrap-grid.min.css" />
-    <Content Include="Content - Copia\bootstrap-reboot.css" />
-    <Content Include="Content - Copia\bootstrap-reboot.min.css" />
-    <Content Include="Content - Copia\bootstrap.css" />
-    <Content Include="Content - Copia\bootstrap.min.css" />
-    <Content Include="Content - Copia\Site.css" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-reboot.css" />
@@ -269,12 +263,6 @@
     <Content Include="Content\bootstrap-reboot.css.map" />
     <Content Include="Content\bootstrap-grid.min.css.map" />
     <Content Include="Content\bootstrap-grid.css.map" />
-    <Content Include="Content - Copia\bootstrap-grid.css.map" />
-    <Content Include="Content - Copia\bootstrap-grid.min.css.map" />
-    <Content Include="Content - Copia\bootstrap-reboot.css.map" />
-    <Content Include="Content - Copia\bootstrap-reboot.min.css.map" />
-    <Content Include="Content - Copia\bootstrap.css.map" />
-    <Content Include="Content - Copia\bootstrap.min.css.map" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -402,10 +390,15 @@
     <Content Include="Views\CasoDeUso\UploadFile.cshtml" />
     <Content Include="Views\Proyecto\ListaActores.cshtml" />
     <Content Include="Views\Proyecto\AgregarActor.cshtml" />
+    <Content Include="Views\Proyecto\EditarRequisito.cshtml" />
+    <Content Include="Views\Proyecto\HistorialCambios.cshtml" />
+    <Content Include="Views\Proyecto\RequisitoSistema.cshtml" />
+    <Content Include="Views\Proyecto\AsociarRequisitoSistemaExistente.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="UploadedFiles\" />
+    <Folder Include="Views\Historial\" />
     <Folder Include="Views\SolicitudDeProyecto\" />
   </ItemGroup>
   <ItemGroup>
@@ -438,7 +431,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>51255</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>

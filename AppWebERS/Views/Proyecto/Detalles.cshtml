@@ -27,23 +27,23 @@
     <h2>Detalles</h2>
 
     <ul class="nav nav-tabs">
-
         <li class="nav-item">
-            <a class="nav-link active" href="@Url.Action("Detalles", "Proyecto", new { id = ProyectoActual.IdProyecto})">Detalles</a>
-        </li>
-
-
-        <li class="nav-item">
-            <a class="nav-link" href="@Url.Action("ListarRequisitosMinimalista", "Proyecto", new { id = ProyectoActual.IdProyecto})">Requisitos</a>
+            <a class="nav-link active" href="@Url.Action("Detalles", "Proyecto", new { id = ProyectoActual.IdProyecto })">Detalles</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="@Url.Action("ListarDiagramas", "Proyecto", new { id = ProyectoActual.IdProyecto})">Diagramas</a>
+            <a class="nav-link" href="@Url.Action("ListarRequisitosMinimalista", "Proyecto", new { id = ProyectoActual.IdProyecto })">Requisitos</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="@Url.Action("ListaUsuarios","Proyecto",new { id = ProyectoActual.IdProyecto})">Usuarios</a>
+            <a class="nav-link" href="@Url.Action("ListarDiagramas", "Proyecto", new { id = ProyectoActual.IdProyecto })">Diagramas</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="@Url.Action("ListaActores","Proyecto",new { id = ProyectoActual.IdProyecto})">Actores</a>
+            <a class="nav-link" href="@Url.Action("ListaUsuarios", "Proyecto", new { id = ProyectoActual.IdProyecto })">Usuarios</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("ListaActores", "Proyecto", new { id = ProyectoActual.IdProyecto })">Actores</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("HistorialCambios","Proyecto",new { id = ProyectoActual.IdProyecto})">Historial de cambios</a>
         </li>
     </ul>
 
@@ -244,11 +244,7 @@
                         @Html.ActionLink("Generar PDF", "ExportarPDF", "Proyecto", new { id = ProyectoActual.IdProyecto }, new { miAtributo = "valor1", @class = "btn btn-danger" })
                     </div>
                 </div>
-                @{
-                    if(TipoUsuario == Proyecto.AUTH_COMO_USUARIO || TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO) {
-                        <a class="btn btn-primary" href="@Url.Action("Requisito","Proyecto",new { id = ProyectoActual.IdProyecto})">Nuevo Requisito</a>
-                    }
-                }
+                
             </div>
         </div>
 
@@ -290,6 +286,7 @@
     </div>
 }
 
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     @if(TipoUsuario != Proyecto.AUTH_COMO_SYSADMIN) {
@@ -300,4 +297,7 @@
         @Scripts.Render("/Scripts/Proyecto/Detalles_sysadmin_quill.min.js")
         @Scripts.Render("~/Scripts/Proyecto/Sysadminconf.js")
     }
+
+
+
 }

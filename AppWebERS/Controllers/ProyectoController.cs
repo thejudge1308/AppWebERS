@@ -1338,7 +1338,7 @@ namespace AppWebERS.Controllers
 
                 ViewBag.IdProyecto = id;
                 List<CheckBox> list = obtenerActores(id);
-                Requisito requisito = new Requisito(null, null, null, null, null, null, null, null, null, null, DateTime.Now.ToString("yyyy-MM-dd"), "0", null);
+                Requisito requisito = new Requisito(null, null, null, null, null, null, null, null, null, null, DateTime.Now.ToString("yyyy-MM-dd"), "1", null);
                 requisito.Actores = list;
                 requisito.IncrementoCheck = new CheckBox() { nombre = "1", id = "1", isChecked = false };
                 return View(requisito);
@@ -1394,6 +1394,10 @@ namespace AppWebERS.Controllers
                , r.TipoRequisito, r.Medida, r.Escala, r.Fecha, r.Incremento, r.Tipo);
             List<String> listaActores = new List<string>();
             List<String> listaReqUsuario = new List<string>();
+            if (r.IncrementoCheck.isChecked)
+            {
+                requisito.Incremento = "" + (Int32.Parse(r.Incremento) + 1);
+            }
             if (r.Requisitos != null)
             {
                 for(int i = 0; i < r.Requisitos.Count; i++)
@@ -1647,7 +1651,7 @@ namespace AppWebERS.Controllers
                 ViewBag.IdProyecto = id;
                 ViewBag.IdRequisitoUsuario = idRequisitoUsuario;
                 List<CheckBox> list = obtenerActores(id);
-                Requisito requisito = new Requisito(null, null, null, null, null, null, null, null, null, null, DateTime.Now.ToString("yyyy-MM-dd"), "0", null);
+                Requisito requisito = new Requisito(null, null, null, null, null, null, null, null, null, null, DateTime.Now.ToString("yyyy-MM-dd"), "1", null);
                 requisito.Actores = list;
                 requisito.IncrementoCheck = new CheckBox() { nombre = "1", id = "1", isChecked = false };
                 return View(requisito);
@@ -1696,7 +1700,16 @@ namespace AppWebERS.Controllers
             {
                 if (requisito.ValidarNombreRequisito(id, r.Nombre))
                 {
-                    if (requisito.RegistrarRequisitoDeSoftware(Int32.Parse(idProyecto), idRequisitoUsuario, r.IdRequisito)) { 
+                    if (requisito.RegistrarRequisitoDeSoftware(Int32.Parse(idProyecto), idRequisitoUsuario, r.IdRequisito)) {
+                        int numRequisito = r.ObtenerNumRequisito(Int32.Parse(idProyecto),r.IdRequisito);
+
+                        foreach (var actor in listaa)
+                        {
+                            if (!r.RegistrarActor2(actor, numRequisito))
+                            {
+                                TempData["alerta"] = new Alerta("!!!!!", TipoAlerta.SUCCESS);
+                            }
+                        }
                         TempData["alerta"] = new Alerta("Éxito al crear Requisito.", TipoAlerta.SUCCESS);
                         return RedirectToAction("ListarRequisitosMinimalista/" + id, "Proyecto");
 
@@ -1705,6 +1718,7 @@ namespace AppWebERS.Controllers
                     {
                         TempData["alerta"] = new Alerta("ERROR al crear Requisito.", TipoAlerta.ERROR);
                     }
+                    
                 }
                 else
                 {

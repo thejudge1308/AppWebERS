@@ -99,13 +99,13 @@ namespace AppWebERS.Controllers{
 
                    
                     webClient.DownloadFile(@url, @path);
-                    this.agregar(nombre, id, "../../UploadedFiles/" +id + nombreURL + Path.GetExtension(path), tipoDeDiagramaURL);
+                    this.agregar(nombreURL, id, "../../UploadedFiles/" +id + nombreURL + Path.GetExtension(path), tipoDeDiagramaURL);
                     //this.agregar(nombreURL, id, path, tipoDeDiagramaURL);
                     TempData["alerta"] = new Alerta("Diagrama subido con éxito!!", TipoAlerta.SUCCESS);
                     ViewBag.Message = "Diagrama subido con éxito!!";
                     Conector.CerrarConexion();
                 
-                   return RedirectToAction("SubirDiagrama", "Diagrama", new { id = idProyecto });
+                   return RedirectToAction("ListarDiagramas", "Proyecto", new { id = idProyecto });
                     
                     
                     
@@ -166,13 +166,13 @@ namespace AppWebERS.Controllers{
                 TempData["alerta"] = new Alerta("Diagrama subido con éxito!!", TipoAlerta.SUCCESS);
                 ViewBag.Message = "Diagrama subido con éxito!!";
                 Conector.CerrarConexion();
-                return RedirectToAction("SubirDiagrama", "Diagrama", new { id = idProyecto });
+                return RedirectToAction("ListarDiagramas", "Proyecto", new { id = idProyecto });
 
             }
             catch
             {
-                ViewBag.Message = "Falla en la subida del Diagrama!!";
-                TempData["alerta"] = new Alerta("Falla en la subida del Diagrama!!", TipoAlerta.ERROR);
+                ViewBag.Message = "Error al subir el diagrama.";
+                TempData["alerta"] = new Alerta("Error al subir el diagrama.", TipoAlerta.ERROR);
                 return RedirectToAction("SubirDiagrama", "Diagrama", new { id = idProyecto });
             }
         }

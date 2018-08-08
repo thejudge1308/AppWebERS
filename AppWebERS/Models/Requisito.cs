@@ -46,6 +46,7 @@ namespace AppWebERS.Models {
             Incremento = incremento;
             Tipo = tipo;
             Actores = new List<CheckBox>();
+            Requisitos = new List<CheckBox>();
 
         }
 
@@ -65,7 +66,9 @@ namespace AppWebERS.Models {
             this.Incremento = "";
             this.Tipo = "";
         }
-
+        /**
+         * Clase   que se utiliza para obtener los valores de los checkbox de los actores en un requisito
+         */
         public class CheckBox
         {
             public string nombre { set; get; }
@@ -240,6 +243,10 @@ namespace AppWebERS.Models {
         **/
         [Display(Name = "Incremento")]
         public CheckBox IncrementoCheck { get; set; }
+
+
+        [Display(Name = "Requisitos Usuario")]
+        public List<CheckBox> Requisitos { get; set; }
         /**
          * Método para Crear un Requisito
          * <returns>Retorna un boolean que indica el correcto registro del requisito.</returns>
@@ -281,7 +288,14 @@ namespace AppWebERS.Models {
         {
 
         }
-
+        /**
+         * <author>Raimundo Vásquez - Jose Nunnez</author>/author>
+         * <summary>
+         * Metodo para registrar un requisito
+         * </summary>
+         * <param idProyecto="idProyecto"> Es el ID correspondiente a un proyecto
+         * <returns> un string que indica si se hizo bien la inserción o no: si está vacío ocurrió un error sino se realizo correctamente</returns>
+         */
         public string RegistrarRequisito(int idProyecto)
         {
             string value = "";
@@ -324,14 +338,19 @@ namespace AppWebERS.Models {
           
             string update = "START TRANSACTION;"+
                 "UPDATE requisito SET id_requisito = '" + r.IdRequisito + "', nombre = '" + r.Nombre + "', descripcion = '" + r.Descripcion +"',"
-                + "prioridad = '"+r.Prioridad + "', fuente = '" + r.Fuente + "', estabilidad = '"+ r.Estabilidad + "', fecha_actualizacion ='" + r.Fecha + "', "
-                + "incremento = '" + r.Incremento +"', tipo = '" + r.Tipo +"' WHERE num_requisito =" +num_requisito +" AND  ref_proyecto ='" +id+ "'; "+
+                + "prioridad = '"+r.Prioridad + "', fuente = '" + r.Fuente + "', estabilidad = '"+ r.Estabilidad + "', estado = '"+r.Estado+"',fecha_actualizacion ='" + r.Fecha + "', "
+                + "incremento = '" + r.Incremento +"', medida = '"+r.Medida+"', escala = '"+r.Escala+"',tipo = '" + r.Tipo +"' WHERE num_requisito =" +num_requisito +" AND  ref_proyecto ='" +id+ "'; "+
                 "COMMIT;";
             ApplicationDbContext con = ApplicationDbContext.Create();
             if (con.RealizarConsultaNoQuery(update) & this.eliminarActores(num_requisito))
             {
+                if (r.Tipo.Equals("SISTEMA"))
+                {
+                    this.eliminarAsociacion(num_requisito);
+                }
                 con.EnsureConnectionClosed();
                 return true;
+                
             }
             return false;
         }
@@ -358,6 +377,30 @@ namespace AppWebERS.Models {
                 return false;
             }
         }
+
+        public bool eliminarAsociacion(int num_requisito)
+        {
+            ApplicationDbContext con = ApplicationDbContext.Create();
+            string delete = "DELETE FROM asociacion WHERE req_software = '" + num_requisito + "'";
+            if (con.RealizarConsultaNoQuery(delete))
+            {
+                con.EnsureConnectionClosed();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        /**
+         * <author>Jose Nunnez</author>/author>
+         * <summary>
+         * Metodo que se encarga de insertar en la relacion vinculo_actor_requisito un actor y su correspondiente requisito
+         * </summary>
+         * <param name=actorr">Requisito actual que se esta modificando del cual obtendremos los campos para las columnas en la tabla requisito</param>
+         * <param name="id">Corresponde al ID del requisito en donde se asociará el actor</param>
+         * <returns> un bool que nos dice si se realizó correctamente la insercion/returns>
+         */
         public bool registrarActor(string actor, string id)
         {
             string n = this.idVerdadero;

@@ -28,15 +28,17 @@
             <a class="nav-link" href="@Url.Action("ListarRequisitosMinimalista", "Proyecto", new { id = ProyectoActual.IdProyecto })">Requisitos</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="@Url.Action("ListarDiagramas", "Proyecto", new { id = ProyectoActual.IdProyecto})">Diagramas</a>
+            <a class="nav-link" href="@Url.Action("ListarDiagramas", "Proyecto", new { id = ProyectoActual.IdProyecto })">Diagramas</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="@Url.Action("ListaUsuarios", "Proyecto", new { id = ProyectoActual.IdProyecto })">Usuarios</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" href="@Url.Action("ListaActores","Proyecto",new { id = ProyectoActual.IdProyecto})">Actores</a>
+            <a class="nav-link active" href="@Url.Action("ListaActores", "Proyecto", new { id = ProyectoActual.IdProyecto })">Actores</a>
         </li>
-
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("HistorialCambios","Proyecto",new { id = ProyectoActual.IdProyecto})">Historial de cambios</a>
+        </li>
     </ul>
 
     <div class="form-group">
@@ -59,10 +61,9 @@
                 <tr>
                     <th scope="col">ID</th>
                     <th scope="col">Nombre</th>
-                    <th scope="col">Descripcion</th>
+                    <th scope="col">Descripción</th>
                     <th scope="col">Num Actual</th>
                     <th scope="col">Num Futuro</th>
-                    <th scope="col">Num Contactables</th>
                 </tr>
             </thead>
             <tbody>
@@ -79,7 +80,6 @@
                                 <td>@item.Descripcion</td>
                                 <td>@item.NumActual</td>
                                 <td>@item.NumFuturo</td>
-                                <td>@item.NumContactables</td>
                             </tr>
                             ++auxiliar;
                         }

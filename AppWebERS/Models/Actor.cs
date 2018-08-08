@@ -22,12 +22,11 @@ namespace AppWebERS.Models {
          * <param name = "nombre" > El nombre del actor.</param>
          **/
 
-        public Actor(int idActor, string descripcion, int numActual, int numFuturo, int numContactables, string nombre) {
+        public Actor(int idActor, string descripcion, int numActual, int numFuturo, string nombre) {
             this.IdActor = idActor;
             this.Descripcion = descripcion;
             this.NumActual = numActual;
             this.NumFuturo = numFuturo;
-            this.NumContactables = numContactables;
             this.Nombre = nombre;
         }
 
@@ -70,16 +69,6 @@ namespace AppWebERS.Models {
          **/
 
         public int NumFuturo {get; set;}
-
-        /**
-         * Setter y Getter del número de contactables del actor
-         * 
-         * <param name = "numContactables" > El numero de contactables del actor.</param>
-         * <returns>Retorna el valor int del numero de contactables.</returns>
-         * 
-         **/
-
-        public int NumContactables {get; set;}
 
         /**
          * Setter y Getter del nombre

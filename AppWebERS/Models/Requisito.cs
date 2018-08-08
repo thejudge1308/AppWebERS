@@ -46,6 +46,7 @@ namespace AppWebERS.Models {
             Incremento = incremento;
             Tipo = tipo;
             Actores = new List<CheckBox>();
+            Requisitos = new List<CheckBox>();
 
         }
 
@@ -65,7 +66,9 @@ namespace AppWebERS.Models {
             this.Incremento = "";
             this.Tipo = "";
         }
-
+        /**
+         * Clase   que se utiliza para obtener los valores de los checkbox de los actores en un requisito
+         */
         public class CheckBox
         {
             public string nombre { set; get; }
@@ -170,7 +173,7 @@ namespace AppWebERS.Models {
          * 
          **/
         [Required(ErrorMessage = "El campo Medida es obligatorio.")]
-        [StringLength(20, ErrorMessage = "La medida debe tener a lo más 20 caracteres.", MinimumLength = 1)]
+        [StringLength(100, ErrorMessage = "La Medida debe tener a lo más 100 caracteres.", MinimumLength = 1)]
         [Display(Name = "Medida")]
         public string Medida { get; set; }
 
@@ -232,6 +235,19 @@ namespace AppWebERS.Models {
         public List<CheckBox> Actores { get; set; }
 
         /**
+        * Setter y Getter del atributo IncrementoCheck
+        * 
+        * <param name = "actores" > La lista de actores involucrados en el requisito.</param>
+        * <returns>Retorna la lista de actores.</returns>
+        * 
+        **/
+        [Display(Name = "Incremento")]
+        public CheckBox IncrementoCheck { get; set; }
+
+
+        [Display(Name = "Requisitos Usuario")]
+        public List<CheckBox> Requisitos { get; set; }
+        /**
          * Método para Crear un Requisito
          * <returns>Retorna un boolean que indica el correcto registro del requisito.</returns>
          **/
@@ -272,7 +288,14 @@ namespace AppWebERS.Models {
         {
 
         }
-
+        /**
+         * <author>Raimundo Vásquez - Jose Nunnez</author>/author>
+         * <summary>
+         * Metodo para registrar un requisito
+         * </summary>
+         * <param idProyecto="idProyecto"> Es el ID correspondiente a un proyecto
+         * <returns> un string que indica si se hizo bien la inserción o no: si está vacío ocurrió un error sino se realizo correctamente</returns>
+         */
         public string RegistrarRequisito(int idProyecto)
         {
             string value = "";
@@ -300,8 +323,84 @@ namespace AppWebERS.Models {
 
             
         }
+        /**
+         * <author>Raimundo Vásquez</author>/author>
+         * <summary>
+         * Metodo que realiza la consulta UPDATE en la base de datos para modificar el proyecto
+         * </summary>
+         * <param name="r">Requisito actual que se esta modificando del cual obtendremos los campos para las columnas en la tabla requisito</param>
+         * <param name="id">ID  del proyecto actual en  el que se esta modificando el requisito</param>
+         * <param name="num_requisito">numero real del requisito que estamos editando</param>
+         * <returns> un bool que nos dice si se realizó correctamente la actualización del requisito</returns>
+         */
+        public bool ActualizarRequisito(Requisito r,int id,int num_requisito)
+        {
+          
+            string update = "START TRANSACTION;"+
+                "UPDATE requisito SET id_requisito = '" + r.IdRequisito + "', nombre = '" + r.Nombre + "', descripcion = '" + r.Descripcion +"',"
+                + "prioridad = '"+r.Prioridad + "', fuente = '" + r.Fuente + "', estabilidad = '"+ r.Estabilidad + "', estado = '"+r.Estado+"',fecha_actualizacion ='" + r.Fecha + "', "
+                + "incremento = '" + r.Incremento +"', medida = '"+r.Medida+"', escala = '"+r.Escala+"',tipo = '" + r.Tipo +"' WHERE num_requisito =" +num_requisito +" AND  ref_proyecto ='" +id+ "'; "+
+                "COMMIT;";
+            ApplicationDbContext con = ApplicationDbContext.Create();
+            if (con.RealizarConsultaNoQuery(update) & this.eliminarActores(num_requisito))
+            {
+                if (r.Tipo.Equals("SISTEMA"))
+                {
+                    this.eliminarAsociacion(num_requisito);
+                }
+                con.EnsureConnectionClosed();
+                return true;
+                
+            }
+            return false;
+        }
 
+        /**
+         * <author>Raimundo Vásquez</author>/author>
+         * <summary>
+         * Metodo que realiza la consulta DELETE en la base de datos para eliminar los actores, para luego asociarlos de nuevo
+         * </summary>
+         * <param name="num_requisito">numero real del requisito que estamos editando</param>
+         * <returns> bool que nos verifica si eliminamos los actores o no</returns>
+         */
+        public bool eliminarActores(int num_requisito)
+        {
+            ApplicationDbContext con = ApplicationDbContext.Create();
+            string delete = "DELETE FROM vinculo_actor_requisito WHERE ref_req ='" + num_requisito + "'";
+            if (con.RealizarConsultaNoQuery(delete))
+            {
+                con.EnsureConnectionClosed();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
+        public bool eliminarAsociacion(int num_requisito)
+        {
+            ApplicationDbContext con = ApplicationDbContext.Create();
+            string delete = "DELETE FROM asociacion WHERE req_software = '" + num_requisito + "'";
+            if (con.RealizarConsultaNoQuery(delete))
+            {
+                con.EnsureConnectionClosed();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        /**
+         * <author>Jose Nunnez</author>/author>
+         * <summary>
+         * Metodo que se encarga de insertar en la relacion vinculo_actor_requisito un actor y su correspondiente requisito
+         * </summary>
+         * <param name=actorr">Requisito actual que se esta modificando del cual obtendremos los campos para las columnas en la tabla requisito</param>
+         * <param name="id">Corresponde al ID del requisito en donde se asociará el actor</param>
+         * <returns> un bool que nos dice si se realizó correctamente la insercion/returns>
+         */
         public bool registrarActor(string actor, string id)
         {
             string n = this.idVerdadero;
@@ -386,10 +485,10 @@ namespace AppWebERS.Models {
          * <summary>Metodo para registrar un requisito de software en la base de datos.</summary>
          * <param name="idProyecto">Id del proyecto al que pertenece el proyecto.</param>
          * <param name="idRequisitoSistema">Id del requisito de sistema que se desea agregar.</param>
-         * <param name="idRequisitoUsuario">Id del requisito de usuario al que se asocia el requisito de usuario.</param>
+         * <param name="idRequisitoUsuario">Id del requisito de usuario al que se asocia el requisito de sistema.</param>
          * <returns>True si se registra exitosamente, false si falla el registro.</returns>
          */ 
-        public bool RegistrarRequisitoDeSoftwareMinimalista(int idProyecto, string idRequisitoUsuario, string idRequisitoSistema)
+        public bool RegistrarRequisitoDeSoftware(int idProyecto, string idRequisitoUsuario, string idRequisitoSistema)
         {
             if (!string.IsNullOrEmpty(idRequisitoUsuario) && !string.IsNullOrEmpty(idRequisitoSistema))
             {
@@ -412,6 +511,35 @@ namespace AppWebERS.Models {
                         }
                     }
 
+                }
+            }
+            return false;
+        }
+
+        /**
+         * 
+         * <autor>Diego Iturriaga</autor>
+         * <summary>Metodo para asociar un requisito de software en la tabla asociacion de la base de datos.</summary>
+         * <param name="idProyecto">Id del proyecto al que pertenece el proyecto.</param>
+         * <param name="idRequisitoSistema">Id del requisito de sistema que se desea asociar.</param>
+         * <param name="idRequisitoUsuario">Id del requisito de usuario al que se asocia el requisito de sistema.</param>
+         * <returns>True si se registra exitosamente, false si falla el registro.</returns>
+         */
+        public bool AsociarRequisitoDeSoftware(int idProyecto, string idRequisitoUsuario, string idRequisitoSistema)
+        {
+            if (!string.IsNullOrEmpty(idRequisitoUsuario) && !string.IsNullOrEmpty(idRequisitoSistema))
+            {
+                ApplicationDbContext conexionLocal = ApplicationDbContext.Create();
+                
+                int num_requisitoUsuario = this.ObtenerNumRequisito(idProyecto, idRequisitoUsuario);
+                int num_requisitoSistema = this.ObtenerNumRequisito(idProyecto, idRequisitoSistema);
+                if (num_requisitoSistema != -1 && num_requisitoUsuario != -1)
+                {
+                    string consultaInsert2 = "INSERT INTO asociacion(req_usuario, req_software) VALUES(" + num_requisitoUsuario + "," + num_requisitoSistema + ");";
+                    if (conexionLocal.RealizarConsultaNoQuery(consultaInsert2))
+                    {
+                        return true;
+                    }
                 }
             }
             return false;
@@ -472,11 +600,11 @@ namespace AppWebERS.Models {
         /**
          * <author>Roberto Ureta</author>
          * <summary>
-         * Obtiene una lista de requisitos de sistema que le corresponden a un requisito de usuario especifico.
+         * Obtiene una lista de requisitos de sistema que le corresponden a un proyecto.
          * </summary>
          * <param name="id">entero que contiene el id de un proyecto</param>
          * <param name="idRequisito">string que contiene el id de un requisito de usuario</param>
-         * <returns> lista con los requisitos de sistema correspondientes a un requisito de usuario.</returns>
+         * <returns> lista con los requisitos de sistema correspondientes a un proyecto.</returns>
          */
         public List<Requisito> ObtenerListaRequisitosSistema(int id, int idRequisito)
         {
@@ -508,6 +636,49 @@ namespace AppWebERS.Models {
                     listaRequisitos.Add(requisitoSistema);
                 }
             }            
+            conexion1.EnsureConnectionClosed();
+            return listaRequisitos.OrderBy(requisito => requisito.IdRequisito).ToList();
+        }
+
+        /**
+         * <author>Roberto Ureta</author>
+         * <summary>
+         * Obtiene una lista de requisitos de sistema que le corresponden a un requisito de usuario especifico.
+         * </summary>
+         * <param name="id">entero que contiene el id de un proyecto</param>
+         * <param name="idRequisito">string que contiene el id de un requisito de usuario</param>
+         * <returns> lista con los requisitos de sistema correspondientes a un requisito de usuario.</returns>
+         */
+        public List<Requisito> ObtenerListaRequisitosSistemaAsociadosProyecto(int id, int idRequisito)
+        {
+            List<Requisito> listaRequisitos = new List<Requisito>();
+            ApplicationDbContext conexion1 = ApplicationDbContext.Create();
+            string nombre = String.Empty;
+            string consulta = "SELECT requisito.* FROM requisito WHERE requisito.tipo='SISTEMA' AND requisito.ref_proyecto =" + id+ " AND requisito.num_requisito NOT IN (SELECT asociacion.req_software FROM asociacion WHERE asociacion.req_usuario =" + idRequisito+");";
+            MySqlDataReader reader = conexion1.RealizarConsulta(consulta);
+            if (reader != null)
+            {
+                while (reader.Read())
+                {
+                    Requisito requisitoSistema = new Requisito()
+                    {
+                        IdRequisito = reader["id_requisito"].ToString(),
+                        Nombre = reader["nombre"].ToString(),
+                        Descripcion = reader["descripcion"].ToString(),
+                        Prioridad = reader["prioridad"].ToString(),
+                        Fuente = reader["fuente"].ToString(),
+                        Estabilidad = reader["estabilidad"].ToString(),
+                        Estado = reader["estado"].ToString(),
+                        TipoRequisito = reader["categoria"].ToString(),
+                        Medida = reader["medida"].ToString(),
+                        Escala = reader["escala"].ToString(),
+                        Fecha = reader["fecha_actualizacion"].ToString(),
+                        Incremento = reader["incremento"].ToString(),
+                        Tipo = reader["tipo"].ToString()
+                    };
+                    listaRequisitos.Add(requisitoSistema);
+                }
+            }
             conexion1.EnsureConnectionClosed();
             return listaRequisitos.OrderBy(requisito => requisito.IdRequisito).ToList();
         }

@@ -1,72 +1,230 @@
-﻿@using AppWebERS.Models;
+﻿@model AppWebERS.Models.DiagramaModels
 @{
+
     ViewBag.Title = "Diagramas";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var ProyectoActual = (Proyecto)ViewData["proyecto"];
+    var ProyectoActual = Model.IdProyecto;
     //var TipoUsuario = (int)ViewData["permiso"];
 }
-
-
-<!--<ul class="nav nav-tabs">
-    <li class="nav-item">
-        <a class="nav-link" href="@*Url.Action("Detalles", "Proyecto", new { id = ProyectoActual.IdProyecto })*@">Detalles</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="@*Url.Action("ListarRequisitosMinimalista", "Proyecto", new { id = ProyectoActual.IdProyecto })*@">Requisitos</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link active" href="@*Url.Action("ListarDiagramas", "Proyecto", new { id = ProyectoActual.IdProyecto})*@">Diagramas</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="@*Url.Action("ListaUsuarios", "Proyecto", new { id = ProyectoActual.IdProyecto })*@">Usuarios</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="@*Url.Action("ListaActores","Proyecto",new { id = ProyectoActual.IdProyecto})*@">Actores</a>
-    </li>
-</ul> -->
 
 <h2>Diagramas</h2>
 <ul class="nav nav-tabs">
     <li class="nav-item">
-        <a class="nav-link" href="@Url.Action("Detalles", "Proyecto", new { id = ProyectoActual.IdProyecto })">Detalles</a>
+        <a class="nav-link" href="@Url.Action("Detalles", "Proyecto", new { id = ProyectoActual })">Detalles</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="@Url.Action("ListarRequisitosMinimalista", "Proyecto", new { id = ProyectoActual.IdProyecto })">Requisitos</a>
+        <a class="nav-link" href="@Url.Action("ListarRequisitosMinimalista", "Proyecto", new { id = ProyectoActual })">Requisitos</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link active" href="@Url.Action("ListarDiagramas", "Proyecto", new { id = ProyectoActual.IdProyecto })">Diagramas</a>
+        <a class="nav-link active" href="@Url.Action("ListarDiagramas", "Proyecto", new { id = ProyectoActual })">Diagramas</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="@Url.Action("ListaUsuarios", "Proyecto", new { id = ProyectoActual.IdProyecto })">Usuarios</a>
+        <a class="nav-link" href="@Url.Action("ListaUsuarios", "Proyecto", new { id = ProyectoActual })">Usuarios</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="@Url.Action("ListaActores", "Proyecto", new { id = ProyectoActual.IdProyecto })">Actores</a>
+        <a class="nav-link" href="@Url.Action("ListaActores", "Proyecto", new { id = ProyectoActual })">Actores</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="@Url.Action("HistorialCambios","Proyecto",new { id = ProyectoActual.IdProyecto})">Historial de cambios</a>
+        <a class="nav-link" href="@Url.Action("HistorialCambios","Proyecto",new { id = ProyectoActual})">Historial de cambios</a>
     </li>
 </ul>
 
 
 <div class="dropdown-divider"></div>
 
-<a href="../../Diagrama/SubirDiagrama/@ProyectoActual.IdProyecto" class="btn btn-primary w-auto">Agregar diagrama</a>
+<a href="../../Diagrama/SubirDiagrama/@Model.IdProyecto" class="btn btn-primary w-auto">Agregar diagrama</a>
 
-<div class="row mt-1">
-    <div clsss="col-4">
-        <div class="card mx-2 my-2">
-            <h4 class="card-header">Diagrama de casos de uso</h4>
-            <div class="card-body">
-                <img class="card-img-bottom" src="https://i-msdn.sec.s-msft.com/dynimg/IC378068.jpeg" alt="Card image cap">
+<div>
+    @if (Model.urlsCasosDeUso != null)
+    {
+
+        if (Model.urlsCasosDeUso.Count > 0)
+        {
+            if (Model.urlsCasosDeUso.Count == 1)
+            {
+                <div class="row w-100">
+                    <h3 style="margin-top:20px;margin-bottom:20px">Diagrama Caso de Uso</h3>
+                </div>
+            }
+            else
+            {
+
+                <div class="row w-100">
+                    <h3 style="margin-top:20px;margin-bottom:20px">Diagramas Caso de Uso</h3>
+                </div>
+            }
+
+            <div class="row w-100">
+                @foreach (var im in Model.urlsCasosDeUso)
+                {
+                    <div class="col-12 col-md-6 col-xl-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                @Html.Label(im.nombre)
+                            </div>
+                            <div class="card-body">
+                                <img src=@im.url alt="Card image cap" style="height:auto;width:100%" />
+                            </div>
+                            <div class="card-footer">
+
+                                <a href="#@im.GetHashCode()" class="btn btn-primary" data-toggle="modal" data-target="#@im.GetHashCode()">Ampliar</a>
+                            </div>
+                        </div>
+
+                        <div class="modal mt-5 mx-auto w-100" id=@im.GetHashCode() tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="true" style="overflow: scroll;">
+                            <div class="modal-dialog-centered">
+
+                                <div class="modal-body float-right pl-5 w-100">
+
+                                    <div class="container float-right pl-2">
+                                        <div class="row justify-content-center">
+                                            <div class=" col-auto">
+                                                <img src=@im.url alt="Card image cap">
+                                            </div>
+                                            <div class="col-auto">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <h1 aria-hidden="true">&times;</h1>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                }
             </div>
-            <div class="card-footer">
-                <p class="card-text">
-                    Diagrama de casos de uso del proyecto AppDERS
-                </p>
-                <a href="#!" class="btn btn-primary">Ampliar</a>
-            </div>
-        </div>
-    </div>
+        }
+    }
 </div>
+
+<div>
+    @if (Model.urlsaArquiFisica != null)
+    {
+
+        if (Model.urlsaArquiFisica.Count > 0)
+        {
+            if (Model.urlsaArquiFisica.Count == 1)
+            {
+                <div class="row w-100">
+                    <h3 style="margin-top:20px;margin-bottom:20px">Diagrama Arquitectura Física</h3>
+                </div>
+            }
+            else
+            {<div class="row w-100">
+                    <h3 style="margin-top:20px;margin-bottom:20px">Diagramas Arquitectura Física</h3>
+                </div>
+            }
+
+            <div class="row w-100">
+                @foreach (var im in Model.urlsaArquiFisica)
+                {
+                    <div class="col-12 col-md-6 col-xl-4 mb-4">
+
+                        <div class="card h-100">
+                            <div class="card-header">
+                                @Html.Label(im.nombre)
+                            </div>
+                            <div class="card-body">
+                                <img src=@im.url alt="Card image cap" style="height:auto;width:100%" />
+                            </div>
+                            <div class="card-footer">
+
+                                <a href="#@im.GetHashCode()" class="btn btn-primary" data-toggle="modal" data-target="#@im.GetHashCode()">Ampliar</a>
+                            </div>
+                        </div>
+                        <div class="modal mt-5 mx-auto w-100" id=@im.GetHashCode() tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="true" style="overflow: scroll;">
+                            <div class="modal-dialog-centered">
+
+                                <div class="modal-body float-right pl-5 w-100">
+
+                                    <div class="container float-right pl-2">
+                                        <div class="row justify-content-center">
+                                            <div class=" col-auto">
+                                                <img src=@im.url alt="Card image cap">
+                                            </div>
+                                            <div class="col-auto">
+
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <h1 aria-hidden="true">&times;</h1>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    }
+</div>
+
+<div>
+    @if (Model.urlsArquiLogica != null)
+    {
+        if (Model.urlsArquiLogica.Count > 0)
+        {
+            if (Model.urlsArquiLogica.Count == 1)
+            {
+                <div class="row w-100">
+                    <h3 style="margin-top:20px;margin-bottom:20px">Diagrama Arquitectura Lógica</h3>
+                </div>
+            }
+            else
+            {
+                <div class="row w-100">
+                    <h3 style="margin-top:20px;margin-bottom:20px">Diagramas Arquitectura Lógica</h3>
+                </div>
+            }
+            <div class="row w-100">
+
+                @foreach (var im in Model.urlsArquiLogica)
+                {
+                    <div class="col-12 col-md-6 col-xl-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                @Html.Label(im.nombre)
+                            </div>
+                            <div class="card-body">
+                                <img src=@im.url alt="Card image cap" style="height:auto;width:100%" />
+                            </div>
+                            <div class="card-footer">
+
+                                <a href="#@im.GetHashCode()" class="btn btn-primary" data-toggle="modal" data-target="#@im.GetHashCode()">Ampliar</a>
+                            </div>
+                        </div>
+                        <div class="modal mt-5 mx-auto w-100" id=@im.GetHashCode() tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="true" style="overflow: scroll;">
+                            <div class="modal-dialog-centered">
+
+                                <div class="modal-body float-right pl-5 w-100">
+
+                                    <div class="container float-right pl-2">
+                                        <div class="row justify-content-center">
+                                            <div class="col-auto">
+
+                                                <img src=@im.url alt="Card image cap">
+                                            </div>
+                                            <div class="col-auto">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <h1 aria-hidden="true">&times;</h1>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    }
+</div>
+
 
 

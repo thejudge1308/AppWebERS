@@ -67,6 +67,13 @@ namespace AppWebERS.Controllers{
                         ViewBag.Message = "Debe ingresar un nombre.";
                         return RedirectToAction("SubirDiagrama", "Diagrama", new { id = idProyecto });
                     }
+
+                    if (this.ValidarExtencionURL(url)==false)
+                    {
+                        TempData["alerta"] = new Alerta("Formato no soportado. Seleccione un archivo de imagen (.jpg, .jpeg, .png, .bmp o .gif)", TipoAlerta.ERROR);
+                        ViewBag.Messagw = "Formato no soportado. Seleccione un archivo de imagen (.jpg, .jpeg, .png, .bmp o .gif)";
+                        return RedirectToAction("SubirDiagrama", "Diagrama", new { id = idProyecto });
+                    }
                     if (this.ValidarURLNoRepetida2(path) == false)
                     {
                         TempData["alerta"] = new Alerta("Ya existe un archivo con este nombre", TipoAlerta.ERROR);
@@ -90,13 +97,15 @@ namespace AppWebERS.Controllers{
                         return RedirectToAction("SubirDiagrama", "Diagrama", new { id = idProyecto });
                     }
 
+                   
                     webClient.DownloadFile(@url, @path);
-                    this.agregar(nombreURL, id, path, tipoDeDiagramaURL);
+                    this.agregar(nombreURL, id, "../../UploadedFiles/" +id + nombreURL + Path.GetExtension(path), tipoDeDiagramaURL);
+                    //this.agregar(nombreURL, id, path, tipoDeDiagramaURL);
                     TempData["alerta"] = new Alerta("Diagrama subido con éxito!!", TipoAlerta.SUCCESS);
                     ViewBag.Message = "Diagrama subido con éxito!!";
                     Conector.CerrarConexion();
                 
-                   return RedirectToAction("SubirDiagrama", "Diagrama", new { id = idProyecto });
+                   return RedirectToAction("ListarDiagramas", "Proyecto", new { id = idProyecto });
                     
                     
                     
@@ -151,19 +160,19 @@ namespace AppWebERS.Controllers{
                     return RedirectToAction("SubirDiagrama", "Diagrama", new { id = idProyecto });
                 }
 
-             
-                this.agregar(nombre, id, _path, tipoDeDiagrama);
+                this.agregar(nombre, id, "../../UploadedFiles/" + _FileName, tipoDeDiagrama);
+                //this.agregar(nombre, id, _path, tipoDeDiagrama);
                 file.SaveAs(_path);
                 TempData["alerta"] = new Alerta("Diagrama subido con éxito!!", TipoAlerta.SUCCESS);
                 ViewBag.Message = "Diagrama subido con éxito!!";
                 Conector.CerrarConexion();
-                return RedirectToAction("SubirDiagrama", "Diagrama", new { id = idProyecto });
+                return RedirectToAction("ListarDiagramas", "Proyecto", new { id = idProyecto });
 
             }
             catch
             {
-                ViewBag.Message = "Falla en la subida del Diagrama!!";
-                TempData["alerta"] = new Alerta("Falla en la subida del Diagrama!!", TipoAlerta.ERROR);
+                ViewBag.Message = "Error al subir el diagrama.";
+                TempData["alerta"] = new Alerta("Error al subir el diagrama.", TipoAlerta.ERROR);
                 return RedirectToAction("SubirDiagrama", "Diagrama", new { id = idProyecto });
             }
         }
@@ -181,23 +190,38 @@ namespace AppWebERS.Controllers{
         {
             try
             {
-                string ConsultaNombre = "SELECT nombre FROM Diagrama WHERE nombre = '" + nombre + "';";
-                MySqlDataReader reader = this.Conector.RealizarConsulta(ConsultaNombre);
-                if (reader == null)
+               
+                string consulta = "use appers; " +
+                    "SELECT diagrama.nombre " +
+                    "FROM diagrama " +
+                    "WHERE diagrama.nombre ='"+nombre+"';";
+                Debug.Write(consulta);
+              
+                MySqlDataReader reader2 = this.Conector.RealizarConsulta(consulta);
+               
+                if (reader2 == null)
                 {
                     this.Conector.CerrarConexion();
                     return true;
                 }
                 else
                 {
-                    while (reader.Read())
+                    while (reader2.Read())
                     {
-                        if (reader["nombre"].ToString()== "null")
+                        if (reader2["nombre"].ToString()== "null")
                         {
+                            this.Conector.CerrarConexion();
                             return true;
                         }
-                        Debug.Write(reader["nombre"].ToString());
-                        return false;
+
+                        if (reader2["nombre"].ToString() == nombre)
+                        {
+                            
+                            this.Conector.CerrarConexion();
+                            
+                            return false;
+                        }
+                       
                     }
                     
                     this.Conector.CerrarConexion();
@@ -207,6 +231,7 @@ namespace AppWebERS.Controllers{
             }
             catch
             {
+                this.Conector.CerrarConexion();
                 return true;
             }
         }
@@ -228,6 +253,7 @@ namespace AppWebERS.Controllers{
                 {
                     while (reader.Read())
                     {
+                        this.Conector.CerrarConexion();
                         return false;
                     }
 
@@ -238,6 +264,7 @@ namespace AppWebERS.Controllers{
             }
             catch
             {
+                this.Conector.CerrarConexion();
                 return true;
             }
         }
@@ -258,6 +285,7 @@ namespace AppWebERS.Controllers{
                 {
                     while (reader.Read())
                     {
+                        this.Conector.CerrarConexion();
                         return false;
                     }
 
@@ -268,9 +296,12 @@ namespace AppWebERS.Controllers{
             }
             catch
             {
+                this.Conector.CerrarConexion();
                 return true;
             }
         }
+
+
 
         public bool ValidarExtencion(HttpPostedFileBase file)
         {
@@ -280,6 +311,26 @@ namespace AppWebERS.Controllers{
                    || (string.Equals(Path.GetExtension(file.FileName), ".png", StringComparison.OrdinalIgnoreCase))
                    || (string.Equals(Path.GetExtension(file.FileName), ".bmp", StringComparison.OrdinalIgnoreCase))
                    || (string.Equals(Path.GetExtension(file.FileName), ".gif", StringComparison.OrdinalIgnoreCase)))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool ValidarExtencionURL(string path)
+        {
+
+            Debug.Write(path );
+            Debug.Write(path.Substring(path.Length - 4));
+            if ((string.Equals(Path.GetExtension(path), ".jpg", StringComparison.OrdinalIgnoreCase))
+
+                   || (string.Equals(Path.GetExtension(path), ".jpeg", StringComparison.OrdinalIgnoreCase))
+                   || (string.Equals(Path.GetExtension(path), ".png", StringComparison.OrdinalIgnoreCase))
+                   || (string.Equals(Path.GetExtension(path), ".bmp", StringComparison.OrdinalIgnoreCase))
+                   || (string.Equals(Path.GetExtension(path), ".gif", StringComparison.OrdinalIgnoreCase)))
             {
                 return true;
             }

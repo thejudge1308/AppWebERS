@@ -242,3 +242,5 @@ ModelManifest.xml
 .fake/
 
 AppWebERS/UploadedFiles/
+
+AppWebERS/Views/Proyecto/ListarDiagramas\.cshtml

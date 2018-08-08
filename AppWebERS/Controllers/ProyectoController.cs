@@ -1045,6 +1045,10 @@ namespace AppWebERS.Controllers
                , r.TipoRequisito, r.Medida, r.Escala, r.Fecha, r.Incremento, r.Tipo);
             List<String> listaActores = new List<string>();
             List<String> listaReqUsuario = new List<string>();
+            if (r.IncrementoCheck.isChecked)
+            {
+                requisito.Incremento = "" + (Int32.Parse(r.Incremento) + 1);
+            }
             if (r.Requisitos != null)
             {
                 for(int i = 0; i < r.Requisitos.Count; i++)

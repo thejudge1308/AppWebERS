@@ -783,6 +783,7 @@ namespace AppWebERS.Controllers
             List<Proyecto> proyectosTodos = new List<Proyecto>();
             List<Proyecto> proyectosAsociados = new List<Proyecto>();
             List<Proyecto> proyectosNoAsociados = new List<Proyecto>();
+            List<ProyectoIDs> proyectosEnJefe = new List<ProyectoIDs>();
             Debug.WriteLine("Tipo Usuario " + TipoUsuario);
             if (TipoUsuario.Equals("SYSADMIN"))
             {
@@ -792,12 +793,15 @@ namespace AppWebERS.Controllers
             {
                 proyectosAsociados = ListaDeProyectosAsociados(ObtenerIdUsuarioActivo());
                 proyectosNoAsociados = ListaDeProyectoNoAsociados(ObtenerIdUsuarioActivo());
+                proyectosEnJefe = ListaDeProyectosEnJefes(ObtenerIdUsuarioActivo());
 
             }
             ViewData["usuario_actual"] = TipoUsuario;
             ViewData["proyectosTodos"] = proyectosTodos;
             ViewData["proyectosAsociados"] = proyectosAsociados;
             ViewData["proyectosNoAsociados"] = proyectosNoAsociados;
+            ViewData["proyectosEnJefe"] = proyectosEnJefe;
+           
 
             return View();
 
@@ -2319,6 +2323,38 @@ namespace AppWebERS.Controllers
                 r.Tipo = reader["tipo"].ToString();
             }
             return r;
+        }
+
+        /*
+        * Autor Juan Abello
+        * Metodo encargado de obtener los id de los proyectos en los que un usuario es jefe.
+        * <param String rut>
+        * <returns> listaProyectosEnJefe
+        */
+        public List<ProyectoIDs> ListaDeProyectosEnJefes(string id)
+        {
+            List<ProyectoIDs> proyectosEnJefe = new List<ProyectoIDs>();
+            string estado = "HABILITADO";
+            string consulta= "SELECT ref_proyecto FROM vinculo_usuario_proyecto WHERE ref_usuario = '"+id+"' AND rol = 'JEFEPROYECTO'";
+            MySqlDataReader data = this.Conector.RealizarConsulta(consulta);
+            if (data == null)
+            {
+                this.Conector.CerrarConexion();
+                return proyectosEnJefe;
+                //return null;
+            }
+            else
+            {
+                while (data.Read())
+                {
+                    int idp = Int32.Parse(data["ref_proyecto"].ToString());
+
+                    proyectosEnJefe.Add(new ProyectoIDs(idp));
+                }
+
+                this.Conector.CerrarConexion();
+                return proyectosEnJefe;
+            }
         }
 
 

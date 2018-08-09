@@ -131,14 +131,14 @@
             </form>*@
         <div>
             @Html.LabelFor(m => m.Fecha)
-            @Html.TextBoxFor(m => m.Fecha, new { placeholder = "Fecha Actualizacion", @class = "form-control col-form-label", oncopy = "return false", onpaste = "return false" })
+            @Html.TextBoxFor(m => m.Fecha, new { placeholder = "Fecha Actualizacion", @class = "form-control col-form-label", disabled = "disabled", @readonly = "readonly", oncopy = "return false", onpaste = "return false" })
             @Html.ValidationMessageFor(m => m.Fecha, "", new { @style = "color:rgb(209,52,56); font-size:12px" })
         </div>
         <div>
             @Html.HiddenFor(m => m.IncrementoCheck.id, new { @class = "form-check-label", style = "margin-right:5px" })
             @Html.LabelFor(m => m.IncrementoCheck)
             @Html.TextBoxFor(m => m.Incremento, new { placeholder = "Incremento", @class = "form-control col-form-label", disabled = "disabled", @readonly = "readonly" })
-            @Html.CheckBoxFor(m => m.IncrementoCheck.isChecked, new { style = "margin-left:8px" })
+            @Html.CheckBoxFor(m => m.IncrementoCheck.isChecked, new { style = "margin-left:8px" , disabled = "disabled"})
             @*@Html.ValidationMessageFor(m => m.Incremento, "", new { @style = "color:rgb(209,52,56); font-size:14px" })*@
         </div>
 
@@ -187,8 +187,6 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-    @Scripts.Render("~/Scripts/jquery-ui/Idioma/datee-picker-es.js")
-    @Scripts.Render("~/Scripts/Requisito/DatePicker.js")
 }
 
 

@@ -90,6 +90,8 @@
                             <h5 class="card-title"></h5>
                             <p class="card-text"></p>
                             <a href="Detalles/@item.IdProyecto" class="btn btn-primary">Ver detalle</a>
+
+                            
                         </div>
                     </div>
                     <br><br>
@@ -131,6 +133,7 @@
                             <h5 class="card-title"></h5>
                             <p class="card-text"></p>
                             <a href="Detalles/@item.IdProyecto" class="btn btn-primary">Ver detalle</a>
+
                             @{
                                 if (item.Estado == "HABILITADO")
                                 {
@@ -142,7 +145,11 @@
                                     <a href="#" class="btn btn-primary" onclick="location.href='@Url.Action("HabilitarProyecto", "Proyecto", new {id=item.IdProyecto })'">Habilitar</a>
 
                                 }
-                            }
+                                if (usuarioActual.Equals("SYSADMIN") OR )
+                                {
+                                    <a href="ExportarPDF/@item.IdProyecto" class="btn btn-primary">Generar PDF</a>
+                                    
+                                }
 
                         </div>
 

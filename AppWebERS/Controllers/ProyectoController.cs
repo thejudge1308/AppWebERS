@@ -798,6 +798,7 @@ namespace AppWebERS.Controllers
             ViewData["proyectosTodos"] = proyectosTodos;
             ViewData["proyectosAsociados"] = proyectosAsociados;
             ViewData["proyectosNoAsociados"] = proyectosNoAsociados;
+           
 
             return View();
 

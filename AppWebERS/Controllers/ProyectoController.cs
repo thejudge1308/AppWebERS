@@ -2321,6 +2321,22 @@ namespace AppWebERS.Controllers
             return r;
         }
 
+        /*
+         * Autor: Nicolás Hervias
+         * Método para listar los cambios realizados en el proyecto
+         * Parámetros: id del proyecto
+         * Retorna: la vista con la lista de modificaciones
+         */
+        public ActionResult ListarHistorial(int id)
+        {
+            Proyecto proyecto = this.GetProyecto(id);
+            List<ModificacionDERS> Historial = new ModificacionDERS().ListarHistorial(id);
+            ViewData["proyecto"] = proyecto;
+            ViewData["cambios"] = Historial;
+
+            return View();
+        }
+
 
     }
 

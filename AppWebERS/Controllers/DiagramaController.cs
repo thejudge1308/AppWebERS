@@ -59,8 +59,8 @@ namespace AppWebERS.Controllers{
                 {
                     string tipoDeDiagramaURL = tipoDiagrama(diagramaValueURL);
                     System.Net.WebClient webClient = new WebClient();
-                    string path = Path.Combine(Server.MapPath("~/UploadedFiles"), id + nombreURL + ".jpg");
-                  
+                    string path = Path.Combine(Server.MapPath("~/UploadedFiles"), id + nombreURL + Path.GetExtension(url)).Replace(@"\", @"/");
+                    Debug.Write(" "+ path.Replace(@"\", @"/") +" ");
                     if (nombreURL.Length == 0)
                     {
                          TempData["alerta"] = new Alerta("Debe ingresar un nombre", TipoAlerta.ERROR);
@@ -99,8 +99,8 @@ namespace AppWebERS.Controllers{
 
                    
                     webClient.DownloadFile(@url, @path);
-                    this.agregar(nombreURL, id, "../../UploadedFiles/" +id + nombreURL + Path.GetExtension(path), tipoDeDiagramaURL);
-                    //this.agregar(nombreURL, id, path, tipoDeDiagramaURL);
+                    //this.agregar(nombreURL, id, "../../UploadedFiles/" +id + nombreURL + Path.GetExtension(path), tipoDeDiagramaURL);
+                    this.agregar(nombreURL, id, "/UploadedFiles/" +id + nombreURL + Path.GetExtension(path), tipoDeDiagramaURL);
                     TempData["alerta"] = new Alerta("Diagrama subido con éxito!!", TipoAlerta.SUCCESS);
                     ViewBag.Message = "Diagrama subido con éxito!!";
                     Conector.CerrarConexion();
@@ -117,8 +117,10 @@ namespace AppWebERS.Controllers{
 
                 string tipoDeDiagrama = tipoDiagrama(diagramaValue);
                 string _FileName = id + Path.GetFileName(file.FileName);
-                string _path = Path.Combine(Server.MapPath("~/UploadedFiles"), _FileName);
+                string _path = Path.Combine(Server.MapPath("~/UploadedFiles"), _FileName).Replace(@"\", @"/");
+                Debug.Write(" " + _path.Replace(@"\", @"/") + " ");
 
+              
                 if (nombre.Length == 0)
                 {
                     nombre = "null";
@@ -160,8 +162,8 @@ namespace AppWebERS.Controllers{
                     return RedirectToAction("SubirDiagrama", "Diagrama", new { id = idProyecto });
                 }
 
-                this.agregar(nombre, id, "../../UploadedFiles/" + _FileName, tipoDeDiagrama);
-                //this.agregar(nombre, id, _path, tipoDeDiagrama);
+                //this.agregar(nombre, id, "../../UploadedFiles/" + _FileName, tipoDeDiagrama);
+                this.agregar(nombre, id, "/UploadedFiles/" + _FileName, tipoDeDiagrama);
                 file.SaveAs(_path);
                 TempData["alerta"] = new Alerta("Diagrama subido con éxito!!", TipoAlerta.SUCCESS);
                 ViewBag.Message = "Diagrama subido con éxito!!";
@@ -241,7 +243,7 @@ namespace AppWebERS.Controllers{
             try
             {
                 string _FileName = id + Path.GetFileName(file.FileName);
-                string _path = Path.Combine(Server.MapPath("~/UploadedFiles"), _FileName);
+                string _path = Path.Combine(Server.MapPath("~/UploadedFiles"), _FileName).Replace(@"\", @"/");
                 string ConsultaPath = "SELECT ruta FROM Diagrama WHERE ruta = '" + _path + "';";
                 MySqlDataReader reader = this.Conector.RealizarConsulta(ConsultaPath);
                 if (reader == null)

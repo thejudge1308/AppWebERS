@@ -16,6 +16,7 @@ namespace AppWebERS.Models{
         public int Ref_proyecto { get; set; }
         public DateTime Fecha { get; set; }
         public string RefUsuario { get; set; }
+        public string Descripcion { get; set; }
         private ConectorBD Conector = ConectorBD.Instance;
 
         /*
@@ -35,12 +36,14 @@ namespace AppWebERS.Models{
          * <param name="refUsuario">La referencia entre el usuario y la modificación.</param>
          * 
          */
-        public ModificacionDERS(int idModificacion, double version, int ref_proyecto, DateTime fecha, string refUsuario){
+        public ModificacionDERS(int idModificacion, double version, int ref_proyecto, DateTime fecha, string refUsuario, string descripcion)
+        {
             this.IdModificacion = idModificacion;
             this.Version = version;
             this.Ref_proyecto = ref_proyecto;
             this.Fecha = fecha;
             this.RefUsuario = refUsuario;
+            this.Descripcion = descripcion;
         }
 
         /**
@@ -50,8 +53,8 @@ namespace AppWebERS.Models{
 
         public bool Crear(int idProyecto)
         {
-            string Values = "'" + this.IdModificacion + "','" + this.Version + "','" + idProyecto + "','" + this.Fecha + "','" + this.RefUsuario + "'";
-            string Consulta = "INSERT INTO Modificacion_DERS (id_modificacion, version, ref_proyecto, fecha, ref_autor_modivicacion) VALUES (" + Values + ");";
+            string Values = "'" + this.IdModificacion + "','" + this.Version + "','" + idProyecto + "','" + this.Fecha + "','" + this.RefUsuario + "','" + this.Descripcion + "'";
+            string Consulta = "INSERT INTO Modificacion_DERS (id_modificacion, version, ref_proyecto, fecha, ref_autor_modivicacion, descripcion) VALUES (" + Values + ");";
 
             if(this.Conector.RealizarConsultaNoQuery(Consulta))
             {
@@ -70,10 +73,12 @@ namespace AppWebERS.Models{
         {
             List<ModificacionDERS> Historial = new List<ModificacionDERS>();
 
-            string Consulta = "SELECT id_modificacion, version, ref_proyecto, fecha, UserName " +
+            string Consulta = "BEGIN TRANSACTION; " +
+                "SELECT Modificacion_DERS.id_modificacion, Modificacion_DERS.version, Modificacion_DERS.ref_proyecto, Modificacion_DERS.fecha, users.UserName, Modificacion_DERS.descripcion" +
                 "FROM Modificacion_DERS, users " +
-                "WHERE Modificacion_DERS.ref_autor_modificacion = users.Id" +
-                "AND ref_proyecto = '" + id + "';";
+                "WHERE Modificacion_DERS.ref_autor_modificacion = users.Id " +
+                "AND Modificacion_DERS.ref_proyecto = '" + id + "'; " +
+                "COMMIT;";
             MySqlDataReader Reader = this.Conector.RealizarConsulta(Consulta);
             if(Reader == null)
             {
@@ -89,7 +94,8 @@ namespace AppWebERS.Models{
                     int ref_proyecto = Reader.GetInt16(2);
                     DateTime fecha = Reader.GetDateTime(3);
                     string user_name = Reader.GetString(5);
-                    Historial.Add(new ModificacionDERS(id_modificacion, version, ref_proyecto, fecha, user_name));
+                    string descripcion = Reader.GetString(6);
+                    Historial.Add(new ModificacionDERS(id_modificacion, version, ref_proyecto, fecha, user_name, descripcion));
                 }
                 this.Conector.CerrarConexion();
                 return Historial;

@@ -2327,6 +2327,7 @@ namespace AppWebERS.Controllers
          * Parámetros: id del proyecto
          * Retorna: la vista con la lista de modificaciones
          */
+         [HttpGet]
         public ActionResult ListarHistorial(int id)
         {
             Proyecto proyecto = this.GetProyecto(id);

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 
@@ -73,12 +74,10 @@ namespace AppWebERS.Models{
         {
             List<ModificacionDERS> Historial = new List<ModificacionDERS>();
 
-            string Consulta = "BEGIN TRANSACTION; " +
-                "SELECT Modificacion_DERS.id_modificacion, Modificacion_DERS.version, Modificacion_DERS.ref_proyecto, Modificacion_DERS.fecha, users.UserName, Modificacion_DERS.descripcion" +
+            string Consulta = "SELECT Modificacion_DERS.id_modificacion, Modificacion_DERS.version, Modificacion_DERS.ref_proyecto, Modificacion_DERS.fecha, users.UserName, Modificacion_DERS.descripcion " +
                 "FROM Modificacion_DERS, users " +
                 "WHERE Modificacion_DERS.ref_autor_modificacion = users.Id " +
-                "AND Modificacion_DERS.ref_proyecto = '" + id + "'; " +
-                "COMMIT;";
+                "AND Modificacion_DERS.ref_proyecto = '" + id + "';";
             MySqlDataReader Reader = this.Conector.RealizarConsulta(Consulta);
             if(Reader == null)
             {
@@ -90,11 +89,17 @@ namespace AppWebERS.Models{
                 while(Reader.Read())
                 {
                     int id_modificacion = Reader.GetInt16(0);
+                    Debug.WriteLine("id: " + id_modificacion);
                     double version = Reader.GetDouble(1);
+                    Debug.WriteLine("version: " + version);
                     int ref_proyecto = Reader.GetInt16(2);
+                    Debug.WriteLine("ref proyecto: " + ref_proyecto);
                     DateTime fecha = Reader.GetDateTime(3);
+                    Debug.WriteLine("fecha: " + fecha);
                     string user_name = Reader.GetString(5);
+                    Debug.WriteLine("nombre: " + user_name);
                     string descripcion = Reader.GetString(6);
+                    Debug.WriteLine("desc: " + descripcion);
                     Historial.Add(new ModificacionDERS(id_modificacion, version, ref_proyecto, fecha, user_name, descripcion));
                 }
                 this.Conector.CerrarConexion();

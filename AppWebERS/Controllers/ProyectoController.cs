@@ -19,6 +19,7 @@ using static AppWebERS.Models.Requisito;
 using Newtonsoft.Json;
 using System.Drawing;
 using MySql.Data;
+using System.Linq;
 
 namespace AppWebERS.Controllers
 {
@@ -2334,6 +2335,7 @@ namespace AppWebERS.Controllers
             List<ModificacionDERS> Historial = new ModificacionDERS().ListarHistorial(id);
             ViewData["proyecto"] = proyecto;
             ViewData["cambios"] = Historial;
+            Debug.WriteLine("elementos en historial: " + Historial.Count());
 
             return View();
         }

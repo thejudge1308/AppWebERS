@@ -1,5 +1,4 @@
 ﻿@using AppWebERS.Models;
-@model Proyecto
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "HistorialCambios";
@@ -9,7 +8,7 @@
 @{
     var ProyectoActual = (Proyecto)ViewData["proyecto"];
 
-    var TipoUsuario = (int)ViewData["permiso"];
+    //var TipoUsuario = (int)ViewData["permiso"];
 
     var Cambios = (List<ModificacionDERS>)ViewData["cambios"];
 }

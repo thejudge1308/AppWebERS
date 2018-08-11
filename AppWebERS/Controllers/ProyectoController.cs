@@ -2321,7 +2321,12 @@ namespace AppWebERS.Controllers
             return r;
         }
 
-
+        /// <author>Gabriel Sanhueza</author>
+        /// <summary>
+        /// Lista los clientes de un proyecto
+        /// </summary>
+        /// <param name="id">Id del proyecto</param>
+        /// <returns>Retorna la vista donde se listan los clientes</returns>
         public ActionResult listaClientes(int id)
         {
             Proyecto proyecto = this.GetProyecto(id);
@@ -2342,6 +2347,11 @@ namespace AppWebERS.Controllers
             ViewData["permiso"] = this.TipoDePermiso(id);
             return View("ListaClientes", clientes);
         }
+        /// <summary>
+        /// Muestra la interfaz para agregar clientes
+        /// </summary>
+        /// <param name="id">El id del proyecto al que pertenece el cliente</param>
+        /// <returns>La vista donde tiene que agregar los datos</returns>
         [HttpGet]
         public ActionResult agregarCliente(int id)
         {
@@ -2351,6 +2361,11 @@ namespace AppWebERS.Controllers
             return View("AgregarCliente");
         }
 
+        /// <summary>
+        /// Agrega un cliente a la base de datos
+        /// </summary>
+        /// <param name="id">El id del proyecto al que pertenece el cliente</param>
+        /// <returns>La vista a la que retorna despues de agregar</returns>
         [HttpPost]
         public ActionResult agregarCliente(int id, string nombre, string rol, string contacto)
         {

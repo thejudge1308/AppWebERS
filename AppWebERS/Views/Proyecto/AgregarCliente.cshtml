@@ -1,0 +1,65 @@
+﻿@model AppWebERS.Models.Cliente
+
+@{
+    ViewBag.Title = "Agregar Cliente";
+}
+
+@{
+    var ProyectoActual = (int)ViewData["actual"];
+    var TipoUsuario = (int)ViewData["usuario"];
+}
+
+<h2>Agregar Cliente</h2>
+
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+
+    @Html.HiddenFor(model => Model.RefProyecto, new { Value = ProyectoActual });
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control", @type = "text", @MaxLength = "30" } })
+            @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Rol, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Rol, new { htmlAttributes = new { @class = "form-control", @type = "text", @MaxLength = "50" } })
+            @Html.ValidationMessageFor(model => model.Rol, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Contacto, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Contacto, new { htmlAttributes = new { @class = "form-control", @type = "text" } })
+            @Html.ValidationMessageFor(model => model.Contacto, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-auto d-inline">
+            <input type="submit" value="Guardar Cambios" class="btn btn-primary" />
+            @Html.ActionLink("Atrás", "ListaClientes", "Proyecto", new { id = ProyectoActual }, new { boton = "valor", @class = "btn btn-primary" })
+
+        </div>
+    </div>
+    
+</div>
+}
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+

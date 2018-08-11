@@ -2371,8 +2371,11 @@ namespace AppWebERS.Controllers
         {
             Cliente cliente = new Cliente();
             cliente.registrarCliente(nombre, rol, contacto, id);
-            TempData["alerta"] = new Alerta("Cliente agregado exitosamente", TipoAlerta.SUCCESS);
-            return RedirectToAction("ListaClientes", new {id = id});
+            if (ModelState.IsValid){
+                TempData["alerta"] = new Alerta("Cliente agregado exitosamente", TipoAlerta.SUCCESS);
+                return RedirectToAction("ListaClientes", new { id = id });
+            }
+            return View("AgregarCliente", cliente);
         }
 
 

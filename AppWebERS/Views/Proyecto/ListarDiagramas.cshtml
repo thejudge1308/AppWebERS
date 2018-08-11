@@ -25,6 +25,9 @@
         <a class="nav-link" href="@Url.Action("ListaActores", "Proyecto", new { id = ProyectoActual })">Actores</a>
     </li>
     <li class="nav-item">
+        <a class="nav-link" href="@Url.Action("ListaClientes", "Proyecto", new { id = ProyectoActual.IdProyecto })">Clientes</a>
+    </li>
+    <li class="nav-item">
         <a class="nav-link" href="@Url.Action("HistorialCambios","Proyecto",new { id = ProyectoActual})">Historial de cambios</a>
     </li>
 </ul>

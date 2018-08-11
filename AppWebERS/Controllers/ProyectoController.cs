@@ -2321,6 +2321,60 @@ namespace AppWebERS.Controllers
             return r;
         }
 
+        /// <author>Gabriel Sanhueza</author>
+        /// <summary>
+        /// Lista los clientes de un proyecto
+        /// </summary>
+        /// <param name="id">Id del proyecto</param>
+        /// <returns>Retorna la vista donde se listan los clientes</returns>
+        public ActionResult listaClientes(int id)
+        {
+            Proyecto proyecto = this.GetProyecto(id);
+            String tipo;
+            String idUser;
+            List<Cliente> clientes;
+            using (var db = ApplicationDbContext.Create())
+            {
+                var userManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
+                string s = User.Identity.GetUserId();
+                ApplicationUser user = userManager.FindByIdAsync(s).Result;
+                tipo = user.Tipo;
+                idUser = user.Id;
+                Cliente cliente = new Cliente();
+                clientes = cliente.obtenerTodosLosClientes(id);
+            }
+            ViewData["proyecto"] = proyecto;
+            ViewData["permiso"] = this.TipoDePermiso(id);
+            return View("ListaClientes", clientes);
+        }
+        /// <summary>
+        /// Muestra la interfaz para agregar clientes
+        /// </summary>
+        /// <param name="id">El id del proyecto al que pertenece el cliente</param>
+        /// <returns>La vista donde tiene que agregar los datos</returns>
+        [HttpGet]
+        public ActionResult agregarCliente(int id)
+        {
+            var UsuarioActual = User.Identity.GetUserId();
+            ViewData["actual"] = id;
+            ViewData["usuario"] = TipoDePermiso(id);
+            return View("AgregarCliente");
+        }
+
+        /// <summary>
+        /// Agrega un cliente a la base de datos
+        /// </summary>
+        /// <param name="id">El id del proyecto al que pertenece el cliente</param>
+        /// <returns>La vista a la que retorna despues de agregar</returns>
+        [HttpPost]
+        public ActionResult agregarCliente(int id, string nombre, string rol, string contacto)
+        {
+            Cliente cliente = new Cliente();
+            cliente.registrarCliente(nombre, rol, contacto, id);
+            TempData["alerta"] = new Alerta("Cliente agregado exitosamente", TipoAlerta.SUCCESS);
+            return RedirectToAction("ListaClientes", new {id = id});
+        }
+
 
     }
 

@@ -783,5 +783,16 @@ namespace AppWebERS.Models {
             System.Diagnostics.Debug.Write(verificar);
         }
 
+
+        public string ObtenerRequisitoSistemaFormatoHTML(string requisito) {
+            string requisitoHTML=String.Empty;
+            char[] caracteres = requisito.ToArray();
+            for (int i = 0; i < caracteres.Length-1; i++) {
+                requisitoHTML = requisitoHTML + caracteres[i] + "<br>";
+            }
+            requisitoHTML = requisitoHTML + caracteres[caracteres.Length-1];
+            return requisitoHTML;
+        }
+
     }
 }

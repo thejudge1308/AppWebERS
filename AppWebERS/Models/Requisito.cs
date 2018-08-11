@@ -1,18 +1,16 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text.RegularExpressions;
 using System.Data;
-using MySql.Data.MySqlClient;
 using System.Linq;
-using System.Web;
-using MySql.Data.MySqlClient;
 
 /**
  * Autor: Gerardo Estrada (Meister1412)
  **/
 
-namespace AppWebERS.Models {
+namespace AppWebERS.Models
+{
     public class Requisito
     {
         /**

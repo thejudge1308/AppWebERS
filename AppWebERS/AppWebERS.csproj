@@ -212,6 +212,7 @@
     <Compile Include="Identity\UserTable.cs" />
     <Compile Include="Models\Actor.cs" />
     <Compile Include="Models\CasoDeUso.cs" />
+    <Compile Include="Models\Cliente.cs" />
     <Compile Include="Models\Diagrama.cs" />
     <Compile Include="Models\ConectorBD.cs" />
     <Compile Include="Models\DiagramaModels.cs" />
@@ -394,6 +395,8 @@
     <Content Include="Views\Proyecto\HistorialCambios.cshtml" />
     <Content Include="Views\Proyecto\RequisitoSistema.cshtml" />
     <Content Include="Views\Proyecto\AsociarRequisitoSistemaExistente.cshtml" />
+    <Content Include="Views\Proyecto\ListaClientes.cshtml" />
+    <Content Include="Views\Proyecto\AgregarCliente.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

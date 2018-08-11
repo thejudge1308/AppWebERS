@@ -798,7 +798,7 @@ namespace AppWebERS.Models {
         {
             List<Requisito> listaRequisitos = new List<Requisito>();
             ApplicationDbContext conexionLocal = ApplicationDbContext.Create();
-            string consulta = "SELECT * FROM requisito WHERE requisito.ref_proyecto ="+ idProyecto + "AND requisito.tipo='SISTEMA';";
+            string consulta = "SELECT * FROM requisito WHERE requisito.ref_proyecto ="+ idProyecto + " AND requisito.tipo='SISTEMA';";
             MySqlDataReader reader = conexionLocal.RealizarConsulta(consulta);
             if (reader != null)
             {
@@ -831,7 +831,7 @@ namespace AppWebERS.Models {
         {
             List<Requisito> listaRequisitos = new List<Requisito>();
             ApplicationDbContext conexionLocal = ApplicationDbContext.Create();
-            string consulta = "SELECT * FROM requisito WHERE requisito.ref_proyecto =" + idProyecto + "AND requisito.tipo='USUARIO';";
+            string consulta = "SELECT * FROM requisito WHERE requisito.ref_proyecto =" + idProyecto + " AND requisito.tipo='USUARIO';";
             MySqlDataReader reader = conexionLocal.RealizarConsulta(consulta);
             if (reader != null)
             {
@@ -874,7 +874,7 @@ namespace AppWebERS.Models {
             String encabezado = "<tr>";
             encabezado = encabezado+ "<td height=" +60+ " width="+ 15 +'%' + ">&nbsp; </td>";
             List<Requisito> lista = ObtenerRequisitosSistemas(idProyecto);
-            foreach (var Requisito in listaOrdenada)
+            foreach (var Requisito in lista)
             {
                 String aux = " <td height=" + 60 + " width=" + 4 + '%' + ">" + ObtenerRequisitoSistemaFormatoHTML(Requisito.IdRequisito) + "</td>";
                 encabezado =encabezado + aux;
@@ -882,6 +882,6 @@ namespace AppWebERS.Models {
             encabezado = encabezado + "</tr>";
             return encabezado;
         }
-
+        
     }
 }

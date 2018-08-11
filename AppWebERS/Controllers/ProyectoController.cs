@@ -1636,6 +1636,7 @@ namespace AppWebERS.Controllers
         [HttpGet]
         public ActionResult RequisitoSistema(int id, string idRequisitoUsuario)
         {
+
             String idUsuario;
             using (var db = ApplicationDbContext.Create())
             {
@@ -1947,16 +1948,16 @@ namespace AppWebERS.Controllers
             List<CheckBox> l = new List<CheckBox>();
             //ARREGLAR LA CONSULTA
             string consulta = "SELECT actor.nombre, actor.id_actor FROM actor WHERE actor.ref_proyecto = '" + id + "'";
-
-            MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
+            ApplicationDbContext conexionLocal = ApplicationDbContext.Create();
+            MySqlDataReader reader = conexionLocal.RealizarConsulta(consulta);
             if (reader != null)
             {
                 while (reader.Read())
                 {
                     l.Add(new CheckBox() { nombre = reader[0].ToString(), id= reader[1].ToString(),isChecked = false });
                 }
-                Conector.CerrarConexion();
             }
+            conexionLocal.EnsureConnectionClosed();
             return l;
         }
         /**

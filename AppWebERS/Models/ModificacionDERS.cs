@@ -89,17 +89,17 @@ namespace AppWebERS.Models{
                 while(Reader.Read())
                 {
                     int id_modificacion = Reader.GetInt16(0);
-                    Debug.WriteLine("id: " + id_modificacion);
+                    //Debug.WriteLine("id: " + id_modificacion);
                     double version = Reader.GetDouble(1);
-                    Debug.WriteLine("version: " + version);
+                    //Debug.WriteLine("version: " + version);
                     int ref_proyecto = Reader.GetInt16(2);
-                    Debug.WriteLine("ref proyecto: " + ref_proyecto);
+                    //Debug.WriteLine("ref proyecto: " + ref_proyecto);
                     DateTime fecha = Reader.GetDateTime(3);
-                    Debug.WriteLine("fecha: " + fecha);
+                    //Debug.WriteLine("fecha: " + fecha);
                     string user_name = Reader.GetString(5);
-                    Debug.WriteLine("nombre: " + user_name);
+                    //Debug.WriteLine("nombre: " + user_name);
                     string descripcion = Reader.GetString(6);
-                    Debug.WriteLine("desc: " + descripcion);
+                    //Debug.WriteLine("desc: " + descripcion);
                     Historial.Add(new ModificacionDERS(id_modificacion, version, ref_proyecto, fecha, user_name, descripcion));
                 }
                 this.Conector.CerrarConexion();

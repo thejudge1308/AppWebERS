@@ -221,6 +221,16 @@ namespace AppWebERS.Controllers
                     return Json(true, JsonRequestBehavior.AllowGet);
                     break;
 
+                case "suposicion":
+                    proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo, User.Identity.GetUserId());
+                    return Json(true, JsonRequestBehavior.AllowGet);
+                    break;
+
+                case "restriccion":
+                    proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo, User.Identity.GetUserId());
+                    return Json(true, JsonRequestBehavior.AllowGet);
+                    break;
+
                 case "ambiente":
                     proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo, User.Identity.GetUserId());
                     return Json(true, JsonRequestBehavior.AllowGet);
@@ -313,31 +323,45 @@ namespace AppWebERS.Controllers
                 "<tr> <td> <strong style=\"font-size: 20px; \" > 1.1) Nombre </strong> <br><br> </td></tr> " +
                 "<tr> <td>" + proyecto.Nombre + "</td> </tr> " +
 
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.2) Propósito </strong> <br><br> </td></tr> " +
+                "<table> " +
+                "<tr> <td> <strong style=\"font-size: 20px; \" > 1.2) Version </strong> <br><br> </td></tr> " +
+                "<tr> <td>" + proyecto.Version + "</td> </tr> " +
+
+                "<table> " +
+                "<tr> <td> <strong style=\"font-size: 20px; \" > 1.3) Descripción </strong> <br><br> </td></tr> " +
+                "<tr> <td>" + proyecto.Descripcion + "</td> </tr> " +
+
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.4) Propósito </strong> <br><br> </td></tr> " +
                 "<tr> <td>" + proyecto.Proposito + "</td> </tr> " +
 
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.3) Alcance </strong> <br><br> </td></tr> " +
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.5) Alcance </strong> <br><br> </td></tr> " +
                 "<tr> <td>" + proyecto.Alcance + "</td> </tr> " +
 
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.4) Contexto </strong> <br><br> </td></tr> " +
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.6) Contexto </strong> <br><br> </td></tr> " +
                 "<tr> <td>" + proyecto.Contexto + "</td> </tr> " +
 
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.5) Definiciones </strong> <br><br> </td></tr> " +
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.7) Definiciones </strong> <br><br> </td></tr> " +
                 "<tr> <td>" + proyecto.Definiciones + "</td> </tr> " +
 
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.6) Acrónimos </strong> <br><br> </td></tr> " +
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.8) Acrónimos </strong> <br><br> </td></tr> " +
                 "<tr> <td>" + proyecto.Acronimos + "</td> </tr> " +
 
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.7) Abreviaturas </strong> <br><br> </td></tr> " +
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.9) Abreviaturas </strong> <br><br> </td></tr> " +
                 "<tr> <td>" + proyecto.Abreviaturas + "</td> </tr> " +
 
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.8) Referencias </strong> <br><br> </td></tr> " +
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.10) Referencias </strong> <br><br> </td></tr> " +
                 "<tr> <td>" + proyecto.Referencias + "</td> </tr> " +
 
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.9) Ambiente Operacional </strong> <br><br> </td></tr> " +
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.11) Suposiciones y Dependencias </strong> <br><br> </td></tr> " +
+                "<tr> <td>" + proyecto.Suposiciones + "</td> </tr> " +
+
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.12) Restricciones </strong> <br><br> </td></tr> " +
+                "<tr> <td>" + proyecto.Restricciones + "</td> </tr> " +
+
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.13) Ambiente Operacional </strong> <br><br> </td></tr> " +
                 "<tr> <td>" + proyecto.AmbienteOperacional + "</td> </tr> " +
 
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.10) Relación con otros proyectos </strong> <br><br> </td></tr> " +
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.14) Relación con otros proyectos </strong> <br><br> </td></tr> " +
                 "<tr> <td>" + proyecto.RelacionProyectos + "</td> </tr> " +
                 
                 "</table> ";
@@ -828,6 +852,8 @@ namespace AppWebERS.Controllers
                 {
                     int id = Int32.Parse(data["id_proyecto"].ToString());
                     string nombre = data["nombre"].ToString();
+                    Double version = Double.Parse(data["version"].ToString());
+                    string descripcion = data["descripcion"].ToString();
                     string proposito = data["proposito"].ToString();
                     string alcance = data["alcance"].ToString();
                     string contexto = data["contexto"].ToString();
@@ -835,11 +861,13 @@ namespace AppWebERS.Controllers
                     string acronimos = data["acronimos"].ToString();
                     string abreviaturas = data["abreviaturas"].ToString();
                     string referencias = data["referencias"].ToString();
+                    string suposiciones = data["suposiciones"].ToString();
+                    string restricciones = data["restricciones"].ToString();
                     string ambiente_operacional = data["ambiente_operacional"].ToString();
                     string relacion_con_otros_proyectos = data["relacion_con_otros_proyectos"].ToString();
-                    string estado = data["estado"].ToString();
+                    string estadop = data["estado"].ToString();
 
-                    proyectos.Add(new Proyecto(id, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambiente_operacional, relacion_con_otros_proyectos, estado));
+                    proyectos.Add(new Proyecto(id, nombre, version, descripcion, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, suposiciones, restricciones, ambiente_operacional, relacion_con_otros_proyectos, estadop));
                 }
 
                 this.conexion.EnsureConnectionClosed();
@@ -875,6 +903,8 @@ namespace AppWebERS.Controllers
                 {
                     int idp = Int32.Parse(data["id_proyecto"].ToString());
                     string nombre = data["nombre"].ToString();
+                    Double version = Double.Parse(data["version"].ToString());
+                    string descripcion = data["descripcion"].ToString();
                     string proposito = data["proposito"].ToString();
                     string alcance = data["alcance"].ToString();
                     string contexto = data["contexto"].ToString();
@@ -882,11 +912,13 @@ namespace AppWebERS.Controllers
                     string acronimos = data["acronimos"].ToString();
                     string abreviaturas = data["abreviaturas"].ToString();
                     string referencias = data["referencias"].ToString();
+                    string suposiciones = data["suposiciones"].ToString();
+                    string restricciones = data["restricciones"].ToString();
                     string ambiente_operacional = data["ambiente_operacional"].ToString();
                     string relacion_con_otros_proyectos = data["relacion_con_otros_proyectos"].ToString();
                     string estadop = data["estado"].ToString();
 
-                    proyectosAsociados.Add(new Proyecto(idp, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambiente_operacional, relacion_con_otros_proyectos, estadop));
+                    proyectosAsociados.Add(new Proyecto(idp, nombre, version, descripcion, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, suposiciones, restricciones, ambiente_operacional, relacion_con_otros_proyectos, estadop));
                 }
 
                 this.Conector.CerrarConexion();
@@ -923,6 +955,8 @@ namespace AppWebERS.Controllers
                 {
                     int idp = Int32.Parse(data["id_proyecto"].ToString());
                     string nombre = data["nombre"].ToString();
+                    Double version = Double.Parse(data["version"].ToString());
+                    string descripcion = data["descripcion"].ToString();
                     string proposito = data["proposito"].ToString();
                     string alcance = data["alcance"].ToString();
                     string contexto = data["contexto"].ToString();
@@ -930,11 +964,13 @@ namespace AppWebERS.Controllers
                     string acronimos = data["acronimos"].ToString();
                     string abreviaturas = data["abreviaturas"].ToString();
                     string referencias = data["referencias"].ToString();
+                    string suposiciones = data["suposiciones"].ToString();
+                    string restricciones = data["restricciones"].ToString();
                     string ambiente_operacional = data["ambiente_operacional"].ToString();
                     string relacion_con_otros_proyectos = data["relacion_con_otros_proyectos"].ToString();
                     string estadop = data["estado"].ToString();
 
-                    proyectosNoAsociados.Add(new Proyecto(idp, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambiente_operacional, relacion_con_otros_proyectos, estadop));
+                    proyectosNoAsociados.Add(new Proyecto(idp, nombre, version, descripcion, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, suposiciones, restricciones, ambiente_operacional, relacion_con_otros_proyectos, estadop));
                 }
 
                 this.Conector.CerrarConexion();
@@ -1045,9 +1081,9 @@ namespace AppWebERS.Controllers
                 else
                     ViewBag.BoolLista = true;
                 proyecto.Nombre = nombre;
-                Proyecto proyectoNuevo = proyecto.CrearProyecto(0, nombre, String.Empty, String.Empty,
+                Proyecto proyectoNuevo = proyecto.CrearProyecto(0, nombre, 0.0, String.Empty, String.Empty, String.Empty,
                                                 String.Empty, String.Empty, String.Empty, String.Empty,
-                                                String.Empty, String.Empty, String.Empty);
+                                                String.Empty, String.Empty, String.Empty, String.Empty, String.Empty);
                 if (proyectoNuevo != null)
                 {
                     if (proyecto.RegistrarProyectoEnBd(proyectoNuevo))

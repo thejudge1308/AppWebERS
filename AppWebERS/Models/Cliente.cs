@@ -1,15 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.ComponentModel.DataAnnotations;
 
 namespace AppWebERS.Models
 {
     public class Cliente
     {
         public int Id { get;}
+        [Required(ErrorMessage = "El campo Nombre es obligatorio.")]
+        [StringLength(35, ErrorMessage = "El largo del nombre deber ser entre 2 a 35 caracteres.", MinimumLength = 2)]
+        [RegularExpression(@"(\s|[a-zA-ZñÑáéíóúÁÉÍÓÚ])*", ErrorMessage = "Nombre no válido.")]
+        [Display(Name = "Nombre")]
         public string Nombre { get; }
+        [Required(ErrorMessage = "El campo Rol es obligatorio.")]
+        [StringLength(35, ErrorMessage = "El largo del rol deber ser entre 2 a 35 caracteres.", MinimumLength = 2)]
+        [RegularExpression(@"(\s|[a-zA-ZñÑáéíóúÁÉÍÓÚ])*", ErrorMessage = "Rol no válido.")]
+        [Display(Name = "Rol")]
         public string Rol { get; }
+        [Required(ErrorMessage = "El campo Correo electrónico es obligatorio.")]
+        [RegularExpression(@"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,3})(\]?)$", ErrorMessage = "Por favor ingrese un correo válido.")]
+        [Display(Name = "Correo de contacto")]
         public string Contacto { get; }
         public int RefProyecto { get; }
 

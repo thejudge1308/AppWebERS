@@ -35,9 +35,12 @@
             <a class="nav-link" href="@Url.Action("ListaActores", "Proyecto", new { id = ProyectoActual.IdProyecto })">Actores</a>
         </li>
         <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("ListaClientes", "Proyecto", new { id = ProyectoActual.IdProyecto })">Clientes</a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link" href="@Url.Action("HistorialCambios","Proyecto",new { id = ProyectoActual.IdProyecto})">Historial de cambios</a>
         </li>
-    
+
         @{
             <!--
         if(TipoUsuario == Proyecto.AUTH_COMO_JEFE_DE_PROYECTO || TipoUsuario == Proyecto.AUTH_COMO_SYSADMIN) {

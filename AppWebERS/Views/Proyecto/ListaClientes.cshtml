@@ -1,0 +1,95 @@
+﻿@using AppWebERS.Models;
+@model List<Cliente>
+@{
+    /**/
+
+    var ProyectoActual = (Proyecto)ViewData["proyecto"];
+    var TipoUsuario = (int)ViewData["permiso"];
+}
+
+@if (ProyectoActual != null)
+{
+    <h2>Lista de clientes.</h2>
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("Detalles", "Proyecto", new { id = ProyectoActual.IdProyecto })">Detalles</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("ListarRequisitosMinimalista", "Proyecto", new { id = ProyectoActual.IdProyecto })">Requisitos</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("ListarDiagramas", "Proyecto", new { id = ProyectoActual.IdProyecto })">Diagramas</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("ListaUsuarios", "Proyecto", new { id = ProyectoActual.IdProyecto })">Usuarios</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("ListaActores", "Proyecto", new { id = ProyectoActual.IdProyecto })">Actores</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" href="@Url.Action("ListaClientes", "Proyecto", new { id = ProyectoActual.IdProyecto })">Clientes</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("HistorialCambios","Proyecto",new { id = ProyectoActual.IdProyecto})">Historial de cambios</a>
+        </li>
+    </ul>
+
+    <div class="form-group">
+        <div class="col-12">
+            @{
+                if (TipoUsuario != Proyecto.AUTH_COMO_SYSADMIN)
+                {
+                    <a class="btn btn-primary mt-3" href="@Url.Action("AgregarCliente", "Proyecto", new { id = ProyectoActual.IdProyecto })">Agregar cliente</a>
+                }
+
+            }
+        </div>
+    </div>
+
+    if (Model.Count != 0)
+    {
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Rol</th>
+                    <th scope="col">Contacto</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+
+                    foreach (var item in Model)
+                    {
+
+                        <tr>
+                            <td>@item.Id</td>
+                            <td>@item.Nombre</td>
+                            <td>@item.Rol</td>
+                            <td>@item.Contacto</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+
+        </table>
+    }
+    else
+    {
+        <div class="jumbotron jumbotron-fluid">
+            <div class="container">
+                <h1>No hay clientes en el proyecto</h1>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1>Proyecto no encontrado</h1>
+        </div>
+    </div>
+}

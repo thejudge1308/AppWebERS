@@ -783,5 +783,29 @@ namespace AppWebERS.Models {
             System.Diagnostics.Debug.Write(verificar);
         }
 
+        public String CrearMatriz(int idProyecto)
+        {
+            String matriz = "";
+            matriz = matriz + "<table border="+1+" cellpadding="+0+" cellspacing="+0+" style= " + "border - collapse: collapse"+ "width="+200 +">";
+            String encabezado=this.CrearEncabezado(idProyecto);
+            matriz = matriz + encabezado;
+            return matriz;
+        }
+
+        public String CrearEncabezado(int idProyecto)
+        {
+            String encabezado = "<tr>";
+            encabezado = encabezado+ "<td height=" +60+ " width="+ 15 +'%' + ">&nbsp; </td>";
+            List<Requisito> lista = ObtenerRequisitosSistemas(idProyecto);
+            List<Requisito> listaOrdenada = lista.OrderBy(requisito => requisito.IdRequisito).ToList();
+            foreach (var Requisito in listaOrdenada)
+            {
+                String aux = " <td height=" + 60 + " width=" + 4 + '%' + ">" + ObtenerRequisitoSistemaFormatoHTML(Requisito.IdRequisito) + "</td>";
+                encabezado =encabezado + aux;
+            }
+            encabezado = encabezado + "</tr>";
+            return encabezado;
+        }
+
     }
 }

@@ -14,8 +14,8 @@ $(document).ready(function () {
        // [{ 'script': 'sub' }, { 'script': 'super' }],      // superscript/subscript
         [{ 'indent': '-1' }, { 'indent': '+1' }],          // outdent/indent
 
-        [{ 'font': [] }],                                 // Front 
-        [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+        //[{ 'font': [] }],                                 // Front 
+        //[{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
        
 
         [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
@@ -39,8 +39,8 @@ $(document).ready(function () {
         //[{ 'script': 'sub' }, { 'script': 'super' }],      // superscript/subscript
         [{ 'indent': '-1' }, { 'indent': '+1' }],          // outdent/indent
 
-        [{ 'font': [] }],                                 // Front 
-        [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+        //[{ 'font': [] }],                                 // Front 
+        //[{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
 
 
         [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme

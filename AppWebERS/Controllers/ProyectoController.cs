@@ -277,6 +277,111 @@ namespace AppWebERS.Controllers
         }
 
 
+        private String seccionHtmlTablaHistorialCambios()
+        {
+            String htmlTablaHistorialCambios =  "< h4 >Historial de cambios</ h4 >" +
+                              "< table >" +
+                                  "< tr >" +
+                                      "< th >" +
+                                          "Version" +
+                                      "</ th >" +
+                                      "< th >" +
+                                          "fecha" +
+                                      "</ th >" +
+                                           "Razon cambio" +
+                                      "</ th >" +
+                                      "</ th >" +
+                                           "Autor(es)" +
+                                      "</ th >"+
+                                  "</ tr >";
+           
+
+
+            return "";
+        }
+
+
+
+        // 
+        /// <autor>Diego Matus</autor>
+        /// <summary>
+        /// Metodo para generar codigo html para tabla de clientes.
+        /// </summary>
+        /// <param name="id">Recibe como parametro el id del proyecto</param>
+        /// <returns>Codigo html en string</returns>
+        private String SeccionHtmlContraParte(int id)
+        {
+
+            List<Usuario> clientes = new List<Usuario>();
+            String htmlTablaClientes = "< h4 > Contraparte</ h4 >" +
+                               "< table >" +
+                                   "< tr >" +
+                                       "< th >" +
+                                           "Nombre del desarrollador" +
+                                       "</ th >" +
+                                       "< th >" +
+                                           "Rol" +
+                                       "</ th >" +
+                                            "Contacto" +
+                                       "</ th >" +
+                                   "</ tr >";
+
+            foreach (var item in clientes)
+            {
+
+                htmlTablaClientes += "< tr >" +
+                      "< td >" + item.Nombre + "</ td >" +
+                      "< td >" + item.CorreoElectronico + "</ td >" +
+                      "< td >" + item.Tipo + "</ td >" +
+                  "</ tr >";
+
+            }
+
+            htmlTablaClientes += "</ table >";
+
+            return htmlTablaClientes;
+        }
+
+
+        /// 
+        /// <autor>Diego Matus</autor>
+        /// <summary>
+        /// Metodo para generar codigo html para tabla de equipo de desarrollo.
+        /// </summary>
+        /// <param name="id">Recibe como parametro el id del proyecto</param>
+        /// <returns>Codigo html en string</returns>
+        private String SeccionHtmlEquipoDesarrollo(int id)
+        {
+
+            List<Usuario> desarrolladores = new List<Usuario>();
+            String htmlTablaEquipoDesarrollo = "< h4 > Equipo de Desarrollo</ h4 >" +
+                               "< table >" +
+                                   "< tr >" +
+                                       "< th >" +
+                                           "Nombre del desarrollador" +
+                                       "</ th >" +
+                                       "< th >" +
+                                           "Rol" +
+                                       "</ th >" +
+                                            "Contacto" +
+                                       "</ th >" +
+                                   "</ tr >";
+
+                                foreach (var item in desarrolladores)
+                                {
+
+                                htmlTablaEquipoDesarrollo += "< tr >" +
+                                      "< td >"+item.Nombre+"</ td >" +
+                                      "< td >"+item.CorreoElectronico+"</ td >" +
+                                      "< td >" + item.Tipo + "</ td >"+
+                                  "</ tr >";
+
+                                }
+
+                              htmlTablaEquipoDesarrollo+="</ table >";
+
+            return htmlTablaEquipoDesarrollo;
+        }
 
         /**
         * 
@@ -306,10 +411,8 @@ namespace AppWebERS.Controllers
                 " </head> " +
                 "<body> " +
                 "<meta charset=\"UTF-8\" /> <table> <tr> <td class=\"logo\">AppWebERS</td> <td </tr> </table> <hr> <p class=\"fecha\">Fecha: " + fecha + "</p> <hr> <h1 class=\"titulo\"> 1) Detalles del proyecto</h1> " +
-            
-                
 
-                "<table> " +
+                   "<table> " +
                 "<tr> <td> <strong style=\"font-size: 20px; \" > 1.1) Nombre </strong> <br><br> </td></tr> " +
                 "<tr> <td>" + proyecto.Nombre + "</td> </tr> " +
 

@@ -622,6 +622,7 @@ namespace AppWebERS.Controllers
             int permiso = proyecto.ObtenerRolDelUsuario(idUsuario, id);
             if (permiso == 1 || permiso == 2 || permiso == 0)
             {
+                new Proyecto().EliminarSolicitudesUnionProyectosInnecesarias(id);
                 List<Usuario> usuarios = new Proyecto().GetListaUsuarios(id);
                 List<SolicitudDeProyecto> solicitudes = new Proyecto().GetSolicitudesProyecto(id);
                 //Debug.WriteLine("Permiso: " + TipoDePermiso());

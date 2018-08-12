@@ -711,6 +711,9 @@ namespace AppWebERS.Controllers
                 this.conexion.EnsureConnectionClosed();
                 ViewData["actual"] = idProyecto;
                 ViewData["usuario"] = TipoDePermiso(idProyecto);
+
+                actor.AgregarModificacionActoresDERS(idProyecto, DateTime.Now.ToString("yyyy-MM-dd"), User.Identity.GetUserId(),
+                    "Se ha agregado al actor con nombre " + nombre);
                 return RedirectToAction("ListaActores", new { id = idProyecto });
             }
 
@@ -2167,7 +2170,7 @@ namespace AppWebERS.Controllers
 
             if (rol == 0 || rol == 2)
             {
-                Requisito requisito = new Requisito(idRequisito, nombre, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, DateTime.Now.ToString("yyyy-MM-dd"), String.Empty, "USUARIO");
+                Requisito requisito = new Requisito(idRequisito, nombre, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, DateTime.Now.ToString("yyyy-MM-dd"), "1", "USUARIO");
                 if (requisito.VerificarIdRequisito(id, idRequisito))
                 {
                     if (requisito.ValidarNombreRequisito(id, nombre))
@@ -2233,7 +2236,7 @@ namespace AppWebERS.Controllers
             {
                 Requisito nuevoRequisistoS = new Requisito(idRequisito, nombre, string.Empty, string.Empty, string.Empty,
                 string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, DateTime.Now.ToString("yyyy-MM-dd"),
-                string.Empty, "SISTEMA");
+                "1", "SISTEMA");
                 if (nuevoRequisistoS.VerificarIdRequisito(id, idRequisito))
                 {
                     if (nuevoRequisistoS.ValidarNombreRequisito(id, nombre))

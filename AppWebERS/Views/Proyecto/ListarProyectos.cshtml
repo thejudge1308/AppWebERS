@@ -88,7 +88,7 @@
 
                                 @item.Nombre
                             </div>
-                            <div class="card-body">
+                        <div class="card-body">
                                 <h5 class="card-title"></h5>
                                 <p class="card-text"></p>
                                 <a href="Detalles/@item.IdProyecto" class="btn btn-primary">Ver detalle</a>
@@ -107,25 +107,34 @@
                     }
                     else
                     {
-                        <div class="card">
-                            <div class="card-header">
 
-                                @item.Nombre
-                            </div>
-                            <div class="card-body">
-                                <h5 class="card-title"></h5>
-                                <p class="card-text"></p>
-                              
+
+                        <div >
+                           
+                       
+                         
+                          
                                 @foreach (ProyectoIDs items in (List<ProyectoIDs>)proyectosEnJefe)
                                 {
                                     if (item.IdProyecto == items.IdProyecto)
                                     {
-                                        <a href="ExportarPDF/@item.IdProyecto" class="btn btn-primary">Generar PDF</a>
+                                        <div class="card">
+                                            <div class="card-header">
+                                                @item.Nombre
+                                            </div>
+                                            <div class="card-body">
+                                                <h5 class="card-title"></h5>
+                                                <p class="card-text"></p>
+                                                <a href="ExportarPDF/@item.IdProyecto" class="btn btn-primary">Generar PDF</a>
+
+                                            </div>
+
+                                        </div>
                                     }
                                 }
 
 
-                            </div>
+                           
                         </div>
                         <br><br>
 

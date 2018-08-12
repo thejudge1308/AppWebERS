@@ -525,8 +525,16 @@ namespace AppWebERS.Controllers
 
         public string RetornarRutUsuarioAutentificado()
         {
-            Task<string> tipo = UserManager.getRutAsync((User.Identity.GetUserId()));
-            return tipo.Result;
+            try
+            {
+                Task<string> tipo = UserManager.getRutAsync((User.Identity.GetUserId()));
+                return tipo.Result;
+            }
+            catch 
+            {
+
+                return "00000000";
+            }
         }
 
         protected override void Dispose(bool disposing)

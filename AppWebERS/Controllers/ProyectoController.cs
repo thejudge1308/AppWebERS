@@ -391,27 +391,59 @@ namespace AppWebERS.Controllers
         }
 
 
-        private String seccionHtmlTablaHistorialCambios()
+        private String seccionHtmlTablaHistorialCambios(int id)
         {
-            String htmlTablaHistorialCambios =  "< h4 >Historial de cambios</ h4 >" +
-                              "< table >" +
-                                  "< tr >" +
-                                      "< th >" +
+
+            ModificacionDERS historial = new ModificacionDERS();
+            List<ModificacionDERS> historialModificaciones = historial.ListarHistorial(id);
+            String htmlTablaHistorialCambios =  "<h2>Historial de cambios</h2>" +
+                          
+                             "<table border=\"1\"style=\"border: 1px solid black; border-collapse: collapse; width: 100%; text-align:center;\">" +
+                              "<thead>" +
+                                  "<tr>" +
+                                      "<th>" +
                                           "Version" +
-                                      "</ th >" +
-                                      "< th >" +
-                                          "fecha" +
-                                      "</ th >" +
+                                      "</th>" +
+                                      "<th>" +
+                                          "Fecha" +
+                                      "</th>" +
+                                       "<th>"+
                                            "Razon cambio" +
-                                      "</ th >" +
-                                      "</ th >" +
+                                      "</th>" +
+                                      "<th>" +
                                            "Autor(es)" +
-                                      "</ th >"+
-                                  "</ tr >";
+                                      "</th>"+
+                                  "</tr>" + "</thead>";
+        if(historialModificaciones!= null)
+            {
+
+          
+                    foreach (var item in historialModificaciones)
+                    {
+                       htmlTablaHistorialCambios  += "<tr>" +
+                           "<td>" + item.Version + "</td>" +
+                              "<td>" + item.Fecha + "</td>" +
+                              "<td>"+item.Descripcion+"</td>" +
+                               "<td>"+item.RefUsuario+"</td>"+
+                            "</tr>";
+                    }
+
+            }
+            else
+            {
+                htmlTablaHistorialCambios += "<tr>" +
+                              "<td>  </td>" +
+                              "<td>  </td>" +
+                              "<td>  </td>" +
+                              "<td>  </td>" +
+                              "</tr>";
+            }
+
+            htmlTablaHistorialCambios += "</table>";
            
 
 
-            return "";
+            return htmlTablaHistorialCambios;
         }
 
 
@@ -425,33 +457,48 @@ namespace AppWebERS.Controllers
         /// <returns>Codigo html en string</returns>
         private String SeccionHtmlContraParte(int id)
         {
+            Cliente cliente = new Cliente();
 
-            List<Usuario> clientes = new List<Usuario>();
-            String htmlTablaClientes = "< h4 > Contraparte</ h4 >" +
-                               "< table >" +
-                                   "< tr >" +
-                                       "< th >" +
-                                           "Nombre del desarrollador" +
-                                       "</ th >" +
-                                       "< th >" +
+
+            List<Cliente> clientes = cliente.obtenerTodosLosClientes(id);
+            String htmlTablaClientes = "<h2> Contraparte</h2>" +
+                               "<table border=\"1\"style=\"border: 1px solid black; border-collapse: collapse; width: 100%; text-align:center;\">" +
+                               "<thead>"+
+                                   "<tr>" +
+                                       "<th>" +
+                                           "Nombre" +
+                                       "</th>" +
+                                       "<th>" +
                                            "Rol" +
-                                       "</ th >" +
+                                       "</th>" +
+                                        "<th>"+
                                             "Contacto" +
-                                       "</ th >" +
-                                   "</ tr >";
-
-            foreach (var item in clientes)
+                                       "</th>" +
+                                   "</tr>"  + "</thead>";
+            if(clientes !=null)
             {
+                foreach (var item in clientes)
+                {
 
-                htmlTablaClientes += "< tr >" +
-                      "< td >" + item.Nombre + "</ td >" +
-                      "< td >" + item.CorreoElectronico + "</ td >" +
-                      "< td >" + item.Tipo + "</ td >" +
-                  "</ tr >";
+                    htmlTablaClientes += "<tr>" +
+                          "<td>" + item.Nombre + "</td>" +
+                          "<td>" + item.Rol + "</td>" +
+                          "<td>" + item.Contacto + "</td>" +
+                      "</tr>";
 
+                }
             }
+            else
+            {
+                htmlTablaClientes += "<tr>" +
+                         "<td></td>" +
+                         "<td></td>" +
+                         "<td></td>" +
+                     "</tr>";
+            }
+           
 
-            htmlTablaClientes += "</ table >";
+            htmlTablaClientes += "</table>";
 
             return htmlTablaClientes;
         }
@@ -466,33 +513,58 @@ namespace AppWebERS.Controllers
         /// <returns>Codigo html en string</returns>
         private String SeccionHtmlEquipoDesarrollo(int id)
         {
-
-            List<Usuario> desarrolladores = new List<Usuario>();
-            String htmlTablaEquipoDesarrollo = "< h4 > Equipo de Desarrollo</ h4 >" +
-                               "< table >" +
-                                   "< tr >" +
-                                       "< th >" +
-                                           "Nombre del desarrollador" +
-                                       "</ th >" +
-                                       "< th >" +
+            Proyecto proyecto = new Proyecto();
+           
+            List<Usuario> desarrolladores = proyecto.GetListaUsuarios(id);
+            String htmlTablaEquipoDesarrollo = "<h2> Equipo de Desarrollo</h2>" +
+                               "<table border=\"1\"style=\"border: 1px solid black; border-collapse: collapse; width: 100%; text-align:center;\">" +
+                                   "<tr>" +
+                                       "<th>" +
+                                           "Nombre" +
+                                       "</th>" +
+                                       "<th>" +
                                            "Rol" +
-                                       "</ th >" +
+                                       "</th>" +
+                                        "<th>"+
                                             "Contacto" +
-                                       "</ th >" +
-                                   "</ tr >";
+                                       "</th>" +
+                                   "</tr>";
+                            if(desarrolladores != null)
+                            {
 
+           
                                 foreach (var item in desarrolladores)
                                 {
-
-                                htmlTablaEquipoDesarrollo += "< tr >" +
-                                      "< td >"+item.Nombre+"</ td >" +
-                                      "< td >"+item.CorreoElectronico+"</ td >" +
-                                      "< td >" + item.Tipo + "</ td >"+
-                                  "</ tr >";
+                                    if (item.Tipo == "Usuario")
+                                    {
+                                    htmlTablaEquipoDesarrollo += "<tr>" +
+                                      "<td>" + item.Nombre + "</td>" +
+                                      "<td>Desarrollador</td>" +
+                                      "<td>" + item.CorreoElectronico + "</td>" +
+                                      "</tr>";
+                                }
+                                else
+                                {
+                                        htmlTablaEquipoDesarrollo += "<tr>" +
+                                      "<td>" + item.Nombre + "</td>" +
+                                      "<td>"+item.Tipo+"</td>" +
+                                      "<td>" + item.CorreoElectronico + "</td>" +
+                                      "</tr>";
+                                 }
+                                
 
                                 }
+                            }
+                            else
+                            {
+                                htmlTablaEquipoDesarrollo += "<tr>" +
+                                 "<td></td>" +
+                                 "<td></td>" +
+                                 "<td></td>" +
+                                 "</tr>";
+                    }
 
-                              htmlTablaEquipoDesarrollo+="</ table >";
+                            htmlTablaEquipoDesarrollo +="</table>";
 
             return htmlTablaEquipoDesarrollo;
         }
@@ -520,12 +592,23 @@ namespace AppWebERS.Controllers
             string htmlContent = "<html>" +
                 "  <head>" +
                 " <style> " +
-                "body { margin: 2cm; } .logo { font-size: 40px; font-weigth: bold; } .titulo { text-align: left; margin-top: 30px;margin-bottom: 30px; } .fecha { margin-left: 100px; } .espacio-izq { margin-left: 50px; } table td{ font-size: 18px;  } " +
+                "body { margin: 2cm; } .logo { font-size: 40px; font-weigth: bold; } .titulo { text-align: left; margin-top: 30px;margin-bottom: 30px; } .fecha { margin-left: 100px; } .espacio-izq { margin-left: 50px; } table td{ font-size: 18px;  } .tabla { text-align: center; } " +
                 "</style>" +
                 " </head> " +
                 "<body> " +
-                "<meta charset=\"UTF-8\" /> <table> <tr> <td class=\"logo\">AppWebERS</td> <td </tr> </table> <hr> <p class=\"fecha\">Fecha: " + fecha + "</p> <hr> <h1 class=\"titulo\"> 1) Detalles del proyecto</h1> " +
+                
+               "<meta charset=\"UTF-8\" /> <table> <tr> <td class=\"logo\">AppWebERS</td> <td </tr> </table> <hr> <p class=\"fecha\">Fecha: " + fecha +
+               
 
+               "</p> <hr> " +
+                SeccionHtmlEquipoDesarrollo(id)
+
+                + SeccionHtmlContraParte(id) +
+
+                seccionHtmlTablaHistorialCambios(id) +
+               "<h1 class=\"titulo\"> 1) Detalles del proyecto</h1> " +
+
+               
                    "<table> " +
                 "<tr> <td> <strong style=\"font-size: 20px; \" > 1.1) Nombre </strong> <br><br> </td></tr> " +
                 "<tr> <td>" + proyecto.Nombre + "</td> </tr> " +

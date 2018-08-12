@@ -374,6 +374,21 @@ namespace AppWebERS.Models
             return false;
         }
 
+        public bool AgregarModificacionRequisitoDERS(int id, string fecha, string userId, string descripcion)
+        {
+
+            float versionActual = this.ObtenerVersionActual(id) + 0.01F;
+            string vers = versionActual.ToString().Replace(',', '.');
+            string consulta = "INSERT INTO modificacion_ders(version,ref_proyecto,fecha,ref_autor_modificacion,descripcion) " +
+                "VALUES(" + vers + ", " + id + ", '" + fecha + "' , '" + userId + "' , '" + descripcion + "' ) ";
+            ApplicationDbContext con = ApplicationDbContext.Create();
+            if (con.RealizarConsultaNoQuery(consulta))
+            {
+                return true;
+            }
+            return false;
+        }
+
         private float ObtenerVersionActual(int id)
         {
 

@@ -95,7 +95,36 @@ namespace AppWebERS.Controllers
 
             }
         }
+        //
+        public class JsonReferenciaInforme
+        {
+            public string id { set; get; }
+            public string autores { set; get; }
+            public string anio { set; get; }
+            public string titulo { set; get; }
+            public string ciudad { set; get; }
+            public string editorial { set; get; }
+        }
+        [HttpPost]
+        public ActionResult AgregarReferenciaInforme(JsonReferenciaInforme informe)
+        {
+            string referencia = this.ParsearReferenciaInforme(informe.autores, informe.anio, informe.titulo, informe.ciudad,informe.editorial);
 
+            string consulta = "INSERT INTO Referencia(ref_proyecto,referencia) VALUES('" + informe.id + "','" + referencia + "');";
+            if (this.conexion.RealizarConsultaNoQuery(consulta))
+            {
+                return Json(true, JsonRequestBehavior.AllowGet);
+
+            }
+            else
+            {
+                return Json(false, JsonRequestBehavior.AllowGet);
+
+            }
+        }
+
+     
+        //
         public class JsonReferenciaLibroOnline
         {
             public string id { set; get; }
@@ -2168,6 +2197,14 @@ namespace AppWebERS.Controllers
             referencia = autorSeccion+". " + "(" + anio + "). " + tituloSeccion+". En "+ autorLibro+", "+tituloLibro + " (págs. " + paginas + "). "+ciudad+": "+editorial+".";
             return referencia;
     }
+
+
+        private string ParsearReferenciaInforme(string autores, string anio, string titulo, string ciudad, string editorial)
+        {
+            string referencia;
+            referencia = autores + ".(" + anio + "). " + titulo + "." + ciudad + ":" + editorial;
+            return referencia;
+        }
 
         /**
          * <author>Ariel Cornejo</author>

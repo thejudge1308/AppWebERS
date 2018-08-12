@@ -69,8 +69,10 @@
                                 <img src=@im.url alt="Card image cap" style="height:auto;width:100%" />
                             </div>
                             <div class="card-footer">
+                                   
 
                                 <a href="#@im.GetHashCode()" class="btn btn-primary" data-toggle="modal" data-target="#@im.GetHashCode()">Ampliar</a>
+                                <a href="@Url.Action("eliminarDiagrama", "Diagrama", new { url = @im.url , idProyecto= ProyectoActual})" class="btn btn-danger" >Eliminar</a>
                             </div>
                         </div>
 
@@ -136,6 +138,7 @@
                             <div class="card-footer">
 
                                 <a href="#@im.GetHashCode()" class="btn btn-primary" data-toggle="modal" data-target="#@im.GetHashCode()">Ampliar</a>
+                                <a href="@Url.Action("eliminarDiagrama", "Diagrama", new { url = @im.url , idProyecto= ProyectoActual})" class="btn btn-danger">Eliminar</a>
                             </div>
                         </div>
                         <div class="modal mt-5 mx-auto w-100" id=@im.GetHashCode() tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="true" style="overflow: scroll;">
@@ -199,6 +202,7 @@
                             <div class="card-footer">
 
                                 <a href="#@im.GetHashCode()" class="btn btn-primary" data-toggle="modal" data-target="#@im.GetHashCode()">Ampliar</a>
+                                <a href="@Url.Action("eliminarDiagrama", "Diagrama", new { url = @im.url , idProyecto= ProyectoActual})" class="btn btn-danger">Eliminar</a>
                             </div>
                         </div>
                         <div class="modal mt-5 mx-auto w-100" id=@im.GetHashCode() tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="true" style="overflow: scroll;">

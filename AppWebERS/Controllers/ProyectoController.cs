@@ -19,6 +19,7 @@ using static AppWebERS.Models.Requisito;
 using Newtonsoft.Json;
 using System.Drawing;
 using MySql.Data;
+using System.Linq;
 
 namespace AppWebERS.Controllers
 {
@@ -783,6 +784,7 @@ namespace AppWebERS.Controllers
             List<Proyecto> proyectosTodos = new List<Proyecto>();
             List<Proyecto> proyectosAsociados = new List<Proyecto>();
             List<Proyecto> proyectosNoAsociados = new List<Proyecto>();
+            List<ProyectoIDs> proyectosEnJefe = new List<ProyectoIDs>();
             Debug.WriteLine("Tipo Usuario " + TipoUsuario);
             if (TipoUsuario.Equals("SYSADMIN"))
             {
@@ -792,12 +794,15 @@ namespace AppWebERS.Controllers
             {
                 proyectosAsociados = ListaDeProyectosAsociados(ObtenerIdUsuarioActivo());
                 proyectosNoAsociados = ListaDeProyectoNoAsociados(ObtenerIdUsuarioActivo());
+                proyectosEnJefe = ListaDeProyectosEnJefes(ObtenerIdUsuarioActivo());
 
             }
             ViewData["usuario_actual"] = TipoUsuario;
             ViewData["proyectosTodos"] = proyectosTodos;
             ViewData["proyectosAsociados"] = proyectosAsociados;
             ViewData["proyectosNoAsociados"] = proyectosNoAsociados;
+            ViewData["proyectosEnJefe"] = proyectosEnJefe;
+           
 
             return View();
 
@@ -2287,7 +2292,7 @@ namespace AppWebERS.Controllers
         * <param name="num_requisito">Id del requisito de sistema que se desea editar.</param>
         * <returns>Objeto con los valores del requisito que se desea editar.</returns>
         */
-        public ActionResult HistorialCambios(int id)
+        public ActionResult HistorialCambios2(int id)
         {
             Proyecto proyecto = this.GetProyecto(id);
             var UsuarioActual = User.Identity.GetUserId();
@@ -2323,6 +2328,38 @@ namespace AppWebERS.Controllers
             return r;
         }
 
+        /*
+        * Autor Juan Abello
+        * Metodo encargado de obtener los id de los proyectos en los que un usuario es jefe.
+        * <param String rut>
+        * <returns> listaProyectosEnJefe
+        */
+        public List<ProyectoIDs> ListaDeProyectosEnJefes(string id)
+        {
+            List<ProyectoIDs> proyectosEnJefe = new List<ProyectoIDs>();
+            string estado = "HABILITADO";
+            string consulta= "SELECT ref_proyecto FROM vinculo_usuario_proyecto WHERE ref_usuario = '"+id+"' AND rol = 'JEFEPROYECTO'";
+            MySqlDataReader data = this.Conector.RealizarConsulta(consulta);
+            if (data == null)
+            {
+                this.Conector.CerrarConexion();
+                return proyectosEnJefe;
+                //return null;
+            }
+            else
+            {
+                while (data.Read())
+                {
+                    int idp = Int32.Parse(data["ref_proyecto"].ToString());
+                    proyectosEnJefe.Add(new ProyectoIDs(idp));
+                }
+
+                this.Conector.CerrarConexion();
+                return proyectosEnJefe;
+            }
+        }
+        
+        
         /// <author>Gabriel Sanhueza</author>
         /// <summary>
         /// Lista los clientes de un proyecto
@@ -2378,6 +2415,24 @@ namespace AppWebERS.Controllers
                 return RedirectToAction("ListaClientes", new { id = id });
             }
             return View("AgregarCliente", cliente);
+        }
+
+        /*
+         * Autor: Nicolás Hervias
+         * Método para listar los cambios realizados en el proyecto
+         * Parámetros: id del proyecto
+         * Retorna: la vista con la lista de modificaciones
+         */
+         [HttpGet]
+        public ActionResult HistorialCambios(int id)
+        {
+            Proyecto proyecto = this.GetProyecto(id);
+            List<ModificacionDERS> Historial = new ModificacionDERS().ListarHistorial(id);
+            ViewData["proyecto"] = proyecto;
+            ViewData["cambios"] = Historial;
+            //Debug.WriteLine("elementos en historial: " + Historial.Count());
+
+            return View();
         }
 
 

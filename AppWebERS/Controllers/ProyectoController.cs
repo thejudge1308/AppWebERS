@@ -19,6 +19,7 @@ using static AppWebERS.Models.Requisito;
 using Newtonsoft.Json;
 using System.Drawing;
 using MySql.Data;
+using System.Linq;
 
 namespace AppWebERS.Controllers
 {
@@ -95,6 +96,91 @@ namespace AppWebERS.Controllers
 
             }
         }
+        //
+        public class JsonReferenciaInforme
+        {
+            public string id { set; get; }
+            public string autores { set; get; }
+            public string anio { set; get; }
+            public string titulo { set; get; }
+            public string ciudad { set; get; }
+            public string editorial { set; get; }
+        }
+        [HttpPost]
+        public ActionResult AgregarReferenciaInforme(JsonReferenciaInforme informe)
+        {
+            string referencia = this.ParsearReferenciaInforme(informe.autores, informe.anio, informe.titulo, informe.ciudad,informe.editorial);
+
+            string consulta = "INSERT INTO Referencia(ref_proyecto,referencia) VALUES('" + informe.id + "','" + referencia + "');";
+            if (this.conexion.RealizarConsultaNoQuery(consulta))
+            {
+                return Json(true, JsonRequestBehavior.AllowGet);
+
+            }
+            else
+            {
+                return Json(false, JsonRequestBehavior.AllowGet);
+
+            }
+        }
+
+     
+        //
+        public class JsonReferenciaLibroOnline
+        {
+            public string id { set; get; }
+            public string autores { set; get; }
+            public string anio { set; get; }
+            public string titulo { set; get; }
+            public string paginaWeb { set; get; }
+        }
+        [HttpPost]
+        public ActionResult AgregarReferenciaLibroOnline(JsonReferenciaLibroOnline libro)
+        {
+            string referencia = this.ParsearReferenciaLibroOnline(libro.autores, libro.anio, libro.titulo, libro.paginaWeb);
+
+            string consulta = "INSERT INTO Referencia(ref_proyecto,referencia) VALUES('" + libro.id + "','" + referencia + "');";
+            if (this.conexion.RealizarConsultaNoQuery(consulta))
+            {
+                return Json(true, JsonRequestBehavior.AllowGet);
+
+            }
+            else
+            {
+                return Json(false, JsonRequestBehavior.AllowGet);
+
+            }
+        }
+
+        public class JsonReferenciaSeccionLibro
+        {
+            public string id { set; get; }
+            public string autorSeccion { set; get; }
+            public string tituloSeccion { set; get; }
+            public string autorLibro { set; get; }
+            public string tituloLibro { set; get; }
+            public string anio { set; get; }
+            public string paginas { set; get; }
+            public string ciudad { set; get; }
+            public string editorial { set; get; }
+        }
+        [HttpPost]
+        public ActionResult AgregarReferenciaSeccionLibro(JsonReferenciaSeccionLibro seccionLibro)
+        {
+            string referencia = this.ParsearReferenciaSeccionLibro(seccionLibro.autorSeccion,seccionLibro.tituloLibro,seccionLibro.autorLibro,seccionLibro.tituloLibro,seccionLibro.anio,seccionLibro.paginas,seccionLibro.ciudad,seccionLibro.editorial);
+
+            string consulta = "INSERT INTO Referencia(ref_proyecto,referencia) VALUES('" + seccionLibro.id + "','" + referencia + "');";
+            if (this.conexion.RealizarConsultaNoQuery(consulta))
+            {
+                return Json(true, JsonRequestBehavior.AllowGet);
+
+            }
+            else
+            {
+                return Json(false, JsonRequestBehavior.AllowGet);
+
+            }
+        }
 
         public class JsonReferenciaPaper {
             public string id { set; get; }
@@ -133,6 +219,7 @@ namespace AppWebERS.Controllers
             public string nombre_conferencia { get; set; }
         }
 
+
         [HttpPost]
         public ActionResult AgregarReferenciaConferencia(JsonReferenciaConferencia paper) {
             //string autores, string fecha, string titulo, string lugar, string nombreConferencia
@@ -160,6 +247,33 @@ namespace AppWebERS.Controllers
             }
         }
 
+        public class JsonReferenciaPaginaWeb
+        {
+            public string id { set; get; }
+            public string autor { set; get; }
+            public string nombrePaginaWeb { set; get; }
+            public string anio { set; get; }
+            public string mes { set; get; }
+            public string dia { set; get; }
+            public string url { set; get; }
+        }
+        [HttpPost]
+        public ActionResult AgregarReferenciaPaginaWeb(JsonReferenciaPaginaWeb paginaWeb)
+        {
+            string referencia = this.ParsearReferenciaPaginaWeb(paginaWeb.autor, paginaWeb.nombrePaginaWeb, paginaWeb.anio, paginaWeb.mes, paginaWeb.dia, paginaWeb.url);
+
+            string consulta = "INSERT INTO Referencia(ref_proyecto,referencia) VALUES('" + paginaWeb.id + "','" + referencia + "');";
+            if (this.conexion.RealizarConsultaNoQuery(consulta))
+            {
+                return Json(true, JsonRequestBehavior.AllowGet);
+
+            }
+            else
+            {
+                return Json(false, JsonRequestBehavior.AllowGet);
+
+            }
+        }
 
         /**
         * <author>Matías Parra</author>
@@ -725,6 +839,7 @@ namespace AppWebERS.Controllers
             int permiso = proyecto.ObtenerRolDelUsuario(idUsuario, id);
             if (permiso == 1 || permiso == 2 || permiso == 0)
             {
+                new Proyecto().EliminarSolicitudesUnionProyectosInnecesarias(id);
                 List<Usuario> usuarios = new Proyecto().GetListaUsuarios(id);
                 List<SolicitudDeProyecto> solicitudes = new Proyecto().GetSolicitudesProyecto(id);
                 //Debug.WriteLine("Permiso: " + TipoDePermiso());
@@ -886,6 +1001,7 @@ namespace AppWebERS.Controllers
             List<Proyecto> proyectosTodos = new List<Proyecto>();
             List<Proyecto> proyectosAsociados = new List<Proyecto>();
             List<Proyecto> proyectosNoAsociados = new List<Proyecto>();
+            List<ProyectoIDs> proyectosEnJefe = new List<ProyectoIDs>();
             Debug.WriteLine("Tipo Usuario " + TipoUsuario);
             if (TipoUsuario.Equals("SYSADMIN"))
             {
@@ -895,12 +1011,15 @@ namespace AppWebERS.Controllers
             {
                 proyectosAsociados = ListaDeProyectosAsociados(ObtenerIdUsuarioActivo());
                 proyectosNoAsociados = ListaDeProyectoNoAsociados(ObtenerIdUsuarioActivo());
+                proyectosEnJefe = ListaDeProyectosEnJefes(ObtenerIdUsuarioActivo());
 
             }
             ViewData["usuario_actual"] = TipoUsuario;
             ViewData["proyectosTodos"] = proyectosTodos;
             ViewData["proyectosAsociados"] = proyectosAsociados;
             ViewData["proyectosNoAsociados"] = proyectosNoAsociados;
+            ViewData["proyectosEnJefe"] = proyectosEnJefe;
+           
 
             return View();
 
@@ -963,7 +1082,7 @@ namespace AppWebERS.Controllers
             string estado = "HABILITADO";
             string consulta = "SELECT proyecto.id_proyecto,proyecto.nombre, proyecto.proposito, proyecto.alcance, proyecto.contexto, proyecto.definiciones," +
                 "proyecto.acronimos, proyecto.abreviaturas, proyecto.referencias, proyecto.ambiente_operacional, proyecto.relacion_con_otros_proyectos, proyecto.estado FROM proyecto, users, vinculo_usuario_proyecto " +
-                               "WHERE proyecto.estado =  '" + estado + "' AND users.id = '" + id + "' AND vinculo_usuario_proyecto.ref_proyecto = " +
+                               "WHERE users.id = '" + id + "' AND vinculo_usuario_proyecto.ref_proyecto = " +
                                "proyecto.id_proyecto AND vinculo_usuario_proyecto.ref_usuario = users.id";
             MySqlDataReader data = this.Conector.RealizarConsulta(consulta);
             if (data == null)
@@ -1739,6 +1858,7 @@ namespace AppWebERS.Controllers
         [HttpGet]
         public ActionResult RequisitoSistema(int id, string idRequisitoUsuario)
         {
+
             String idUsuario;
             using (var db = ApplicationDbContext.Create())
             {
@@ -2050,16 +2170,16 @@ namespace AppWebERS.Controllers
             List<CheckBox> l = new List<CheckBox>();
             //ARREGLAR LA CONSULTA
             string consulta = "SELECT actor.nombre, actor.id_actor FROM actor WHERE actor.ref_proyecto = '" + id + "'";
-
-            MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
+            ApplicationDbContext conexionLocal = ApplicationDbContext.Create();
+            MySqlDataReader reader = conexionLocal.RealizarConsulta(consulta);
             if (reader != null)
             {
                 while (reader.Read())
                 {
                     l.Add(new CheckBox() { nombre = reader[0].ToString(), id= reader[1].ToString(),isChecked = false });
                 }
-                Conector.CerrarConexion();
             }
+            conexionLocal.EnsureConnectionClosed();
             return l;
         }
         /**
@@ -2202,6 +2322,32 @@ namespace AppWebERS.Controllers
             return referencia;
 
         }
+        private string ParsearReferenciaLibroOnline(string autores, string anio, string titulo, string paginaWeb) {
+            string referencia;
+            referencia = autores + ".("+anio+"). "+titulo+". Recuperado de "+ paginaWeb;
+            return referencia;
+        }
+
+        private string ParsearReferenciaSeccionLibro(string autorSeccion, string tituloSeccion, string autorLibro, string tituloLibro, string anio, string paginas, string ciudad, string editorial)
+        {
+            string referencia;
+            referencia = autorSeccion+". " + "(" + anio + "). " + tituloSeccion+". En "+ autorLibro+", "+tituloLibro + " (págs. " + paginas + "). "+ciudad+": "+editorial+".";
+            return referencia;
+        }
+
+        private string ParsearReferenciaPaginaWeb(string autor, string nombrePaginaWeb, string anio, string mes, string dia, string url)
+        {
+            string referencia;
+            referencia = autor + ". " + "(" + dia + " de "+ mes +" de "+ anio +"). " + nombrePaginaWeb + ". Obtenido de "+nombrePaginaWeb+": " + url;
+            return referencia;
+        }
+        private string ParsearReferenciaInforme(string autores, string anio, string titulo, string ciudad, string editorial)
+        {
+            string referencia;
+            referencia = autores + ".(" + anio + "). " + titulo + "." + ciudad + ":" + editorial;
+            return referencia;
+        }
+
         /**
          * <author>Ariel Cornejo</author>
          * <summary>
@@ -2388,7 +2534,7 @@ namespace AppWebERS.Controllers
         * <param name="num_requisito">Id del requisito de sistema que se desea editar.</param>
         * <returns>Objeto con los valores del requisito que se desea editar.</returns>
         */
-        public ActionResult HistorialCambios(int id)
+        public ActionResult HistorialCambios2(int id)
         {
             Proyecto proyecto = this.GetProyecto(id);
             var UsuarioActual = User.Identity.GetUserId();
@@ -2424,6 +2570,38 @@ namespace AppWebERS.Controllers
             return r;
         }
 
+        /*
+        * Autor Juan Abello
+        * Metodo encargado de obtener los id de los proyectos en los que un usuario es jefe.
+        * <param String rut>
+        * <returns> listaProyectosEnJefe
+        */
+        public List<ProyectoIDs> ListaDeProyectosEnJefes(string id)
+        {
+            List<ProyectoIDs> proyectosEnJefe = new List<ProyectoIDs>();
+            string estado = "HABILITADO";
+            string consulta= "SELECT ref_proyecto FROM vinculo_usuario_proyecto WHERE ref_usuario = '"+id+"' AND rol = 'JEFEPROYECTO'";
+            MySqlDataReader data = this.Conector.RealizarConsulta(consulta);
+            if (data == null)
+            {
+                this.Conector.CerrarConexion();
+                return proyectosEnJefe;
+                //return null;
+            }
+            else
+            {
+                while (data.Read())
+                {
+                    int idp = Int32.Parse(data["ref_proyecto"].ToString());
+                    proyectosEnJefe.Add(new ProyectoIDs(idp));
+                }
+
+                this.Conector.CerrarConexion();
+                return proyectosEnJefe;
+            }
+        }
+        
+        
         /// <author>Gabriel Sanhueza</author>
         /// <summary>
         /// Lista los clientes de un proyecto
@@ -2496,6 +2674,25 @@ namespace AppWebERS.Controllers
             TempData["alerta"] = new Alerta("Cliente eliminado exitosamente", TipoAlerta.SUCCESS);
             return RedirectToAction("listaClientes", "Proyecto", new { id = IdProyecto });
         }
+        /*
+         * Autor: Nicolás Hervias
+         * Método para listar los cambios realizados en el proyecto
+         * Parámetros: id del proyecto
+         * Retorna: la vista con la lista de modificaciones
+         */
+         [HttpGet]
+        public ActionResult HistorialCambios(int id)
+        {
+            Proyecto proyecto = this.GetProyecto(id);
+            List<ModificacionDERS> Historial = new ModificacionDERS().ListarHistorial(id);
+            ViewData["proyecto"] = proyecto;
+            ViewData["cambios"] = Historial;
+            //Debug.WriteLine("elementos en historial: " + Historial.Count());
+
+            return View();
+        }
+
+
     }
 
    

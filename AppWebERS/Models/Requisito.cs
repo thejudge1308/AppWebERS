@@ -875,6 +875,7 @@ namespace AppWebERS.Models {
                 {
                     String matriz = CrearMatriz2(reqUsuario,sistAux,idProyecto);
                     matrices.Add(matriz);
+                    sistAux.Clear();
                 }
                 i++;
             }
@@ -904,7 +905,8 @@ namespace AppWebERS.Models {
                 foreach (var requSistema in reqSistema)
                 {
                     filas = filas + "<td height=" + 19 + " width=" + 4 + '%' + ">&nbsp;";
-                    filas = filas + this.marcarRelacion(idProyecto, requUsuario, requSistema);
+                    List<Requisito> sistAsociados = this.ObtenerListaRequisitosSistemaAsociadosProyecto(idProyecto, this.ObtenerNumRequisito(idProyecto, requUsuario.IdRequisito));
+                    filas = filas + this.marcarRelacion(idProyecto, requUsuario, requSistema,sistAsociados);
                 }
                 filas = filas + "</tr>";
             }
@@ -965,7 +967,8 @@ namespace AppWebERS.Models {
                 foreach (var reqSistema in requisitoSistema)
                 {
                     filas = filas + "<td height=" +19+" width="+4+ '%'+ ">&nbsp;";
-                    filas = filas + this.marcarRelacion(idProyecto,reqUsuario,reqSistema);
+                    List<Requisito> sistAsociados = this.ObtenerListaRequisitosSistemaAsociadosProyecto(idProyecto, this.ObtenerNumRequisito(idProyecto, reqUsuario.IdRequisito));
+                    filas = filas + this.marcarRelacion(idProyecto,reqUsuario,reqSistema,sistAsociados);
                 }
                 filas = filas + "</tr>";
             }
@@ -973,10 +976,10 @@ namespace AppWebERS.Models {
             return filas;
         }
 
-        public String marcarRelacion(int idproyecto,Requisito reqUsuario,Requisito reqSistema)
+        public String marcarRelacion(int idproyecto,Requisito reqUsuario,Requisito reqSistema, List<Requisito> sistAsociados)
         {
             String cruz = "X</td>";
-            List<Requisito> sistAsociados = this.ObtenerListaRequisitosSistemaAsociadosProyecto(idproyecto, this.ObtenerNumRequisito(idproyecto, reqUsuario.IdRequisito));
+            
             foreach (var objetivo in sistAsociados)
             {
                 if (reqSistema.IdRequisito == objetivo.IdRequisito)

@@ -1657,8 +1657,6 @@ namespace AppWebERS.Controllers
                 List<CheckBox> list = obtenerActores(id);
                 Requisito requisito = new Requisito(null, null, null, null, null, null, null, null, null, null, DateTime.Now.ToString("yyyy-MM-dd"), "1", null);
                 requisito.Actores = list;
-                List<String> algo = requisito.MatrizRequisitos(id);
-                //algo = algo + "";
                 requisito.IncrementoCheck = new CheckBox() { nombre = "1", id = "1", isChecked = false };
                 return View(requisito);
             }

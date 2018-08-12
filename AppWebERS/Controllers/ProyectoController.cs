@@ -19,6 +19,7 @@ using static AppWebERS.Models.Requisito;
 using Newtonsoft.Json;
 using System.Drawing;
 using MySql.Data;
+using System.Linq;
 
 namespace AppWebERS.Controllers
 {
@@ -2289,7 +2290,7 @@ namespace AppWebERS.Controllers
         * <param name="num_requisito">Id del requisito de sistema que se desea editar.</param>
         * <returns>Objeto con los valores del requisito que se desea editar.</returns>
         */
-        public ActionResult HistorialCambios(int id)
+        public ActionResult HistorialCambios2(int id)
         {
             Proyecto proyecto = this.GetProyecto(id);
             var UsuarioActual = User.Identity.GetUserId();
@@ -2355,6 +2356,70 @@ namespace AppWebERS.Controllers
                 this.Conector.CerrarConexion();
                 return proyectosEnJefe;
             }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /*
+         * Autor: Nicolás Hervias
+         * Método para listar los cambios realizados en el proyecto
+         * Parámetros: id del proyecto
+         * Retorna: la vista con la lista de modificaciones
+         */
+         [HttpGet]
+        public ActionResult HistorialCambios(int id)
+        {
+            Proyecto proyecto = this.GetProyecto(id);
+            List<ModificacionDERS> Historial = new ModificacionDERS().ListarHistorial(id);
+            ViewData["proyecto"] = proyecto;
+            ViewData["cambios"] = Historial;
+            //Debug.WriteLine("elementos en historial: " + Historial.Count());
+
+            return View();
         }
 
 

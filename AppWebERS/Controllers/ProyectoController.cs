@@ -406,70 +406,87 @@ namespace AppWebERS.Controllers
             var generator = new NReco.PdfGenerator.HtmlToPdfConverter();
             Proyecto proyecto = this.GetProyecto(id);
 
-            
-
-
-
-            DateTime fechadt = DateTime.Now;
-            string fecha = String.Format("{0:dddd d 'de' MMMM 'del' yyyy}", fechadt);
-            string htmlContent = "<html>" +
-                "  <head>" +
-                " <style> " +
-                "body { margin: 2cm; } .logo { font-size: 40px; font-weigth: bold; } .titulo { text-align: left; margin-top: 30px;margin-bottom: 30px; } .fecha { margin-left: 100px; } .espacio-izq { margin-left: 50px; } table td{ font-size: 18px;  } " +
-                "</style>" +
-                " </head> " +
-                "<body> " +
-                "<meta charset=\"UTF-8\" /> <table> <tr> <td class=\"logo\">AppWebERS</td> <td </tr> </table> <hr> <p class=\"fecha\">Fecha: " + fecha + "</p> <hr> <h1 class=\"titulo\"> 1) Detalles del proyecto</h1> " +
-            
-                
-
-                "<table> " +
-                "<tr> <td> <strong style=\"font-size: 20px; \" > 1.1) Nombre </strong> <br><br> </td></tr> " +
-                "<tr> <td>" + proyecto.Nombre + "</td> </tr> " +
-
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.2) Propósito </strong> <br><br> </td></tr> " +
-                "<tr> <td>" + proyecto.Proposito + "</td> </tr> " +
-
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.3) Alcance </strong> <br><br> </td></tr> " +
-                "<tr> <td>" + proyecto.Alcance + "</td> </tr> " +
-
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.4) Contexto </strong> <br><br> </td></tr> " +
-                "<tr> <td>" + proyecto.Contexto + "</td> </tr> " +
-
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.5) Definiciones </strong> <br><br> </td></tr> " +
-                "<tr> <td>" + proyecto.Definiciones + "</td> </tr> " +
-
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.6) Acrónimos </strong> <br><br> </td></tr> " +
-                "<tr> <td>" + proyecto.Acronimos + "</td> </tr> " +
-
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.7) Abreviaturas </strong> <br><br> </td></tr> " +
-                "<tr> <td>" + proyecto.Abreviaturas + "</td> </tr> " +
-
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.8) Referencias </strong> <br><br> </td></tr> " +
-                "<tr> <td>" + proyecto.Referencias + "</td> </tr> " +
-
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.9) Ambiente Operacional </strong> <br><br> </td></tr> " +
-                "<tr> <td>" + proyecto.AmbienteOperacional + "</td> </tr> " +
-
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.10) Relación con otros proyectos </strong> <br><br> </td></tr> " +
-                "<tr> <td>" + proyecto.RelacionProyectos + "</td> </tr> " +
-                
-                "</table> ";
-
             string minimalista = this.AgregarListadoMinimalista(id);
 
             string volere = this.CrearVolere(id);
             string diagramas = this.obtenerHtmlDiagramas(id);
             string referencias = this.obtenerReferencias(id);
 
-            string final = " </body> </html>";
-            
-            htmlContent = htmlContent + minimalista + volere + diagramas  + referencias +  final;
+            DateTime fechadt = DateTime.Now;
+            string fecha = String.Format("{0:dddd d 'de' MMMM 'del' yyyy}", fechadt);
+            string htmlContent = "<html>" +
+                "  <head>" +
+                " <style> " +
+                "body { font-size: 18px; margin: 2cm; } .logo { font-size: 40px; font-weigth: bold; } .titulo { text-align: left; margin-top: 30px;margin-bottom: 30px; } .fecha { margin-left: 100px; } .espacio-izq { margin-left: 50px; } table td{ font-size: 18px;  } " +
+                "</style>" +
+                " </head> " +
+                "<body> " +
+                "<meta charset=\"UTF-8\" />" +
+
+                "<div>" +
+                    @"<h1>1. Introducción</h1>" +
+
+                        @"<h2>1.1 Propósito</h1>" +
+                        @"<div> " + proyecto.Proposito + @"</div>" +
+
+                        @"<h2>1.2 Alcance</h1>" +
+                        @"<div> " + proyecto.Alcance + @"</div>" +
+
+                        @"<h2>1.3 Contexto</h1>" +
+                        @"<div> " + proyecto.Contexto + @"</div>" +
+
+                        @"<h2>1.4 Definición de acrónimos </h1>" +
+                        @"<div> " + proyecto.Acronimos + @"</div>" +
+
+                        @"<h2>1.5 Referencias</h1>" +
+                        @"<div> " + referencias + @"</div>" +
+
+                @"</div>" +
+
+
+                "<div>" +
+                    @"<h1>2. Descripción general</h1>" +
+
+                        @"<h2>2.1 Características de los usuarios</h1>" +
+                        @"<div> " + proyecto.Proposito + @"</div>" +
+
+
+                 @"</div>" +
+
+                 "<div>" +
+                    @"<h1>3. Requisitos </h1>" +
+
+                     @"<h2>3.1 Listado de requisitos</h1>" +
+                     @"<div> " + minimalista + @"</div>" +
+
+                     @"<h2>3.2 Listado de requisitos en plantillas de Volere</h1>" +
+                     @"<div> " + volere + @"</div>" +
+
+    
+                 @"</div>" +
+
+                 "<div>" +
+                    @"<h1>4. Matriz de trazado requisitos de usuario vs requisitos de software</h1>" +
+                     @"<div> " +  proyecto.Proposito +  @"</div>" +
+
+                 @"</div>" +
+
+
+                 "<div>" +
+                    @"<h1>5. Diagramas</h1>" +
+                     @"<div> " + diagramas + @"</div>" +
+
+                 @"</div>" +
+
+                 @" </body> </html>";
+                
+
             
             string filename = fecha+".pdf";
 
             generator.Orientation = NReco.PdfGenerator.PageOrientation.Default;
-
+            generator.GenerateToc = true;
+            generator.TocHeaderText = "Tabla de contenidos";
             var pdfBytes = generator.GeneratePdf(htmlContent);
 
             HttpContext.Response.ContentEncoding = System.Text.Encoding.UTF8;
@@ -528,8 +545,6 @@ namespace AppWebERS.Controllers
 
             "<table> " +
 
-            "<tr> <td>  <h1 class=\"titulo\" > 5) Referencias</h1> </td></tr> " +
-
             ht +
 
             "</table> ";
@@ -554,6 +569,7 @@ namespace AppWebERS.Controllers
             string raiz = Server.MapPath("~/");
             foreach (Diagrama t in diagramas)
             {
+                 
                 string rutaGuardada = t.GetRuta().Remove(0, 1);
                 string url = Path.Combine(raiz, rutaGuardada);
                 System.Drawing.Image img = System.Drawing.Image.FromFile(url);
@@ -590,7 +606,6 @@ namespace AppWebERS.Controllers
 
                 "<table> " +
 
-                "<tr> <td>  <h1 class=\"titulo\" > 4) Diagramas</h1> </td></tr> " +
 
                 ht +
 
@@ -608,7 +623,7 @@ namespace AppWebERS.Controllers
 
         private string AgregarListadoMinimalista(int idp) {
 
-            string s = "<h1 class=\"titulo\" > 2) Listado de requisitos</h1> <table class=\"espacio - izq\">";
+            string s = "";
             
             MySqlDataReader reader;
             string consulta = "select * from requisito where requisito.ref_proyecto = " + idp;
@@ -647,7 +662,7 @@ namespace AppWebERS.Controllers
             foreach (var item in requisitos)
             {
                 Requisito ru = item.Key;
-                s = s + "<tr> <td> <b>RU " + ru.IdRequisito + "</b> " + ru.Nombre + ".";
+                s = s + "<tr> <td> <b>" + ru.IdRequisito + "</b> - " + ru.Nombre + ".";
                 List<Requisito> aux = item.Value;
 
                 if (aux.Count != 0)
@@ -656,7 +671,7 @@ namespace AppWebERS.Controllers
 
                     foreach (Requisito r in aux)
                     {
-                        s = s + "<li>" + "<b>RS " + r.IdRequisito + "</b> " + r.Nombre + ".</li>";
+                        s = s + "<li>" + "<b>" + r.IdRequisito + "</b> - " + r.Nombre + ".</li>";
                     }
 
                     s = s + "</ul>";
@@ -676,12 +691,12 @@ namespace AppWebERS.Controllers
         */
 
         private string CrearVolere(int idp) {
-            string s = "<h1 class=\"titulo\" > 3) Requisitos Volere</h1> ";
+            string s = "";
             string tabla = "";
             foreach (var item in requisitos)
             {
                 Requisito ru = item.Key;
-                tabla = tabla + "<div style=\"page -break-after:always\"></div> <table border=\"1\"style=\"border: 1px solid black; border-collapse: collapse; width: 100%; \"> <tr> <td colspan=\"3\" style=\"text-align:center; padding: 5px;  \">RU \"" + ru.Nombre + "\"</td> </tr> <tr> <td style=\"padding: 5px;\"><b>ID: " + ru.IdRequisito + "</b></td> <td style=\"padding: 5px;\"><b>Tipo Requisito</b></td> <td style=\"padding: 5px;\">" + ru.TipoRequisito+ "</td> </tr> <tr> <td style=\"padding: 5px;\"><b>Prioridad</b></td><td colspan=\"2\" style=\"padding: 5px;\" >" +ru.Prioridad + "</td> </tr><tr> <td style=\"padding: 5px;\"><b>Descripcion</b></td> <td colspan=\"2\" style=\"padding: 5px;\">" + ru.Descripcion+"</td> </tr> <tr> <td style=\"padding: 5px;\"><b>Fuente</b></td> <td colspan=\"2\" style=\"padding: 5px; \">" + ru.Fuente+ "</td> </tr> <tr class=\"big\"> <td style=\"padding: 5px;\"><b>Actor</b></td> <td colspan=\"2\" style=\"padding: 5px;\">"+ this.AgregarActoresVolere(idp, ru)+ "</td> </tr> <tr> <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\" ><b> Fecha: "+ru.Fecha +" </b></td> <td style=\"padding: 5px;\"><b>Incremento: "+ru.Incremento+"</b></td> </tr> <tr> <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\"><b>Estado: "+ru.Estado+"</b> </td> <td style=\"padding: 5px;\"><b>Escala: "+ru.Escala+"</b></td> </tr> <tr > <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\"><b> Estabilidad: " +ru.Estabilidad+"</b></td> <td style=\"padding: 5px;\"> <b>Medida: "+ru.Medida+"</b></td> </tr> </table>";
+                tabla = tabla + "<div style=\"page -break-after:always\"></div> <table border=\"1\"style=\"border: 1px solid black; border-collapse: collapse; width: 100%; \"> <tr> <td colspan=\"3\" style=\"text-align:center; padding: 5px;  \"> \"" + ru.Nombre + "\"</td> </tr> <tr> <td style=\"padding: 5px;\"><b>ID: " + ru.IdRequisito + "</b></td> <td style=\"padding: 5px;\"><b>Tipo Requisito</b></td> <td style=\"padding: 5px;\">" + ru.TipoRequisito+ "</td> </tr> <tr> <td style=\"padding: 5px;\"><b>Prioridad</b></td><td colspan=\"2\" style=\"padding: 5px;\" >" +ru.Prioridad + "</td> </tr><tr> <td style=\"padding: 5px;\"><b>Descripcion</b></td> <td colspan=\"2\" style=\"padding: 5px;\">" + ru.Descripcion+"</td> </tr> <tr> <td style=\"padding: 5px;\"><b>Fuente</b></td> <td colspan=\"2\" style=\"padding: 5px; \">" + ru.Fuente+ "</td> </tr> <tr class=\"big\"> <td style=\"padding: 5px;\"><b>Actor</b></td> <td colspan=\"2\" style=\"padding: 5px;\">"+ this.AgregarActoresVolere(idp, ru)+ "</td> </tr> <tr> <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\" ><b> Fecha: "+ru.Fecha +" </b></td> <td style=\"padding: 5px;\"><b>Incremento: "+ru.Incremento+"</b></td> </tr> <tr> <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\"><b>Estado: "+ru.Estado+"</b> </td> <td style=\"padding: 5px;\"><b>Escala: "+ru.Escala+"</b></td> </tr> <tr > <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\"><b> Estabilidad: " +ru.Estabilidad+"</b></td> <td style=\"padding: 5px;\"> <b>Medida: "+ru.Medida+"</b></td> </tr> </table>";
                 tabla = tabla + "<br/>";
                 List<Requisito> aux = item.Value;
 
@@ -689,7 +704,7 @@ namespace AppWebERS.Controllers
                 {
                     foreach (Requisito r in aux)
                     {
-                        tabla = tabla + "<div style=\"page -break-after:always\"></div> <table border=\"1\"style=\"border: 1px solid black; border-collapse: collapse; width: 100%; \"> <tr> <td colspan=\"3\" style=\"text-align:center; padding: 5px;  \">RS \"" + r.Nombre + "\"</td> </tr> <tr> <td style=\"padding: 5px;\"><b>ID: " + r.IdRequisito + "</b></td> <td style=\"padding: 5px;\"><b>Tipo Requisito</b></td> <td style=\"padding: 5px;\">" + r.TipoRequisito + "</td> </tr> <tr> <td style=\"padding: 5px;\"><b>Prioridad</b></td><td colspan=\"2\" style=\"padding: 5px;\" >" + r.Prioridad + "</td> </tr><tr> <td style=\"padding: 5px;\"><b>Descripcion</b></td> <td colspan=\"2\" style=\"padding: 5px;\">" + r.Descripcion + "</td> </tr> <tr> <td style=\"padding: 5px;\"><b>Fuente</b></td> <td colspan=\"2\" style=\"padding: 5px; \">" + r.Fuente + "</td> </tr> <tr class=\"big\"> <td style=\"padding: 5px;\"><b>Actor(es)</b></td> <td colspan=\"2\" style=\"padding: 5px;\">"+this.AgregarActoresVolere(idp , r) +"</td> </tr> <tr> <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\" ><b> Fecha: " + r.Fecha + " </b></td> <td style=\"padding: 5px;\"><b>Incremento: " + r.Incremento + "</b></td> </tr> <tr> <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\"><b>Estado: " + r.Estado + "</b> </td> <td style=\"padding: 5px;\"><b>Escala: " + r.Escala + "</b></td> </tr> <tr > <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\"><b> Estabilidad: " + r.Estabilidad + "</b></td> <td style=\"padding: 5px;\"> <b>Medida: " + r.Medida + "</b></td> </tr> </table>";
+                        tabla = tabla + "<div style=\"page -break-after:always\"></div> <table border=\"1\"style=\"border: 1px solid black; border-collapse: collapse; width: 100%; \"> <tr> <td colspan=\"3\" style=\"text-align:center; padding: 5px;  \"> \"" + r.Nombre + "\"</td> </tr> <tr> <td style=\"padding: 5px;\"><b>ID: " + r.IdRequisito + "</b></td> <td style=\"padding: 5px;\"><b>Tipo Requisito</b></td> <td style=\"padding: 5px;\">" + r.TipoRequisito + "</td> </tr> <tr> <td style=\"padding: 5px;\"><b>Prioridad</b></td><td colspan=\"2\" style=\"padding: 5px;\" >" + r.Prioridad + "</td> </tr><tr> <td style=\"padding: 5px;\"><b>Descripcion</b></td> <td colspan=\"2\" style=\"padding: 5px;\">" + r.Descripcion + "</td> </tr> <tr> <td style=\"padding: 5px;\"><b>Fuente</b></td> <td colspan=\"2\" style=\"padding: 5px; \">" + r.Fuente + "</td> </tr> <tr class=\"big\"> <td style=\"padding: 5px;\"><b>Actor(es)</b></td> <td colspan=\"2\" style=\"padding: 5px;\">"+this.AgregarActoresVolere(idp , r) +"</td> </tr> <tr> <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\" ><b> Fecha: " + r.Fecha + " </b></td> <td style=\"padding: 5px;\"><b>Incremento: " + r.Incremento + "</b></td> </tr> <tr> <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\"><b>Estado: " + r.Estado + "</b> </td> <td style=\"padding: 5px;\"><b>Escala: " + r.Escala + "</b></td> </tr> <tr > <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\"><b> Estabilidad: " + r.Estabilidad + "</b></td> <td style=\"padding: 5px;\"> <b>Medida: " + r.Medida + "</b></td> </tr> </table>";
                         tabla = tabla + "<br/>";
                     }
 

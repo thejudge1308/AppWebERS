@@ -412,5 +412,34 @@ namespace AppWebERS.Controllers{
         public void Editar() {
 
         }
+
+        [HttpGet]
+        public ActionResult eliminarDiagrama(string url,string idProyecto)
+        {
+            try
+            {
+                String consulta = "DELETE FROM `appers`.`diagrama` WHERE(`ruta` ='" + url + "')";
+                Debug.Write(consulta);
+                bool resultado = this.Conector.RealizarConsultaNoQuery(consulta);
+                System.IO.File.Delete(Server.MapPath(url));
+
+                if (resultado == true)
+                {
+                    TempData["alerta"] = new Alerta("Diagrama eliminado con éxito!!", TipoAlerta.SUCCESS);
+                }
+                else
+                {
+                    TempData["alerta"] = new Alerta("Error al eliminar diagrama", TipoAlerta.ERROR);
+                }
+
+                return RedirectToAction("ListarDiagramas", "Proyecto", new { id = idProyecto });
+            }
+            catch
+            {
+                TempData["alerta"] = new Alerta("Error al eliminar diagrama", TipoAlerta.ERROR);
+                return RedirectToAction("ListarDiagramas", "Proyecto", new { id = idProyecto });
+            }
+            
+        }
     }
 }

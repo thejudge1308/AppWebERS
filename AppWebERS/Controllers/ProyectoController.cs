@@ -1423,7 +1423,8 @@ namespace AppWebERS.Controllers
             int id = Int32.Parse(idProyecto);
             int num = Int32.Parse(num_requisito);
             bool validate = requisito.ActualizarRequisito(requisito,id,num);
-            if (validate)
+            bool modDers = r.ModificacionRequisitoDERS(r, id, DateTime.Now.ToString("yyyy-MM-dd"), User.Identity.GetUserId()); 
+            if (validate && modDers)
             {
                 foreach (var actor in listaActores)
                 {
@@ -1444,8 +1445,9 @@ namespace AppWebERS.Controllers
                         }
                     }
                 }
-                
 
+
+               
                 TempData["alerta"] = new Alerta("Éxito al editar Requisito.", TipoAlerta.SUCCESS);
                 return RedirectToAction("ListarRequisitosMinimalista", "Proyecto", new { id = idProyecto });
             }

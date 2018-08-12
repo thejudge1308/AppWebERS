@@ -57,6 +57,11 @@ $("#referencia_modal .modal-body").on("click", "#bookOn-button", function () {
     bookOn_option();
     fecha_event();
 });
+
+$("#referencia_modal .modal-body").on("click", "#seccionLibro-button", function () {
+    seccionLibro_option();
+    fecha_event();
+});
 /*
  * Guardado de datos
  * 
@@ -83,6 +88,19 @@ $('#referencia_modal .modal-footer').on('click', '#guardar_bookOn', function () 
     } else {
         //Aqui van los campos a guardar
         guardarBookOn($("#ProyectoActual_IdProyecto").val(), $.trim($("#autores-box").val()), $.trim($("#anio-box").val()), $.trim($("#titulo-box").val()), $.trim($("#paginaWeb-box").val()));
+    }
+
+});
+
+//SeccionLibro
+$('#referencia_modal .modal-footer').on('click', '#guardarSeccionLibro', function () {
+
+    $("#mensaje").text("");
+    if ($.trim($("#autorSeccion-box").val()) == "" || $.trim($("#tituloSeccion-box").val()) == "" || $.trim($("#autorLibro-box").val()) == "" || $.trim($("#tituloLibro-box").val()) == "" || $.trim($("#anio-box").val()) == "" || $.trim($("#paginas-box").val()) == "" || $.trim($("#ciudad-box").val()) == "" || $.trim($("#editorial-box").val()) == "") {
+        $("#mensaje").text("Ingrese todos los datos.");
+    } else {
+        //Aqui van los campos a guardar
+        guardarSeccionLibro($("#ProyectoActual_IdProyecto").val(), $.trim($("#autorSeccion-box").val()), $.trim($("#tituloSeccion-box").val()), $.trim($("#autorLibro-box").val()), $.trim($("#tituloLibro-box").val()),$.trim($("#anio-box").val()), $.trim($("#paginas-box").val()), $.trim($("#ciudad-box").val()), $.trim($("#editorial-box").val()));
     }
 
 });
@@ -183,6 +201,18 @@ function bookOn_option() {
         '<button id="guardar_bookOn" type="button" class="btn btn-primary">Guardar</button>' +
         '<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>');
 }
+
+function seccionLibro_option() {
+    $("#referencia_modal .modal-body").empty();
+    $("#tittle_modal").text("Formulario Seccion Libro");
+    $("#referencia_modal .modal-body").append(seccionLibro_modal());
+    $("#referencia_modal .modal-footer").empty();
+    $("#referencia_modal .modal-footer").append(
+        //Ojo aqui
+        '<button id="guardarSeccionLibro" type="button" class="btn btn-primary">Guardar</button>' +
+        '<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>');
+}
+
 function paper_option() {
     $("#referencia_modal .modal-body").empty();
     $("#tittle_modal").text("Formulario revista.");
@@ -227,6 +257,11 @@ function init_modal() {
                 '<button id="bookOn-button" type="button" style="width:100%" class="btn btn-primary">Libro Online.</button>' +
             '</div>' +
         '</div>' +
+        '<div class="row">' +
+            '<div class="col-md-12 m-2">' +
+                '<button id="seccionLibro-button" type="button" style="width:100%" class="btn btn-primary">Seccion Libro.</button>' +
+            '</div>' +
+        '</div>' +
         '</div >';
     return html;
 }
@@ -236,8 +271,8 @@ function book_modal() {
         '<div class="row">'+
         '<div class="col-md-12 col-sm-12 col-xs-12">' +
             '<div class="form-group">'+
-                        '<label class="control-label"> Autores. </label>'+
-                        '<input class="form-control" style="max-width: 100%;" id="autores-box" type="text" />'+
+                '<label class="control-label"> Autores. </label>'+
+                '<input class="form-control" style="max-width: 100%;" id="autores-box" type="text" />'+
             '</div>'+
             '<div class="form-group">' +
                 '<label class="control-label"> Año de publicación. </label>' +
@@ -291,6 +326,51 @@ function bookOn_modal() {
         '</div>' +
         '</div>' +
         '</div>' +
+        '</div >';
+    return html;
+}
+
+function seccionLibro_modal() {
+    html = '<div class="container-fluid">' +
+            '<div class="row">' +
+                '<div class="col-md-12 col-sm-12 col-xs-12">' +
+                    '<div class="form-group">' +
+                        '<label class="control-label"> Autor Sección. </label>' +
+                        '<input class="form-control" style="max-width: 100%;" id="autorSeccion-box" type="text" />' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                        '<label class="control-label"> Título Seccion. </label>' +
+                        '<input class="form-control" style="max-width: 100%;" id="tituloSeccion-box" type="text" />' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                        '<label class="control-label"> Autor Libro. </label>' +
+                        '<input class="form-control" style="max-width: 100%;" id="autorLibro-box" type="text" />' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                        '<label class="control-label " for="name"> Título Libro. </label>' +
+                        '<input class="form-control" style="max-width: 100%;" id="tituloLibro-box" type="text" />' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                        '<label class="control-label"> Año. </label>' +
+                        '<input class="form-control" style="max-width: 100%;" id="anio-box" type="number" />' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                        '<label class="control-label"> Páginas. </label>' +
+                        '<input class="form-control" style="max-width: 100%;" id="paginas-box" type="text" />' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                        '<label class="control-label"> Ciudad. </label>' +
+                        '<input class="form-control" style="max-width: 100%;" id="ciudad-box" type="text" />' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                        '<label class="control-label"> Editorial. </label>' +
+                        '<input class="form-control" style="max-width: 100%;" id="editorial-box" type="text" />' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                        '<label id="mensaje" class="control-label text-danger"></label>' +
+                    '</div>' +
+                '</div>' +
+            '</div>' +
         '</div >';
     return html;
 }
@@ -467,6 +547,48 @@ function guardarBookOn(idR, autoresR, anioR, tituloR, paginawebR) {
         type: "POST",
         url: "/Proyecto/AgregarReferenciaLibroOnline",
         data: JSON.stringify(JsonReferenciaLibro),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            //mostrarAlerta("Modificado con éxito.");
+            console.log(response);
+            if (response) {
+                mostrarAlerta("Agregado con éxito");
+                $('#referencia_modal').modal('toggle');
+                $('#referencia_table tbody').empty();
+                getReferencias();
+            }
+            else {
+                mostrarAlerta("No se ha podido guardar la referencia.");
+            }
+
+        },
+        failure: function (response) {
+            mostrarAlerta(response.responseText);
+        },
+        error: function (response) {
+            mostrarAlerta(response.responseText);
+        }
+    });
+}
+
+function guardarSeccionLibro(idR, autorSeccionR, tituloSeccionR, autorLibroR, tituloLibroR, anioR, paginasR, ciudadR, editorialR) {
+    var JsonReferenciaSeccionLibro = {
+        id: idR,
+        autorSeccion: autorSeccionR,
+        tituloSeccion: tituloSeccionR,
+        autorLibro: autorLibroR,
+        tituloLibro: tituloLibroR,
+        anio: anioR,
+        paginas: paginasR,
+        ciudad: ciudadR,
+        editorial: editorialR
+    };
+    console.log(JsonReferenciaSeccionLibro);
+    $.ajax({
+        type: "POST",
+        url: "/Proyecto/AgregarReferenciaSeccionLibro",
+        data: JSON.stringify(JsonReferenciaSeccionLibro),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {

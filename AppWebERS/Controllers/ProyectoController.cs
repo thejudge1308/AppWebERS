@@ -122,6 +122,36 @@ namespace AppWebERS.Controllers
             }
         }
 
+        public class JsonReferenciaSeccionLibro
+        {
+            public string id { set; get; }
+            public string autorSeccion { set; get; }
+            public string tituloSeccion { set; get; }
+            public string autorLibro { set; get; }
+            public string tituloLibro { set; get; }
+            public string anio { set; get; }
+            public string paginas { set; get; }
+            public string ciudad { set; get; }
+            public string editorial { set; get; }
+        }
+        [HttpPost]
+        public ActionResult AgregarReferenciaSeccionLibro(JsonReferenciaSeccionLibro seccionLibro)
+        {
+            string referencia = this.ParsearReferenciaSeccionLibro(seccionLibro.autorSeccion,seccionLibro.tituloLibro,seccionLibro.autorLibro,seccionLibro.tituloLibro,seccionLibro.anio,seccionLibro.paginas,seccionLibro.ciudad,seccionLibro.editorial);
+
+            string consulta = "INSERT INTO Referencia(ref_proyecto,referencia) VALUES('" + seccionLibro.id + "','" + referencia + "');";
+            if (this.conexion.RealizarConsultaNoQuery(consulta))
+            {
+                return Json(true, JsonRequestBehavior.AllowGet);
+
+            }
+            else
+            {
+                return Json(false, JsonRequestBehavior.AllowGet);
+
+            }
+        }
+
         public class JsonReferenciaPaper {
             public string id { set; get; }
             public string autores { set; get; }
@@ -2132,6 +2162,13 @@ namespace AppWebERS.Controllers
             referencia = autores + ".("+anio+"). "+titulo+". Recuperado de "+ paginaWeb;
             return referencia;
         }
+        private string ParsearReferenciaSeccionLibro(string autorSeccion, string tituloSeccion, string autorLibro, string tituloLibro, string anio, string paginas, string ciudad, string editorial)
+        {
+            string referencia;
+            referencia = autorSeccion+". " + "(" + anio + "). " + tituloSeccion+". En "+ autorLibro+", "+tituloLibro + " (págs. " + paginas + "). "+ciudad+": "+editorial+".";
+            return referencia;
+    }
+
         /**
          * <author>Ariel Cornejo</author>
          * <summary>

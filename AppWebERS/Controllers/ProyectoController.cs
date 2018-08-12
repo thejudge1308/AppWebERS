@@ -1086,9 +1086,7 @@ namespace AppWebERS.Controllers
                 else
                     ViewBag.BoolLista = true;
                 proyecto.Nombre = nombre;
-                Proyecto proyectoNuevo = proyecto.CrearProyecto(0, nombre, String.Empty, String.Empty, String.Empty,
-                                                String.Empty, String.Empty, String.Empty, String.Empty,
-                                                String.Empty, String.Empty, 0.0, String.Empty, String.Empty, String.Empty);
+                Proyecto proyectoNuevo = proyecto.CrearProyecto(0,"", "", "", "", "", "", "", "", "", "", Double.MinValue, "", "", "", "");
                 if (proyectoNuevo != null)
                 {
                     if (proyecto.RegistrarProyectoEnBd(proyectoNuevo))

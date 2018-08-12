@@ -581,6 +581,7 @@ namespace AppWebERS.Models {
                 conexionPrivada.EnsureConnectionClosed();
                 return num_requisito;
             }
+            conexionPrivada.EnsureConnectionClosed();
             return -1;
         }
 
@@ -798,7 +799,7 @@ namespace AppWebERS.Models {
         {
             List<Requisito> listaRequisitos = new List<Requisito>();
             ApplicationDbContext conexionLocal = ApplicationDbContext.Create();
-            string consulta = "SELECT * FROM requisito WHERE requisito.ref_proyecto ="+ idProyecto + "AND requisito.tipo='SISTEMA';";
+            string consulta = "SELECT * FROM requisito WHERE requisito.ref_proyecto ="+ idProyecto + " AND requisito.tipo='SISTEMA';";
             MySqlDataReader reader = conexionLocal.RealizarConsulta(consulta);
             if (reader != null)
             {
@@ -831,7 +832,7 @@ namespace AppWebERS.Models {
         {
             List<Requisito> listaRequisitos = new List<Requisito>();
             ApplicationDbContext conexionLocal = ApplicationDbContext.Create();
-            string consulta = "SELECT * FROM requisito WHERE requisito.ref_proyecto =" + idProyecto + "AND requisito.tipo='USUARIO';";
+            string consulta = "SELECT * FROM requisito WHERE requisito.ref_proyecto =" + idProyecto + " AND requisito.tipo='USUARIO';";
             MySqlDataReader reader = conexionLocal.RealizarConsulta(consulta);
             if (reader != null)
             {
@@ -866,6 +867,8 @@ namespace AppWebERS.Models {
             matriz = matriz + "<table border="+1+" cellpadding="+0+" cellspacing="+0+" style= " + "border - collapse: collapse"+ "width="+200 +">";
             String encabezado=this.CrearEncabezado(idProyecto);
             matriz = matriz + encabezado;
+            String filas = this.CrearFilas(idProyecto);
+            matriz = matriz + filas;
             return matriz;
         }
 
@@ -874,7 +877,7 @@ namespace AppWebERS.Models {
             String encabezado = "<tr>";
             encabezado = encabezado+ "<td height=" +60+ " width="+ 15 +'%' + ">&nbsp; </td>";
             List<Requisito> lista = ObtenerRequisitosSistemas(idProyecto);
-            foreach (var Requisito in listaOrdenada)
+            foreach (var Requisito in lista)
             {
                 String aux = " <td height=" + 60 + " width=" + 4 + '%' + ">" + ObtenerRequisitoSistemaFormatoHTML(Requisito.IdRequisito) + "</td>";
                 encabezado =encabezado + aux;
@@ -882,6 +885,41 @@ namespace AppWebERS.Models {
             encabezado = encabezado + "</tr>";
             return encabezado;
         }
+
+        public String CrearFilas(int idProyecto)
+        {
+            String filas = "";
+            List<Requisito> requisitosUsuario = this.ObtenerRequisitosUsuarios(idProyecto);
+            List<Requisito> requisitoSistema = this.ObtenerRequisitosSistemas(idProyecto);
+            foreach (var reqUsuario in requisitosUsuario)
+            {
+                filas = filas + "<tr>";
+                filas = filas + "  <td height="+ 19 +" width="+ 15+  '%'+ ">&nbsp;"+reqUsuario.IdRequisito +"</td>";
+                foreach (var reqSistema in requisitoSistema)
+                {
+                    filas = filas + "<td height=" +19+" width="+4+ '%'+ ">&nbsp;";
+                    filas = filas + this.marcarRelacion(idProyecto,reqUsuario,reqSistema);
+                }
+                filas = filas + "</tr>";
+            }
+            filas = filas + "</table>";
+            return filas;
+        }
+
+        public String marcarRelacion(int idproyecto,Requisito reqUsuario,Requisito reqSistema)
+        {
+            String cruz = "X</td>";
+            List<Requisito> sistAsociados = this.ObtenerListaRequisitosSistemaAsociadosProyecto(idproyecto, this.ObtenerNumRequisito(idproyecto, reqUsuario.IdRequisito));
+            foreach (var objetivo in sistAsociados)
+            {
+                if (reqSistema.IdRequisito == objetivo.IdRequisito)
+                {
+                    cruz = "</td>";
+                }
+            }
+            return cruz;
+        }
+         
 
     }
 }

@@ -6,6 +6,8 @@ $(document).ready(function () {
     var opcionesTolbar = [
         ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
 
+        ['image'],
+
         //[{ 'header': 1 }, { 'header': 2 }],// custom button values
         //[{ 'header': [1, 2, 3, 4, 5, 6, false] }], //Header size
 
@@ -27,6 +29,8 @@ $(document).ready(function () {
     //Configuracion de la barra de herramientas para Definición, Acrómino y Abreviatura (Permitir ingreso como lista con bullets)
     var opcionesTolbar2 = [
         ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+
+        ['image'],
 
         //[{ 'header': 1 }, { 'header': 2 }],// custom button values
         //[{ 'header': [1, 2, 3, 4, 5, 6, false] }], //Header size

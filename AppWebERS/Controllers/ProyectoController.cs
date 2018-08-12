@@ -1456,6 +1456,33 @@ namespace AppWebERS.Controllers
             return RedirectToAction("ListarRequisitosMinimalista", "Proyecto", new { id = idProyecto });
         }
 
+        /**
+         * <author>Manuel González</author>
+         * <summary>
+         * GET que obtiene los datos del requisito que se desea mostrar 
+         * </summary>
+         * <param name="id">id correspondiente al Proyecto Actual.</param>
+         * <param name="num_requisito">id del requisito del cual queremos conocer los detalles.</param>
+         * <returns> Interfaz con tarjeta de volere que contiene los detalles del requisito seleccionado</returns>
+         */
+        [HttpGet]
+        public ActionResult DetallesRequisito(int id, string idRequisito)
+        {
+            Requisito requisito = this.obtenerRequisito(id, idRequisito);
+            ViewData["requisito"] = requisito;
+            ViewData["tipo"] = requisito.Tipo;
+            List<CheckBox> list = obtenerActores(id);
+            List<CheckBox> list2 = this.obtenerRequisitosUsuario(requisito, id);
+            this.obtenereRequisitosUsuariosAsociados(requisito, idRequisito, list2, id);
+            this.obtenerActoresAsociados(requisito, idRequisito, list, id);
+            requisito.Actores = list;
+            requisito.Requisitos = list2;
+            int num_requisito = requisito.ObtenerNumRequisito(id, idRequisito);
+            ViewBag.IdProyecto = id;
+            ViewBag.numRequisito = num_requisito;
+            return View(requisito);
+        }
+
         
         /**
           * <author>Diego Iturriaga</author>
@@ -2126,6 +2153,7 @@ namespace AppWebERS.Controllers
             {
                 ViewData["proyecto"] = proyecto;
                 ViewData["permiso"] = this.TipoDePermiso(id);
+                ViewData["tipoUsuario"] = tipo;
                 Requisito requisito = new Requisito(null, null, null, null, null, null, null, null, null, null, DateTime.Now.ToString("yyyy-MM-dd"), null, null);
                 ViewData["diccionarioRequisitos"] = requisito.ObtenerDiccionarioRequisitos(id);
                 return View(requisito);

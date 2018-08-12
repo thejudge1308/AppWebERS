@@ -533,7 +533,7 @@ namespace AppWebERS.Models{
             if(data != null) {
                 data.Read();
                 string nombre = data["nombre"].ToString();
-                Double version = Double.Parse(data["nombre"].ToString());
+                Double version = Double.Parse(data["version"].ToString());
                 string descripcion = data["descripcion"].ToString();
                 string proposito = data["proposito"].ToString();
                 string alcance = data["alcance"].ToString();

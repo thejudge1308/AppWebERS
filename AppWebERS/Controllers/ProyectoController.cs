@@ -186,6 +186,11 @@ namespace AppWebERS.Controllers
                     return Json(true, JsonRequestBehavior.AllowGet);
                     break;
 
+                case "descripcion":
+                    proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo, User.Identity.GetUserId());
+                    return Json(true, JsonRequestBehavior.AllowGet);
+                    break;
+
                 case "proposito":
                     proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo, User.Identity.GetUserId());
                     return Json(true, JsonRequestBehavior.AllowGet);
@@ -867,7 +872,7 @@ namespace AppWebERS.Controllers
                     string relacion_con_otros_proyectos = data["relacion_con_otros_proyectos"].ToString();
                     string estadop = data["estado"].ToString();
 
-                    proyectos.Add(new Proyecto(id, nombre, version, descripcion, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, suposiciones, restricciones, ambiente_operacional, relacion_con_otros_proyectos, estadop));
+                    proyectos.Add(new Proyecto(id, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambiente_operacional, relacion_con_otros_proyectos, estadop, version, descripcion , suposiciones, restricciones));
                 }
 
                 this.conexion.EnsureConnectionClosed();
@@ -918,7 +923,7 @@ namespace AppWebERS.Controllers
                     string relacion_con_otros_proyectos = data["relacion_con_otros_proyectos"].ToString();
                     string estadop = data["estado"].ToString();
 
-                    proyectosAsociados.Add(new Proyecto(idp, nombre, version, descripcion, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, suposiciones, restricciones, ambiente_operacional, relacion_con_otros_proyectos, estadop));
+                    proyectosAsociados.Add(new Proyecto(idp, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambiente_operacional, relacion_con_otros_proyectos, estadop, version, descripcion, suposiciones, restricciones));
                 }
 
                 this.Conector.CerrarConexion();
@@ -970,7 +975,7 @@ namespace AppWebERS.Controllers
                     string relacion_con_otros_proyectos = data["relacion_con_otros_proyectos"].ToString();
                     string estadop = data["estado"].ToString();
 
-                    proyectosNoAsociados.Add(new Proyecto(idp, nombre, version, descripcion, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, suposiciones, restricciones, ambiente_operacional, relacion_con_otros_proyectos, estadop));
+                    proyectosNoAsociados.Add(new Proyecto(idp, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambiente_operacional, relacion_con_otros_proyectos, estadop, version, descripcion, suposiciones, restricciones));
                 }
 
                 this.Conector.CerrarConexion();
@@ -1081,9 +1086,9 @@ namespace AppWebERS.Controllers
                 else
                     ViewBag.BoolLista = true;
                 proyecto.Nombre = nombre;
-                Proyecto proyectoNuevo = proyecto.CrearProyecto(0, nombre, 0.0, String.Empty, String.Empty, String.Empty,
+                Proyecto proyectoNuevo = proyecto.CrearProyecto(0, nombre, String.Empty, String.Empty, String.Empty,
                                                 String.Empty, String.Empty, String.Empty, String.Empty,
-                                                String.Empty, String.Empty, String.Empty, String.Empty, String.Empty);
+                                                String.Empty, String.Empty, 0.0, String.Empty, String.Empty, String.Empty);
                 if (proyectoNuevo != null)
                 {
                     if (proyecto.RegistrarProyectoEnBd(proyectoNuevo))

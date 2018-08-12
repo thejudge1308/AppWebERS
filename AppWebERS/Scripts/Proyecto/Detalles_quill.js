@@ -75,6 +75,7 @@ $(document).ready(function () {
     var abreviaturaQ = new Quill('#abreviatura-edit', config2); 
     //var referenciaQ = new Quill('#referencia-edit', config);
     var suposicionQ = new Quill('#suposicion-edit', config);
+    var caracteristicasQ = new Quill('#caracteristicas-edit', config2);
     var restriccionQ = new Quill('#restriccion-edit', config);
     var ambienteQ = new Quill('#ambiente-edit', config); 
     var relacionQ = new Quill('#relacion-edit', config); 
@@ -100,6 +101,7 @@ $(document).ready(function () {
             //var referencia = data.Referencias === "" ? emptydata : data.Referencias;
             var suposicion = data.Suposiciones === "" ? emptydata : data.Suposiciones;
             var restriccion = data.Restricciones === "" ? emptydata : data.Restricciones;
+            var caracteristicas = data.CaracteristicasUsuarios === "" ? emptydata : data.CaracteristicasUsuarios;
             var ambiente = data.AmbienteOperacional === "" ? emptydata : data.AmbienteOperacional;
             var relacion = data.RelacionProyectos === "" ? emptydata : data.RelacionProyectos;
 
@@ -115,7 +117,8 @@ $(document).ready(function () {
             $('#abreviatura-edit .ql-editor').empty();
             //$('#referencia-edit .ql-editor').empty();
             $('#suposicion-edit .ql-editor').empty();
-            $('#descripcion-edit .ql-editor').empty();
+            $('#restriccion-edit .ql-editor').empty();
+            $('#caracteristicas-edit .ql-editor').empty();
             $('#ambiente-edit .ql-editor').empty();
             $('#relacion-edit .ql-editor').empty();
 
@@ -132,6 +135,7 @@ $(document).ready(function () {
             //$('#referencia-edit .ql-editor').append(referencia);
             $('#suposicion-edit .ql-editor').append(suposicion);
             $('#restriccion-edit .ql-editor').append(restriccion);
+            $('#caracteristicas-edit .ql-editor').append(caracteristicas);
             $('#ambiente-edit .ql-editor').append(ambiente);
             $('#relacion-edit .ql-editor').append(relacion);
 
@@ -185,6 +189,10 @@ $(document).ready(function () {
     });
     $('#restriccion-button').on('click', function () {
         info_post($("#ProyectoActual_IdProyecto").val(), "restriccion", restriccionQ.root.innerHTML);
+    });
+
+    $('#caracteristicas-button').on('click', function () {
+        info_post($("#ProyectoActual_IdProyecto").val(), "caracteristicas", caracteristicasQ.root.innerHTML);
     });
     $('#ambiente-button').on('click', function () {
         info_post($("#ProyectoActual_IdProyecto").val(), "ambiente", ambienteQ.root.innerHTML);

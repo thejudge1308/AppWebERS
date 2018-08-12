@@ -581,6 +581,7 @@ namespace AppWebERS.Models {
                 conexionPrivada.EnsureConnectionClosed();
                 return num_requisito;
             }
+            conexionPrivada.EnsureConnectionClosed();
             return -1;
         }
 
@@ -907,13 +908,13 @@ namespace AppWebERS.Models {
 
         public String marcarRelacion(int idproyecto,Requisito reqUsuario,Requisito reqSistema)
         {
-            String cruz = "</td>";
+            String cruz = "X</td>";
             List<Requisito> sistAsociados = this.ObtenerListaRequisitosSistemaAsociadosProyecto(idproyecto, this.ObtenerNumRequisito(idproyecto, reqUsuario.IdRequisito));
             foreach (var objetivo in sistAsociados)
             {
                 if (reqSistema.IdRequisito == objetivo.IdRequisito)
                 {
-                    cruz = "x</td>";
+                    cruz = "</td>";
                 }
             }
             return cruz;

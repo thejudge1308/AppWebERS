@@ -218,6 +218,7 @@ namespace AppWebERS.Controllers
             public string nombre_conferencia { get; set; }
         }
 
+
         [HttpPost]
         public ActionResult AgregarReferenciaConferencia(JsonReferenciaConferencia paper) {
             //string autores, string fecha, string titulo, string lugar, string nombreConferencia
@@ -245,6 +246,33 @@ namespace AppWebERS.Controllers
             }
         }
 
+        public class JsonReferenciaPaginaWeb
+        {
+            public string id { set; get; }
+            public string autor { set; get; }
+            public string nombrePaginaWeb { set; get; }
+            public string anio { set; get; }
+            public string mes { set; get; }
+            public string dia { set; get; }
+            public string url { set; get; }
+        }
+        [HttpPost]
+        public ActionResult AgregarReferenciaPaginaWeb(JsonReferenciaPaginaWeb paginaWeb)
+        {
+            string referencia = this.ParsearReferenciaPaginaWeb(paginaWeb.autor, paginaWeb.nombrePaginaWeb, paginaWeb.anio, paginaWeb.mes, paginaWeb.dia, paginaWeb.url);
+
+            string consulta = "INSERT INTO Referencia(ref_proyecto,referencia) VALUES('" + paginaWeb.id + "','" + referencia + "');";
+            if (this.conexion.RealizarConsultaNoQuery(consulta))
+            {
+                return Json(true, JsonRequestBehavior.AllowGet);
+
+            }
+            else
+            {
+                return Json(false, JsonRequestBehavior.AllowGet);
+
+            }
+        }
 
         /**
         * <author>Matías Parra</author>
@@ -2191,14 +2219,20 @@ namespace AppWebERS.Controllers
             referencia = autores + ".("+anio+"). "+titulo+". Recuperado de "+ paginaWeb;
             return referencia;
         }
+
         private string ParsearReferenciaSeccionLibro(string autorSeccion, string tituloSeccion, string autorLibro, string tituloLibro, string anio, string paginas, string ciudad, string editorial)
         {
             string referencia;
             referencia = autorSeccion+". " + "(" + anio + "). " + tituloSeccion+". En "+ autorLibro+", "+tituloLibro + " (págs. " + paginas + "). "+ciudad+": "+editorial+".";
             return referencia;
-    }
+        }
 
-
+        private string ParsearReferenciaPaginaWeb(string autor, string nombrePaginaWeb, string anio, string mes, string dia, string url)
+        {
+            string referencia;
+            referencia = autor + ". " + "(" + dia + " de "+ mes +" de "+ anio +"). " + nombrePaginaWeb + ". Obtenido de "+nombrePaginaWeb+": " + url;
+            return referencia;
+        }
         private string ParsearReferenciaInforme(string autores, string anio, string titulo, string ciudad, string editorial)
         {
             string referencia;

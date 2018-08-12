@@ -6,14 +6,16 @@ $(document).ready(function () {
     var opcionesTolbar = [
         ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
 
+        ['image'],
+
         //[{ 'header': 1 }, { 'header': 2 }],// custom button values
         //[{ 'header': [1, 2, 3, 4, 5, 6, false] }], //Header size
 
        // [{ 'script': 'sub' }, { 'script': 'super' }],      // superscript/subscript
         [{ 'indent': '-1' }, { 'indent': '+1' }],          // outdent/indent
 
-        [{ 'font': [] }],                                 // Front 
-        [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+        //[{ 'font': [] }],                                 // Front 
+        //[{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
        
 
         [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
@@ -28,6 +30,8 @@ $(document).ready(function () {
     var opcionesTolbar2 = [
         ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
 
+        ['image'],
+
         //[{ 'header': 1 }, { 'header': 2 }],// custom button values
         //[{ 'header': [1, 2, 3, 4, 5, 6, false] }], //Header size
 
@@ -35,8 +39,8 @@ $(document).ready(function () {
         //[{ 'script': 'sub' }, { 'script': 'super' }],      // superscript/subscript
         [{ 'indent': '-1' }, { 'indent': '+1' }],          // outdent/indent
 
-        [{ 'font': [] }],                                 // Front 
-        [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+        //[{ 'font': [] }],                                 // Front 
+        //[{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
 
 
         [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme

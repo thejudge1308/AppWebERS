@@ -2481,7 +2481,21 @@ namespace AppWebERS.Controllers
             return View("AgregarCliente", cliente);
         }
 
-
+        ///<author>Maximo Hernandez</author>
+        /// <summary>
+        /// Elimina un cliente.
+        /// </summary>
+        /// <param name="IdCliente">Id del cliente a eliminar</param>
+        /// <param name="IdProyecto">Id del proyecto actual, necesario para ingresar al metodo para devolver a la vista</param>
+        /// <returns>Devuelve la vista de listaClientes</returns>
+        [HttpGet]
+        public ActionResult EliminarCliente (int IdCliente, int IdProyecto)
+        {
+            Cliente cliente = new Cliente();
+            cliente.EliminarCliente(IdCliente);
+            TempData["alerta"] = new Alerta("Cliente eliminado exitosamente", TipoAlerta.SUCCESS);
+            return RedirectToAction("listaClientes", "Proyecto", new { id = IdProyecto });
+        }
     }
 
    

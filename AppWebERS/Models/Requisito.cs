@@ -860,7 +860,74 @@ namespace AppWebERS.Models {
             conexionLocal.EnsureConnectionClosed();
             return listaRequisitos.OrderBy(requisito => requisito.IdRequisito).ToList();
         }
+        //Metodos encargados
+        public List<String> MatrizRequisitos(int idProyecto)
+        {
+            List<String> matrices = new List<String>();
+            List<Requisito> reqSistema = this.ObtenerRequisitosSistemas(idProyecto);
+            List<Requisito> reqUsuario = this.ObtenerRequisitosUsuarios(idProyecto);
+            List<Requisito> sistAux = new List<Requisito>();
+            int i = 1;
+            foreach (var sis in reqSistema)
+            {
+                sistAux.Add(sis);
+                if (i%20==0 || i==reqSistema.Count)
+                {
+                    String matriz = CrearMatriz2(reqUsuario,sistAux,idProyecto);
+                    matrices.Add(matriz);
+                }
+                i++;
+            }
 
+            return matrices;
+        }
+
+        private string CrearMatriz2(List<Requisito> reqUsuario,List<Requisito> reqSistema,int idProyecto)
+        {
+            String matriz = "";
+            matriz = matriz + "<table border=" + 1 + " cellpadding=" + 0 + " cellspacing=" + 0 + " style= " + "border - collapse: collapse" + "width=" + 200 + ">";
+            String encabezado = this.crearEncabezado2(reqUsuario,reqSistema,idProyecto);
+            matriz = matriz + encabezado;
+            String filas = this.crearFilas2(idProyecto, reqUsuario, reqSistema);
+            matriz = matriz + filas;
+            return matriz;
+        }
+
+        private string crearFilas2(int idProyecto, List<Requisito> reqUsuario, List<Requisito> reqSistema)
+        {
+            String filas = "";
+           
+            foreach (var requUsuario in reqUsuario)
+            {
+                filas = filas + "<tr>";
+                filas = filas + "  <td height=" + 19 + " width=" + 15 + '%' + ">&nbsp;" + requUsuario.IdRequisito + "</td>";
+                foreach (var requSistema in reqSistema)
+                {
+                    filas = filas + "<td height=" + 19 + " width=" + 4 + '%' + ">&nbsp;";
+                    filas = filas + this.marcarRelacion(idProyecto, requUsuario, requSistema);
+                }
+                filas = filas + "</tr>";
+            }
+            filas = filas + "</table>";
+            return filas;
+        }
+
+        private string crearEncabezado2(List<Requisito> reqUsuario, List<Requisito> reqSistema, int idProyecto)
+        {
+            String encabezado = "<tr>";
+            encabezado = encabezado + "<td height=" + 60 + " width=" + 15 + '%' + ">&nbsp; </td>";
+            
+            foreach (var Requisito in reqSistema)
+            {
+                String aux = " <td height=" + 60 + " width=" + 4 + '%' + ">" + ObtenerRequisitoSistemaFormatoHTML(Requisito.IdRequisito) + "</td>";
+                encabezado = encabezado + aux;
+            }
+            encabezado = encabezado + "</tr>";
+            return encabezado;
+        }
+
+
+        //Estos metodos son para generar una tabla para todos los requisitos juntos
         public String CrearMatriz(int idProyecto)
         {
             String matriz = "";

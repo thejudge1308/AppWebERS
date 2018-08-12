@@ -19,7 +19,7 @@
 
 <div class="form-horizontal">
 
-    @Html.HiddenFor(model => Model.RefProyecto, new { Value = ProyectoActual });
+    @Html.HiddenFor(model => Model.RefProyecto, new { Value = ProyectoActual })
     <hr />
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     <div class="form-group">

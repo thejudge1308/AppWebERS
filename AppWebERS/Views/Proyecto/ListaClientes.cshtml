@@ -50,12 +50,13 @@
     {
 
         <table class="table">
-            <thead>
-                <tr>
+            <thead class="thead-light">
+                <tr class="text-center">
                     <th scope="col">ID</th>
                     <th scope="col">Nombre</th>
                     <th scope="col">Rol</th>
                     <th scope="col">Contacto</th>
+                    <th scope="col">Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -64,11 +65,13 @@
                     foreach (var item in Model)
                     {
 
-                        <tr>
+                        <tr class="text-center">
                             <td>@item.Id</td>
                             <td>@item.Nombre</td>
                             <td>@item.Rol</td>
                             <td>@item.Contacto</td>
+                            <td>@Html.ActionLink("Eliminar cliente","EliminarCliente","Proyecto", new { IdCliente = item.Id,
+                               IdProyecto = ProyectoActual.IdProyecto }, new { @class="btn btn-secondary" })</td>
                         </tr>
                     }
                 }

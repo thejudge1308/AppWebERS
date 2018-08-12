@@ -865,7 +865,7 @@ namespace AppWebERS.Controllers
             string estado = "HABILITADO";
             string consulta = "SELECT proyecto.id_proyecto,proyecto.nombre, proyecto.proposito, proyecto.alcance, proyecto.contexto, proyecto.definiciones," +
                 "proyecto.acronimos, proyecto.abreviaturas, proyecto.referencias, proyecto.ambiente_operacional, proyecto.relacion_con_otros_proyectos, proyecto.estado FROM proyecto, users, vinculo_usuario_proyecto " +
-                               "WHERE proyecto.estado =  '" + estado + "' AND users.id = '" + id + "' AND vinculo_usuario_proyecto.ref_proyecto = " +
+                               "WHERE users.id = '" + id + "' AND vinculo_usuario_proyecto.ref_proyecto = " +
                                "proyecto.id_proyecto AND vinculo_usuario_proyecto.ref_usuario = users.id";
             MySqlDataReader data = this.Conector.RealizarConsulta(consulta);
             if (data == null)

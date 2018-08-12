@@ -81,28 +81,56 @@
 
                 @foreach (Proyecto item in (List<Proyecto>)proyectosAsociados)
                 {
+                    if (item.Estado == "HABILITADO")
+                    {
+                        <div class="card">
+                            <div class="card-header">
 
-                    <div class="card">
-                        <div class="card-header">
-
-                            @item.Nombre
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title"></h5>
-                            <p class="card-text"></p>
-                            <a href="Detalles/@item.IdProyecto" class="btn btn-primary">Ver detalle</a>
-                            @foreach(ProyectoIDs items in (List<ProyectoIDs>)proyectosEnJefe)
-                            {
-                                if (item.IdProyecto == items.IdProyecto)
+                                @item.Nombre
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title"></h5>
+                                <p class="card-text"></p>
+                                <a href="Detalles/@item.IdProyecto" class="btn btn-primary">Ver detalle</a>
+                                @foreach (ProyectoIDs items in (List<ProyectoIDs>)proyectosEnJefe)
                                 {
-                                    <a href="ExportarPDF/@item.IdProyecto" class="btn btn-primary">Generar PDF</a>
+                                    if (item.IdProyecto == items.IdProyecto)
+                                    {
+                                        <a href="ExportarPDF/@item.IdProyecto" class="btn btn-primary">Generar PDF</a>
+                                    }
                                 }
-                            }
 
 
+                            </div>
                         </div>
-                    </div>
-                    <br><br>
+                        <br><br>
+                    }
+                    else
+                    {
+                        <div class="card">
+                            <div class="card-header">
+
+                                @item.Nombre
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title"></h5>
+                                <p class="card-text"></p>
+                              
+                                @foreach (ProyectoIDs items in (List<ProyectoIDs>)proyectosEnJefe)
+                                {
+                                    if (item.IdProyecto == items.IdProyecto)
+                                    {
+                                        <a href="ExportarPDF/@item.IdProyecto" class="btn btn-primary">Generar PDF</a>
+                                    }
+                                }
+
+
+                            </div>
+                        </div>
+                        <br><br>
+
+                    }
+
 
                 }
 

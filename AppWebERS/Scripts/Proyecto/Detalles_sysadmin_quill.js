@@ -26,6 +26,8 @@ $(document).ready(function () {
             var emptydata = "<p></br></p>";
             //obtener valores
             var nombre = data.Nombre === "" ? emptydata : data.Nombre;
+            var version = data.Version === "" ? emptydata : data.Version;
+            var descripcion = data.Descripcion === "" ? emptydata : data.Descripcion;
             var proposito = data.Proposito === "" ? emptydata : data.Proposito;
             var alcance = data.Alcance === "" ? emptydata : data.Alcance;
             var contexto = data.Contexto === "" ? emptydata : data.Contexto;
@@ -33,11 +35,15 @@ $(document).ready(function () {
             var acronimo = data.Acronimos === "" ? emptydata : data.Acronimos;
             var abreviatura = data.Abreviaturas === "" ? emptydata : data.Abreviaturas;
             var referencia = data.Referencia === "" ? emptydata : data.Referencia;
+            var suposicion = data.Suposicion === "" ? emptydata : data.Suposicion;
+            var restriccion = data.Restriccion === "" ? emptydata : data.Restriccion;
             var ambiente = data.AmbienteOperacional === "" ? emptydata : data.AmbienteOperacional;
             var relacion = data.RelacionProyectos === "" ? emptydata : data.RelacionProyectos;
 
             //Set space
             $('#nombre-edit').addClass('border border-dark p-3');
+            $('#version-edit').addClass('border border-dark p-3');
+            $('#descripcion-edit').addClass('border border-dark p-3');
             $('#proposito-edit').addClass('border border-dark p-3');
             $('#alcance-edit').addClass('border border-dark p-3');
             $('#contexto-edit').addClass('border border-dark p-3');
@@ -45,11 +51,15 @@ $(document).ready(function () {
             $('#acronimo-edit').addClass('border border-dark p-3');
             $('#abreviatura-edit').addClass('border border-dark p-3');
             $('#referencia-edit').addClass('border border-dark p-3');
+            $('#suposicion-edit').addClass('border border-dark p-3');
+            $('#restriccion-edit').addClass('border border-dark p-3');
             $('#ambiente-edit').addClass('border border-dark p-3');
             $('#relacion-edit').addClass('border border-dark p-3');
 
             //cargar la informacion 
             $('#nombre-edit').append(nombre);
+            $('#version-edit').append(version);
+            $('#descripcion-edit').append(descripcion);
             $('#proposito-edit').append(proposito);
             $('#alcance-edit').append(alcance);
             $('#contexto-edit').append(contexto);
@@ -57,6 +67,8 @@ $(document).ready(function () {
             $('#acronimo-edit').append(acronimo);
             $('#abreviatura-edit').append(abreviatura);
             $('#referencia-edit').append(referencia);
+            $('#suposicion-edit').append(suposicion);
+            $('#restriccion-edit').append(restriccion);
             $('#ambiente-edit').append(ambiente);
             $('#relacion-edit').append(relacion);
 

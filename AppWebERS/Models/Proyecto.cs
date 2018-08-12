@@ -40,6 +40,8 @@ namespace AppWebERS.Models{
          * 
          * <param name = "idProyecto" > El identificador del proyecto.</param>
          * <param name = "nombre" > El identificador del proyecto.</param>
+         * <param name = "version" > La version del proyecto.</param>
+         * <param name = "descripcion" > La descripcion del proyecto.</param>
          * <param name = "proposito" > El proposito del proyecto.</param>
          * <param name = "alcance" > El alcance del proyecto.</param>
          * <param name = "contexto" > El contexto del proyecto.</param>
@@ -47,6 +49,8 @@ namespace AppWebERS.Models{
          * <param name = "acronimos" > Los acronimos del proyecto.</param>
          * <param name = "abreviaturas" > Las abreviaturas del proyecto.</param>
          * <param name = "referencias" > Las referencias del proyecto.</param>
+         * <param name = "suposiciones" > Las suposiciones y dependencias del proyecto.</param>
+         * <param name = "restricciones" > Las restricciones del proyecto.</param>
          * <param name = "ambienteOperacional" > El ambiente operacional del proyecto.</param>
          * <param name = "relacionProyectos" > La relacion con otros proyectos del proyecto.</param>
          * <param name = "usuarios" > La lista de usuarios involucrados en el proyecto.</param>
@@ -54,6 +58,29 @@ namespace AppWebERS.Models{
          * <param name = "casosDeUso" > La lista de casos de uso asociados al proyecto.</param>
          * <param name = "actores" > La lista de actores asociados al proyecto.</param>
          **/
+
+        public Proyecto(int idProyecto, string nombre, string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string referencias, string ambienteOperacional, string relacionProyectos, string estado, Double version, string descripcion, string suposiciones, string restricciones, List<Usuario> usuarios, List<Requisito> requisitos, List<CasoDeUso> casosDeUso, List<Actor> actores) {
+            this.IdProyecto = idProyecto;
+            this.Nombre = nombre;
+            this.Proposito = proposito;
+            this.Alcance = alcance;
+            this.Contexto = contexto;
+            this.Definiciones = definiciones;
+            this.Acronimos = acronimos;
+            this.Abreviaturas = abreviaturas;
+            this.Referencias = referencias;
+            this.AmbienteOperacional = ambienteOperacional;
+            this.RelacionProyectos = relacionProyectos;
+            this.Estado = estado;
+            this.Version = version;
+            this.Descripcion = descripcion;
+            this.Suposiciones = suposiciones;
+            this.Restricciones = restricciones;
+            this.Usuarios = new List<Usuario>();
+            this.Requisitos = new List<Requisito>();
+            this.CasosDeUso = new List<CasoDeUso>();
+            this.Actores = new List<Actor>();
+        }
 
         public Proyecto(int idProyecto, string nombre,string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string referencias, string ambienteOperacional, string relacionProyectos, List<Usuario> usuarios, List<Requisito> requisitos, List<CasoDeUso> casosDeUso, List<Actor> actores) {
             this.IdProyecto = idProyecto;
@@ -72,8 +99,6 @@ namespace AppWebERS.Models{
             this.CasosDeUso = new List<CasoDeUso>();
             this.Actores = new List<Actor>();
         }
-        
-
 
         private ApplicationDbContext conexion = ApplicationDbContext.Create();
 
@@ -95,7 +120,26 @@ namespace AppWebERS.Models{
          * <param name = "casosDeUso" > La lista de casos de uso asociados al proyecto.</param>
          * <param name = "actores" > La lista de actores asociados al proyecto.</param>
          **/
-        public Proyecto(int idProyecto, string nombre, string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string referencias, string ambienteOperacional, string relacionProyectos, string estado) {
+
+        public Proyecto(int idProyecto, string nombre, string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string ambienteOperacional, string relacionProyectos, string estado, Double version, string descripcion, string suposiciones, string restricciones) {
+            IdProyecto = idProyecto;
+            Nombre = nombre;
+            Proposito = proposito;
+            Alcance = alcance;
+            Contexto = contexto;
+            Definiciones = definiciones;
+            Acronimos = acronimos;
+            Abreviaturas = abreviaturas;
+            AmbienteOperacional = ambienteOperacional;
+            RelacionProyectos = relacionProyectos;
+            Estado = estado;
+            Version = version;
+            Descripcion = descripcion;
+            Suposiciones = suposiciones;
+            Restricciones = restricciones;
+        }
+
+        public Proyecto(int idProyecto, string nombre, string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string referencias, string ambienteOperacional, string relacionProyectos, string estado, Double version, string descripcion, string suposiciones, string restricciones) {
             IdProyecto = idProyecto;
             Nombre = nombre;
             Proposito = proposito;
@@ -108,9 +152,13 @@ namespace AppWebERS.Models{
             AmbienteOperacional = ambienteOperacional;
             RelacionProyectos = relacionProyectos;
             Estado = estado;
+            Version = version;
+            Descripcion = descripcion;
+            Suposiciones = suposiciones;
+            Restricciones = restricciones;
         }
 
-        public Proyecto(int idProyecto, string nombre, string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string ambienteOperacional, string relacionProyectos, string estado) {
+        public Proyecto(int idProyecto, string nombre, string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string ambienteOperacional, string relacionProyectos, string estado, double version) {
             IdProyecto = idProyecto;
             Nombre = nombre;
             Proposito = proposito;
@@ -149,6 +197,33 @@ namespace AppWebERS.Models{
         [Display(Name = "Nombre")]
         [StringLength(255, ErrorMessage = "El nombre es requerido.", MinimumLength = 1)]
         public string Nombre { get; set;}
+
+        /**
+        * Setter y Getter del atributo que contiene la versión del proyecto
+        * 
+        * <param name = "version" > Las referencias del proyecto.</param>
+        * <returns>Retorna el valor Double de la versión del proyecto.</returns>
+        * 
+        **/
+        [Display(Name = "Version")]
+        public Double Version {
+            get; set;
+        }
+
+
+        /**
+         * Setter y Getter de Descripcion del proyecto
+         * 
+         * <param name = "nombre" > El identificador del proyecto.</param>
+         * <returns>Retorna el valor string del nombre.</returns>
+         * 
+         **/
+        [Required]
+        [Display(Name = "Descripcion")]
+        [StringLength(255, ErrorMessage = "La descripcion es requerida.", MinimumLength = 1)]
+        public string Descripcion {
+            get; set;
+        }
 
         /**
          * Setter y Getter del proposito del proyecto
@@ -234,11 +309,40 @@ namespace AppWebERS.Models{
         * <returns>Retorna el valor string del ambiente operacional.</returns>
         * 
         **/
-
         [Required]
         [Display(Name = "Ambiente operacional")]
         [StringLength(255, ErrorMessage = "El ambiente operacional es requerido.", MinimumLength = 1)]
-        public string AmbienteOperacional {get; set;}
+        public string AmbienteOperacional {
+            get; set;
+        }
+
+        /**
+         * Setter y Getter de las suposiciones y dependencias del proyecto
+         * 
+         * <param name = "suposicion" > Las suposiciones y dependencias del proyecto.</param>
+         * <returns>Retorna el valor string de las suposiciones y dependencias.</returns>
+         * 
+         **/
+        [Required]
+        [Display(Name = "Suposiciones")]
+        [StringLength(255, ErrorMessage = "Las suposiciones y dependencias son requeridas.", MinimumLength = 1)]
+        public string Suposiciones {
+            get; set;
+        }
+
+        /**
+         * Setter y Getter de las restricciones del proyecto
+         * 
+         * <param name = "restriccion" > Las restricciones del proyecto.</param>
+         * <returns>Retorna el valor string de las restricciones.</returns>
+         * 
+         **/
+        [Required]
+        [Display(Name = "Restricciones")]
+        [StringLength(255, ErrorMessage = "Las restricciones son requeridas.", MinimumLength = 1)]
+        public string Restricciones {
+            get; set;
+        }
 
 
         /**
@@ -352,14 +456,14 @@ namespace AppWebERS.Models{
          * no pasen las validaciones correspondientes.</returns>
          **/
 
-        public Proyecto CrearProyecto(int idProyecto, string nombre, string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string referencias, string ambienteOperacional, string relacionProyectos)
+        public Proyecto CrearProyecto(int idProyecto, string nombre, string proposito, string alcance, string contexto, string definiciones, string acronimos, string abreviaturas, string referencias, string ambienteOperacional, string relacionProyectos, Double version, string descripcion, string suposiciones, string restricciones)
         {
             Proyecto proyectoNuevo = null;
             if (this.VerificarNombre(nombre))
             {
                 if (this.ValidarNombre(nombre))
                 {
-                    proyectoNuevo = new Proyecto(idProyecto, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambienteOperacional, relacionProyectos, "HABILITADO");
+                    proyectoNuevo = new Proyecto(idProyecto, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambienteOperacional, relacionProyectos, "HABILITADO", version, descripcion, suposiciones, restricciones);
                     return proyectoNuevo;
                 }
             }
@@ -409,6 +513,8 @@ namespace AppWebERS.Models{
             if(data != null) {
                 data.Read();
                 string nombre = data["nombre"].ToString();
+                Double version = Double.Parse(data["nombre"].ToString());
+                string descripcion = data["descripcion"].ToString();
                 string proposito = data["proposito"].ToString();
                 string alcance = data["alcance"].ToString();
                 string contexto = data["contexto"].ToString();
@@ -416,12 +522,14 @@ namespace AppWebERS.Models{
                 string acronimos = data["acronimos"].ToString();
                 string abreviaturas = data["abreviaturas"].ToString();
                 //string referencias = data["referencias"].ToString();
+                string suposiciones = data["suposiciones"].ToString();
+                string restricciones = data["restricciones"].ToString();
                 string ambiente_operacional = data["ambiente_operacional"].ToString();
                 string relacion_con_otros_proyectos = data["relacion_con_otros_proyectos"].ToString();
                 string estado = data["estado"].ToString();
 
 
-                proyecto = new Proyecto(ID, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, ambiente_operacional, relacion_con_otros_proyectos, estado);
+                proyecto = new Proyecto(ID, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, ambiente_operacional, relacion_con_otros_proyectos, estado, version, descripcion, suposiciones, restricciones);
                 //Debug.WriteLine(proyecto.Proposito);
                 this.conexion.EnsureConnectionClosed();
             }
@@ -584,7 +692,16 @@ namespace AppWebERS.Models{
                     consulta = "UPDATE proyecto SET nombre='" + valor + "' WHERE id_proyecto=" + idProyecto;
                     reader = this.conexion.RealizarConsulta(consulta);
                     this.conexion.EnsureConnectionClosed();
-                    consulta = "CALL controlVersiones('" + idUsuario+"',"+idProyecto+",'"+valor+"','"+atributo+"')";
+                    consulta = "CALL controlVersiones('" + idUsuario+"',"+idProyecto+",'"+atributo+"')";
+                    reader = this.conexion.RealizarConsulta(consulta);
+                    this.conexion.EnsureConnectionClosed();
+                    break;
+                    
+                case "descripcion":
+                    consulta = "UPDATE proyecto SET proposito='" + valor + "' WHERE id_proyecto=" + idProyecto;
+                    reader = this.conexion.RealizarConsulta(consulta);
+                    this.conexion.EnsureConnectionClosed();
+                    consulta = "CALL controlVersiones('" + idUsuario + "'," + idProyecto + ", '" + atributo + "')";
                     reader = this.conexion.RealizarConsulta(consulta);
                     this.conexion.EnsureConnectionClosed();
                     break;
@@ -593,7 +710,7 @@ namespace AppWebERS.Models{
                     consulta = "UPDATE proyecto SET proposito='" + valor + "' WHERE id_proyecto=" + idProyecto;
                     reader = this.conexion.RealizarConsulta(consulta);
                     this.conexion.EnsureConnectionClosed();
-                    consulta = "CALL controlVersiones('" + idUsuario + "'," + idProyecto + ",'" + valor + "','" + atributo + "')";
+                    consulta = "CALL controlVersiones('" + idUsuario + "'," + idProyecto + ", '" + atributo + "')";
                     reader = this.conexion.RealizarConsulta(consulta);
                     this.conexion.EnsureConnectionClosed();
                     break;                    
@@ -602,7 +719,7 @@ namespace AppWebERS.Models{
                     consulta = "UPDATE proyecto SET alcance='" + valor + "' WHERE id_proyecto=" + idProyecto;
                     reader = this.conexion.RealizarConsulta(consulta);
                     this.conexion.EnsureConnectionClosed();
-                    consulta = "CALL controlVersiones('" + idUsuario + "'," + idProyecto + ",'" + valor + "','" + atributo + "')";
+                    consulta = "CALL controlVersiones('" + idUsuario + "'," + idProyecto + ", '" + atributo + "')";
                     reader = this.conexion.RealizarConsulta(consulta);
                     this.conexion.EnsureConnectionClosed();
                     break;
@@ -611,7 +728,7 @@ namespace AppWebERS.Models{
                     consulta = "UPDATE proyecto SET contexto='" + valor + "' WHERE id_proyecto=" + idProyecto;
                     reader = this.conexion.RealizarConsulta(consulta);
                     this.conexion.EnsureConnectionClosed();
-                    consulta = "CALL controlVersiones('" + idUsuario + "'," + idProyecto + ",'" + valor + "','" + atributo + "')";
+                    consulta = "CALL controlVersiones('" + idUsuario + "'," + idProyecto + ", '" + atributo + "')";
                     reader = this.conexion.RealizarConsulta(consulta);
                     this.conexion.EnsureConnectionClosed();
                     break;
@@ -620,7 +737,7 @@ namespace AppWebERS.Models{
                     consulta = "UPDATE proyecto SET definiciones='" + valor + "' WHERE id_proyecto=" + idProyecto;
                     reader = this.conexion.RealizarConsulta(consulta);
                     this.conexion.EnsureConnectionClosed();
-                    consulta = "CALL controlVersiones('" + idUsuario + "'," + idProyecto + ",'" + valor + "','" + atributo + "')";
+                    consulta = "CALL controlVersiones('" + idUsuario + "'," + idProyecto + ", '" + atributo + "')";
                     reader = this.conexion.RealizarConsulta(consulta);
                     this.conexion.EnsureConnectionClosed();
                     break;
@@ -629,7 +746,7 @@ namespace AppWebERS.Models{
                     consulta = "UPDATE proyecto SET acronimos='" + valor + "' WHERE id_proyecto=" + idProyecto;
                     reader = this.conexion.RealizarConsulta(consulta);
                     this.conexion.EnsureConnectionClosed();
-                    consulta = "CALL controlVersiones('" + idUsuario + "'," + idProyecto + ",'" + valor + "','" + atributo + "')";
+                    consulta = "CALL controlVersiones('" + idUsuario + "'," + idProyecto + ", '" + atributo + "')";
                     reader = this.conexion.RealizarConsulta(consulta);
                     this.conexion.EnsureConnectionClosed();
                     break;
@@ -638,7 +755,7 @@ namespace AppWebERS.Models{
                     consulta = "UPDATE proyecto SET abreviaturas='" + valor + "' WHERE id_proyecto=" + idProyecto;
                     reader = this.conexion.RealizarConsulta(consulta);
                     this.conexion.EnsureConnectionClosed();
-                    consulta = "CALL controlVersiones('" + idUsuario + "'," + idProyecto + ",'" + valor + "','" + atributo + "')";
+                    consulta = "CALL controlVersiones('" + idUsuario + "'," + idProyecto + ", '" + atributo + "')";
                     reader = this.conexion.RealizarConsulta(consulta);
                     this.conexion.EnsureConnectionClosed();
                     break;
@@ -647,7 +764,25 @@ namespace AppWebERS.Models{
                     consulta = "UPDATE proyecto SET referencias='" + valor + "' WHERE id_proyecto=" + idProyecto;
                     reader = this.conexion.RealizarConsulta(consulta);
                     this.conexion.EnsureConnectionClosed();
-                    consulta = "CALL controlVersiones('" + idUsuario + "'," + idProyecto + ",'" + valor + "','" + atributo + "')";
+                    consulta = "CALL controlVersiones('" + idUsuario + "'," + idProyecto + ", '" + atributo + "')";
+                    reader = this.conexion.RealizarConsulta(consulta);
+                    this.conexion.EnsureConnectionClosed();
+                    break;
+
+                case "suposicion":
+                    consulta = "UPDATE proyecto SET referencias='" + valor + "' WHERE id_proyecto=" + idProyecto;
+                    reader = this.conexion.RealizarConsulta(consulta);
+                    this.conexion.EnsureConnectionClosed();
+                    consulta = "CALL controlVersiones('" + idUsuario + "'," + idProyecto + ", '" + atributo + "')";
+                    reader = this.conexion.RealizarConsulta(consulta);
+                    this.conexion.EnsureConnectionClosed();
+                    break;
+
+                case "restriccion":
+                    consulta = "UPDATE proyecto SET referencias='" + valor + "' WHERE id_proyecto=" + idProyecto;
+                    reader = this.conexion.RealizarConsulta(consulta);
+                    this.conexion.EnsureConnectionClosed();
+                    consulta = "CALL controlVersiones('" + idUsuario + "'," + idProyecto + ", '" + atributo + "')";
                     reader = this.conexion.RealizarConsulta(consulta);
                     this.conexion.EnsureConnectionClosed();
                     break;
@@ -656,7 +791,7 @@ namespace AppWebERS.Models{
                     consulta = "UPDATE proyecto SET ambiente_operacional='" + valor + "' WHERE id_proyecto=" + idProyecto;
                     reader = this.conexion.RealizarConsulta(consulta);
                     this.conexion.EnsureConnectionClosed();
-                    consulta = "CALL controlVersiones('" + idUsuario + "'," + idProyecto + ",'" + valor + "','" + atributo + "')";
+                    consulta = "CALL controlVersiones('" + idUsuario + "'," + idProyecto + ", '" + atributo + "')";
                     reader = this.conexion.RealizarConsulta(consulta);
                     this.conexion.EnsureConnectionClosed();
                     break;
@@ -665,7 +800,7 @@ namespace AppWebERS.Models{
                     consulta = "UPDATE proyecto SET relacion_con_otros_proyectos='" + valor + "' WHERE id_proyecto=" + idProyecto;
                     reader = this.conexion.RealizarConsulta(consulta);
                     this.conexion.EnsureConnectionClosed();
-                    consulta = "CALL controlVersiones('" + idUsuario + "'," + idProyecto + ",'" + valor + "','" + atributo + "')";
+                    consulta = "CALL controlVersiones('" + idUsuario + "'," + idProyecto + ", '" + atributo + "')";
                     reader = this.conexion.RealizarConsulta(consulta);
                     this.conexion.EnsureConnectionClosed();
                     break;
@@ -724,6 +859,8 @@ namespace AppWebERS.Models{
         public bool RegistrarProyectoEnBd(Proyecto proyecto)
         {
             String nombre = proyecto.Nombre;
+            Double version = proyecto.Version;
+            String descripcion = proyecto.Descripcion;
             String proposito = proyecto.Proposito;
             String alcance = proyecto.Alcance;
             String contexto = proyecto.Contexto;
@@ -731,11 +868,13 @@ namespace AppWebERS.Models{
             String acronimos = proyecto.Acronimos;
             String abreviaturas = proyecto.Abreviaturas;
             String referencias = proyecto.Referencias;
+            String suposiciones = proyecto.Suposiciones;
+            String restricciones = proyecto.Restricciones;
             String ambiente = proyecto.AmbienteOperacional;
             String relacion = proyecto.RelacionProyectos;
             String estado = proyecto.Estado;
-            String consulta = "INSERT INTO proyecto (nombre,proposito,alcance,contexto,definiciones,acronimos,abreviaturas,referencias,ambiente_operacional,relacion_con_otros_proyectos,estado)" +
-                " VALUES ('" + nombre + "', '" + proposito + "','" + alcance + "','" + contexto + "','" + definiciones + "','" + acronimos + "','" + abreviaturas + "','" + referencias + "','" + ambiente + "','" + relacion + "','" + estado + "')";
+            String consulta = "INSERT INTO proyecto (nombre,proposito,alcance,contexto,definiciones,acronimos,abreviaturas,referencias,ambiente_operacional,relacion_con_otros_proyectos,estado,version,descripcion,suposiciones,restricciones)" +
+                " VALUES ('" + nombre + "', '" + proposito + "','" + alcance + "','" + contexto + "','" + definiciones + "','" + acronimos + "','" + abreviaturas + "','" + referencias + "','" + ambiente + "','" + relacion + "','" + estado + "','" + version + "','" + descripcion + "','" + suposiciones + "','" + restricciones + "')";
             return this.conexion.RealizarConsultaNoQuery(consulta);
         }
         //Metodos para Asignar Jefes de Proyectos

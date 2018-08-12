@@ -96,6 +96,32 @@ namespace AppWebERS.Controllers
             }
         }
 
+        public class JsonReferenciaLibroOnline
+        {
+            public string id { set; get; }
+            public string autores { set; get; }
+            public string anio { set; get; }
+            public string titulo { set; get; }
+            public string paginaWeb { set; get; }
+        }
+        [HttpPost]
+        public ActionResult AgregarReferenciaLibroOnline(JsonReferenciaLibroOnline libro)
+        {
+            string referencia = this.ParsearReferenciaLibroOnline(libro.autores, libro.anio, libro.titulo, libro.paginaWeb);
+
+            string consulta = "INSERT INTO Referencia(ref_proyecto,referencia) VALUES('" + libro.id + "','" + referencia + "');";
+            if (this.conexion.RealizarConsultaNoQuery(consulta))
+            {
+                return Json(true, JsonRequestBehavior.AllowGet);
+
+            }
+            else
+            {
+                return Json(false, JsonRequestBehavior.AllowGet);
+
+            }
+        }
+
         public class JsonReferenciaPaper {
             public string id { set; get; }
             public string autores { set; get; }
@@ -1657,8 +1683,6 @@ namespace AppWebERS.Controllers
                 List<CheckBox> list = obtenerActores(id);
                 Requisito requisito = new Requisito(null, null, null, null, null, null, null, null, null, null, DateTime.Now.ToString("yyyy-MM-dd"), "1", null);
                 requisito.Actores = list;
-                List<String> algo = requisito.MatrizRequisitos(id);
-                //algo = algo + "";
                 requisito.IncrementoCheck = new CheckBox() { nombre = "1", id = "1", isChecked = false };
                 return View(requisito);
             }
@@ -2102,6 +2126,11 @@ namespace AppWebERS.Controllers
             referencia = autores + ", \"" + titulo + "\". Presentado en "+nombreConferencia+", "+lugar+", "+fecha;
             return referencia;
 
+        }
+        private string ParsearReferenciaLibroOnline(string autores, string anio, string titulo, string paginaWeb) {
+            string referencia;
+            referencia = autores + ".("+anio+"). "+titulo+". Recuperado de "+ paginaWeb;
+            return referencia;
         }
         /**
          * <author>Ariel Cornejo</author>

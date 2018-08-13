@@ -1,5 +1,6 @@
 ﻿using AppWebERS.Models;
 using AppWebERS.Utilidades;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -364,6 +365,8 @@ namespace AppWebERS.Controllers{
                         Debug.Write(consulta);
                         this.Conector.RealizarConsulta(consulta);
                         this.Conector.CerrarConexion();
+                        this.AgregarModificacionDiagramaDERS(idProyecto, DateTime.Now.ToString("yyyy-MM-dd"), User.Identity.GetUserId(),
+                            "Se ha agregado un diagrama con url"+url);
                     }
                     else
                     {
@@ -372,6 +375,8 @@ namespace AppWebERS.Controllers{
 
                         this.Conector.RealizarConsulta(consulta);
                         this.Conector.CerrarConexion();
+                        this.AgregarModificacionDiagramaDERS(idProyecto, DateTime.Now.ToString("yyyy-MM-dd"), User.Identity.GetUserId(),
+                            "Se ha agregado el diagrama del tipo "+tipo +" con nombre " + nombre);
                     }
 
                 }
@@ -411,6 +416,99 @@ namespace AppWebERS.Controllers{
 
         public void Editar() {
 
+        }
+
+        [HttpGet]
+        public ActionResult eliminarDiagrama(string url,string idProyecto)
+        {
+            try
+            {
+                String nombreDiagrama = this.obtenerNombreDiagrama(url);
+                String consulta = "DELETE FROM `appers`.`diagrama` WHERE(`ruta` ='" + url + "')";
+                Debug.Write(consulta);
+                bool resultado = this.Conector.RealizarConsultaNoQuery(consulta);
+                System.IO.File.Delete(Server.MapPath(url));
+
+                if (resultado == true)
+                {
+                    int id = Int32.Parse(idProyecto);
+
+                    if (!nombreDiagrama.Equals("")) { 
+                        this.AgregarModificacionDiagramaDERS(id, DateTime.Now.ToString("yyyy-MM-dd"), User.Identity.GetUserId(),
+                            "Se ha eliminado el diagrama "+nombreDiagrama);
+                    }
+                    else {
+                        this.AgregarModificacionDiagramaDERS(id, DateTime.Now.ToString("yyyy-MM-dd"), User.Identity.GetUserId(),
+                           "Se ha eliminado al diagrama con url: "+url);
+                    }
+                    TempData["alerta"] = new Alerta("Diagrama eliminado con éxito!!", TipoAlerta.SUCCESS);
+                }
+                else
+                {
+                    TempData["alerta"] = new Alerta("Error al eliminar diagrama", TipoAlerta.ERROR);
+                }
+
+                return RedirectToAction("ListarDiagramas", "Proyecto", new { id = idProyecto });
+            }
+            catch
+            {
+                TempData["alerta"] = new Alerta("Error al eliminar diagrama", TipoAlerta.ERROR);
+                return RedirectToAction("ListarDiagramas", "Proyecto", new { id = idProyecto });
+            }
+            
+        }
+        public bool AgregarModificacionDiagramaDERS( int id, string fecha, string userId, string descripcion)
+        {
+            
+            float versionActual = this.ObtenerVersionActual(id) + 0.01F;
+            string vers = versionActual.ToString().Replace(',', '.');
+            string consulta = "INSERT INTO modificacion_ders(version,ref_proyecto,fecha,ref_autor_modificacion,descripcion) " +
+                "VALUES(" + vers + ", " + id + ", '" + fecha + "' , '" + userId + "' , '" + descripcion + "' ) ";
+            ApplicationDbContext con = ApplicationDbContext.Create();
+            if (con.RealizarConsultaNoQuery(consulta))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private string obtenerNombreDiagrama(string url) {
+            string consulta = "SELECT diagrama.nombre FROM diagrama WHERE ruta='"+url+"';";
+            ApplicationDbContext con = ApplicationDbContext.Create();
+            MySqlDataReader reader = con.RealizarConsulta(consulta);
+
+            if (reader != null)
+            {
+                reader.Read();
+                return reader[0].ToString();
+            }
+            else
+            {
+
+                return null;
+            }
+        }
+
+        private float ObtenerVersionActual(int id)
+        {
+
+            float version = 0.00F;
+            string consulta = "SELECT modificacion_ders.version FROM modificacion_ders WHERE ref_proyecto = " + id +
+                " ORDER BY version DESC LIMIT 1";
+            ApplicationDbContext con = ApplicationDbContext.Create();
+            MySqlDataReader reader = con.RealizarConsulta(consulta);
+
+            if (reader != null)
+            {
+                reader.Read();
+                version = float.Parse(reader[0].ToString());
+                return version;
+            }
+            else
+            {
+
+                return 0.00F;
+            }
         }
     }
 }

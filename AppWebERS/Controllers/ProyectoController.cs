@@ -1960,14 +1960,14 @@ namespace AppWebERS.Controllers
         {
             string value = "";
             string consulta = "SELECT users.Id FROM users WHERE users.Rut = '" + rut + "'";
-            MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
+            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
             if(reader!= null)
             {
                 while(reader.Read())
                 {
                     value = reader[0].ToString();
                 }
-                Conector.CerrarConexion();
+                this.conexion.EnsureConnectionClosed();
             }
              return value;
         }
@@ -1985,14 +1985,14 @@ namespace AppWebERS.Controllers
             //ARREGLAR LA CONSULTA
             string consulta = "SELECT actor.nombre, actor.id_actor FROM actor WHERE actor.ref_proyecto = '" + id + "'";
 
-            MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
+            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
             if (reader != null)
             {
                 while (reader.Read())
                 {
                     l.Add(new CheckBox() { nombre = reader[0].ToString(), id= reader[1].ToString(),isChecked = false });
                 }
-                Conector.CerrarConexion();
+                this.conexion.EnsureConnectionClosed();
             }
             return l;
         }
@@ -2022,7 +2022,7 @@ namespace AppWebERS.Controllers
                     {
                         l.Add(new CheckBox() { nombre = reader[0].ToString(), id = reader[1].ToString(), isChecked = false });
                     }
-                    Conector.CerrarConexion();
+                    con.EnsureConnectionClosed();
                 }
                
                 
@@ -2104,11 +2104,12 @@ namespace AppWebERS.Controllers
                     referencia.valor = reader[1].ToString();
                     lista.Add(referencia);
                 }
-
+                conexion.EnsureConnectionClosed();
                 return lista;
             }
             else
             {
+                conexion.EnsureConnectionClosed();
                 return null;
             }
 
@@ -2316,13 +2317,7 @@ namespace AppWebERS.Controllers
             return View(model);
         }
 
-        /**
-          <autor> Raimundo Vasquez</autor>
-        * <summary>Metodo para obtener un id según proyecto y numero ( autoincremental en bd) del requisito</summary>
-        * <param name="id">Id del proyecto al que pertenece el requisito.</param>
-        * <param name="num_requisito">Id del requisito de sistema que se desea editar.</param>
-        * <returns>Objeto con los valores del requisito que se desea editar.</returns>
-        */
+        
         public ActionResult HistorialCambios2(int id)
         {
             Proyecto proyecto = this.GetProyecto(id);
@@ -2331,7 +2326,13 @@ namespace AppWebERS.Controllers
             ViewData["permiso"] = TipoDePermiso(id);
             return View();
         }
-
+        /**
+          <autor> Raimundo Vasquez</autor>
+        * <summary>Metodo para obtener un id según proyecto y numero ( autoincremental en bd) del requisito</summary>
+        * <param name="id">Id del proyecto al que pertenece el requisito.</param>
+        * <param name="idRequisito">Id del requisito de sistema que se desea editar.</param>
+        * <returns>Objeto con los valores del requisito que se desea editar.</returns>
+        */
         private Requisito obtenerRequisito(int id,string idRequisito)
         {
             Requisito r = new Requisito();
@@ -2356,6 +2357,7 @@ namespace AppWebERS.Controllers
                 r.Incremento = reader["incremento"].ToString();
                 r.Tipo = reader["tipo"].ToString();
             }
+            conexion.EnsureConnectionClosed();
             return r;
         }
 

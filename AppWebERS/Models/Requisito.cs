@@ -358,7 +358,15 @@ namespace AppWebERS.Models
             return false;
         }
 
-
+        /**
+          <autor> Raimundo Vasquez</autor>
+        * <summary>Metodo para agregar la modificacion de requisito al historial de cambios</summary>
+        * <param name="fecha">fecha en que se hizo el cambio</param>
+        * <param name="id">Id del proyecto al que pertenece el requisito.</param>
+        * <param name="r">requisito que se edito.</param>
+        * <param name="userId">id del usuario que hizo la modificacion</param>
+        * <returns>Verdadero o falso , si se realizó la acción o no.</returns>
+        */
         public bool ModificacionRequisitoDERS(Requisito r, int id, string fecha, string userId)
         {
             string descripcion = "Se editó el Requisito" + r.IdRequisito;
@@ -369,6 +377,7 @@ namespace AppWebERS.Models
             ApplicationDbContext con = ApplicationDbContext.Create();
             if (con.RealizarConsultaNoQuery(consulta))
             {
+                con.EnsureConnectionClosed();
                 return true;
             }
             return false;
@@ -384,11 +393,17 @@ namespace AppWebERS.Models
             ApplicationDbContext con = ApplicationDbContext.Create();
             if (con.RealizarConsultaNoQuery(consulta))
             {
+                con.EnsureConnectionClosed();
                 return true;
             }
             return false;
         }
-
+        /**
+          <autor> Raimundo Vasquez</autor>
+        * <summary>Obtiene la version actual del proyecto</summary>
+        * <param name="id">Id del proyecto .</param>
+        * <returns>version actual del proyecto.</returns>
+        */
         private float ObtenerVersionActual(int id)
         {
 

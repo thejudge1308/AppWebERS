@@ -96,6 +96,91 @@ namespace AppWebERS.Controllers
 
             }
         }
+        //
+        public class JsonReferenciaInforme
+        {
+            public string id { set; get; }
+            public string autores { set; get; }
+            public string anio { set; get; }
+            public string titulo { set; get; }
+            public string ciudad { set; get; }
+            public string editorial { set; get; }
+        }
+        [HttpPost]
+        public ActionResult AgregarReferenciaInforme(JsonReferenciaInforme informe)
+        {
+            string referencia = this.ParsearReferenciaInforme(informe.autores, informe.anio, informe.titulo, informe.ciudad,informe.editorial);
+
+            string consulta = "INSERT INTO Referencia(ref_proyecto,referencia) VALUES('" + informe.id + "','" + referencia + "');";
+            if (this.conexion.RealizarConsultaNoQuery(consulta))
+            {
+                return Json(true, JsonRequestBehavior.AllowGet);
+
+            }
+            else
+            {
+                return Json(false, JsonRequestBehavior.AllowGet);
+
+            }
+        }
+
+     
+        //
+        public class JsonReferenciaLibroOnline
+        {
+            public string id { set; get; }
+            public string autores { set; get; }
+            public string anio { set; get; }
+            public string titulo { set; get; }
+            public string paginaWeb { set; get; }
+        }
+        [HttpPost]
+        public ActionResult AgregarReferenciaLibroOnline(JsonReferenciaLibroOnline libro)
+        {
+            string referencia = this.ParsearReferenciaLibroOnline(libro.autores, libro.anio, libro.titulo, libro.paginaWeb);
+
+            string consulta = "INSERT INTO Referencia(ref_proyecto,referencia) VALUES('" + libro.id + "','" + referencia + "');";
+            if (this.conexion.RealizarConsultaNoQuery(consulta))
+            {
+                return Json(true, JsonRequestBehavior.AllowGet);
+
+            }
+            else
+            {
+                return Json(false, JsonRequestBehavior.AllowGet);
+
+            }
+        }
+
+        public class JsonReferenciaSeccionLibro
+        {
+            public string id { set; get; }
+            public string autorSeccion { set; get; }
+            public string tituloSeccion { set; get; }
+            public string autorLibro { set; get; }
+            public string tituloLibro { set; get; }
+            public string anio { set; get; }
+            public string paginas { set; get; }
+            public string ciudad { set; get; }
+            public string editorial { set; get; }
+        }
+        [HttpPost]
+        public ActionResult AgregarReferenciaSeccionLibro(JsonReferenciaSeccionLibro seccionLibro)
+        {
+            string referencia = this.ParsearReferenciaSeccionLibro(seccionLibro.autorSeccion,seccionLibro.tituloLibro,seccionLibro.autorLibro,seccionLibro.tituloLibro,seccionLibro.anio,seccionLibro.paginas,seccionLibro.ciudad,seccionLibro.editorial);
+
+            string consulta = "INSERT INTO Referencia(ref_proyecto,referencia) VALUES('" + seccionLibro.id + "','" + referencia + "');";
+            if (this.conexion.RealizarConsultaNoQuery(consulta))
+            {
+                return Json(true, JsonRequestBehavior.AllowGet);
+
+            }
+            else
+            {
+                return Json(false, JsonRequestBehavior.AllowGet);
+
+            }
+        }
 
         public class JsonReferenciaPaper {
             public string id { set; get; }
@@ -134,6 +219,7 @@ namespace AppWebERS.Controllers
             public string nombre_conferencia { get; set; }
         }
 
+
         [HttpPost]
         public ActionResult AgregarReferenciaConferencia(JsonReferenciaConferencia paper) {
             //string autores, string fecha, string titulo, string lugar, string nombreConferencia
@@ -161,6 +247,33 @@ namespace AppWebERS.Controllers
             }
         }
 
+        public class JsonReferenciaPaginaWeb
+        {
+            public string id { set; get; }
+            public string autor { set; get; }
+            public string nombrePaginaWeb { set; get; }
+            public string anio { set; get; }
+            public string mes { set; get; }
+            public string dia { set; get; }
+            public string url { set; get; }
+        }
+        [HttpPost]
+        public ActionResult AgregarReferenciaPaginaWeb(JsonReferenciaPaginaWeb paginaWeb)
+        {
+            string referencia = this.ParsearReferenciaPaginaWeb(paginaWeb.autor, paginaWeb.nombrePaginaWeb, paginaWeb.anio, paginaWeb.mes, paginaWeb.dia, paginaWeb.url);
+
+            string consulta = "INSERT INTO Referencia(ref_proyecto,referencia) VALUES('" + paginaWeb.id + "','" + referencia + "');";
+            if (this.conexion.RealizarConsultaNoQuery(consulta))
+            {
+                return Json(true, JsonRequestBehavior.AllowGet);
+
+            }
+            else
+            {
+                return Json(false, JsonRequestBehavior.AllowGet);
+
+            }
+        }
 
         /**
         * <author>Matías Parra</author>
@@ -278,6 +391,183 @@ namespace AppWebERS.Controllers
         }
 
 
+        private String seccionHtmlTablaHistorialCambios(int id)
+        {
+
+            ModificacionDERS historial = new ModificacionDERS();
+            List<ModificacionDERS> historialModificaciones = historial.ListarHistorial(id);
+            String htmlTablaHistorialCambios =  "<h2>Historial de cambios</h2>" +
+                          
+                             "<table border=\"1\"style=\"border: 1px solid black; border-collapse: collapse; width: 100%; text-align:center;\">" +
+                              "<thead>" +
+                                  "<tr>" +
+                                      "<th>" +
+                                          "Version" +
+                                      "</th>" +
+                                      "<th>" +
+                                          "Fecha" +
+                                      "</th>" +
+                                       "<th>"+
+                                           "Razon cambio" +
+                                      "</th>" +
+                                      "<th>" +
+                                           "Autor(es)" +
+                                      "</th>"+
+                                  "</tr>" + "</thead>";
+        if(historialModificaciones!= null)
+            {
+
+          
+                    foreach (var item in historialModificaciones)
+                    {
+                       htmlTablaHistorialCambios  += "<tr>" +
+                           "<td>" + item.Version + "</td>" +
+                              "<td>" + item.Fecha + "</td>" +
+                              "<td>"+item.Descripcion+"</td>" +
+                               "<td>"+item.RefUsuario+"</td>"+
+                            "</tr>";
+                    }
+
+            }
+            else
+            {
+                htmlTablaHistorialCambios += "<tr>" +
+                              "<td>  </td>" +
+                              "<td>  </td>" +
+                              "<td>  </td>" +
+                              "<td>  </td>" +
+                              "</tr>";
+            }
+
+            htmlTablaHistorialCambios += "</table>";
+           
+
+
+            return htmlTablaHistorialCambios;
+        }
+
+
+
+        // 
+        /// <autor>Diego Matus</autor>
+        /// <summary>
+        /// Metodo para generar codigo html para tabla de clientes.
+        /// </summary>
+        /// <param name="id">Recibe como parametro el id del proyecto</param>
+        /// <returns>Codigo html en string</returns>
+        private String SeccionHtmlContraParte(int id)
+        {
+            Cliente cliente = new Cliente();
+
+
+            List<Cliente> clientes = cliente.obtenerTodosLosClientes(id);
+            String htmlTablaClientes = "<h2> Contraparte</h2>" +
+                               "<table border=\"1\"style=\"border: 1px solid black; border-collapse: collapse; width: 100%; text-align:center;\">" +
+                               "<thead>"+
+                                   "<tr>" +
+                                       "<th>" +
+                                           "Nombre" +
+                                       "</th>" +
+                                       "<th>" +
+                                           "Rol" +
+                                       "</th>" +
+                                        "<th>"+
+                                            "Contacto" +
+                                       "</th>" +
+                                   "</tr>"  + "</thead>";
+            if(clientes !=null)
+            {
+                foreach (var item in clientes)
+                {
+
+                    htmlTablaClientes += "<tr>" +
+                          "<td>" + item.Nombre + "</td>" +
+                          "<td>" + item.Rol + "</td>" +
+                          "<td>" + item.Contacto + "</td>" +
+                      "</tr>";
+
+                }
+            }
+            else
+            {
+                htmlTablaClientes += "<tr>" +
+                         "<td></td>" +
+                         "<td></td>" +
+                         "<td></td>" +
+                     "</tr>";
+            }
+           
+
+            htmlTablaClientes += "</table>";
+
+            return htmlTablaClientes;
+        }
+
+
+        /// 
+        /// <autor>Diego Matus</autor>
+        /// <summary>
+        /// Metodo para generar codigo html para tabla de equipo de desarrollo.
+        /// </summary>
+        /// <param name="id">Recibe como parametro el id del proyecto</param>
+        /// <returns>Codigo html en string</returns>
+        private String SeccionHtmlEquipoDesarrollo(int id)
+        {
+            Proyecto proyecto = new Proyecto();
+           
+            List<Usuario> desarrolladores = proyecto.GetListaUsuarios(id);
+            String htmlTablaEquipoDesarrollo = "<h2> Equipo de Desarrollo</h2>" +
+                               "<table border=\"1\"style=\"border: 1px solid black; border-collapse: collapse; width: 100%; text-align:center;\">" +
+                                   "<tr>" +
+                                       "<th>" +
+                                           "Nombre" +
+                                       "</th>" +
+                                       "<th>" +
+                                           "Rol" +
+                                       "</th>" +
+                                        "<th>"+
+                                            "Contacto" +
+                                       "</th>" +
+                                   "</tr>";
+                            if(desarrolladores != null)
+                            {
+
+           
+                                foreach (var item in desarrolladores)
+                                {
+                                    if (item.Tipo == "Usuario")
+                                    {
+                                    htmlTablaEquipoDesarrollo += "<tr>" +
+                                      "<td>" + item.Nombre + "</td>" +
+                                      "<td>Desarrollador</td>" +
+                                      "<td>" + item.CorreoElectronico + "</td>" +
+                                      "</tr>";
+                                }
+                                else
+                                {
+                                        htmlTablaEquipoDesarrollo += "<tr>" +
+                                      "<td>" + item.Nombre + "</td>" +
+                                      "<td>"+item.Tipo+"</td>" +
+                                      "<td>" + item.CorreoElectronico + "</td>" +
+                                      "</tr>";
+                                 }
+                                
+
+                                }
+                            }
+                            else
+                            {
+                                htmlTablaEquipoDesarrollo += "<tr>" +
+                                 "<td></td>" +
+                                 "<td></td>" +
+                                 "<td></td>" +
+                                 "</tr>";
+                    }
+
+                            htmlTablaEquipoDesarrollo +="</table>";
+
+            return htmlTablaEquipoDesarrollo;
+        }
 
         /**
         * 
@@ -293,70 +583,97 @@ namespace AppWebERS.Controllers
             var generator = new NReco.PdfGenerator.HtmlToPdfConverter();
             Proyecto proyecto = this.GetProyecto(id);
 
-            
-
-
-
-            DateTime fechadt = DateTime.Now;
-            string fecha = String.Format("{0:dddd d 'de' MMMM 'del' yyyy}", fechadt);
-            string htmlContent = "<html>" +
-                "  <head>" +
-                " <style> " +
-                "body { margin: 2cm; } .logo { font-size: 40px; font-weigth: bold; } .titulo { text-align: left; margin-top: 30px;margin-bottom: 30px; } .fecha { margin-left: 100px; } .espacio-izq { margin-left: 50px; } table td{ font-size: 18px;  } " +
-                "</style>" +
-                " </head> " +
-                "<body> " +
-                "<meta charset=\"UTF-8\" /> <table> <tr> <td class=\"logo\">AppWebERS</td> <td </tr> </table> <hr> <p class=\"fecha\">Fecha: " + fecha + "</p> <hr> <h1 class=\"titulo\"> 1) Detalles del proyecto</h1> " +
-            
-                
-
-                "<table> " +
-                "<tr> <td> <strong style=\"font-size: 20px; \" > 1.1) Nombre </strong> <br><br> </td></tr> " +
-                "<tr> <td>" + proyecto.Nombre + "</td> </tr> " +
-
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.2) Propósito </strong> <br><br> </td></tr> " +
-                "<tr> <td>" + proyecto.Proposito + "</td> </tr> " +
-
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.3) Alcance </strong> <br><br> </td></tr> " +
-                "<tr> <td>" + proyecto.Alcance + "</td> </tr> " +
-
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.4) Contexto </strong> <br><br> </td></tr> " +
-                "<tr> <td>" + proyecto.Contexto + "</td> </tr> " +
-
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.5) Definiciones </strong> <br><br> </td></tr> " +
-                "<tr> <td>" + proyecto.Definiciones + "</td> </tr> " +
-
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.6) Acrónimos </strong> <br><br> </td></tr> " +
-                "<tr> <td>" + proyecto.Acronimos + "</td> </tr> " +
-
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.7) Abreviaturas </strong> <br><br> </td></tr> " +
-                "<tr> <td>" + proyecto.Abreviaturas + "</td> </tr> " +
-
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.8) Referencias </strong> <br><br> </td></tr> " +
-                "<tr> <td>" + proyecto.Referencias + "</td> </tr> " +
-
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.9) Ambiente Operacional </strong> <br><br> </td></tr> " +
-                "<tr> <td>" + proyecto.AmbienteOperacional + "</td> </tr> " +
-
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.10) Relación con otros proyectos </strong> <br><br> </td></tr> " +
-                "<tr> <td>" + proyecto.RelacionProyectos + "</td> </tr> " +
-                
-                "</table> ";
-
             string minimalista = this.AgregarListadoMinimalista(id);
 
             string volere = this.CrearVolere(id);
             string diagramas = this.obtenerHtmlDiagramas(id);
             string referencias = this.obtenerReferencias(id);
 
-            string final = " </body> </html>";
-            
-            htmlContent = htmlContent + minimalista + volere + diagramas  + referencias +  final;
+            List<String> tablasMatrizDeTrazado =  new Requisito().MatrizRequisitos(id);
+           
+            String matrizDeTrazadoHtml = "";
+            foreach (String tabla in tablasMatrizDeTrazado)
+            {
+                Debug.WriteLine("Tabla: " + tabla);
+               matrizDeTrazadoHtml += tabla + "<br> </br> ";
+            }
+            Debug.WriteLine("Tablas " + matrizDeTrazadoHtml);
+
+             DateTime fechadt = DateTime.Now;
+            string fecha = String.Format("{0:dddd d 'de' MMMM 'del' yyyy}", fechadt);
+            string htmlContent = "<html>" +
+                "  <head>" +
+                " <style> " +
+                "body { font-size: 18px; margin: 2cm; } .logo { font-size: 40px; font-weigth: bold; } .titulo { text-align: left; margin-top: 30px;margin-bottom: 30px; } .fecha { margin-left: 100px; } .espacio-izq { margin-left: 50px; } table td{ font-size: 18px;  } " +
+                "</style>" +
+                " </head> " +
+                "<body> " +
+                "<meta charset=\"UTF-8\" />" +
+
+                "<div>" +
+                    @"<h1>1. Introducción</h1>" +
+
+                        @"<h2>1.1 Propósito</h1>" +
+                        @"<div> " + proyecto.Proposito + @"</div>" +
+
+                        @"<h2>1.2 Alcance</h1>" +
+                        @"<div> " + proyecto.Alcance + @"</div>" +
+
+                        @"<h2>1.3 Contexto</h1>" +
+                        @"<div> " + proyecto.Contexto + @"</div>" +
+
+                        @"<h2>1.4 Definición de acrónimos </h1>" +
+                        @"<div> " + proyecto.Acronimos + @"</div>" +
+
+                        @"<h2>1.5 Referencias</h1>" +
+                        @"<div> " + referencias + @"</div>" +
+
+                @"</div>" +
+
+
+                "<div>" +
+                    @"<h1>2. Descripción general</h1>" +
+
+                        @"<h2>2.1 Características de los usuarios</h1>" +
+                        @"<div> " + proyecto.Proposito + @"</div>" +
+
+
+                 @"</div>" +
+
+                 "<div>" +
+                    @"<h1>3. Requisitos </h1>" +
+
+                     @"<h2>3.1 Listado de requisitos</h1>" +
+                     @"<div> " + minimalista + @"</div>" +
+
+                     @"<h2>3.2 Listado de requisitos en plantillas de Volere</h1>" +
+                     @"<div> " + volere + @"</div>" +
+
+    
+                 @"</div>" +
+
+                 "<div>" +
+                    @"<h1>4. Matriz de trazado requisitos de usuario vs requisitos de software</h1>" +
+                     @"<div> " +  matrizDeTrazadoHtml +  @"</div>" +
+
+                 @"</div>" +
+
+
+                 "<div>" +
+                    @"<h1>5. Diagramas</h1>" +
+                     @"<div> " + diagramas + @"</div>" +
+
+                 @"</div>" +
+
+                 @" </body> </html>";
+                
+
             
             string filename = fecha+".pdf";
 
             generator.Orientation = NReco.PdfGenerator.PageOrientation.Default;
-
+            generator.GenerateToc = true;
+            generator.TocHeaderText = "Tabla de contenidos";
             var pdfBytes = generator.GeneratePdf(htmlContent);
 
             HttpContext.Response.ContentEncoding = System.Text.Encoding.UTF8;
@@ -417,8 +734,6 @@ namespace AppWebERS.Controllers
 
             "<table> " +
 
-            "<tr> <td>  <h1 class=\"titulo\" > 5) Referencias</h1> </td></tr> " +
-
             ht +
 
             "</table> ";
@@ -443,6 +758,7 @@ namespace AppWebERS.Controllers
             string raiz = Server.MapPath("~/");
             foreach (Diagrama t in diagramas)
             {
+                 
                 string rutaGuardada = t.GetRuta().Remove(0, 1);
                 string url = Path.Combine(raiz, rutaGuardada);
                 System.Drawing.Image img = System.Drawing.Image.FromFile(url);
@@ -479,7 +795,6 @@ namespace AppWebERS.Controllers
 
                 "<table> " +
 
-                "<tr> <td>  <h1 class=\"titulo\" > 4) Diagramas</h1> </td></tr> " +
 
                 ht +
 
@@ -497,7 +812,7 @@ namespace AppWebERS.Controllers
 
         private string AgregarListadoMinimalista(int idp) {
 
-            string s = "<h1 class=\"titulo\" > 2) Listado de requisitos</h1> <table class=\"espacio - izq\">";
+            string s = "";
             
             MySqlDataReader reader;
             string consulta = "select * from requisito where requisito.ref_proyecto = " + idp;
@@ -508,6 +823,7 @@ namespace AppWebERS.Controllers
             }
 
             while (reader.Read()) {
+
 
                 string idr = reader["id_requisito"].ToString();
                 string nombre = reader["nombre"].ToString();
@@ -536,7 +852,7 @@ namespace AppWebERS.Controllers
             foreach (var item in requisitos)
             {
                 Requisito ru = item.Key;
-                s = s + "<tr> <td> <b>RU " + ru.IdRequisito + "</b> " + ru.Nombre + ".";
+                s = s + "<tr> <td> <b>" + ru.IdRequisito + "</b> - " + ru.Nombre + ".";
                 List<Requisito> aux = item.Value;
 
                 if (aux.Count != 0)
@@ -545,7 +861,7 @@ namespace AppWebERS.Controllers
 
                     foreach (Requisito r in aux)
                     {
-                        s = s + "<li>" + "<b>RS " + r.IdRequisito + "</b> " + r.Nombre + ".</li>";
+                        s = s + "<li>" + "<b>" + r.IdRequisito + "</b> - " + r.Nombre + ".</li>";
                     }
 
                     s = s + "</ul>";
@@ -565,12 +881,12 @@ namespace AppWebERS.Controllers
         */
 
         private string CrearVolere(int idp) {
-            string s = "<h1 class=\"titulo\" > 3) Requisitos Volere</h1> ";
+            string s = "";
             string tabla = "";
             foreach (var item in requisitos)
             {
                 Requisito ru = item.Key;
-                tabla = tabla + "<div style=\"page -break-after:always\"></div> <table border=\"1\"style=\"border: 1px solid black; border-collapse: collapse; width: 100%; \"> <tr> <td colspan=\"3\" style=\"text-align:center; padding: 5px;  \">RU \"" + ru.Nombre + "\"</td> </tr> <tr> <td style=\"padding: 5px;\"><b>ID: " + ru.IdRequisito + "</b></td> <td style=\"padding: 5px;\"><b>Tipo Requisito</b></td> <td style=\"padding: 5px;\">" + ru.TipoRequisito+ "</td> </tr> <tr> <td style=\"padding: 5px;\"><b>Prioridad</b></td><td colspan=\"2\" style=\"padding: 5px;\" >" +ru.Prioridad + "</td> </tr><tr> <td style=\"padding: 5px;\"><b>Descripcion</b></td> <td colspan=\"2\" style=\"padding: 5px;\">" + ru.Descripcion+"</td> </tr> <tr> <td style=\"padding: 5px;\"><b>Fuente</b></td> <td colspan=\"2\" style=\"padding: 5px; \">" + ru.Fuente+ "</td> </tr> <tr class=\"big\"> <td style=\"padding: 5px;\"><b>Actor</b></td> <td colspan=\"2\" style=\"padding: 5px;\">"+ this.AgregarActoresVolere(idp, ru)+ "</td> </tr> <tr> <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\" ><b> Fecha: "+ru.Fecha +" </b></td> <td style=\"padding: 5px;\"><b>Incremento: "+ru.Incremento+"</b></td> </tr> <tr> <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\"><b>Estado: "+ru.Estado+"</b> </td> <td style=\"padding: 5px;\"><b>Escala: "+ru.Escala+"</b></td> </tr> <tr > <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\"><b> Estabilidad: " +ru.Estabilidad+"</b></td> <td style=\"padding: 5px;\"> <b>Medida: "+ru.Medida+"</b></td> </tr> </table>";
+                tabla = tabla + "<div style=\"page -break-after:always\"></div> <table border=\"1\"style=\"border: 1px solid black; border-collapse: collapse; width: 100%; \"> <tr> <td colspan=\"3\" style=\"text-align:center; padding: 5px;  \"> \"" + ru.Nombre + "\"</td> </tr> <tr> <td style=\"padding: 5px;\"><b>ID: " + ru.IdRequisito + "</b></td> <td style=\"padding: 5px;\"><b>Tipo Requisito</b></td> <td style=\"padding: 5px;\">" + ru.TipoRequisito+ "</td> </tr> <tr> <td style=\"padding: 5px;\"><b>Prioridad</b></td><td colspan=\"2\" style=\"padding: 5px;\" >" +ru.Prioridad + "</td> </tr><tr> <td style=\"padding: 5px;\"><b>Descripcion</b></td> <td colspan=\"2\" style=\"padding: 5px;\">" + ru.Descripcion+"</td> </tr> <tr> <td style=\"padding: 5px;\"><b>Fuente</b></td> <td colspan=\"2\" style=\"padding: 5px; \">" + ru.Fuente+ "</td> </tr> <tr class=\"big\"> <td style=\"padding: 5px;\"><b>Actor</b></td> <td colspan=\"2\" style=\"padding: 5px;\">"+ this.AgregarActoresVolere(idp, ru)+ "</td> </tr> <tr> <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\" ><b> Fecha: "+ru.Fecha +" </b></td> <td style=\"padding: 5px;\"><b>Incremento: "+ru.Incremento+"</b></td> </tr> <tr> <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\"><b>Estado: "+ru.Estado+"</b> </td> <td style=\"padding: 5px;\"><b>Escala: "+ru.Escala+"</b></td> </tr> <tr > <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\"><b> Estabilidad: " +ru.Estabilidad+"</b></td> <td style=\"padding: 5px;\"> <b>Medida: "+ru.Medida+"</b></td> </tr> </table>";
                 tabla = tabla + "<br/>";
                 List<Requisito> aux = item.Value;
 
@@ -578,7 +894,7 @@ namespace AppWebERS.Controllers
                 {
                     foreach (Requisito r in aux)
                     {
-                        tabla = tabla + "<div style=\"page -break-after:always\"></div> <table border=\"1\"style=\"border: 1px solid black; border-collapse: collapse; width: 100%; \"> <tr> <td colspan=\"3\" style=\"text-align:center; padding: 5px;  \">RS \"" + r.Nombre + "\"</td> </tr> <tr> <td style=\"padding: 5px;\"><b>ID: " + r.IdRequisito + "</b></td> <td style=\"padding: 5px;\"><b>Tipo Requisito</b></td> <td style=\"padding: 5px;\">" + r.TipoRequisito + "</td> </tr> <tr> <td style=\"padding: 5px;\"><b>Prioridad</b></td><td colspan=\"2\" style=\"padding: 5px;\" >" + r.Prioridad + "</td> </tr><tr> <td style=\"padding: 5px;\"><b>Descripcion</b></td> <td colspan=\"2\" style=\"padding: 5px;\">" + r.Descripcion + "</td> </tr> <tr> <td style=\"padding: 5px;\"><b>Fuente</b></td> <td colspan=\"2\" style=\"padding: 5px; \">" + r.Fuente + "</td> </tr> <tr class=\"big\"> <td style=\"padding: 5px;\"><b>Actor(es)</b></td> <td colspan=\"2\" style=\"padding: 5px;\">"+this.AgregarActoresVolere(idp , r) +"</td> </tr> <tr> <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\" ><b> Fecha: " + r.Fecha + " </b></td> <td style=\"padding: 5px;\"><b>Incremento: " + r.Incremento + "</b></td> </tr> <tr> <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\"><b>Estado: " + r.Estado + "</b> </td> <td style=\"padding: 5px;\"><b>Escala: " + r.Escala + "</b></td> </tr> <tr > <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\"><b> Estabilidad: " + r.Estabilidad + "</b></td> <td style=\"padding: 5px;\"> <b>Medida: " + r.Medida + "</b></td> </tr> </table>";
+                        tabla = tabla + "<div style=\"page -break-after:always\"></div> <table border=\"1\"style=\"border: 1px solid black; border-collapse: collapse; width: 100%; \"> <tr> <td colspan=\"3\" style=\"text-align:center; padding: 5px;  \"> \"" + r.Nombre + "\"</td> </tr> <tr> <td style=\"padding: 5px;\"><b>ID: " + r.IdRequisito + "</b></td> <td style=\"padding: 5px;\"><b>Tipo Requisito</b></td> <td style=\"padding: 5px;\">" + r.TipoRequisito + "</td> </tr> <tr> <td style=\"padding: 5px;\"><b>Prioridad</b></td><td colspan=\"2\" style=\"padding: 5px;\" >" + r.Prioridad + "</td> </tr><tr> <td style=\"padding: 5px;\"><b>Descripcion</b></td> <td colspan=\"2\" style=\"padding: 5px;\">" + r.Descripcion + "</td> </tr> <tr> <td style=\"padding: 5px;\"><b>Fuente</b></td> <td colspan=\"2\" style=\"padding: 5px; \">" + r.Fuente + "</td> </tr> <tr class=\"big\"> <td style=\"padding: 5px;\"><b>Actor(es)</b></td> <td colspan=\"2\" style=\"padding: 5px;\">"+this.AgregarActoresVolere(idp , r) +"</td> </tr> <tr> <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\" ><b> Fecha: " + r.Fecha + " </b></td> <td style=\"padding: 5px;\"><b>Incremento: " + r.Incremento + "</b></td> </tr> <tr> <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\"><b>Estado: " + r.Estado + "</b> </td> <td style=\"padding: 5px;\"><b>Escala: " + r.Escala + "</b></td> </tr> <tr > <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\"><b> Estabilidad: " + r.Estabilidad + "</b></td> <td style=\"padding: 5px;\"> <b>Medida: " + r.Medida + "</b></td> </tr> </table>";
                         tabla = tabla + "<br/>";
                     }
 
@@ -625,6 +941,7 @@ namespace AppWebERS.Controllers
             int permiso = proyecto.ObtenerRolDelUsuario(idUsuario, id);
             if (permiso == 1 || permiso == 2 || permiso == 0)
             {
+                new Proyecto().EliminarSolicitudesUnionProyectosInnecesarias(id);
                 List<Usuario> usuarios = new Proyecto().GetListaUsuarios(id);
                 List<SolicitudDeProyecto> solicitudes = new Proyecto().GetSolicitudesProyecto(id);
                 //Debug.WriteLine("Permiso: " + TipoDePermiso());
@@ -870,7 +1187,7 @@ namespace AppWebERS.Controllers
             string estado = "HABILITADO";
             string consulta = "SELECT proyecto.id_proyecto,proyecto.nombre, proyecto.proposito, proyecto.alcance, proyecto.contexto, proyecto.definiciones," +
                 "proyecto.acronimos, proyecto.abreviaturas, proyecto.referencias, proyecto.ambiente_operacional, proyecto.relacion_con_otros_proyectos, proyecto.estado FROM proyecto, users, vinculo_usuario_proyecto " +
-                               "WHERE proyecto.estado =  '" + estado + "' AND users.id = '" + id + "' AND vinculo_usuario_proyecto.ref_proyecto = " +
+                               "WHERE users.id = '" + id + "' AND vinculo_usuario_proyecto.ref_proyecto = " +
                                "proyecto.id_proyecto AND vinculo_usuario_proyecto.ref_usuario = users.id";
             MySqlDataReader data = this.Conector.RealizarConsulta(consulta);
             if (data == null)
@@ -1675,6 +1992,7 @@ namespace AppWebERS.Controllers
         [HttpGet]
         public ActionResult RequisitoSistema(int id, string idRequisitoUsuario)
         {
+
             String idUsuario;
             using (var db = ApplicationDbContext.Create())
             {
@@ -1987,18 +2305,16 @@ namespace AppWebERS.Controllers
             List<CheckBox> l = new List<CheckBox>();
             //ARREGLAR LA CONSULTA
             string consulta = "SELECT actor.nombre, actor.id_actor FROM actor WHERE actor.ref_proyecto = '" + id + "'";
-
-            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
+            ApplicationDbContext conexionLocal = ApplicationDbContext.Create();
+            MySqlDataReader reader = conexionLocal.RealizarConsulta(consulta);
             if (reader != null)
             {
                 while (reader.Read())
                 {
                     l.Add(new CheckBox() { nombre = reader[0].ToString(), id= reader[1].ToString(),isChecked = false });
                 }
-                this.conexion.EnsureConnectionClosed();
             }
-            this.conexion.EnsureConnectionClosed();
-
+            conexionLocal.EnsureConnectionClosed();
             return l;
         }
         /**
@@ -2143,6 +2459,32 @@ namespace AppWebERS.Controllers
             return referencia;
 
         }
+        private string ParsearReferenciaLibroOnline(string autores, string anio, string titulo, string paginaWeb) {
+            string referencia;
+            referencia = autores + ".("+anio+"). "+titulo+". Recuperado de "+ paginaWeb;
+            return referencia;
+        }
+
+        private string ParsearReferenciaSeccionLibro(string autorSeccion, string tituloSeccion, string autorLibro, string tituloLibro, string anio, string paginas, string ciudad, string editorial)
+        {
+            string referencia;
+            referencia = autorSeccion+". " + "(" + anio + "). " + tituloSeccion+". En "+ autorLibro+", "+tituloLibro + " (págs. " + paginas + "). "+ciudad+": "+editorial+".";
+            return referencia;
+        }
+
+        private string ParsearReferenciaPaginaWeb(string autor, string nombrePaginaWeb, string anio, string mes, string dia, string url)
+        {
+            string referencia;
+            referencia = autor + ". " + "(" + dia + " de "+ mes +" de "+ anio +"). " + nombrePaginaWeb + ". Obtenido de "+nombrePaginaWeb+": " + url;
+            return referencia;
+        }
+        private string ParsearReferenciaInforme(string autores, string anio, string titulo, string ciudad, string editorial)
+        {
+            string referencia;
+            referencia = autores + ".(" + anio + "). " + titulo + "." + ciudad + ":" + editorial;
+            return referencia;
+        }
+
         /**
          * <author>Ariel Cornejo</author>
          * <summary>
@@ -2456,6 +2798,21 @@ namespace AppWebERS.Controllers
             return View("AgregarCliente", cliente);
         }
 
+        ///<author>Maximo Hernandez</author>
+        /// <summary>
+        /// Elimina un cliente.
+        /// </summary>
+        /// <param name="IdCliente">Id del cliente a eliminar</param>
+        /// <param name="IdProyecto">Id del proyecto actual, necesario para ingresar al metodo para devolver a la vista</param>
+        /// <returns>Devuelve la vista de listaClientes</returns>
+        [HttpGet]
+        public ActionResult EliminarCliente (int IdCliente, int IdProyecto)
+        {
+            Cliente cliente = new Cliente();
+            cliente.EliminarCliente(IdCliente);
+            TempData["alerta"] = new Alerta("Cliente eliminado exitosamente", TipoAlerta.SUCCESS);
+            return RedirectToAction("listaClientes", "Proyecto", new { id = IdProyecto });
+        }
         /*
          * Autor: Nicolás Hervias
          * Método para listar los cambios realizados en el proyecto

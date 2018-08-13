@@ -52,7 +52,26 @@ $("#referencia_modal .modal-body").on("click", "#conferencia-button", function (
     fecha_event();
 
 });
+//Aqui tienen copiar esto
+$("#referencia_modal .modal-body").on("click", "#bookOn-button", function () {
+    bookOn_option();
+    fecha_event();
+});
 
+$("#referencia_modal .modal-body").on("click", "#seccionLibro-button", function () {
+    seccionLibro_option();
+    fecha_event();
+});
+
+$("#referencia_modal .modal-body").on("click", "#paginaWeb-button", function () {
+    paginaWeb_option();
+    fecha_event();
+});
+
+$("#referencia_modal .modal-body").on("click", "#infOn-button", function () {
+    infOn_option();
+    fecha_event();
+});
 /*
  * Guardado de datos
  * 
@@ -69,6 +88,57 @@ $('#referencia_modal .modal-footer').on('click', '#guardar_libro', function () {
     
 });
 
+//LibroOn
+//Aqui hice cambios-------------------------------------X----------------------
+$('#referencia_modal .modal-footer').on('click', '#guardar_bookOn', function () {
+
+    $("#mensaje").text("");
+    if ($.trim($("#autores-box").val()) == "" || $.trim($("#anio-box").val()) == "" || $.trim($("#titulo-box").val()) == "" || $.trim($("#paginaWeb-box").val()) == "") {
+        $("#mensaje").text("Ingrese todos los datos.");
+    } else {
+        //Aqui van los campos a guardar
+        guardarBookOn($("#ProyectoActual_IdProyecto").val(), $.trim($("#autores-box").val()), $.trim($("#anio-box").val()), $.trim($("#titulo-box").val()), $.trim($("#paginaWeb-box").val()));
+    }
+
+});
+
+//SeccionLibro
+$('#referencia_modal .modal-footer').on('click', '#guardarSeccionLibro', function () {
+
+    $("#mensaje").text("");
+    if ($.trim($("#autorSeccion-box").val()) == "" || $.trim($("#tituloSeccion-box").val()) == "" || $.trim($("#autorLibro-box").val()) == "" || $.trim($("#tituloLibro-box").val()) == "" || $.trim($("#anio-box").val()) == "" || $.trim($("#paginas-box").val()) == "" || $.trim($("#ciudad-box").val()) == "" || $.trim($("#editorial-box").val()) == "") {
+        $("#mensaje").text("Ingrese todos los datos.");
+    } else {
+        //Aqui van los campos a guardar
+        guardarSeccionLibro($("#ProyectoActual_IdProyecto").val(), $.trim($("#autorSeccion-box").val()), $.trim($("#tituloSeccion-box").val()), $.trim($("#autorLibro-box").val()), $.trim($("#tituloLibro-box").val()),$.trim($("#anio-box").val()), $.trim($("#paginas-box").val()), $.trim($("#ciudad-box").val()), $.trim($("#editorial-box").val()));
+    }
+
+});
+//
+//Pagina Web
+$('#referencia_modal .modal-footer').on('click', '#guardarPaginaWeb', function () {
+
+    $("#mensaje").text("");
+    if ($.trim($("#autor-box").val()) == "" || $.trim($("#nombrePaginaWeb-box").val()) == "" || $.trim($("#anio-box").val()) == "" || $.trim($("#mes-box").val()) == "" || $.trim($("#dia-box").val()) == "" || $.trim($("#url-box").val()) == "") {
+        $("#mensaje").text("Ingrese todos los datos.");
+    } else {
+        //Aqui van los campos a guardar
+        guardarPaginaWeb($("#ProyectoActual_IdProyecto").val(), $.trim($("#autor-box").val()), $.trim($("#nombrePaginaWeb-box").val()), $.trim($("#anio-box").val()), $.trim($("#mes-box").val()), $.trim($("#dia-box").val()), $.trim($("#url-box").val()));
+    }
+
+});
+$('#referencia_modal .modal-footer').on('click', '#guardar_infOn', function () {
+
+    $("#mensaje").text("");
+    if ($.trim($("#autores-box").val()) == "" || $.trim($("#anio-box").val()) == "" || $.trim($("#titulo-box").val()) == "" || $.trim($("#ciudad-box").val()) == "" || $.trim($("#editorial-box").val()) == "") {
+        $("#mensaje").text("Ingrese todos los datos.");
+    } else {
+        //Aqui van los campos a guardar
+        guardarInfOn($("#ProyectoActual_IdProyecto").val(), $.trim($("#autores-box").val()), $.trim($("#anio-box").val()), $.trim($("#titulo-box").val()), $.trim($("#ciudad-box").val()), $.trim($("#editorial-box").val()));
+    }
+
+});
+//
 //Paper
 $('#referencia_modal .modal-footer').on('click', '#guardar_paper', function () {
     $("#mensaje").text("");
@@ -155,7 +225,53 @@ function book_option() {
         '<button id="guardar_libro" type="button" class="btn btn-primary">Guardar</button>' +
         '<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>');
 }
+//Aqui hay que copiar y poner el nombre del metodo
+function bookOn_option() {
+    $("#referencia_modal .modal-body").empty();
+    $("#tittle_modal").text("Formulario libro Online");
+    $("#referencia_modal .modal-body").append(bookOn_modal());
+    $("#referencia_modal .modal-footer").empty();
+    $("#referencia_modal .modal-footer").append(
+        //Ojo aqui
+        '<button id="guardar_bookOn" type="button" class="btn btn-primary">Guardar</button>' +
+        '<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>');
+}
 
+function seccionLibro_option() {
+    $("#referencia_modal .modal-body").empty();
+    $("#tittle_modal").text("Formulario Sección Libro");
+    $("#referencia_modal .modal-body").append(seccionLibro_modal());
+    $("#referencia_modal .modal-footer").empty();
+    $("#referencia_modal .modal-footer").append(
+        //Ojo aqui
+        '<button id="guardarSeccionLibro" type="button" class="btn btn-primary">Guardar</button>' +
+        '<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>');
+}
+
+function paginaWeb_option() {
+    $("#referencia_modal .modal-body").empty();
+    $("#tittle_modal").text("Formulario Página Web");
+    $("#referencia_modal .modal-body").append(seccionLibro_modal());
+    $("#referencia_modal .modal-footer").empty();
+    $("#referencia_modal .modal-footer").append(
+        //Ojo aqui
+        '<button id="guardarPaginaWeb" type="button" class="btn btn-primary">Guardar</button>' +
+        '<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>');
+}
+
+//
+//Aqui hay que copiar y poner el nombre del metodo
+function infOn_option() {
+    $("#referencia_modal .modal-body").empty();
+    $("#tittle_modal").text("Formulario Informe");
+    $("#referencia_modal .modal-body").append(infOn_modal());
+    $("#referencia_modal .modal-footer").empty();
+    $("#referencia_modal .modal-footer").append(
+        //Ojo aqui
+        '<button id="guardar_infOn" type="button" class="btn btn-primary">Guardar</button>' +
+        '<button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>');
+}
+//
 function paper_option() {
     $("#referencia_modal .modal-body").empty();
     $("#tittle_modal").text("Formulario revista.");
@@ -186,7 +302,7 @@ function init_modal() {
         '</div >'+
         '<div class="row">'+
             '<div class="col-md-12 m-2">'+
-                '<button id="paper-button" type="button" style="width:100%" class="btn btn-primary">Paper</button>'+
+                '<button id="paper-button" type="button" style="width:100%" class="btn btn-primary">Paper.</button>'+
             '</div>'+
         '</div>' +
         '<div class="row">' +
@@ -194,7 +310,27 @@ function init_modal() {
                 '<button id="conferencia-button" type="button" style="width:100%" class="btn btn-primary">Paper de conferencia.</button>' +
             '</div>' +
         '</div>' +
-        '</div >'+
+        //Copiar y agregar nuevo boton
+        '<div class="row">' +
+            '<div class="col-md-12 m-2">' +
+                '<button id="bookOn-button" type="button" style="width:100%" class="btn btn-primary">Libro Online.</button>' +
+            '</div>' +
+        '</div>' +
+        '<div class="row">' +
+            '<div class="col-md-12 m-2">' +
+                '<button id="seccionLibro-button" type="button" style="width:100%" class="btn btn-primary">Sección Libro.</button>' +
+            '</div>' +
+        '</div>' +
+       '<div class="row">' +
+            '<div class="col-md-12 m-2">' +
+                '<button id="infOn-button" type="button" style="width:100%" class="btn btn-primary">Informe.</button>' +
+            '</div>' +
+        '</div>' +
+        '<div class="row">' +
+            '<div class="col-md-12 m-2">' +
+                '<button id="paginaWeb-button" type="button" style="width:100%" class="btn btn-primary">Página Web.</button>' +
+            '</div>' +
+        '</div>' +
         '</div >';
     return html;
 }
@@ -204,8 +340,8 @@ function book_modal() {
         '<div class="row">'+
         '<div class="col-md-12 col-sm-12 col-xs-12">' +
             '<div class="form-group">'+
-                        '<label class="control-label"> Autores. </label>'+
-                        '<input class="form-control" style="max-width: 100%;" id="autores-box" type="text" />'+
+                '<label class="control-label"> Autores. </label>'+
+                '<input class="form-control" style="max-width: 100%;" id="autores-box" type="text" />'+
             '</div>'+
             '<div class="form-group">' +
                 '<label class="control-label"> Año de publicación. </label>' +
@@ -228,6 +364,152 @@ function book_modal() {
             '</div>' +
         '</div>'+
         '</div>'+
+        '</div >';
+    return html;
+}
+
+
+//Esto hay que copiar
+function bookOn_modal() {
+    html = '<div class="container-fluid">' +
+        '<div class="row">' +
+        '<div class="col-md-12 col-sm-12 col-xs-12">' +
+        '<div class="form-group">' +
+        '<label class="control-label"> Autores. </label>' +
+        '<input class="form-control" style="max-width: 100%;" id="autores-box" type="text" />' +
+        '</div>' +
+        '<div class="form-group">' +
+        '<label class="control-label"> Año de publicación. </label>' +
+        '<input class="form-control" style="max-width: 100%;" id="anio-box" type="number" />' +
+        '</div>' +
+        '<div class="form-group">' +
+        '<label class="control-label"> Título del libro. </label>' +
+        '<input class="form-control" style="max-width: 100%;" id="titulo-box" type="text" />' +
+        '</div>' +
+        '<div class="form-group">' +
+        '<label class="control-label " for="name"> Pagina Web. </label>' +
+        '<input class="form-control" style="max-width: 100%;" id="paginaWeb-box" type="text" />' +
+        '</div>' +
+        '<div class="form-group">' +
+        '<label id="mensaje" class="control-label text-danger"></label>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '</div >';
+    return html;
+}
+//
+function infOn_modal() {
+    html = '<div class="container-fluid">' +
+        '<div class="row">' +
+        '<div class="col-md-12 col-sm-12 col-xs-12">' +
+        '<div class="form-group">' +
+        '<label class="control-label"> Autores. </label>' +
+        '<input class="form-control" style="max-width: 100%;" id="autores-box" type="text" />' +
+        '</div>' +
+        '<div class="form-group">' +
+        '<label class="control-label"> Año de publicación. </label>' +
+        '<input class="form-control" style="max-width: 100%;" id="anio-box" type="number" />' +
+        '</div>' +
+        '<div class="form-group">' +
+        '<label class="control-label"> Título del libro. </label>' +
+        '<input class="form-control" style="max-width: 100%;" id="titulo-box" type="text" />' +
+        '</div>' +
+        '<div class="form-group">' +
+        '<label class="control-label " for="name"> Ciudad. </label>' +
+        '<input class="form-control" style="max-width: 100%;" id="ciudad-box" type="text" />' +
+        '</div>' +
+        '<div class="form-group">' +
+        '<label class="control-label"> Editorial. </label>' +
+        '<input class="form-control" style="max-width: 100%;" id="editorial-box" type="text" />' +
+        '</div>' +
+        '<div class="form-group">' +
+        '<label id="mensaje" class="control-label text-danger"></label>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '</div >';
+    return html;
+}
+
+function seccionLibro_modal() {
+    html = '<div class="container-fluid">' +
+            '<div class="row">' +
+                '<div class="col-md-12 col-sm-12 col-xs-12">' +
+                    '<div class="form-group">' +
+                        '<label class="control-label"> Autor Sección. </label>' +
+                        '<input class="form-control" style="max-width: 100%;" id="autorSeccion-box" type="text" />' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                        '<label class="control-label"> Título Seccion. </label>' +
+                        '<input class="form-control" style="max-width: 100%;" id="tituloSeccion-box" type="text" />' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                        '<label class="control-label"> Autor Libro. </label>' +
+                        '<input class="form-control" style="max-width: 100%;" id="autorLibro-box" type="text" />' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                        '<label class="control-label " for="name"> Título Libro. </label>' +
+                        '<input class="form-control" style="max-width: 100%;" id="tituloLibro-box" type="text" />' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                        '<label class="control-label"> Año. </label>' +
+                        '<input class="form-control" style="max-width: 100%;" id="anio-box" type="number" />' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                        '<label class="control-label"> Páginas. </label>' +
+                        '<input class="form-control" style="max-width: 100%;" id="paginas-box" type="text" />' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                        '<label class="control-label"> Ciudad. </label>' +
+                        '<input class="form-control" style="max-width: 100%;" id="ciudad-box" type="text" />' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                        '<label class="control-label"> Editorial. </label>' +
+                        '<input class="form-control" style="max-width: 100%;" id="editorial-box" type="text" />' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                        '<label id="mensaje" class="control-label text-danger"></label>' +
+                    '</div>' +
+                '</div>' +
+            '</div>' +
+        '</div >';
+    return html;
+}
+
+function seccionLibro_modal() {
+    html = '<div class="container-fluid">' +
+        '<div class="row">' +
+        '<div class="col-md-12 col-sm-12 col-xs-12">' +
+        '<div class="form-group">' +
+        '<label class="control-label"> Autor. </label>' +
+        '<input class="form-control" style="max-width: 100%;" id="autor-box" type="text" />' +
+        '</div>' +
+        '<div class="form-group">' +
+        '<label class="control-label"> Nombre Página Web. </label>' +
+        '<input class="form-control" style="max-width: 100%;" id="nombrePaginaWeb-box" type="text" />' +
+        '</div>' +
+        '<div class="form-group">' +
+        '<label class="control-label"> Año. </label>' +
+        '<input class="form-control" style="max-width: 100%;" id="anio-box" type="number" />' +
+        '</div>' +
+        '<div class="form-group">' +
+        '<label class="control-label "> Mes. </label>' +
+        '<input class="form-control" style="max-width: 100%;" id="mes-box" type="text" />' +
+        '</div>' +
+        '<div class="form-group">' +
+        '<label class="control-label"> Día. </label>' +
+        '<input class="form-control" style="max-width: 100%;" id="dia-box" type="text" />' +
+        '</div>' +
+        '<div class="form-group">' +
+        '<label class="control-label"> URL. </label>' +
+        '<input class="form-control" style="max-width: 100%;" id="url-box" type="text" />' +
+        '</div>' +
+        '<div class="form-group">' +
+        '<label id="mensaje" class="control-label text-danger"></label>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
         '</div >';
     return html;
 }
@@ -389,6 +671,165 @@ function guardarLibro(idR, autoresR, anioR, tituloR, lugarR, editorialR) {
             mostrarAlerta(response.responseText);
         }
     });  
+}
+
+function guardarBookOn(idR, autoresR, anioR, tituloR, paginawebR) {
+    var JsonReferenciaLibro = {
+        id: idR,
+        autores: autoresR,
+        anio: anioR,
+        titulo: tituloR,
+        paginaWeb: paginawebR
+    };
+    console.log(JsonReferenciaLibro);
+    $.ajax({
+        type: "POST",
+        url: "/Proyecto/AgregarReferenciaLibroOnline",
+        data: JSON.stringify(JsonReferenciaLibro),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            //mostrarAlerta("Modificado con éxito.");
+            console.log(response);
+            if (response) {
+                mostrarAlerta("Agregado con éxito");
+                $('#referencia_modal').modal('toggle');
+                $('#referencia_table tbody').empty();
+                getReferencias();
+            }
+            else {
+                mostrarAlerta("No se ha podido guardar la referencia.");
+            }
+
+        },
+        failure: function (response) {
+            mostrarAlerta(response.responseText);
+        },
+        error: function (response) {
+            mostrarAlerta(response.responseText);
+        }
+    });
+}
+//
+function guardarInfOn(idR, autoresR, anioR, tituloR, ciudadR,editorialR) {
+    var JsonReferenciaInforme = {
+        id: idR,
+        autores: autoresR,
+        anio: anioR,
+        titulo: tituloR,
+        ciudad: ciudadR,
+        editorial: editorialR
+    };
+    console.log(JsonReferenciaInforme);
+    $.ajax({
+        type: "POST",
+        url: "/Proyecto/AgregarReferenciaInforme",
+        data: JSON.stringify(JsonReferenciaInforme),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            //mostrarAlerta("Modificado con éxito.");
+            console.log(response);
+            if (response) {
+                mostrarAlerta("Agregado con éxito");
+                $('#referencia_modal').modal('toggle');
+                $('#referencia_table tbody').empty();
+                getReferencias();
+            }
+            else {
+                mostrarAlerta("No se ha podido guardar la referencia.");
+            }
+
+        },
+        failure: function (response) {
+            mostrarAlerta(response.responseText);
+        },
+        error: function (response) {
+            mostrarAlerta(response.responseText);
+        }
+    });
+}
+//
+function guardarSeccionLibro(idR, autorSeccionR, tituloSeccionR, autorLibroR, tituloLibroR, anioR, paginasR, ciudadR, editorialR) {
+    var JsonReferenciaSeccionLibro = {
+        id: idR,
+        autorSeccion: autorSeccionR,
+        tituloSeccion: tituloSeccionR,
+        autorLibro: autorLibroR,
+        tituloLibro: tituloLibroR,
+        anio: anioR,
+        paginas: paginasR,
+        ciudad: ciudadR,
+        editorial: editorialR
+    };
+    console.log(JsonReferenciaSeccionLibro);
+    $.ajax({
+        type: "POST",
+        url: "/Proyecto/AgregarReferenciaSeccionLibro",
+        data: JSON.stringify(JsonReferenciaSeccionLibro),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            //mostrarAlerta("Modificado con éxito.");
+            console.log(response);
+            if (response) {
+                mostrarAlerta("Agregado con éxito");
+                $('#referencia_modal').modal('toggle');
+                $('#referencia_table tbody').empty();
+                getReferencias();
+            }
+            else {
+                mostrarAlerta("No se ha podido guardar la referencia.");
+            }
+
+        },
+        failure: function (response) {
+            mostrarAlerta(response.responseText);
+        },
+        error: function (response) {
+            mostrarAlerta(response.responseText);
+        }
+    });
+}
+
+function guardarPaginaWeb(idR, autorR, nombrePaginaWebR, anioR, mesR, diaR, urlR) {
+    var JsonReferenciaPaginaWeb = {
+        id: idR,
+        autor: autorR,
+        nombrePaginaWeb: nombrePaginaWebR,
+        anio: anioR,
+        mes: mesR,
+        dia: diaR,
+        url: urlR
+    };
+    console.log(JsonReferenciaPaginaWeb);
+    $.ajax({
+        type: "POST",
+        url: "/Proyecto/AgregarReferenciaPaginaWeb",
+        data: JSON.stringify(JsonReferenciaPaginaWeb),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            //mostrarAlerta("Modificado con éxito.");
+            console.log(response);
+            if (response) {
+                mostrarAlerta("Agregado con éxito");
+                $('#referencia_modal').modal('toggle');
+                $('#referencia_table tbody').empty();
+                getReferencias();
+            }
+            else {
+                mostrarAlerta("No se ha podido guardar la referencia.");
+            }
+
+        },
+        failure: function (response) {
+            mostrarAlerta(response.responseText);
+        },
+        error: function (response) {
+            mostrarAlerta(response.responseText);
+        }
+    });
 }
 
 function guardarRevista(idR, autoresR, fechaR, tituloR, revistaR, volumenR, pagR) {

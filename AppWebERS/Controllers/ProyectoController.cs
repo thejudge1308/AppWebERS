@@ -390,7 +390,27 @@ namespace AppWebERS.Controllers
             return imagenes;
         }
 
+        /**
+        * 
+        * <autor>Christian Marchant</autor>
+        * <summary>Obtiene la version actual de un proyecto.</summary>
+        * <param name="id">Id del proyecto consultado.</param>
+        * <returns>La version del proyecto.</returns>
+        */
 
+        public string ObtenerVersionProyecto(int ID)
+        {
+            string consulta = "SELECT * FROM proyecto WHERE id_proyecto = " + ID + ";";
+            MySqlDataReader data = this.conexion.RealizarConsulta(consulta);
+            if (data != null)
+            {
+                data.Read();
+                string version = data["version"].ToString();
+                this.conexion.EnsureConnectionClosed();
+                return version;
+            }
+            return "0";
+        }
         private String seccionHtmlTablaHistorialCambios(int id)
         {
 
@@ -582,13 +602,44 @@ namespace AppWebERS.Controllers
             FileResult fileResult = null;
             var generator = new NReco.PdfGenerator.HtmlToPdfConverter();
             Proyecto proyecto = this.GetProyecto(id);
+            DateTime fechadt = DateTime.Now;
+            string fecha = String.Format("{0:dddd d 'de' MMMM 'del' yyyy}", fechadt);
 
             string minimalista = this.AgregarListadoMinimalista(id);
+            String portada = "<table> " +
+                "<tr> <td> <strong style=\"font-size: 20px; \" > AppWebERS </strong> <br><br> </td></tr> " +
+                "<tr> <td>  <br>  <br><br> </td></tr> " +
+                "<tr> <td>  <br>  <br><br> </td></tr> " +
+                "<tr> <td>  <br>  <br><br> </td></tr> " +
+                "<tr> <td>  <br>  <br><br> </td></tr> " +
+                "<tr> <td>  <br>  <br><br> </td></tr> " +
+                "<tr> <td>  <br>  <br><br> </td></tr> " +
+                "<tr> <td>  <br>  <br><br> </td></tr> " +
+                "<tr> <td>  <br>  <br><br> </td></tr> </table> ";
+            portada += "<h3 style=\"text-align:center\" >" + "Documento de especificacion de requisitos de usuario/software" + " </h3>";
+            portada += "<h3 style=\"text-align:center\" >" + proyecto.Nombre + " </h3>";
+            portada += "<table>" +
+                "<tr> <td>  <br>  <br><br> </td></tr> " +
+                "<tr> <td>  <br>  <br><br> </td></tr> " +
+                "<tr> <td>  <br>  <br><br> </td></tr> " +
+                "<tr> <td>  <br>  <br><br> </td></tr> " +
+                "<tr> <td>  <br>  <br><br> </td></tr> " +
+                "<tr> <td>  <br>  <br><br> </td></tr> " +
+                "<tr> <td>  <br>  <br><br> </td></tr> " +
+                "<tr> <td>  <br>  <br><br> </td></tr> </table> ";
+            portada += "<h5 style=\"text-align:right\" >" + "Fecha: " + fecha + " </h5>";
+            portada += "<h5 style=\"text-align:right\" >" + "Version: " + this.ObtenerVersionProyecto(id).Replace(',', '.') + " </h5>";
+
+            portada += @"<br></br> <br></br>";
+            portada += SeccionHtmlEquipoDesarrollo(id);
+            portada += SeccionHtmlContraParte(id);
+            portada += seccionHtmlTablaHistorialCambios(id);
 
             string volere = this.CrearVolere(id);
             string diagramas = this.obtenerHtmlDiagramas(id);
             string referencias = this.obtenerReferencias(id);
-
+            
+            
             List<String> tablasMatrizDeTrazado =  new Requisito().MatrizRequisitos(id);
            
             String matrizDeTrazadoHtml = "";
@@ -599,8 +650,9 @@ namespace AppWebERS.Controllers
             }
             Debug.WriteLine("Tablas " + matrizDeTrazadoHtml);
 
-             DateTime fechadt = DateTime.Now;
-            string fecha = String.Format("{0:dddd d 'de' MMMM 'del' yyyy}", fechadt);
+
+
+
             string htmlContent = "<html>" +
                 "  <head>" +
                 " <style> " +
@@ -635,7 +687,7 @@ namespace AppWebERS.Controllers
                     @"<h1>2. Descripción general</h1>" +
 
                         @"<h2>2.1 Características de los usuarios</h1>" +
-                        @"<div> " + proyecto.Proposito + @"</div>" +
+                        @"<div> " + DescripcionGeneralActores(id) + @"</div>" +
 
 
                  @"</div>" +
@@ -674,7 +726,7 @@ namespace AppWebERS.Controllers
             generator.Orientation = NReco.PdfGenerator.PageOrientation.Default;
             generator.GenerateToc = true;
             generator.TocHeaderText = "Tabla de contenidos";
-            var pdfBytes = generator.GeneratePdf(htmlContent);
+            var pdfBytes = generator.GeneratePdf(htmlContent, portada);
 
             HttpContext.Response.ContentEncoding = System.Text.Encoding.UTF8;
             fileResult = new FileContentResult(pdfBytes, "application/pdf");
@@ -800,6 +852,35 @@ namespace AppWebERS.Controllers
 
                 "</table> ";
             return htmlDiagramas;
+        }
+
+        /**
+        * 
+        * <autor>Rodrigo Letelier</autor>
+        * <summary>Crea el html que inserta la caracteristicas de los actores.</summary>
+        * <param name="idp">Id del proyecto al que se asocia el requisito.</param>
+        * <returns>El html con las caracterisiticas.</returns>
+        */
+
+
+        private string DescripcionGeneralActores(int idp) {
+            MySqlDataReader reader;
+            string consulta = "select actor.nombre , actor.descripcion from actor where actor.ref_proyecto = " + idp;
+            reader = this.conexion.RealizarConsulta(consulta);
+            string s = "";
+            s = s + " <table border=\"1\"style=\"border: 1px solid black; border-collapse: collapse; width: 100%; \"> <tr> <td style=\"padding: 5px; \"><b>Actor</b></td> <td style=\"padding: 5px; \"><b>Descripcion</b></td> </tr>";
+            if (reader != null) {
+                while (reader.Read()) {
+                    string nombre = reader["nombre"].ToString();
+                    string descripcion = reader["descripcion"].ToString();
+                    s = s + "<tr> <td style=\"padding: 5px; \">" + nombre + "</td> <td style=\"padding: 5px; \">"+descripcion+"</td> </tr> ";
+                }
+                
+                
+            }
+            s = s + "</table>";
+            this.conexion.EnsureConnectionClosed();
+            return s;
         }
 
         /**

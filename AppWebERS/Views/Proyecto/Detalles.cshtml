@@ -43,6 +43,9 @@
             <a class="nav-link" href="@Url.Action("ListaActores", "Proyecto", new { id = ProyectoActual.IdProyecto })">Actores</a>
         </li>
         <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("ListaClientes", "Proyecto", new { id = ProyectoActual.IdProyecto })">Clientes</a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link" href="@Url.Action("HistorialCambios","Proyecto",new { id = ProyectoActual.IdProyecto})">Historial de cambios</a>
         </li>
     </ul>
@@ -291,7 +294,7 @@
     @Scripts.Render("~/bundles/jqueryval")
     @if(TipoUsuario != Proyecto.AUTH_COMO_SYSADMIN) {
         @Scripts.Render("/Scripts/Proyecto/Detalles_quill.min.js")
-        @Scripts.Render("/Scripts/Proyecto/Referencias_modal.min.js")
+        @Scripts.Render("/Scripts/Proyecto/Referencias_modal.js")
 
     } else {
         @Scripts.Render("/Scripts/Proyecto/Detalles_sysadmin_quill.min.js")

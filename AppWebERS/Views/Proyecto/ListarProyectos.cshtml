@@ -11,6 +11,7 @@
     var proyectosTodos = (List<Proyecto>)ViewData["proyectosTodos"];
     var proyectosAsociados = (List<Proyecto>)ViewData["proyectosAsociados"];
     var proyectosNoAsociados = (List<Proyecto>)ViewData["proyectosNoAsociados"];
+    var proyectosEnJefe = (List<ProyectoIDs>)ViewData["proyectosEnJefe"];
 
 }
 
@@ -80,19 +81,65 @@
 
                 @foreach (Proyecto item in (List<Proyecto>)proyectosAsociados)
                 {
+                    if (item.Estado == "HABILITADO")
+                    {
+                        <div class="card">
+                            <div class="card-header">
 
-                    <div class="card">
-                        <div class="card-header">
-
-                            @item.Nombre
-                        </div>
+                                @item.Nombre
+                            </div>
                         <div class="card-body">
-                            <h5 class="card-title"></h5>
-                            <p class="card-text"></p>
-                            <a href="Detalles/@item.IdProyecto" class="btn btn-primary">Ver detalle</a>
+                                <h5 class="card-title"></h5>
+                                <p class="card-text"></p>
+                                <a href="Detalles/@item.IdProyecto" class="btn btn-primary">Ver detalle</a>
+                                @foreach (ProyectoIDs items in (List<ProyectoIDs>)proyectosEnJefe)
+                                {
+                                    if (item.IdProyecto == items.IdProyecto)
+                                    {
+                                        <a href="ExportarPDF/@item.IdProyecto" class="btn btn-primary">Generar PDF</a>
+                                    }
+                                }
+
+
+                            </div>
                         </div>
-                    </div>
-                    <br><br>
+                        <br><br>
+                    }
+                    else
+                    {
+
+
+                        <div >
+                           
+                       
+                         
+                          
+                                @foreach (ProyectoIDs items in (List<ProyectoIDs>)proyectosEnJefe)
+                                {
+                                    if (item.IdProyecto == items.IdProyecto)
+                                    {
+                                        <div class="card">
+                                            <div class="card-header">
+                                                @item.Nombre
+                                            </div>
+                                            <div class="card-body">
+                                                <h5 class="card-title"></h5>
+                                                <p class="card-text"></p>
+                                                <a href="ExportarPDF/@item.IdProyecto" class="btn btn-primary">Generar PDF</a>
+
+                                            </div>
+
+                                        </div>
+                                    }
+                                }
+
+
+                           
+                        </div>
+                        <br><br>
+
+                    }
+
 
                 }
 
@@ -122,6 +169,7 @@
 
                 @foreach (Proyecto item in (List<Proyecto>)proyectosTodos)
                 {
+
                     <div class="card">
                         <div class="card-header">
 
@@ -131,18 +179,22 @@
                             <h5 class="card-title"></h5>
                             <p class="card-text"></p>
                             <a href="Detalles/@item.IdProyecto" class="btn btn-primary">Ver detalle</a>
+
                             @{
                                 if (item.Estado == "HABILITADO")
                                 {
-                                    <a href="#" class="btn btn-primary" onclick="location.href='@Url.Action("DeshabilitarProyecto", "Proyecto", new {id=item.IdProyecto })'">Deshabilitar</a>
+                                    <a href="#" class="btn btn-primary" onclick="location.href='@Url.Action("DeshabilitarProyecto", "Proyecto", new { id = item.IdProyecto })'">Deshabilitar</a>
 
                                 }
                                 else
                                 {
-                                    <a href="#" class="btn btn-primary" onclick="location.href='@Url.Action("HabilitarProyecto", "Proyecto", new {id=item.IdProyecto })'">Habilitar</a>
+                                    <a href="#" class="btn btn-primary" onclick="location.href='@Url.Action("HabilitarProyecto", "Proyecto", new { id = item.IdProyecto })'">Habilitar</a>
 
                                 }
-                            }
+                               
+                                    <a href="ExportarPDF/@item.IdProyecto" class="btn btn-primary">Generar PDF</a>
+                                    
+                                }
 
                         </div>
 

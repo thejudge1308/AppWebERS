@@ -391,6 +391,183 @@ namespace AppWebERS.Controllers
         }
 
 
+        private String seccionHtmlTablaHistorialCambios(int id)
+        {
+
+            ModificacionDERS historial = new ModificacionDERS();
+            List<ModificacionDERS> historialModificaciones = historial.ListarHistorial(id);
+            String htmlTablaHistorialCambios =  "<h2>Historial de cambios</h2>" +
+                          
+                             "<table border=\"1\"style=\"border: 1px solid black; border-collapse: collapse; width: 100%; text-align:center;\">" +
+                              "<thead>" +
+                                  "<tr>" +
+                                      "<th>" +
+                                          "Version" +
+                                      "</th>" +
+                                      "<th>" +
+                                          "Fecha" +
+                                      "</th>" +
+                                       "<th>"+
+                                           "Razon cambio" +
+                                      "</th>" +
+                                      "<th>" +
+                                           "Autor(es)" +
+                                      "</th>"+
+                                  "</tr>" + "</thead>";
+        if(historialModificaciones!= null)
+            {
+
+          
+                    foreach (var item in historialModificaciones)
+                    {
+                       htmlTablaHistorialCambios  += "<tr>" +
+                           "<td>" + item.Version + "</td>" +
+                              "<td>" + item.Fecha + "</td>" +
+                              "<td>"+item.Descripcion+"</td>" +
+                               "<td>"+item.RefUsuario+"</td>"+
+                            "</tr>";
+                    }
+
+            }
+            else
+            {
+                htmlTablaHistorialCambios += "<tr>" +
+                              "<td>  </td>" +
+                              "<td>  </td>" +
+                              "<td>  </td>" +
+                              "<td>  </td>" +
+                              "</tr>";
+            }
+
+            htmlTablaHistorialCambios += "</table>";
+           
+
+
+            return htmlTablaHistorialCambios;
+        }
+
+
+
+        // 
+        /// <autor>Diego Matus</autor>
+        /// <summary>
+        /// Metodo para generar codigo html para tabla de clientes.
+        /// </summary>
+        /// <param name="id">Recibe como parametro el id del proyecto</param>
+        /// <returns>Codigo html en string</returns>
+        private String SeccionHtmlContraParte(int id)
+        {
+            Cliente cliente = new Cliente();
+
+
+            List<Cliente> clientes = cliente.obtenerTodosLosClientes(id);
+            String htmlTablaClientes = "<h2> Contraparte</h2>" +
+                               "<table border=\"1\"style=\"border: 1px solid black; border-collapse: collapse; width: 100%; text-align:center;\">" +
+                               "<thead>"+
+                                   "<tr>" +
+                                       "<th>" +
+                                           "Nombre" +
+                                       "</th>" +
+                                       "<th>" +
+                                           "Rol" +
+                                       "</th>" +
+                                        "<th>"+
+                                            "Contacto" +
+                                       "</th>" +
+                                   "</tr>"  + "</thead>";
+            if(clientes !=null)
+            {
+                foreach (var item in clientes)
+                {
+
+                    htmlTablaClientes += "<tr>" +
+                          "<td>" + item.Nombre + "</td>" +
+                          "<td>" + item.Rol + "</td>" +
+                          "<td>" + item.Contacto + "</td>" +
+                      "</tr>";
+
+                }
+            }
+            else
+            {
+                htmlTablaClientes += "<tr>" +
+                         "<td></td>" +
+                         "<td></td>" +
+                         "<td></td>" +
+                     "</tr>";
+            }
+           
+
+            htmlTablaClientes += "</table>";
+
+            return htmlTablaClientes;
+        }
+
+
+        /// 
+        /// <autor>Diego Matus</autor>
+        /// <summary>
+        /// Metodo para generar codigo html para tabla de equipo de desarrollo.
+        /// </summary>
+        /// <param name="id">Recibe como parametro el id del proyecto</param>
+        /// <returns>Codigo html en string</returns>
+        private String SeccionHtmlEquipoDesarrollo(int id)
+        {
+            Proyecto proyecto = new Proyecto();
+           
+            List<Usuario> desarrolladores = proyecto.GetListaUsuarios(id);
+            String htmlTablaEquipoDesarrollo = "<h2> Equipo de Desarrollo</h2>" +
+                               "<table border=\"1\"style=\"border: 1px solid black; border-collapse: collapse; width: 100%; text-align:center;\">" +
+                                   "<tr>" +
+                                       "<th>" +
+                                           "Nombre" +
+                                       "</th>" +
+                                       "<th>" +
+                                           "Rol" +
+                                       "</th>" +
+                                        "<th>"+
+                                            "Contacto" +
+                                       "</th>" +
+                                   "</tr>";
+                            if(desarrolladores != null)
+                            {
+
+           
+                                foreach (var item in desarrolladores)
+                                {
+                                    if (item.Tipo == "Usuario")
+                                    {
+                                    htmlTablaEquipoDesarrollo += "<tr>" +
+                                      "<td>" + item.Nombre + "</td>" +
+                                      "<td>Desarrollador</td>" +
+                                      "<td>" + item.CorreoElectronico + "</td>" +
+                                      "</tr>";
+                                }
+                                else
+                                {
+                                        htmlTablaEquipoDesarrollo += "<tr>" +
+                                      "<td>" + item.Nombre + "</td>" +
+                                      "<td>"+item.Tipo+"</td>" +
+                                      "<td>" + item.CorreoElectronico + "</td>" +
+                                      "</tr>";
+                                 }
+                                
+
+                                }
+                            }
+                            else
+                            {
+                                htmlTablaEquipoDesarrollo += "<tr>" +
+                                 "<td></td>" +
+                                 "<td></td>" +
+                                 "<td></td>" +
+                                 "</tr>";
+                    }
+
+                            htmlTablaEquipoDesarrollo +="</table>";
+
+            return htmlTablaEquipoDesarrollo;
+        }
 
         /**
         * 
@@ -412,7 +589,17 @@ namespace AppWebERS.Controllers
             string diagramas = this.obtenerHtmlDiagramas(id);
             string referencias = this.obtenerReferencias(id);
 
-            DateTime fechadt = DateTime.Now;
+            List<String> tablasMatrizDeTrazado =  new Requisito().MatrizRequisitos(id);
+           
+            String matrizDeTrazadoHtml = "";
+            foreach (String tabla in tablasMatrizDeTrazado)
+            {
+                Debug.WriteLine("Tabla: " + tabla);
+               matrizDeTrazadoHtml += tabla + "<br> </br> ";
+            }
+            Debug.WriteLine("Tablas " + matrizDeTrazadoHtml);
+
+             DateTime fechadt = DateTime.Now;
             string fecha = String.Format("{0:dddd d 'de' MMMM 'del' yyyy}", fechadt);
             string htmlContent = "<html>" +
                 "  <head>" +
@@ -467,7 +654,7 @@ namespace AppWebERS.Controllers
 
                  "<div>" +
                     @"<h1>4. Matriz de trazado requisitos de usuario vs requisitos de software</h1>" +
-                     @"<div> " +  proyecto.Proposito +  @"</div>" +
+                     @"<div> " +  matrizDeTrazadoHtml +  @"</div>" +
 
                  @"</div>" +
 
@@ -634,6 +821,7 @@ namespace AppWebERS.Controllers
             }
 
             while (reader.Read()) {
+
 
                 string idr = reader["id_requisito"].ToString();
                 string nombre = reader["nombre"].ToString();

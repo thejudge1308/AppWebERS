@@ -380,6 +380,7 @@ namespace AppWebERS.Models
                 con.EnsureConnectionClosed();
                 return true;
             }
+            con.EnsureConnectionClosed();
             return false;
         }
 
@@ -396,6 +397,7 @@ namespace AppWebERS.Models
                 con.EnsureConnectionClosed();
                 return true;
             }
+            con.EnsureConnectionClosed();
             return false;
         }
         /**

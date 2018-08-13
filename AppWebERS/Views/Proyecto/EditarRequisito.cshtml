@@ -74,6 +74,7 @@
                 @Html.LabelFor(m => m.TipoRequisito, new { @class = "col-form-label", style = "margin-left:15px" })
                 <div class="col-sm-3">
                     <select id="TipoRequisito" name="TipoRequisito" class="form-control mx-sm-2">
+                        <option selected>@Model.TipoRequisito</option>
                         <option>Funcional</option>
                         <option>No Funcional</option>
                     </select>
@@ -82,6 +83,7 @@
                 @Html.LabelFor(m => m.Estado, new { @class = "col-form-label", style = "margin-right:30px" })
                 <div class="col-sm-3">
                     <select id="Estado" name="Estado" class="form-control mx-sm-2">
+                        <option selected>@Model.Estado</option>
                         <option>Pendiente</option>
                         <option>En Proceso</option>
                         <option>En Pruebas</option>
@@ -95,16 +97,18 @@
                 @Html.LabelFor(m => m.Prioridad, new { @class = "col-form-label", style = "margin-left:15px;margin-right:35px" })
                 <div class="col-sm-3">
                     <select id="Prioridad" name="Prioridad" class="form-control mx-sm-2">
+                        <option selected>@Model.Prioridad</option>
                         <option>Crítico</option>
                         <option>Alto</option>
-					    <option>Estándar</option>
-					    <option>Bajo</option>
-					    <option>Deseable</option>
-                </select>
+                        <option>Estándar</option>
+                        <option>Bajo</option>
+                        <option>Deseable</option>
+                    </select>
                 </div>
                 @Html.LabelFor(m => m.Estabilidad, new { @class = "col-form-label" })
                 <div class="col-sm-3">
                     <select id="Estabilidad" name="Estabilidad" class="form-control mx-sm-2">
+                        <option selected>@Model.Estabilidad</option>
                         <option>Transable</option>
                         <option>Intransable</option>
                     </select>

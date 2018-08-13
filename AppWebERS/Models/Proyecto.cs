@@ -897,6 +897,30 @@ namespace AppWebERS.Models{
             return false;
         }
 
+        public bool EliminarSolicitudesUnionProyectosInnecesarias(int idProyecto)
+        {
+            string consulta = "SELECT vinculo_usuario_proyecto.ref_usuario FROM vinculo_usuario_proyecto WHERE vinculo_usuario_proyecto.ref_proyecto ="+idProyecto+";";
+            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
+            if (reader != null)
+            {
+                while (reader.Read())
+                {
+                    string idUsuarioBD = reader["ref_usuario"].ToString();
+                    EliminarSolicitudUnionProyecto(idUsuarioBD,idProyecto);
+                }
+            }
+            this.conexion.EnsureConnectionClosed();
+            return true;
+        }
+
+        public bool EliminarSolicitudUnionProyecto(string idUsuario, int idProyecto)
+        {
+            ApplicationDbContext conexionLocal = ApplicationDbContext.Create();
+            string consulta = "DELETE FROM solicitud_vinculacion_proyecto WHERE ref_usuario = '"+idUsuario+"' AND ref_proyecto = "+idProyecto+";";
+            bool valor = conexionLocal.RealizarConsultaNoQuery(consulta);
+            conexionLocal.EnsureConnectionClosed();
+            return valor;
+        }
 
         /**
          * 

@@ -75,6 +75,23 @@ namespace AppWebERS.Models
             }
         }
 
+        ///<author>Maximo Hernandez</author>
+        /// <summary>
+        /// Metodo que elimina el cliente que posee la Id entregada al inicio del metodo.
+        /// </summary>
+        /// <param name="IdCliente">Id del cliente a eliminar</param>
+        public void EliminarCliente(int IdCliente)
+        {
+            using (var db = ApplicationDbContext.Create())
+            {
+                string query = @"DELETE FROM `appers`.`cliente_proyecto` WHERE `Id` = @IdCliente;";
+                Dictionary<string, object> parametros = new Dictionary<string, object>();
+                parametros.Add("@IdCliente", IdCliente);
+
+                db.Execute(query, parametros);
+            }
+        }
+
         /// <summary>
         /// Obtiene todos los clientes de la base de datos dado una referencia de un proyecto
         /// </summary>

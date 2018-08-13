@@ -276,6 +276,27 @@ namespace AppWebERS.Controllers
             return imagenes;
         }
 
+        /**
+        * 
+        * <autor>Christian Marchant</autor>
+        * <summary>Obtiene la version actual de un proyecto.</summary>
+        * <param name="id">Id del proyecto consultado.</param>
+        * <returns>La version del proyecto.</returns>
+        */
+
+        public string ObtenerVersionProyecto(int ID)
+        {
+            string consulta = "SELECT * FROM proyecto WHERE id_proyecto = " + ID + ";";
+            MySqlDataReader data = this.conexion.RealizarConsulta(consulta);
+            if (data != null)
+            {
+                data.Read();
+                string version = data["version"].ToString();
+                this.conexion.EnsureConnectionClosed();
+                return version;
+            }
+            return "0";
+        }
 
 
         /**
@@ -291,13 +312,39 @@ namespace AppWebERS.Controllers
             FileResult fileResult = null;
             var generator = new NReco.PdfGenerator.HtmlToPdfConverter();
             Proyecto proyecto = this.GetProyecto(id);
-
-            
-
-
-
             DateTime fechadt = DateTime.Now;
             string fecha = String.Format("{0:dddd d 'de' MMMM 'del' yyyy}", fechadt);
+
+            String portada =
+
+            "<table> " +
+                "<tr> <td> <strong style=\"font-size: 20px; \" > AppWebERS </strong> <br><br> </td></tr> " +
+                "<tr> <td>  <br>  <br><br> </td></tr> " +
+                "<tr> <td>  <br>  <br><br> </td></tr> " +
+                "<tr> <td>  <br>  <br><br> </td></tr> " +
+                "<tr> <td>  <br>  <br><br> </td></tr> " +
+                "<tr> <td>  <br>  <br><br> </td></tr> " +
+                "<tr> <td>  <br>  <br><br> </td></tr> " +
+                "<tr> <td>  <br>  <br><br> </td></tr> " +
+                "<tr> <td>  <br>  <br><br> </td></tr> </table> ";
+            portada += "<h3 style=\"text-align:center\" >" + "Documento de especificación de requisitos de usuario/software"  + " </h3>";
+            portada += "<h3 style=\"text-align:center\" >" + proyecto.Nombre + " </h3>";
+            portada +=
+
+                "<table>" +
+                "<tr> <td>  <br>  <br><br> </td></tr> " +
+                "<tr> <td>  <br>  <br><br> </td></tr> " +
+                "<tr> <td>  <br>  <br><br> </td></tr> " +
+                "<tr> <td>  <br>  <br><br> </td></tr> " +
+                "<tr> <td>  <br>  <br><br> </td></tr> " +
+                "<tr> <td>  <br>  <br><br> </td></tr> " +
+                "<tr> <td>  <br>  <br><br> </td></tr> " +
+                "<tr> <td>  <br>  <br><br> </td></tr> </table> ";
+
+            portada += "<h5 style=\"text-align:right\" >" + "Fecha: " + fecha + " </h5>";
+            portada += "<h5 style=\"text-align:right\" >" + "Versión: " + this.ObtenerVersionProyecto(id).Replace(',','.') + " </h5>";
+
+
             string htmlContent = "<html>" +
                 "  <head>" +
                 " <style> " +
@@ -305,48 +352,49 @@ namespace AppWebERS.Controllers
                 "</style>" +
                 " </head> " +
                 "<body> " +
-                "<meta charset=\"UTF-8\" /> <table> <tr> <td class=\"logo\">AppWebERS</td> <td </tr> </table> <hr> <p class=\"fecha\">Fecha: " + fecha + "</p> <hr> <h1> 1 Detalles del proyecto</h1> " +
-            
-                
+                "<meta charset=\"UTF-8\" /> " + portada + "  " +
+
+
 
                 "<table> " +
+                "<tr> <td> <strong style=\"font-size: 30px; \" > 1) Detalles del Proyecto </strong> <br><br> </td></tr> " +
                 "<tr> <td> <strong style=\"font-size: 20px; \" > 1.1) Nombre </strong> <br><br> </td></tr> " +
                 "<tr> <td>" + proyecto.Nombre + "</td> </tr> " +
 
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.2) Propósito </strong> <br><br> </td></tr> " +
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.2) Descripcion General </strong> <br><br> </td></tr> " +
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.3) Suposiciones y dependencias </strong> <br><br> </td></tr> " +
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.4) Restricciones </strong> <br><br> </td></tr> " +
+
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.5) Propósito </strong> <br><br> </td></tr> " +
                 "<tr> <td>" + proyecto.Proposito + "</td> </tr> " +
 
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.3) Alcance </strong> <br><br> </td></tr> " +
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.6) Alcance </strong> <br><br> </td></tr> " +
                 "<tr> <td>" + proyecto.Alcance + "</td> </tr> " +
 
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.4) Contexto </strong> <br><br> </td></tr> " +
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.7) Contexto </strong> <br><br> </td></tr> " +
                 "<tr> <td>" + proyecto.Contexto + "</td> </tr> " +
 
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.5) Definiciones </strong> <br><br> </td></tr> " +
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.8) Definiciones </strong> <br><br> </td></tr> " +
                 "<tr> <td>" + proyecto.Definiciones + "</td> </tr> " +
 
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.6) Acrónimos </strong> <br><br> </td></tr> " +
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.9) Acrónimos </strong> <br><br> </td></tr> " +
                 "<tr> <td>" + proyecto.Acronimos + "</td> </tr> " +
 
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.7) Abreviaturas </strong> <br><br> </td></tr> " +
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.10) Abreviaturas </strong> <br><br> </td></tr> " +
                 "<tr> <td>" + proyecto.Abreviaturas + "</td> </tr> " +
 
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.8) Referencias </strong> <br><br> </td></tr> " +
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.11) Referencias </strong> <br><br> </td></tr> " +
                 "<tr> <td>" + proyecto.Referencias + "</td> </tr> " +
 
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.9) Ambiente Operacional </strong> <br><br> </td></tr> " +
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.12) Ambiente Operacional </strong> <br><br> </td></tr> " +
                 "<tr> <td>" + proyecto.AmbienteOperacional + "</td> </tr> " +
 
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.10) Relación con otros proyectos </strong> <br><br> </td></tr> " +
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.13) Relación con otros proyectos </strong> <br><br> </td></tr> " +
                 "<tr> <td>" + proyecto.RelacionProyectos + "</td> </tr> " +
-
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.11) Descripcion General </strong> <br><br> </td></tr> " +
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.12) Suposiciones y dependencias </strong> <br><br> </td></tr> " +
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.10) Restricciones </strong> <br><br> </td></tr> " +
-
-
+                
                 "</table> ";
-            string descripciong = "<h1> 2 Caractristicas de los actores</h1>";
+
+            string descripciong = "<h1> 2) Caractristicas de los actores</h1>";
             descripciong = descripciong + this.DescripcionGeneralActores(id);
             string minimalista = this.AgregarListadoMinimalista(id);
 
@@ -420,7 +468,7 @@ namespace AppWebERS.Controllers
 
             "<table> " +
 
-            "<tr> <td>  <h1 > 5 Referencias</h1> </td></tr> " +
+            "<tr> <td>  <h1 > 5) Referencias</h1> </td></tr> " +
 
             ht +
 
@@ -482,7 +530,7 @@ namespace AppWebERS.Controllers
 
                 "<table> " +
 
-                "<tr> <td>  <h1 class=\"titulo\" > 4 Diagramas</h1> </td></tr> " +
+                "<tr> <td>  <h1 class=\"titulo\" > 4) Diagramas</h1> </td></tr> " +
 
                 ht +
 
@@ -528,7 +576,7 @@ namespace AppWebERS.Controllers
          */
 
         private string AgregarListadoMinimalista(int idp) {
-            string ini = "<h1> 3 Requisitos del portal</h1>";
+            string ini = "<h1> 3) Requisitos del portal</h1>";
             string s = ini + "<h2> 3.1 Listado de requisitos</h2> <table class=\"espacio - izq\">";
             
             MySqlDataReader reader;

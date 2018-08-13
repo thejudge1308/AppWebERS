@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using MySql.Data.MySqlClient;
 using System.Web;
 
 /**
@@ -113,6 +114,43 @@ namespace AppWebERS.Models {
 
         public void CargarDatos(DataRow dr) {
 
+        }
+
+        public bool AgregarModificacionActoresDERS(int id, string fecha, string userId, string descripcion)
+        {
+
+            float versionActual = this.ObtenerVersionActual(id) + 0.01F;
+            string vers = versionActual.ToString().Replace(',', '.');
+            string consulta = "INSERT INTO modificacion_ders(version,ref_proyecto,fecha,ref_autor_modificacion,descripcion) " +
+                "VALUES(" + vers + ", " + id + ", '" + fecha + "' , '" + userId + "' , '" + descripcion + "' ) ";
+            ApplicationDbContext con = ApplicationDbContext.Create();
+            if (con.RealizarConsultaNoQuery(consulta))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private float ObtenerVersionActual(int id)
+        {
+
+            float version = 0.00F;
+            string consulta = "SELECT modificacion_ders.version FROM modificacion_ders WHERE ref_proyecto = " + id +
+                " ORDER BY version DESC LIMIT 1";
+            ApplicationDbContext con = ApplicationDbContext.Create();
+            MySqlDataReader reader = con.RealizarConsulta(consulta);
+
+            if (reader != null)
+            {
+                reader.Read();
+                version = float.Parse(reader[0].ToString());
+                return version;
+            }
+            else
+            {
+
+                return 0.00F;
+            }
         }
     }
 }

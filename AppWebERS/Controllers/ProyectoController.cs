@@ -388,6 +388,8 @@ namespace AppWebERS.Controllers
                     AppWebERS.Models.Referencia dm = new AppWebERS.Models.Referencia(idProyecto, referencia);
                     referencias.Add(dm);
                 }
+                this.conexion.EnsureConnectionClosed();
+
             }
             conexion.EnsureConnectionClosed();
 
@@ -711,6 +713,9 @@ namespace AppWebERS.Controllers
                 this.conexion.EnsureConnectionClosed();
                 ViewData["actual"] = idProyecto;
                 ViewData["usuario"] = TipoDePermiso(idProyecto);
+
+                actor.AgregarModificacionActoresDERS(idProyecto, DateTime.Now.ToString("yyyy-MM-dd"), User.Identity.GetUserId(),
+                    "Se ha agregado al actor con nombre " + nombre);
                 return RedirectToAction("ListaActores", new { id = idProyecto });
             }
 
@@ -1428,7 +1433,8 @@ namespace AppWebERS.Controllers
             int id = Int32.Parse(idProyecto);
             int num = Int32.Parse(num_requisito);
             bool validate = requisito.ActualizarRequisito(requisito,id,num);
-            if (validate)
+            bool modDers = r.ModificacionRequisitoDERS(r, id, DateTime.Now.ToString("yyyy-MM-dd"), User.Identity.GetUserId()); 
+            if (validate && modDers)
             {
                 foreach (var actor in listaActores)
                 {
@@ -1449,8 +1455,9 @@ namespace AppWebERS.Controllers
                         }
                     }
                 }
-                
 
+
+               
                 TempData["alerta"] = new Alerta("Éxito al editar Requisito.", TipoAlerta.SUCCESS);
                 return RedirectToAction("ListarRequisitosMinimalista", "Proyecto", new { id = idProyecto });
             }
@@ -1459,6 +1466,33 @@ namespace AppWebERS.Controllers
                 TempData["alerta"] = new Alerta("ERROR al editar Requisito.", TipoAlerta.ERROR);
             }
             return RedirectToAction("ListarRequisitosMinimalista", "Proyecto", new { id = idProyecto });
+        }
+
+        /**
+         * <author>Manuel González</author>
+         * <summary>
+         * GET que obtiene los datos del requisito que se desea mostrar 
+         * </summary>
+         * <param name="id">id correspondiente al Proyecto Actual.</param>
+         * <param name="num_requisito">id del requisito del cual queremos conocer los detalles.</param>
+         * <returns> Interfaz con tarjeta de volere que contiene los detalles del requisito seleccionado</returns>
+         */
+        [HttpGet]
+        public ActionResult DetallesRequisito(int id, string idRequisito)
+        {
+            Requisito requisito = this.obtenerRequisito(id, idRequisito);
+            ViewData["requisito"] = requisito;
+            ViewData["tipo"] = requisito.Tipo;
+            List<CheckBox> list = obtenerActores(id);
+            List<CheckBox> list2 = this.obtenerRequisitosUsuario(requisito, id);
+            this.obtenereRequisitosUsuariosAsociados(requisito, idRequisito, list2, id);
+            this.obtenerActoresAsociados(requisito, idRequisito, list, id);
+            requisito.Actores = list;
+            requisito.Requisitos = list2;
+            int num_requisito = requisito.ObtenerNumRequisito(id, idRequisito);
+            ViewBag.IdProyecto = id;
+            ViewBag.numRequisito = num_requisito;
+            return View(requisito);
         }
 
         
@@ -1928,15 +1962,16 @@ namespace AppWebERS.Controllers
         {
             string value = "";
             string consulta = "SELECT users.Id FROM users WHERE users.Rut = '" + rut + "'";
-            MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
+            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
             if(reader!= null)
             {
                 while(reader.Read())
                 {
                     value = reader[0].ToString();
                 }
-                Conector.CerrarConexion();
+                this.conexion.EnsureConnectionClosed();
             }
+            this.conexion.EnsureConnectionClosed();
              return value;
         }
 
@@ -1953,15 +1988,17 @@ namespace AppWebERS.Controllers
             //ARREGLAR LA CONSULTA
             string consulta = "SELECT actor.nombre, actor.id_actor FROM actor WHERE actor.ref_proyecto = '" + id + "'";
 
-            MySqlDataReader reader = this.Conector.RealizarConsulta(consulta);
+            MySqlDataReader reader = this.conexion.RealizarConsulta(consulta);
             if (reader != null)
             {
                 while (reader.Read())
                 {
                     l.Add(new CheckBox() { nombre = reader[0].ToString(), id= reader[1].ToString(),isChecked = false });
                 }
-                Conector.CerrarConexion();
+                this.conexion.EnsureConnectionClosed();
             }
+            this.conexion.EnsureConnectionClosed();
+
             return l;
         }
         /**
@@ -1990,10 +2027,11 @@ namespace AppWebERS.Controllers
                     {
                         l.Add(new CheckBox() { nombre = reader[0].ToString(), id = reader[1].ToString(), isChecked = false });
                     }
-                    Conector.CerrarConexion();
+                    con.EnsureConnectionClosed();
                 }
-               
-                
+
+                this.conexion.EnsureConnectionClosed();
+
                 return l;
             }
 
@@ -2072,11 +2110,12 @@ namespace AppWebERS.Controllers
                     referencia.valor = reader[1].ToString();
                     lista.Add(referencia);
                 }
-
+                conexion.EnsureConnectionClosed();
                 return lista;
             }
             else
             {
+                conexion.EnsureConnectionClosed();
                 return null;
             }
 
@@ -2131,6 +2170,7 @@ namespace AppWebERS.Controllers
             {
                 ViewData["proyecto"] = proyecto;
                 ViewData["permiso"] = this.TipoDePermiso(id);
+                ViewData["tipoUsuario"] = tipo;
                 Requisito requisito = new Requisito(null, null, null, null, null, null, null, null, null, null, DateTime.Now.ToString("yyyy-MM-dd"), null, null);
                 ViewData["diccionarioRequisitos"] = requisito.ObtenerDiccionarioRequisitos(id);
                 return View(requisito);
@@ -2165,7 +2205,7 @@ namespace AppWebERS.Controllers
 
             if (rol == 0 || rol == 2)
             {
-                Requisito requisito = new Requisito(idRequisito, nombre, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, DateTime.Now.ToString("yyyy-MM-dd"), String.Empty, "USUARIO");
+                Requisito requisito = new Requisito(idRequisito, nombre, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, String.Empty, DateTime.Now.ToString("yyyy-MM-dd"), "1", "USUARIO");
                 if (requisito.VerificarIdRequisito(id, idRequisito))
                 {
                     if (requisito.ValidarNombreRequisito(id, nombre))
@@ -2231,7 +2271,7 @@ namespace AppWebERS.Controllers
             {
                 Requisito nuevoRequisistoS = new Requisito(idRequisito, nombre, string.Empty, string.Empty, string.Empty,
                 string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, DateTime.Now.ToString("yyyy-MM-dd"),
-                string.Empty, "SISTEMA");
+                "1", "SISTEMA");
                 if (nuevoRequisistoS.VerificarIdRequisito(id, idRequisito))
                 {
                     if (nuevoRequisistoS.ValidarNombreRequisito(id, nombre))
@@ -2283,13 +2323,7 @@ namespace AppWebERS.Controllers
             return View(model);
         }
 
-        /**
-          <autor> Raimundo Vasquez</autor>
-        * <summary>Metodo para obtener un id según proyecto y numero ( autoincremental en bd) del requisito</summary>
-        * <param name="id">Id del proyecto al que pertenece el requisito.</param>
-        * <param name="num_requisito">Id del requisito de sistema que se desea editar.</param>
-        * <returns>Objeto con los valores del requisito que se desea editar.</returns>
-        */
+        
         public ActionResult HistorialCambios2(int id)
         {
             Proyecto proyecto = this.GetProyecto(id);
@@ -2298,7 +2332,13 @@ namespace AppWebERS.Controllers
             ViewData["permiso"] = TipoDePermiso(id);
             return View();
         }
-
+        /**
+          <autor> Raimundo Vasquez</autor>
+        * <summary>Metodo para obtener un id según proyecto y numero ( autoincremental en bd) del requisito</summary>
+        * <param name="id">Id del proyecto al que pertenece el requisito.</param>
+        * <param name="idRequisito">Id del requisito de sistema que se desea editar.</param>
+        * <returns>Objeto con los valores del requisito que se desea editar.</returns>
+        */
         private Requisito obtenerRequisito(int id,string idRequisito)
         {
             Requisito r = new Requisito();
@@ -2323,6 +2363,7 @@ namespace AppWebERS.Controllers
                 r.Incremento = reader["incremento"].ToString();
                 r.Tipo = reader["tipo"].ToString();
             }
+            conexion.EnsureConnectionClosed();
             return r;
         }
 

@@ -425,6 +425,8 @@ namespace AppWebERS.Models{
                 //Debug.WriteLine(proyecto.Proposito);
                 this.conexion.EnsureConnectionClosed();
             }
+
+            this.conexion.EnsureConnectionClosed();
             return proyecto;
         }
 
@@ -469,6 +471,7 @@ namespace AppWebERS.Models{
                 }
                 this.conexion.EnsureConnectionClosed();
            } else {
+                this.conexion.EnsureConnectionClosed();
                 permiso = NO_AUTH;
            }
             return permiso;

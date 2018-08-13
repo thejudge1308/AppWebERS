@@ -1,5 +1,7 @@
 ﻿using AppWebERS.Models;
 using AppWebERS.Utilidades;
+using Microsoft.AspNet.Identity;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,8 +74,13 @@ namespace AppWebERS.Controllers
             int NumeroDeRequisitosAsociados = Requisito.ObtenerNumeroDeRequisitosAsociadoAUnRequisito(IdProyecto, IdRequisito, 0);
             if (NumeroDeRequisitosAsociados == 0)
             {
+                Requisito.AgregarModificacionRequisitoDERS(IdProyecto, DateTime.Now.ToString("yyyy-MM-dd"), User.Identity.GetUserId(),
+                    "Se ha eliminado el requisito de usuario" + obtenerNombreRequisito(IdRequisito));
+
                 Requisito.EliminarRequisito(IdProyecto, IdRequisito);
                 TempData["alerta"] = new Alerta("Requisito de usuario eliminado con exito", TipoAlerta.SUCCESS);
+
+
                 return RedirectToAction("ListarRequisitosMinimalista/" + IdProyecto, "Proyecto");
             }
             TempData["alerta"] = new Alerta("El requisito de usuario todavia posee requisitos de sistema asociados, elimine estos primero", TipoAlerta.ERROR);
@@ -98,6 +105,8 @@ namespace AppWebERS.Controllers
             int NumeroDeRequisitosAsociados = Requisito.ObtenerNumeroDeRequisitosAsociadoAUnRequisito(IdProyecto, IdRequisitoSistema, 1);
             if (NumeroDeRequisitosAsociados == 1)
             {
+                Requisito.AgregarModificacionRequisitoDERS(IdProyecto, DateTime.Now.ToString("yyyy-MM-dd"), User.Identity.GetUserId(),
+                   "Se ha eliminado el requisito de sistema " + obtenerNombreRequisito(IdRequisitoSistema));
                 Requisito.EliminarRequisito(IdProyecto, IdRequisitoSistema, IdRequisitoUsuario);
                 TempData["alerta"] = new Alerta("Requisito de sistema eliminado con exito", TipoAlerta.SUCCESS);
                 return RedirectToAction("ListarRequisitosMinimalista/" + IdProyecto, "Proyecto");
@@ -112,5 +121,23 @@ namespace AppWebERS.Controllers
             System.Diagnostics.Debug.WriteLine(NumeroDeRequisitos);
             return RedirectToAction("ListarRequisitosMinimalista/" + IdProyecto, "Proyecto");
         }
+
+        private string obtenerNombreRequisito(string idRequisito) {
+            string consulta = "SELECT requisito.nombre FROM requisito WHERE id_requisito='" + idRequisito + "';";
+            ApplicationDbContext con = ApplicationDbContext.Create();
+            MySqlDataReader reader = con.RealizarConsulta(consulta);
+
+            if (reader != null)
+            {
+                reader.Read();
+                return reader[0].ToString();
+            }
+            else
+            {
+
+                return null;
+            }
+        }
     }
+
 }

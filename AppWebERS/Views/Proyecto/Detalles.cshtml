@@ -281,6 +281,22 @@
 
         <div class="form-group border">
             <div class="my-2">
+                @{@Html.LabelFor(p => ProyectoActual.CaracteristicasUsuarios, new { @class = "col-md-12 control-label" })}
+                <div class="col-12">
+                    <div id="caracteristicas-edit"></div>
+                </div>
+                @if (TipoUsuario != Proyecto.AUTH_COMO_SYSADMIN) {
+                    <div class="mt-2 d-flex flex-row-reverse">
+                        <div class="p-2">
+                            <a id="caracteristicas-button" class="btn btn-primary text-white">Guardar cambios</a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="form-group border">
+            <div class="my-2">
                 @{@Html.LabelFor(p => ProyectoActual.Referencias, new { @class = "col-md-12 control-label" })}
                 <div class="col-12 table-wrapper-scroll-y">
                     @*@<div id="referencia-edit"></div>*@

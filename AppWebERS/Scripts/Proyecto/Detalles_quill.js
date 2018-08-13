@@ -78,8 +78,9 @@ $(document).ready(function () {
     var acronimoQ = new Quill('#acronimo-edit', config2); 
     var abreviaturaQ = new Quill('#abreviatura-edit', config2); 
     //var referenciaQ = new Quill('#referencia-edit', config);
-    var suposicionQ = new Quill('#suposiciones-edit', config2);
-    var restriccionQ = new Quill('#restricciones-edit', config2); 
+    var suposicionQ = new Quill('#suposicion-edit', config);
+    var caracteristicasQ = new Quill('#caracteristicas-edit', config2);
+    var restriccionQ = new Quill('#restriccion-edit', config);
     var ambienteQ = new Quill('#ambiente-edit', config); 
     var relacionQ = new Quill('#relacion-edit', config); 
 
@@ -102,8 +103,9 @@ $(document).ready(function () {
             var acronimo = data.Acronimos === "" ? emptydata : data.Acronimos;
             var abreviatura = data.Abreviaturas === "" ? emptydata : data.Abreviaturas;
             //var referencia = data.Referencias === "" ? emptydata : data.Referencias;
-            var suposicion = data.Suposicion === "" ? emptydata : data.Suposicion;
-            var restriccion = data.Restriccion === "" ? emptydata : data.Restriccion;
+            var suposicion = data.Suposiciones === "" ? emptydata : data.Suposiciones;
+            var restriccion = data.Restricciones === "" ? emptydata : data.Restricciones;
+            var caracteristicas = data.CaracteristicasUsuarios === "" ? emptydata : data.CaracteristicasUsuarios;
             var ambiente = data.AmbienteOperacional === "" ? emptydata : data.AmbienteOperacional;
             var relacion = data.RelacionProyectos === "" ? emptydata : data.RelacionProyectos;
 
@@ -120,6 +122,7 @@ $(document).ready(function () {
             //$('#referencia-edit .ql-editor').empty();
             $('#suposicion-edit .ql-editor').empty();
             $('#restriccion-edit .ql-editor').empty();
+            $('#caracteristicas-edit .ql-editor').empty();
             $('#ambiente-edit .ql-editor').empty();
             $('#relacion-edit .ql-editor').empty();
 
@@ -136,6 +139,7 @@ $(document).ready(function () {
             //$('#referencia-edit .ql-editor').append(referencia);
             $('#suposicion-edit .ql-editor').append(suposicion);
             $('#restriccion-edit .ql-editor').append(restriccion);
+            $('#caracteristicas-edit .ql-editor').append(caracteristicas);
             $('#ambiente-edit .ql-editor').append(ambiente);
             $('#relacion-edit .ql-editor').append(relacion);
 
@@ -157,10 +161,9 @@ $(document).ready(function () {
         }
     });
 
-
     $('#version-button').on('click', function () {
         info_post($("#ProyectoActual_IdProyecto").val(), "version", versionQ.root.innerHTML);
-    });
+
     $('#descripcion-button').on('click', function () {
         info_post($("#ProyectoActual_IdProyecto").val(), "descripcion", descripcionQ.root.innerHTML);
     });
@@ -189,7 +192,11 @@ $(document).ready(function () {
         info_post($("#ProyectoActual_IdProyecto").val(), "suposicion", suposicionQ.root.innerHTML);
     });
     $('#restriccion-button').on('click', function () {
-        info_post($("#ProyectoActual_IdProyecto").val(), "referencia", restriccionQ.root.innerHTML);
+        info_post($("#ProyectoActual_IdProyecto").val(), "restriccion", restriccionQ.root.innerHTML);
+    });
+
+    $('#caracteristicas-button').on('click', function () {
+        info_post($("#ProyectoActual_IdProyecto").val(), "caracteristicas", caracteristicasQ.root.innerHTML);
     });
     $('#ambiente-button').on('click', function () {
         info_post($("#ProyectoActual_IdProyecto").val(), "ambiente", ambienteQ.root.innerHTML);

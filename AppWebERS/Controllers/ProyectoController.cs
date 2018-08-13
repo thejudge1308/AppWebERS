@@ -339,6 +339,16 @@ namespace AppWebERS.Controllers
                     return Json(true, JsonRequestBehavior.AllowGet);
                     break;
 
+                case "suposicion":
+                    proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo, User.Identity.GetUserId());
+                    return Json(true, JsonRequestBehavior.AllowGet);
+                    break;
+
+                case "restriccion":
+                    proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo, User.Identity.GetUserId());
+                    return Json(true, JsonRequestBehavior.AllowGet);
+                    break;
+
                 case "ambiente":
                     proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo, User.Identity.GetUserId());
                     return Json(true, JsonRequestBehavior.AllowGet);
@@ -599,10 +609,12 @@ namespace AppWebERS.Controllers
                 "<div>" +
                     @"<h1>1. Introducción</h1>" +
 
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.2) Versión </strong> <br><br> </td></tr> " +
+                "<table> " +
+                "<tr> <td> <strong style=\"font-size: 20px; \" > 1.2) Version </strong> <br><br> </td></tr> " +
                 "<tr> <td>" + proyecto.Version + "</td> </tr> " +
 
-                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.3) Descripción </strong> <br><br> </td></tr> " +
+                "<table> " +
+                "<tr> <td> <strong style=\"font-size: 20px; \" > 1.3) Descripción </strong> <br><br> </td></tr> " +
                 "<tr> <td>" + proyecto.Descripcion + "</td> </tr> " +
 
                 "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.4) Propósito </strong> <br><br> </td></tr> " +
@@ -1121,7 +1133,7 @@ namespace AppWebERS.Controllers
                 while (data.Read()) {
                     int idp = Int32.Parse(data["id_proyecto"].ToString());
                     string nombre = data["nombre"].ToString();
-                    Double version = Double.Parse(data["nombre"].ToString());
+                    Double version = Double.Parse(data["version"].ToString());
                     string descripcion = data["descripcion"].ToString();
                     string proposito = data["proposito"].ToString();
                     string alcance = data["alcance"].ToString();
@@ -1136,7 +1148,7 @@ namespace AppWebERS.Controllers
                     string relacion_con_otros_proyectos = data["relacion_con_otros_proyectos"].ToString();
                     string estadop = data["estado"].ToString();
 
-                    proyectos.Add(new Proyecto(idp, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambiente_operacional, relacion_con_otros_proyectos, estadop, version, descripcion, suposiciones, restricciones));
+                    proyectos.Add(new Proyecto(id, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambiente_operacional, relacion_con_otros_proyectos, estadop, version, descripcion , suposiciones, restricciones));
                 }
 
                 this.conexion.EnsureConnectionClosed();
@@ -1168,7 +1180,7 @@ namespace AppWebERS.Controllers
                 while (data.Read()) {
                     int idp = Int32.Parse(data["id_proyecto"].ToString());
                     string nombre = data["nombre"].ToString();
-                    Double version = Double.Parse(data["nombre"].ToString());
+                    Double version = Double.Parse(data["version"].ToString());
                     string descripcion = data["descripcion"].ToString();
                     string proposito = data["proposito"].ToString();
                     string alcance = data["alcance"].ToString();
@@ -1216,7 +1228,7 @@ namespace AppWebERS.Controllers
                 while (data.Read()) {
                     int idp = Int32.Parse(data["id_proyecto"].ToString());
                     string nombre = data["nombre"].ToString();
-                    Double version = Double.Parse(data["nombre"].ToString());
+                    Double version = Double.Parse(data["version"].ToString());
                     string descripcion = data["descripcion"].ToString();
                     string proposito = data["proposito"].ToString();
                     string alcance = data["alcance"].ToString();
@@ -1333,13 +1345,13 @@ namespace AppWebERS.Controllers
                 else
                     ViewBag.BoolLista = true;
                 proyecto.Nombre = nombre;
-                Proyecto proyectoNuevo = proyecto.CrearProyecto(0, nombre, String.Empty, String.Empty,
-                                                String.Empty, String.Empty, String.Empty, String.Empty,
-                                                String.Empty, String.Empty, String.Empty, 0.0, String.Empty,
-                                                String.Empty, String.Empty);
-                if (proyectoNuevo != null) {
-                    if (proyecto.RegistrarProyectoEnBd(proyectoNuevo)) {
-                        if (proyecto.AsignarJefeProyecto(usuario, nombre)) {
+                Proyecto proyectoNuevo = proyecto.CrearProyecto(0,"", "", "", "", "", "", "", "", "", "", Double.MinValue, "", "", "", "");
+                if (proyectoNuevo != null)
+                {
+                    if (proyecto.RegistrarProyectoEnBd(proyectoNuevo))
+                    {
+                        if (proyecto.AsignarJefeProyecto(usuario, nombre))
+                        {
                             TempData["alerta"] = new Alerta("Éxito al crear Proyecto.", TipoAlerta.SUCCESS);
                             return RedirectToAction("ListarProyectos", "Proyecto");
                         }

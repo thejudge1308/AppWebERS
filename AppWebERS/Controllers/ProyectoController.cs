@@ -388,6 +388,8 @@ namespace AppWebERS.Controllers
                     AppWebERS.Models.Referencia dm = new AppWebERS.Models.Referencia(idProyecto, referencia);
                     referencias.Add(dm);
                 }
+                this.conexion.EnsureConnectionClosed();
+
             }
             conexion.EnsureConnectionClosed();
 
@@ -1969,6 +1971,7 @@ namespace AppWebERS.Controllers
                 }
                 this.conexion.EnsureConnectionClosed();
             }
+            this.conexion.EnsureConnectionClosed();
              return value;
         }
 
@@ -1994,6 +1997,8 @@ namespace AppWebERS.Controllers
                 }
                 this.conexion.EnsureConnectionClosed();
             }
+            this.conexion.EnsureConnectionClosed();
+
             return l;
         }
         /**
@@ -2024,8 +2029,9 @@ namespace AppWebERS.Controllers
                     }
                     con.EnsureConnectionClosed();
                 }
-               
-                
+
+                this.conexion.EnsureConnectionClosed();
+
                 return l;
             }
 

@@ -409,8 +409,10 @@ namespace AppWebERS.Controllers
                 this.conexion.EnsureConnectionClosed();
                 return version;
             }
+            this.conexion.EnsureConnectionClosed();
             return "0";
         }
+
         private String seccionHtmlTablaHistorialCambios(int id)
         {
 
@@ -616,8 +618,8 @@ namespace AppWebERS.Controllers
                 "<tr> <td>  <br>  <br><br> </td></tr> " +
                 "<tr> <td>  <br>  <br><br> </td></tr> " +
                 "<tr> <td>  <br>  <br><br> </td></tr> </table> ";
-            portada += "<h3 style=\"text-align:center\" >" + "Documento de especificacion de requisitos de usuario/software" + " </h3>";
-            portada += "<h3 style=\"text-align:center\" >" + proyecto.Nombre + " </h3>";
+            portada += "<h2 font-size: 45; style=\"text-align:center\" >" + "Documento de especificacion de requisitos de usuario/software" + " </h2>";
+            portada += "<h1 style=\"text-align:center; font-size: 60;\" >" + proyecto.Nombre + " </h1>";
             portada += "<table>" +
                 "<tr> <td>  <br>  <br><br> </td></tr> " +
                 "<tr> <td>  <br>  <br><br> </td></tr> " +
@@ -628,7 +630,7 @@ namespace AppWebERS.Controllers
                 "<tr> <td>  <br>  <br><br> </td></tr> " +
                 "<tr> <td>  <br>  <br><br> </td></tr> </table> ";
             portada += "<h5 style=\"text-align:right\" >" + "Fecha: " + fecha + " </h5>";
-            portada += "<h5 style=\"text-align:right\" >" + "Version: " + this.ObtenerVersionProyecto(id).Replace(',', '.') + " </h5>";
+            portada += "<h5 style=\"text-align:right\" >" + "" + " </h5>";
 
             portada += @"<br></br> <br></br>";
             portada += SeccionHtmlEquipoDesarrollo(id);
@@ -868,7 +870,7 @@ namespace AppWebERS.Controllers
             string consulta = "select actor.nombre , actor.descripcion from actor where actor.ref_proyecto = " + idp;
             reader = this.conexion.RealizarConsulta(consulta);
             string s = "";
-            s = s + " <table border=\"1\"style=\"border: 1px solid black; border-collapse: collapse; width: 100%; \"> <tr> <td style=\"padding: 5px; \"><b>Actor</b></td> <td style=\"padding: 5px; \"><b>Descripcion</b></td> </tr>";
+            s = s + " <table border=\"1\"style=\"border: 1px solid black; border-collapse: collapse; width: 100%; \"> <tr> <td style=\"padding: 5px; \"><b>Actor</b></td> <td style=\"padding: 5px; \"><b>Descripción</b></td> </tr>";
             if (reader != null) {
                 while (reader.Read()) {
                     string nombre = reader["nombre"].ToString();
@@ -967,7 +969,7 @@ namespace AppWebERS.Controllers
             foreach (var item in requisitos)
             {
                 Requisito ru = item.Key;
-                tabla = tabla + "<div style=\"page -break-after:always\"></div> <table border=\"1\"style=\"border: 1px solid black; border-collapse: collapse; width: 100%; \"> <tr> <td colspan=\"3\" style=\"text-align:center; padding: 5px;  \"> \"" + ru.Nombre + "\"</td> </tr> <tr> <td style=\"padding: 5px;\"><b>ID: " + ru.IdRequisito + "</b></td> <td style=\"padding: 5px;\"><b>Tipo Requisito</b></td> <td style=\"padding: 5px;\">" + ru.TipoRequisito+ "</td> </tr> <tr> <td style=\"padding: 5px;\"><b>Prioridad</b></td><td colspan=\"2\" style=\"padding: 5px;\" >" +ru.Prioridad + "</td> </tr><tr> <td style=\"padding: 5px;\"><b>Descripcion</b></td> <td colspan=\"2\" style=\"padding: 5px;\">" + ru.Descripcion+"</td> </tr> <tr> <td style=\"padding: 5px;\"><b>Fuente</b></td> <td colspan=\"2\" style=\"padding: 5px; \">" + ru.Fuente+ "</td> </tr> <tr class=\"big\"> <td style=\"padding: 5px;\"><b>Actor</b></td> <td colspan=\"2\" style=\"padding: 5px;\">"+ this.AgregarActoresVolere(idp, ru)+ "</td> </tr> <tr> <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\" ><b> Fecha: "+ru.Fecha +" </b></td> <td style=\"padding: 5px;\"><b>Incremento: "+ru.Incremento+"</b></td> </tr> <tr> <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\"><b>Estado: "+ru.Estado+"</b> </td> <td style=\"padding: 5px;\"><b>Escala: "+ru.Escala+"</b></td> </tr> <tr > <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\"><b> Estabilidad: " +ru.Estabilidad+"</b></td> <td style=\"padding: 5px;\"> <b>Medida: "+ru.Medida+"</b></td> </tr> </table>";
+                tabla = tabla + "<div style=\"page -break-after:always\"></div> <table border=\"1\"style=\"border: 1px solid black; border-collapse: collapse; width: 100%; \"> <tr> <td colspan=\"3\" style=\"text-align:center; padding: 5px;  \"> \"" + ru.Nombre + "\"</td> </tr> <tr> <td style=\"padding: 5px;\"><b>ID: " + ru.IdRequisito + "</b></td> <td style=\"padding: 5px;\"><b>Tipo Requisito</b></td> <td style=\"padding: 5px;\">" + ru.TipoRequisito+ "</td> </tr> <tr> <td style=\"padding: 5px;\"><b>Prioridad</b></td><td colspan=\"2\" style=\"padding: 5px;\" >" +ru.Prioridad + "</td> </tr><tr> <td style=\"padding: 5px;\"><b>Descripción</b></td> <td colspan=\"2\" style=\"padding: 5px;\">" + ru.Descripcion+"</td> </tr> <tr> <td style=\"padding: 5px;\"><b>Fuente</b></td> <td colspan=\"2\" style=\"padding: 5px; \">" + ru.Fuente+ "</td> </tr> <tr class=\"big\"> <td style=\"padding: 5px;\"><b>Actor</b></td> <td colspan=\"2\" style=\"padding: 5px;\">"+ this.AgregarActoresVolere(idp, ru)+ "</td> </tr> <tr> <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\" ><b> Fecha: "+ru.Fecha +" </b></td> <td style=\"padding: 5px;\"><b>Incremento: "+ru.Incremento+"</b></td> </tr> <tr> <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\"><b>Estado: "+ru.Estado+"</b> </td> <td style=\"padding: 5px;\"><b>Escala: "+ru.Escala+"</b></td> </tr> <tr > <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\"><b> Estabilidad: " +ru.Estabilidad+"</b></td> <td style=\"padding: 5px;\"> <b>Medida: "+ru.Medida+"</b></td> </tr> </table>";
                 tabla = tabla + "<br/>";
                 List<Requisito> aux = item.Value;
 
@@ -975,7 +977,7 @@ namespace AppWebERS.Controllers
                 {
                     foreach (Requisito r in aux)
                     {
-                        tabla = tabla + "<div style=\"page -break-after:always\"></div> <table border=\"1\"style=\"border: 1px solid black; border-collapse: collapse; width: 100%; \"> <tr> <td colspan=\"3\" style=\"text-align:center; padding: 5px;  \"> \"" + r.Nombre + "\"</td> </tr> <tr> <td style=\"padding: 5px;\"><b>ID: " + r.IdRequisito + "</b></td> <td style=\"padding: 5px;\"><b>Tipo Requisito</b></td> <td style=\"padding: 5px;\">" + r.TipoRequisito + "</td> </tr> <tr> <td style=\"padding: 5px;\"><b>Prioridad</b></td><td colspan=\"2\" style=\"padding: 5px;\" >" + r.Prioridad + "</td> </tr><tr> <td style=\"padding: 5px;\"><b>Descripcion</b></td> <td colspan=\"2\" style=\"padding: 5px;\">" + r.Descripcion + "</td> </tr> <tr> <td style=\"padding: 5px;\"><b>Fuente</b></td> <td colspan=\"2\" style=\"padding: 5px; \">" + r.Fuente + "</td> </tr> <tr class=\"big\"> <td style=\"padding: 5px;\"><b>Actor(es)</b></td> <td colspan=\"2\" style=\"padding: 5px;\">"+this.AgregarActoresVolere(idp , r) +"</td> </tr> <tr> <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\" ><b> Fecha: " + r.Fecha + " </b></td> <td style=\"padding: 5px;\"><b>Incremento: " + r.Incremento + "</b></td> </tr> <tr> <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\"><b>Estado: " + r.Estado + "</b> </td> <td style=\"padding: 5px;\"><b>Escala: " + r.Escala + "</b></td> </tr> <tr > <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\"><b> Estabilidad: " + r.Estabilidad + "</b></td> <td style=\"padding: 5px;\"> <b>Medida: " + r.Medida + "</b></td> </tr> </table>";
+                        tabla = tabla + "<div style=\"page -break-after:always\"></div> <table border=\"1\"style=\"border: 1px solid black; border-collapse: collapse; width: 100%; \"> <tr> <td colspan=\"3\" style=\"text-align:center; padding: 5px;  \"> \"" + r.Nombre + "\"</td> </tr> <tr> <td style=\"padding: 5px;\"><b>ID: " + r.IdRequisito + "</b></td> <td style=\"padding: 5px;\"><b>Tipo Requisito</b></td> <td style=\"padding: 5px;\">" + r.TipoRequisito + "</td> </tr> <tr> <td style=\"padding: 5px;\"><b>Prioridad</b></td><td colspan=\"2\" style=\"padding: 5px;\" >" + r.Prioridad + "</td> </tr><tr> <td style=\"padding: 5px;\"><b>Descripción</b></td> <td colspan=\"2\" style=\"padding: 5px;\">" + r.Descripcion + "</td> </tr> <tr> <td style=\"padding: 5px;\"><b>Fuente</b></td> <td colspan=\"2\" style=\"padding: 5px; \">" + r.Fuente + "</td> </tr> <tr class=\"big\"> <td style=\"padding: 5px;\"><b>Actor(es)</b></td> <td colspan=\"2\" style=\"padding: 5px;\">"+this.AgregarActoresVolere(idp , r) +"</td> </tr> <tr> <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\" ><b> Fecha: " + r.Fecha + " </b></td> <td style=\"padding: 5px;\"><b>Incremento: " + r.Incremento + "</b></td> </tr> <tr> <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\"><b>Estado: " + r.Estado + "</b> </td> <td style=\"padding: 5px;\"><b>Escala: " + r.Escala + "</b></td> </tr> <tr > <td colspan=\"2\" width=\"50%\" style=\"padding: 5px;\"><b> Estabilidad: " + r.Estabilidad + "</b></td> <td style=\"padding: 5px;\"> <b>Medida: " + r.Medida + "</b></td> </tr> </table>";
                         tabla = tabla + "<br/>";
                     }
 

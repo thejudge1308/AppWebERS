@@ -359,14 +359,83 @@ namespace AppWebERS.Models
         }
 
         /**
-         * <author>Raimundo Vásquez</author>/author>
-         * <summary>
-         * Metodo que realiza la consulta DELETE en la base de datos para eliminar los actores, para luego asociarlos de nuevo
-         * </summary>
-         * <param name="num_requisito">numero real del requisito que estamos editando</param>
-         * <returns> bool que nos verifica si eliminamos los actores o no</returns>
-         */
-        public bool eliminarActores(int num_requisito)
+          <autor> Raimundo Vasquez</autor>
+        * <summary>Metodo para agregar la modificacion de requisito al historial de cambios</summary>
+        * <param name="fecha">fecha en que se hizo el cambio</param>
+        * <param name="id">Id del proyecto al que pertenece el requisito.</param>
+        * <param name="r">requisito que se edito.</param>
+        * <param name="userId">id del usuario que hizo la modificacion</param>
+        * <returns>Verdadero o falso , si se realizó la acción o no.</returns>
+        */
+        public bool ModificacionRequisitoDERS(Requisito r, int id, string fecha, string userId)
+        {
+            string descripcion = "Se editó el Requisito" + r.IdRequisito;
+            float versionActual = this.ObtenerVersionActual(id) + 0.01F;
+            string vers = versionActual.ToString().Replace(',', '.');
+            string consulta = "INSERT INTO modificacion_ders(version,ref_proyecto,fecha,ref_autor_modificacion,descripcion) " +
+                "VALUES(" + vers + ", " + id + ", '" + fecha + "' , '" + userId + "' , '" + descripcion + "' ) ";
+            ApplicationDbContext con = ApplicationDbContext.Create();
+            if (con.RealizarConsultaNoQuery(consulta))
+            {
+                con.EnsureConnectionClosed();
+                return true;
+            }
+            con.EnsureConnectionClosed();
+            return false;
+        }
+
+        public bool AgregarModificacionRequisitoDERS(int id, string fecha, string userId, string descripcion)
+        {
+
+            float versionActual = this.ObtenerVersionActual(id) + 0.01F;
+            string vers = versionActual.ToString().Replace(',', '.');
+            string consulta = "INSERT INTO modificacion_ders(version,ref_proyecto,fecha,ref_autor_modificacion,descripcion) " +
+                "VALUES(" + vers + ", " + id + ", '" + fecha + "' , '" + userId + "' , '" + descripcion + "' ) ";
+            ApplicationDbContext con = ApplicationDbContext.Create();
+            if (con.RealizarConsultaNoQuery(consulta))
+            {
+                con.EnsureConnectionClosed();
+                return true;
+            }
+            con.EnsureConnectionClosed();
+            return false;
+        }
+        /**
+          <autor> Raimundo Vasquez</autor>
+        * <summary>Obtiene la version actual del proyecto</summary>
+        * <param name="id">Id del proyecto .</param>
+        * <returns>version actual del proyecto.</returns>
+        */
+        private float ObtenerVersionActual(int id)
+        {
+
+            float version = 0.00F;
+            string consulta = "SELECT modificacion_ders.version FROM modificacion_ders WHERE ref_proyecto = " + id +
+                " ORDER BY version DESC LIMIT 1";
+            ApplicationDbContext con = ApplicationDbContext.Create();
+            MySqlDataReader reader = con.RealizarConsulta(consulta);
+
+            if (reader != null)
+            {
+                reader.Read();
+                version = float.Parse(reader[0].ToString());
+                return version;
+            }
+            else
+            {
+
+                return 0.00F;
+            }
+        }
+                /**
+                 * <author>Raimundo Vásquez</author>/author>
+                 * <summary>
+                 * Metodo que realiza la consulta DELETE en la base de datos para eliminar los actores, para luego asociarlos de nuevo
+                 * </summary>
+                 * <param name="num_requisito">numero real del requisito que estamos editando</param>
+                 * <returns> bool que nos verifica si eliminamos los actores o no</returns>
+                 */
+                public bool eliminarActores(int num_requisito)
         {
             ApplicationDbContext con = ApplicationDbContext.Create();
             string delete = "DELETE FROM vinculo_actor_requisito WHERE ref_req ='" + num_requisito + "'";

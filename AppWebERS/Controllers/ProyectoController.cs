@@ -305,7 +305,7 @@ namespace AppWebERS.Controllers
                 "</style>" +
                 " </head> " +
                 "<body> " +
-                "<meta charset=\"UTF-8\" /> <table> <tr> <td class=\"logo\">AppWebERS</td> <td </tr> </table> <hr> <p class=\"fecha\">Fecha: " + fecha + "</p> <hr> <h1 class=\"titulo\"> 1) Detalles del proyecto</h1> " +
+                "<meta charset=\"UTF-8\" /> <table> <tr> <td class=\"logo\">AppWebERS</td> <td </tr> </table> <hr> <p class=\"fecha\">Fecha: " + fecha + "</p> <hr> <h1> 1 Detalles del proyecto</h1> " +
             
                 
 
@@ -339,9 +339,15 @@ namespace AppWebERS.Controllers
 
                 "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.10) Relación con otros proyectos </strong> <br><br> </td></tr> " +
                 "<tr> <td>" + proyecto.RelacionProyectos + "</td> </tr> " +
-                
-                "</table> ";
 
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.11) Descripcion General </strong> <br><br> </td></tr> " +
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.12) Suposiciones y dependencias </strong> <br><br> </td></tr> " +
+                "<tr> <td>  <br> <strong style=\"font-size: 20px; \" > 1.10) Restricciones </strong> <br><br> </td></tr> " +
+
+
+                "</table> ";
+            string descripciong = "<h1> 2 Caractristicas de los actores</h1>";
+            descripciong = descripciong + this.DescripcionGeneralActores(id);
             string minimalista = this.AgregarListadoMinimalista(id);
 
             string volere = this.CrearVolere(id);
@@ -350,7 +356,7 @@ namespace AppWebERS.Controllers
 
             string final = " </body> </html>";
             
-            htmlContent = htmlContent + minimalista + volere + diagramas  + referencias +  final;
+            htmlContent = htmlContent + descripciong + minimalista + volere + diagramas  + referencias +  final;
             
             string filename = fecha+".pdf";
 
@@ -414,7 +420,7 @@ namespace AppWebERS.Controllers
 
             "<table> " +
 
-            "<tr> <td>  <h1 class=\"titulo\" > 5) Referencias</h1> </td></tr> " +
+            "<tr> <td>  <h1 > 5 Referencias</h1> </td></tr> " +
 
             ht +
 
@@ -476,12 +482,41 @@ namespace AppWebERS.Controllers
 
                 "<table> " +
 
-                "<tr> <td>  <h1 class=\"titulo\" > 4) Diagramas</h1> </td></tr> " +
+                "<tr> <td>  <h1 class=\"titulo\" > 4 Diagramas</h1> </td></tr> " +
 
                 ht +
 
                 "</table> ";
             return htmlDiagramas;
+        }
+
+        /**
+        * 
+        * <autor>Rodrigo Letelier</autor>
+        * <summary>Crea el html que inserta la caracteristicas de los actores.</summary>
+        * <param name="idp">Id del proyecto al que se asocia el requisito.</param>
+        * <returns>El html con las caracterisiticas.</returns>
+        */
+
+
+        private string DescripcionGeneralActores(int idp) {
+            MySqlDataReader reader;
+            string consulta = "select actor.nombre , actor.descripcion from actor where actor.ref_proyecto = " + idp;
+            reader = this.conexion.RealizarConsulta(consulta);
+            string s = "";
+            s = s + " <table border=\"1\"style=\"border: 1px solid black; border-collapse: collapse; width: 100%; \"> <tr> <td style=\"padding: 5px; \"><b>Actor</b></td> <td style=\"padding: 5px; \"><b>Descripcion</b></td> </tr>";
+            if (reader != null) {
+                while (reader.Read()) {
+                    string nombre = reader["nombre"].ToString();
+                    string descripcion = reader["descripcion"].ToString();
+                    s = s + "<tr> <td style=\"padding: 5px; \">" + nombre + "</td> <td style=\"padding: 5px; \">"+descripcion+"</td> </tr> ";
+                }
+                
+                
+            }
+            s = s + "</table>";
+            this.conexion.EnsureConnectionClosed();
+            return s;
         }
 
         /**
@@ -493,8 +528,8 @@ namespace AppWebERS.Controllers
          */
 
         private string AgregarListadoMinimalista(int idp) {
-
-            string s = "<h1 class=\"titulo\" > 2) Listado de requisitos</h1> <table class=\"espacio - izq\">";
+            string ini = "<h1> 3 Requisitos del portal</h1>";
+            string s = ini + "<h2> 3.1 Listado de requisitos</h2> <table class=\"espacio - izq\">";
             
             MySqlDataReader reader;
             string consulta = "select * from requisito where requisito.ref_proyecto = " + idp;
@@ -562,7 +597,7 @@ namespace AppWebERS.Controllers
         */
 
         private string CrearVolere(int idp) {
-            string s = "<h1 class=\"titulo\" > 3) Requisitos Volere</h1> ";
+            string s = "<h2 > 3.2 Requisitos Volere</h2> ";
             string tabla = "";
             foreach (var item in requisitos)
             {

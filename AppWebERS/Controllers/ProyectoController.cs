@@ -339,16 +339,6 @@ namespace AppWebERS.Controllers
                     return Json(true, JsonRequestBehavior.AllowGet);
                     break;
 
-                case "suposicion":
-                    proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo, User.Identity.GetUserId());
-                    return Json(true, JsonRequestBehavior.AllowGet);
-                    break;
-
-                case "restriccion":
-                    proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo, User.Identity.GetUserId());
-                    return Json(true, JsonRequestBehavior.AllowGet);
-                    break;
-
                 case "ambiente":
                     proyecto.ActualizarDatosProyecto(Int32.Parse(json.id), json.valor, json.atributo, User.Identity.GetUserId());
                     return Json(true, JsonRequestBehavior.AllowGet);
@@ -1148,7 +1138,7 @@ namespace AppWebERS.Controllers
                     string relacion_con_otros_proyectos = data["relacion_con_otros_proyectos"].ToString();
                     string estadop = data["estado"].ToString();
 
-                    proyectos.Add(new Proyecto(id, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambiente_operacional, relacion_con_otros_proyectos, estadop, version, descripcion , suposiciones, restricciones));
+                    proyectos.Add(new Proyecto(idp, nombre, proposito, alcance, contexto, definiciones, acronimos, abreviaturas, referencias, ambiente_operacional, relacion_con_otros_proyectos, estadop, version, descripcion , suposiciones, restricciones));
                 }
 
                 this.conexion.EnsureConnectionClosed();
@@ -1166,8 +1156,8 @@ namespace AppWebERS.Controllers
         public List<Proyecto> ListaDeProyectosAsociados(string id) {
             List<Proyecto> proyectosAsociados = new List<Proyecto>();
             string estado = "HABILITADO";
-            string consulta = "SELECT proyecto.id_proyecto,proyecto.nombre, proyecto.proposito, proyecto.alcance, proyecto.contexto, proyecto.definiciones," +
-                "proyecto.acronimos, proyecto.abreviaturas, proyecto.referencias, proyecto.ambiente_operacional, proyecto.relacion_con_otros_proyectos, proyecto.estado FROM proyecto, users, vinculo_usuario_proyecto " +
+            string consulta = "SELECT proyecto.id_proyecto,proyecto.nombre, proyecto.proposito, proyecto.alcance, proyecto.contexto, proyecto.definiciones, proyecto.version, proyecto.suposiciones, proyecto.restricciones, proyecto.caracteristicas_usuarios, " +
+                "proyecto.descripcion, proyecto.acronimos, proyecto.abreviaturas, proyecto.referencias, proyecto.ambiente_operacional, proyecto.relacion_con_otros_proyectos, proyecto.estado FROM proyecto, users, vinculo_usuario_proyecto " +
                                "WHERE users.id = '" + id + "' AND vinculo_usuario_proyecto.ref_proyecto = " +
                                "proyecto.id_proyecto AND vinculo_usuario_proyecto.ref_usuario = users.id";
             MySqlDataReader data = this.Conector.RealizarConsulta(consulta);
@@ -1212,8 +1202,8 @@ namespace AppWebERS.Controllers
         public List<Proyecto> ListaDeProyectoNoAsociados(string id) {
             List<Proyecto> proyectosNoAsociados = new List<Proyecto>();
             string estado = "HABILITADO";
-            string consulta = "SELECT proyecto.id_proyecto,proyecto.nombre, proyecto.proposito, proyecto.alcance, proyecto.contexto, proyecto.definiciones," +
-                "proyecto.acronimos, proyecto.abreviaturas, proyecto.referencias, proyecto.ambiente_operacional, proyecto.relacion_con_otros_proyectos, proyecto.estado" + " FROM Proyecto where  proyecto.estado = '" + estado + "' AND " +
+            string consulta = "SELECT proyecto.id_proyecto,proyecto.nombre, proyecto.proposito, proyecto.alcance, proyecto.contexto, proyecto.definiciones, proyecto.version, proyecto.suposiciones, proyecto.restricciones, proyecto.caracteristicas_usuarios, " +
+                "proyecto.descripcion, proyecto.acronimos, proyecto.abreviaturas, proyecto.referencias, proyecto.ambiente_operacional, proyecto.relacion_con_otros_proyectos, proyecto.estado" + " FROM Proyecto where  proyecto.estado = '" + estado + "' AND " +
                               "Proyecto.nombre NOT IN" +
                               "(SELECT Proyecto.nombre FROM Proyecto, users, vinculo_usuario_proyecto " +
                               "WHERE users.id ='" + id + "'  AND Vinculo_usuario_proyecto.ref_proyecto = Proyecto.id_proyecto AND Vinculo_usuario_proyecto.ref_usuario = users.id)";
